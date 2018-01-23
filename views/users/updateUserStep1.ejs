@@ -1,0 +1,84 @@
+<html>
+<head>
+    <title>add user</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var userToAddUpdate_ID;
+            $("#next").click(function(){
+                userToAddUpdate_ID=$("#userID").val();
+
+                var checkedRoleID = [];
+                $.each($("input[name='checkbox']:checked"), function(){
+                    checkedRoleID.push($(this).val());
+                });
+                var checkedRoleName;
+                checkedRoleName = $("input[name='checkbox']:checked").next('label').map(function(){
+                    return $(this).text();
+                }).get();
+
+                //-----forms validation------------------------------------
+
+                if (checkedRoleID.length < 1) {
+                    alert("You must choose at least one USER ROLE");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/users/updateUser/step1",{
+                    userToAddUpdate_ID: userToAddUpdate_ID,
+                    userRoleID: checkedRoleID,
+                    userRoleName: checkedRoleName
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Add User failed.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<input type="hidden" id="userID"  value="<%= user._id %>">
+
+<label for="userRole"><b>User Role:</b></label><br>
+<% roles2.forEach(function(role2) { %>
+<% var check = 0;    %>
+<% for (var i=0; i < user.userRoleID.length; i++) { %>
+<%if (role2.roleID == user.userRoleID[i]) { %>
+<input class="checkbox" type="checkbox" name="checkbox" id=<%= role2.roleID %> value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
+<% check = 1; %>
+<% }  %>
+<% } %>
+<% if (check == 0) {%>
+<input class="checkbox" type="checkbox" name="checkbox" id=<%= role2.roleID %> value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+<% }else {%>
+<% check = 0; %>
+<% } %>
+<% }); %><br>
+
+<form>
+    <form action="/dashboard">
+        <input type="submit" value="Cancel">
+    </form>
+    <form action="/users/showUsers">
+        <input type="submit" value="Back">
+    </form>
+
+    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+        <input type="button" id="next" value="Next" ><br>
+    <% } else { %>
+        <input type="button" id="next" value="Next" disabled><br>
+    <% } %>
+</form>
+
+</body>
+</html>

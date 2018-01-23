@@ -1,0 +1,507 @@
+<html>
+<head>
+    <title>update user</title>
+    <link rel='stylesheet' href='/stylesheets/updateUser.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+
+        var choices;
+        function selectUser(select)
+        {
+            var option = select.options[select.selectedIndex];
+            if(option.id != 'studentList') {
+                var ul = select.parentNode.getElementsByTagName('ul')[0];
+                choices = ul.getElementsByTagName('input');
+
+                for (var i = 0; i < choices.length; i++) {
+                    if (choices[i].value == option.value) {
+                        return;
+                    }
+                }
+
+                var li = document.createElement('li');
+                var input = document.createElement('input');
+                var text = document.createTextNode(option.firstChild.data);
+
+                input.type = 'hidden';
+                input.name = 'users[]';
+                input.value = option.value;
+
+                li.appendChild(input);
+                li.appendChild(text);
+                li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
+
+                ul.appendChild(li);
+            }
+
+        }
+        var usersToRemove = [];
+        function removeUser(user){
+            var choice = user.getElementsByTagName('input');
+            usersToRemove.push(choice[0].value);
+        }
+
+
+        $(document).ready(function(){
+
+            function checkBoxOffOther() {
+                $('#other').removeClass().addClass('disable');
+                $('#firstName').removeClass().addClass('disable');
+                $('#lastName').removeClass().addClass('disable');
+                $('#labelsDiv1').removeClass().addClass('labelsDivDisable');
+            }
+            function checkBoxOnOther() {
+                $('#other').removeClass().addClass('enable');
+                $('#firstName').removeClass().addClass('enable');
+                $('#lastName').removeClass().addClass('enable');
+                $('#labelsDiv1').removeClass().addClass('labelsDivEnable');
+            }
+
+            //This will check the status of radio button on page load/page refresh
+            $('input[class=other]').each(function() {
+                var checkVal = $('.other:checked');
+                if (checkVal.length < 1){
+                    checkBoxOffOther();
+                } else {
+                    checkBoxOnOther();
+                }
+            });
+            //This will check the status of radio button onclick
+            $('input:checkbox[class=other]').change(function() {
+                var checkVal = $('.other:checked');
+                if (checkVal.length < 1){
+                    checkBoxOffOther();
+                } else {
+                    checkBoxOnOther();
+                }
+            });
+
+            function checkBoxOffParents() {
+                $('#smecsUserSelect').removeClass().addClass('disable');
+                $("#smecsUserSelect").attr('disabled',true);
+                $('#imgAdd').removeClass().addClass('disable');
+                $('#smecsUserLabel').removeClass().addClass('disable');
+                $('#smecsUserDiv').removeClass().addClass('disable');
+                $('#smecsUserUl').removeClass().addClass('disable');
+                $('#clickHere').removeClass().addClass('disable');
+            }
+            function checkBoxOnParents() {
+                $('#smecsUserSelect').removeClass().addClass('enable');
+                $("#smecsUserSelect").attr('disabled',false);
+                $('#imgAdd').removeClass().addClass('enable');
+                $('#smecsUserLabel').removeClass().addClass('enable');
+                $('#smecsUserDiv').removeClass().addClass('enable');
+                $('#smecsUserUl').removeClass().addClass('enable');
+                $('#clickHere').removeClass().addClass('enable');
+            }
+
+            //This will check the status of radio button on page load/page refresh
+            $('input[id=parents]').each(function() {
+                var checkVal = $(this).is(':checked');
+                if (checkVal == false){
+                    checkBoxOffParents();
+                } else {
+                    checkBoxOnParents();
+                }
+            });
+            //This will check the status of radio button onclick
+            $('input:checkbox[id=parents]').change(function() {
+                var checkVal = $(this).is(':checked');
+                if (checkVal == false){
+                    checkBoxOffParents();
+                } else {
+                    checkBoxOnParents();
+                }
+            });
+
+            function checkBoxOffUtilityName() {
+                $('#companyName').removeClass().addClass('disable');
+                $('#companyNameText').removeClass().addClass('disable');
+                $('#labelsDiv3').removeClass().addClass('labelsDivDisable');
+            }
+            function checkBoxOnUtilityName() {
+                $('#companyName').removeClass().addClass('enable');
+                $('#companyNameText').removeClass().addClass('enable');
+                $('#labelsDiv3').removeClass().addClass('labelsDivEnable');
+            }
+
+            //This will check the status of radio button on page load/page refresh
+            $('input[class=utilityCompany]').each(function() {
+                var checkVal = $(this).is(':checked');
+                if (checkVal == false){
+                    checkBoxOffUtilityName();
+                } else {
+                    checkBoxOnUtilityName();
+                }
+            });
+            //This will check the status of radio button onclick
+            $('input:checkbox[class=utilityCompany]').change(function() {
+                var checkVal = $(this).is(':checked');
+                if (checkVal == false){
+                    checkBoxOffUtilityName();
+                } else {
+                    checkBoxOnUtilityName();
+                }
+            });
+
+            var userID,userPrivilegeName,userPrivilegeID,firstName,lastName,email,newPin, oldPin,confirmPin,photo,companyNameText;
+            $("#<%= users.id %>").click(function(){
+                userID=$(this).attr('id');
+
+                var checkedRoleID = [];
+                $.each($("input[name='checkbox']:checked"), function(){
+                    checkedRoleID.push($(this).val());
+                });
+                var checkedRoleName;
+                checkedRoleName = $("input[name='checkbox']:checked").next('label').map(function(){
+                    return $(this).text();
+                }).get();
+
+                userPrivilegeID=$("input:radio[name='userPrivilegeID']:checked").val();
+                userPrivilegeName = $("input:radio[name='userPrivilegeID']:checked + label").text();
+                firstName=$("#firstName").val();
+                lastName=$("#lastName").val();
+                email=$("#email").val();
+                oldPin=$("#oldPin").val();
+                newPin=$("#newPin").val();
+                confirmPin=$("#confirmPin").val();
+                photo=$("#photo").val();
+                companyNameText=$("#companyNameText").val();
+
+                var arrayUsers = [];
+                if (choices === undefined){
+                    arrayUsers = $("#savedValueSmecsUsers").val().split(",");
+                    for (var a = 0; a < usersToRemove.length; a++) {
+                        for (var i = 0; i < arrayUsers.length; i++) {
+                            if (usersToRemove[a] == arrayUsers[i]){
+                                arrayUsers.splice(i, 1);
+                            }
+                        }
+                    }
+                } else {
+                    if(choices.length > 0) {
+                        for (var a = 0; a < choices.length; a++) {
+                            arrayUsers.push(choices[a].value);
+                        }
+                    }
+                }
+
+                if(arrayUsers.length == 1 && arrayUsers[0] == "") {
+                    var index = arrayUsers.indexOf(5);
+                    arrayUsers.splice(index, 1);
+                }
+
+
+                    //-----forms validation------------------------------------
+
+                var mailFormat = /^([a-z A-Z 0-9 _\.\-])+\@(([a-z A-Z 0-9\-])+\.)+([a-z A-z 0-9]{2,4})+$/;
+                if (!mailFormat.test(email)) {
+                    alert("Please input a valid EMAIL address!");
+                    return false;
+                }
+                if (newPin != confirmPin) {
+                    alert("Pin and Confirm Pin don't match!");
+                    return false;
+                }
+                if (newPin !== oldPin) {
+                    var pinFormat = /^\d{4}$/;
+                    if (!pinFormat.test(newPin)) {
+                        alert("Pin code should be 4 digits ");
+                        return false;
+                    }
+                    if (!pinFormat.test(confirmPin)) {
+                        alert("Confirm Pin code should be 4 digits ");
+                        return false;
+                    }
+                    if (newPin != confirmPin) {
+                        alert("Pin and Confirm Pin don't match!");
+                        return false;
+                    }
+                }
+                if (checkedRoleID.length < 1) {
+                    alert("You must choose at least one USER ROLE");
+                    return false;
+                }else{
+                        for (var a = 0; a < checkedRoleID.length; a++) {
+                        if (checkedRoleID[a] != 99) {
+                            if (firstName == "" ) {
+                                alert("FIRST NAME must be filled out");
+                                return false;
+                            }
+                            if (lastName == "" ) {
+                                alert("LAST NAME must be filled out");
+                                return false;
+                            }
+                        }
+                            // Ask user if he wants the program to change automatically user privilege to regular user
+                            /*else {
+                                if (userPrivilegeID != 5 && confirm('Since user role has only "Parent" or "Utility Company" selected, user privilege will change to "Regular User". Do you want to continue?')) {
+                                    $("#5").prop("checked", true);
+                                    userPrivilegeID=$("input:radio[name='userPrivilegeID']:checked").val();
+                                    userPrivilegeName = $("input:radio[name='userPrivilegeID']:checked + label").text();
+                                    return false;
+                                } else {
+                                    // Do nothing!
+
+                                }
+                            }*/
+                            if (checkedRoleID[a] == 98 ) {
+                                if (arrayUsers.length < 1) {
+                                    alert("Parent Role is checked. Please choose a student that belong to this parent or uncheck Parent Role from this user.");
+                                    return false;
+                                }
+                            }
+                            if (checkedRoleID[a] == 99) {
+                                if (companyNameText == "") {
+                                    alert("COMPANY NAME must be filled out");
+                                    return false;
+                                }
+                            }
+                        }
+                }
+
+                if (userPrivilegeID == null ) {
+                    alert("USER PRIVILEGE must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+                var pin;
+                if (newPin !== oldPin) {
+                    pin = newPin;
+
+                } else{
+                    pin = "oldPin";
+                }
+                $.post("/users/updateUser", {
+                    userToUpdate: userID,
+                    userRoleID: checkedRoleID,
+                    userRoleName: checkedRoleName,
+                    userPrivilegeID: userPrivilegeID,
+                    userPrivilegeName: userPrivilegeName,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    pin: pin,
+                    parentOf: arrayUsers,
+                    companyName: companyNameText,
+                    photo: photo
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("Email already in use. Choose a different Email .")
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <hr>
+    <label for="userCredentials"><b>User Email/pin:</b></label><br>
+    <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">
+        Email:</b>&nbsp
+        <input type="email" id="email" size="40" value="<%= users.email %>"><br>
+        Pin:&nbsp
+        <input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
+        <input type="password" id="newPin" size="40" value="<%= users.pin %>"><br>
+        Confirm Pin:&nbsp
+        <input type="password" id="confirmPin" size="40" value="<%= users.pin %>"><br>
+
+        <input type="hidden" id="savedValueSmecsUsers" value="<%= studentsIdArray %>">
+        <input type="hidden" id="oldUtilityName" value="<%= users.companyNameText %>">
+        <input type="hidden" id="oldUtilityID" value="<%= users.utilityID %>">
+        <input type="hidden" id="photo" >
+    </div>
+    <hr>
+    <label for="userRole"><b>User Role:</b></label><br>
+    <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">
+        <% roles2.forEach(function(role2) { %>
+        <% var check = 0;    %>
+        <% for (var i=0; i < users.userRoleID.length; i++) { %>
+        <%if (role2.roleID != 99) { %>
+        <%if (role2.roleID == users.userRoleID[i]) { %>
+
+        <%if (role2.roleID == 98 && role2.roleID == users.userRoleID[i]) { %>
+        <input class="other" type="checkbox" id="parents" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
+        <% check = 1; %>
+        <% } else {%>
+
+        <input class="other" type="checkbox" id="parents" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
+        <% check = 1; %>
+        <% }  %>
+        <% }  %>
+        <% }  %>
+
+        <% } %>
+        <% if (check == 0) {%>
+        <%if (role2.roleID != 98 && role2.roleID != 99) { %>
+        <input class="other" type="checkbox" name="checkbox" value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+
+        <% } %>
+
+        <% } %>
+        <% }); %>
+
+        <div id="labelsDiv2" class="labelsDiv2">
+            <div id="smecsUserDiv" class="enable">
+                <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parent of:</label><br>
+
+
+                <ul id="smecsUserUl" class="enable">
+                    <% for (var a = 0; a < users.parentOf.length; a++) { %>
+
+                    <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                        <input type="hidden" name="users[]" value="<%= users.parentOf[a].studentID %>" />
+                        <%= users.parentOf[a].studentFirstName %> <%= users.parentOf[a].studentLastName %>
+                    </li>
+                    <% } %>
+
+                </ul>
+
+
+                <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+                    <!–– <option selected disabled hidden> -- select a student -- </option> ––>
+                    <option disabled selected id="studentList"> - select a student from dropdown list - </option>
+                    <% students.forEach(function(student) { %>
+
+                    <option value="<%= student.studentID %>" ><%= student.firstName %> <%= student.lastName %> </option>
+
+                    <% }); %>
+                </select>
+                <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+                <br><br>
+                If you want to add a new student to dropdown list <a id="clickHere" class="enable"href="/students/addStudent">click here</a>.
+            </div>
+        </div>
+
+
+
+
+
+        <% var check = 0;    %>
+        <% roles2.forEach(function(role2) { %>
+
+        <% for (var i=0; i < users.userRoleID.length; i++) { %>
+        <%if (role2.roleID == 99) { %>
+        <%if (role2.roleID == users.userRoleID[i]) { %>
+        <input class="utilityCompany" type="checkbox" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
+        <% check = 1; %>
+        <% }  %>
+        <% }  %>
+
+        <% } %>
+        <% if (check == 0) {%>
+        <%if (role2.roleID == 99) { %>
+        <input class="utilityCompany" type="checkbox" name="checkbox" value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+        <% } %>
+        <% } %>
+        <% }); %>
+
+        <div id="labelsDiv3" class="labelsDiv3">
+            Company Name:
+            <input type="text" id="companyNameText" size="40" value="<%= users.companyName %>" class="disable">
+        </div>
+    </div>
+
+    <hr>
+    <label for="userRole"><b>User Name:</b></label><br>
+    <div id="labelsDiv1" class="labelsDiv1">
+        First Name:
+        <input type="text" id="firstName"  value="<%= users.firstName %>"><br>
+        Last Name:
+        <input type="text" id="lastName"  value="<%= users.lastName %>"><br>
+    </div>
+    <hr>
+
+
+
+
+
+    <label for="userPrivilege"><b>User Privilege:</b></label><br>
+    <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">
+        <% privileges.forEach(function(privilege) { %>
+        <% if (userAuthID == 1) {%>
+        <%if (privilege.privilegeID == users.userPrivilegeID) { %>
+        <input type="radio" name="userPrivilegeID" id="<%= privilege.privilegeID %>" value="<%= privilege.privilegeID %>" checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label><br>
+        <% }else {%>
+        <input type="radio" name="userPrivilegeID" id="<%= privilege.privilegeID %>" value="<%= privilege.privilegeID %>"><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+        <% if (privilege.privilegeID == 2 ) { %>
+        <small> - by default, has Full Access</small>
+        <% } %>
+        <% if (privilege.privilegeID == 3 ) { %>
+        <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
+        <% } %>
+        <% if (privilege.privilegeID == 4 ) { %>
+        <small> - by default, can Add/Delete Users</small>
+        <% } %>
+        <% if (privilege.privilegeID == 5 ) { %>
+        <small> - by default, No Web Dashboard Access</small>
+        <% } %>
+        <br>
+        <% }%>
+        <% } else if (privilege.privilegeID != 1 ) { %>
+        <%if (privilege.privilegeID == users.userPrivilegeID) { %>
+        <input type="radio" name="userPrivilegeID" id="<%= privilege.privilegeID %>" value="<%= privilege.privilegeID %>" checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+        <% if (privilege.privilegeID == 2 ) { %>
+        <small> - by default, has Full Access</small>
+        <% } %>
+        <% if (privilege.privilegeID == 3 ) { %>
+        <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
+        <% } %>
+        <% if (privilege.privilegeID == 4 ) { %>
+        <small> - by default, can Add/Delete Users</small>
+        <% } %>
+        <% if (privilege.privilegeID == 5 ) { %>
+        <small> - by default, No Web Dashboard Access</small>
+        <% } %>
+        <br>
+        <% }else {%>
+        <input type="radio" name="userPrivilegeID" id="<%= privilege.privilegeID %>" value="<%= privilege.privilegeID %>"><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+        <% if (privilege.privilegeID == 2 ) { %>
+        <small> - by default, has Full Access</small>
+        <% } %>
+        <% if (privilege.privilegeID == 3 ) { %>
+        <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
+        <% } %>
+        <% if (privilege.privilegeID == 4 ) { %>
+        <small> - by default, can Add/Delete Users</small>
+        <% } %>
+        <% if (privilege.privilegeID == 5 ) { %>
+        <small> - by default, No Web Dashboard Access</small>
+        <% } %>
+        <br>
+        <% }%>
+        <% } %>
+        <% }); %><br>
+    </div>
+    <hr>
+    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input type="button" id=<%= users.id %> value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id=<%= users.id %> value="Submit" disabled><br>
+    <% } %>
+</form>
+<form action="/users/showUsers">
+    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input type="submit" value="Back" ><br>
+    <% } else { %>
+    <input type="submit" value="Back" disabled><br>
+    <% } %>
+</form>
+
+</body>
+</html>

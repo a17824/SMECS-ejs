@@ -1,0 +1,335 @@
+<html>
+<head>
+    <title>update utility</title>
+    <link rel='stylesheet' href='/stylesheets/addUtility.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+
+
+
+        var choices;
+        function selectUser(select)
+        {
+            var option = select.options[select.selectedIndex];
+            if(option.id != 'userList') {
+                var ul = select.parentNode.getElementsByTagName('ul')[0];
+                choices = ul.getElementsByTagName('input');
+
+                for (var i = 0; i < choices.length; i++) {
+                    if (choices[i].value == option.value) {
+                        return;
+                    }
+                }
+
+                var li = document.createElement('li');
+                var input = document.createElement('input');
+                var text = document.createTextNode(option.firstChild.data);
+
+                input.type = 'hidden';
+                input.name = 'users[]';
+                input.value = option.value;
+
+                li.appendChild(input);
+                li.appendChild(text);
+                li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
+
+                ul.appendChild(li);
+            }
+        }
+        var usersToRemove = [];
+        function removeUser(user){
+            var choice = user.getElementsByTagName('input');
+            //console.log(choice[0].value);
+            usersToRemove.push(choice[0].value);
+        }
+
+        $(document).ready(function(){
+            var oldSortID = $("#oldSortID").val();
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var oldUtilityID = $("#oldUtilityID").val();
+            var select = '';
+            var myArray = $("#inUseUtilityID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldUtilityID){
+                    if(i == oldUtilityID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            //$(":radio[value=email]")
+            var savedDefaultContact;
+            function getRadioValue() {
+                savedDefaultContact=$("#savedDefaultContact").val();
+                for (var i = 0; i < document.getElementsByName('defaultContact').length; i++) {
+                    if (document.getElementsByName('defaultContact')[i].value == savedDefaultContact ) {
+                        document.getElementsByName('defaultContact')[i].checked = true
+                    }
+                }
+            }
+            getRadioValue();
+
+            function radioOff() {
+                $('#smecsUserSelect').removeClass().addClass('disable');
+                $("#smecsUserSelect").attr('disabled',true);
+                $('#imgAdd').removeClass().addClass('disable');
+                $('#smecsUserLabel').removeClass().addClass('disable');
+                $('#smecsUserDiv').removeClass().addClass('disable');
+                $('#smecsUserUl').removeClass().addClass('disable');
+                $('#clickHere').removeClass().addClass('disable');
+            }
+            function radioOn() {
+                $('#smecsUserSelect').removeClass().addClass('enable');
+                $("#smecsUserSelect").attr('disabled',false);
+                $('#imgAdd').removeClass().addClass('enable');
+                $('#smecsUserLabel').removeClass().addClass('enable');
+                $('#smecsUserDiv').removeClass().addClass('enable');
+                $('#smecsUserUl').removeClass().addClass('enable');
+                $('#clickHere').removeClass().addClass('enable');
+            }
+            //This will check the status of radio button on page load
+            $('input[name=smecsApp]:checked').each(function() {
+                console.log('PRESSED1')
+                var checkVal = $(this).val();
+                if (checkVal == 'false'){
+                    console.log('PRESSED2')
+                    radioOff();
+                } else {
+                    console.log('PRESSED3')
+                    radioOn();
+                }
+            });
+            //This will check the status of radio button onclick
+            $('input:radio[name=smecsApp]').click(function() {
+                var checkVal = $(this).val();
+                if (checkVal == 'false'){
+                    radioOff();
+                } else {
+                    radioOn();
+                }
+            });
+
+            var utility_ID, utilityName, utilityID, contactName, phone, email, smecsApp, defaultContact, sortID;
+            $("#<%= utility.id %>").click(function(){
+                utility_ID=$(this).attr('id');
+                utilityName=$("#utilityName").val();
+                utilityID=$("#some_select").val();
+                contactName=$("#contactName").val();
+                phone=$("#phone").val();
+                email=$("#email").val();
+                smecsApp=$("input:radio[name='smecsApp']:checked").val();
+                defaultContact=$("input:radio[name='defaultContact']:checked").val();
+                sortID=$("#sort_select").val();
+
+                var arrayUsers = [];
+                if (choices === undefined){
+                    arrayUsers = $("#savedValueSmecsUsers").val().split(",");
+                    for (var a = 0; a < usersToRemove.length; a++) {
+                        for (var i = 0; i < arrayUsers.length; i++) {
+                            if (usersToRemove[a] == arrayUsers[i]){
+                                arrayUsers.splice(i, 1);
+                            }
+                        }
+                    }
+
+                } else {
+                    if(choices.length > 0) {
+                        for (var a = 0; a < choices.length; a++) {
+                            arrayUsers.push(choices[a].value);
+                        }
+                    }
+                }
+
+                //-----forms validation------------------------------------
+                if (utilityName == "" ) {
+                    alert("UTILITY NAME must be filled out");
+                    return false;
+                }
+
+                //var phoneFormat =/^\d{3}[\-]\d{3}[\-]\d{4}$/; //ex: 333-333-4444
+                //valid input phone format: (123) 456-7890 or (123)4567890 or 123-456-7890 or 123.456.7890 or 1234567890
+                var phoneFormat =/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+                //console.log('phoneFormat = ' + phoneNumber);
+                if (!phoneFormat.test(phone) && phone !== '' ) {
+                    alert("Please input a valid Phone Number! ex: xxx-xxx-xxxx or (xxx) xxx-xxxx or xxxxxxxxxx");
+                    return false;
+                }
+
+                var mailFormat = /^([a-z A-Z 0-9 _\.\-])+\@(([a-z A-Z 0-9\-])+\.)+([a-z A-z 0-9]{2,4})+$/;
+                if (!mailFormat.test(email) && email !== '' ) {
+                    alert("Please input a valid EMAIL address!");
+                    return false;
+                }
+
+                /*strange behaviour when saving and radio smecs == true and no user is in arrayUsers.
+                Its s adding 1 user in arrayUsers(arrayUsers[0] == "").
+                Following "if" is to delete this user */
+                if(arrayUsers.length == 1 && arrayUsers[0] == ""){
+                    var index = arrayUsers.indexOf(5);
+                    arrayUsers.splice( index, 1 );
+                }
+                if(smecsApp == 'true' && arrayUsers.length < 1 ){
+                    alert("You have selected Company/Person have/has SMECS app. Please select at least one user from dropdown list");
+                    return false;
+                }
+
+
+                if (defaultContact == 'phone' && !phoneFormat.test(phone) && phone == '' ) {
+                    alert("Default contact can't be Phone because there is no valid phone number. Please input first a valid Phone Number!");
+                    return false;
+                }
+                if (defaultContact == 'email' && !mailFormat.test(email) && email == '' ) {
+                    alert("Default contact can't be Email because there is no valid email address. Please input first a valid EMAIL Address!");
+                    return false;
+                }
+                if (defaultContact == 'smecsApp' && smecsApp == 'false') {
+                    alert("Default contact can't be SMECS App because third party doesn't have SMECS App. Please choose a different default contact option");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+                $.post("/utilities/updateUtilities",{
+                    utilityToUpdate: utility_ID,
+                    utilityName: utilityName,
+                    utilityID: utilityID,
+                    contactName: contactName,
+                    phone: phone,
+                    email: email,
+                    smecsApp: smecsApp,
+                    smecsUsers: arrayUsers,
+                    defaultContact: defaultContact,
+                    sortID: sortID
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Utility Name already in use. Choose a different Name .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+    <label for="utilityName"><b>Utility Name:</b></label><br>
+    <input type="text" id="utilityName" size="40" value="<%= utility.utilityName %>"><br><br>
+
+    <label for="contactName"><b>Contact/Company/Person name encharge of repair:</b>(optional)</label><br>
+    <input type="text" id="contactName" size="40" value="<%= utility.contactName %>" ><br><br>
+
+    <label for="phone"><b>Company/Person Phone number:</b>(optional)</label><br>
+    <input type="text" id="phone" size="40" value="<%= utility.phone %>" placeholder="ex: (xxx) xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx" ><br><br>
+
+    <label for="email"><b>Company/Person Email address:</b>(optional)</label><br>
+    <input type="text" id="email" size="40" value="<%= utility.email %>" ><br><br>
+
+    <label for="smecsApp"><b>Company/Person is using SMECS app:</b></label><br>
+    <%if (utility.smecsApp == false) { %>
+    <input type="radio" name="smecsApp" value="false" checked> No &emsp;
+    <input type="radio" name="smecsApp" value="true"> Yes<br>
+    <% }else {%>
+    <input type="radio" name="smecsApp" value="false"> No &emsp;
+    <input type="radio" name="smecsApp" value="true" checked> Yes<br>
+    <% }%>
+
+    <div id="smecsUserDiv" class="enable">
+        <label for="smecsUserLabel" id="smecsUserLabel" class="enable">SMECS user to login:</label><br>
+
+
+        <ul id="smecsUserUl" class="enable">
+            <% for (var a = 0; a < utility.smecsUsers.length; a++) { %>
+            <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                <input type="hidden" name="users[]" value="<%= utility.smecsUsers[a] %>" />
+                <%= utility.smecsUsers[a] %>
+            </li>
+            <% } %>
+
+        </ul>
+
+
+        <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+            <!–– <option selected disabled hidden> -- select a user -- </option> ––>
+            <option disabled selected id="userList"> -- select a user from dropdown list -- </option>
+            <% utilityUsers.forEach(function(user) { %>
+            <% if (user.softDeleted == null) { %>
+            <option value="<%= user.email %>" ><%= user.email %>&emsp; (<%= user.note %>)</option>
+            <% } %>
+            <% }); %>
+        </select>
+        <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+        <br><br>
+        If you want to insert a new user to dropdown list <a id="clickHere" class="enable"href="/utilities/addUtilitiesUsers">click here</a>.
+    </div>
+    <br>
+
+
+    <label for="defaultContact"><b>Default contact method:</b></label><br>
+    <input type="radio" name="defaultContact" value="ask"> Ask what contact method to use when sending alert<br>
+    <input type="radio" name="defaultContact" value="phone"> Call Phone number<br>
+    <input type="radio" name="defaultContact" value="email"> Send an Email<br>
+    <input type="radio" name="defaultContact" value="smecsApp"> Use SMECS App to send alert to third party/contractor <br>
+    <br><br>
+
+    <input type="hidden" id="savedDefaultContact" value="<%= utility.defaultContact %>">
+    <input type="hidden" id="savedValueSmecsApp" value="<%= utility.smecsApp %>">
+    <input type="hidden" id="savedValueSmecsUsers" value="<%= utility.smecsUsers %>">
+    <input type="hidden" id="inUseUtilityID" value="<%= array %>">
+
+    <label for="sortID"><b>Sort ID:</b></label><br>
+    <input type="hidden" id="oldSortID" value="<%= utility.sortID %>">
+    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+    <select id='sort_select'></select><br><br>
+
+    <% if (userAuthID == 1) {%>
+    <label for="utilityID"><b>Utility ID:</b></label><br>
+    <select id='some_select'></select><br><br>
+    <% } else { %>
+    <select id='some_select' style="display:none;"></select>
+    <% } %>
+
+    <input type="hidden" id="oldUtilityName" value="<%= utility.utilityName %>">
+    <input type="hidden" id="oldUtilityID" value="<%= utility.utilityID %>"><br>
+
+    <% if (aclModifyUtilities == null || aclModifyUtilities.checkBoxValue == true) {%>
+    <input type="button" id="<%= utility.id %>" value="Save" ><br>
+    <% } else { %>
+    <input type="button" id="<%= utility.id %>" value="Save" disabled><br>
+    <% } %>
+
+</form>
+<form action="/utilities/showUtilities">
+    <% if (aclShowUtilities == null || aclShowUtilities.checkBoxValue == true) {%>
+    <input type="submit" value="Back">
+    <% } else { %>
+    <input type="submit" value="Back" disabled>
+    <% } %>
+
+</form>
+
+</body>
+</html>

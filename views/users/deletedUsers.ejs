@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deleted Users</title>
+    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+<!--<p><%= users %></p>-->
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Privilege</th>
+        <th align="center">Deleted</th>
+        <th align="center">Photo</th>
+        <th align="center">Restore User</th>
+        <th align="center">Erase</th>
+    </tr>
+    <tbody>
+    <% users.forEach(function(user) { %>
+    <% if (user.softDeleted !== null) { %>
+    <tr>
+        <td ></td>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+        <td><%= user.email %></td>
+        <td><%= user.userRoleName %></td>
+        <td><%= user.userPrivilegeName %></td>
+        <td><%= user.softDeleted %></td>
+        <% if (user.photo == "") { %>
+        <td align="center"><a href="/users/addPhoto/<%= user.id %>">add</a></td>
+        <% } else { %>
+        <td align="center"><a href="/users/showPhoto/<%= user.id %>">show</a> /
+            <a href="/users/addPhoto/<%= user.id %>">change</a> /
+            <a href="/users/deletePhoto/<%= user.id %>">delete</a></td>
+        <% } %>
+        <td align="center">
+            <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+            <a href="/users/restoreUsers/<%= user.id %>"><button class="inTable">restore</button></a>
+            <% } else { %>
+            <a href="/users/restoreUsers/<%= user.id %>"><button class="inTable" disabled>restore</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if (aclEraseUsers == null || aclEraseUsers.checkBoxValue == true) {%>
+                <a href="/users/deletedUsers/<%= user.id %>"><button class="inTable">erase</button></a>
+            <% } else { %>
+                <a href="/users/deletedUsers/<%= user.id %>"><button class="inTable" disabled>erase</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/users/showUsers">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Alerts</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+        $("#alertLink").live("click", function () {
+            $.ajax({
+                url: '/alerts/addAlerts',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+
+                error: function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Alert NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+
+<table id="myTable" class="tablesorter">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th>Alert Group</th>
+        <th>Alert Name</th>
+        <% if (userAuthID == 1) {%>
+        <th>Alert ID</th>
+        <% } %>
+        <th>Procedure</th>
+        <th>Add Alert</th>
+        <% if (userAuthID == 1) {%>
+        <th>Delete</th>
+        <% } %>
+    </tr>
+    <tbody>
+    <% alert.forEach(function(alert) { %>
+    <% if (alert.softDeleted == true) { %>
+    <tr>
+        <td><%= alert.alertTypeName %></td>
+        <td><%= alert.alertName %></td>
+        <% if (userAuthID == 1) {%>
+        <td><%= alert.alertID %></td>
+        <% } %>
+        <td>
+            <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
+            <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable">show</button></a>
+            <% } else { %>
+            <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable" disabled>show</button></a>
+            <% } %>
+        </td>
+        <td>
+            <% if (aclAddAlert == null || aclAddAlert.checkBoxValue == true) {%>
+            <a href="/alerts/restoreAlerts/<%= alert.id %>"><button class="inTable">add</button></a>
+            <% } else { %>
+            <a href="/alerts/restoreAlerts/<%= alert.id %>"><button class="inTable" disabled>add</button></a>
+            <% } %>
+        </td>
+        <% if (userAuthID == 1) {%>
+        <td>
+            <a href="/alerts/addAlerts/<%= alert.id %>" id="alertLink"><button class="inTable">Delete</button></a>
+        </td>
+        <% } %>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<form action="/alerts/showAlerts">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

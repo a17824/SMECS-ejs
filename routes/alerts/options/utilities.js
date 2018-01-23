@@ -1,0 +1,201 @@
+//Dependencies
+var models = require('./../../models');
+var async = require("async");
+var aclPermissions = require('./../../acl/aclPermissions');
+
+
+
+
+/* SHOW ALL Utilities. */
+module.exports.show = function(req, res, next) {
+    /*
+     models.Utilities.find(function(err, utility) {
+     res.render('utilities/showUtilities', { title: 'Utilities Failures', utility: utility });
+     }).sort({"utilityID":1});
+     */
+    async.parallel([
+        function(callback){
+            models.Utilities.find().sort({"sortID":1}).exec(callback);
+        },
+        function(callback){
+            models.UtilityUsers.find().exec(callback);
+        },
+        function(callback){aclPermissions.addUtilities(req, res, callback);},   //aclPermissions addUtilities
+        function(callback){aclPermissions.modifyUtilities(req, res, callback);},   //aclPermissions modifyUtilities
+        function(callback){aclPermissions.deleteUtilities(req, res, callback);}   //aclPermissions deleteUtilities
+
+    ],function(err, results){
+        //console.log(results[2]);
+        res.render('utilities/showUtilities',{
+            title:'Utilities Failures',
+            userAuthID: req.user.userPrivilegeID,
+            utility: results[0],
+            utilityUsers: results[1],
+            aclAddUtilities: results[2], //aclPermissions addUtilities
+            aclModifyUtilities: results[3], //aclPermissions modifyUtilities
+            aclDeleteUtilities: results[4] //aclPermissions deleteUtilities
+
+        });
+    })
+};
+
+/* ADD Utilities. -------------------------------*/
+module.exports.add = function(req, res) {
+    async.parallel([
+        function(callback){
+            models.Utilities.find(function(error, utility) {
+
+            }).exec(callback);
+        },
+        function(callback){
+            models.UtilityUsers.find(function(error, utility) {
+
+            }).exec(callback);
+        },
+        function(callback){aclPermissions.showUtilities(req, res, callback);}, //aclPermissions showUtilities
+        function(callback){aclPermissions.addUtilities(req, res, callback);}  //aclPermissions addUtilities
+
+    ],function(err, results){
+        var arraySort = [];
+        var array = [];
+
+        var streamSort = models.Utilities.find().sort({"sortID":1}).stream();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            //console.log(arraySort);
+        });
+
+        var stream = models.Utilities.find().sort({"utilityID":1}).stream();
+        stream.on('data', function (doc) {
+            array.push(doc.utilityID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            //console.log(array);
+            res.render('utilities/addUtilities',{
+                title:'Add Utility',
+                arraySort: arraySort,
+                array: array,
+                userAuthID: req.user.userPrivilegeID,
+                utility: results[0],
+                utilityUsers: results[1],
+                aclShowUtilities: results[2],     //aclPermissions showAddUtilities
+                aclAddUtilities: results[3]      //aclPermissions addAddUtilities
+            });
+        })
+    })
+};
+module.exports.addPost = function(req, res) {
+    console.log(req.body.smecsUsers);
+    var utility1 = new models.Utilities({
+        utilityID: req.body.utilityID,
+        utilityName: req.body.utilityName,
+        contactName: req.body.contactName,
+        phone: req.body.phone,
+        email: req.body.email,
+        smecsApp: req.body.smecsApp,
+        smecsUsers: req.body.smecsUsers,
+        sortID: req.body.sortID
+    });
+    utility1.save(function (err) {
+        if (err && (err.code === 11000 || err.code === 11001)) {
+            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+            return res.status(409).send('showAlert')
+        }else{
+            return res.send({redirect:'/utilities/showUtilities'})
+        }
+    });
+};
+/*-------------------------end of adding Utilities*/
+
+/* UPDATE Utilities. -------------------------------*/
+module.exports.update = function(req, res) {
+    async.parallel([
+        function(callback){
+            models.Utilities.findById(req.params.id,function(error, utility) {
+
+            }).exec(callback);
+        },
+        function(callback){
+            models.UtilityUsers.find(function(error, utility) {
+
+            }).exec(callback);
+        },
+        function(callback){aclPermissions.showUtilities(req, res, callback);},  //aclPermissions showUtilities
+        function(callback){aclPermissions.modifyUtilities(req, res, callback);}  //aclPermissions modifyUtilities
+
+    ],function(err, results){
+        var arraySort = [];
+        var array = [];
+
+        var streamSort = models.Utilities.find().sort({"sortID":1}).stream();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            //console.log(arraySort);
+        });
+
+        var stream = models.Utilities.find().sort({"utilityID":1}).stream();
+        stream.on('data', function (doc) {
+            array.push(doc.utilityID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            //console.log(array);
+            res.render('utilities/updateUtilities',{
+                title:'Update Utility',
+                userAuthID: req.user.userPrivilegeID,
+                arraySort: arraySort,
+                array: array,
+                utility: results[0],
+                utilityUsers: results[1],
+                aclShowUtilities: results[2],      //aclPermissions ShowUtilities
+                aclModifyUtilities: results[3]      //aclPermissions modifyUtilities
+            });
+        })
+    })
+};
+module.exports.updatePost = function(req, res) {
+    var utilityToUpdate1 = req.body.utilityToUpdate;
+    //console.log('req.body.defaultContact = ' + req.body.defaultContact);
+    models.Utilities.findById({'_id': utilityToUpdate1}, function(err, utility){
+        utility.utilityID = req.body.utilityID;
+        utility.utilityName = req.body.utilityName;
+        utility.contactName = req.body.contactName;
+        utility.phone = req.body.phone;
+        utility.email = req.body.email;
+        utility.smecsApp = req.body.smecsApp;
+        utility.defaultContact = req.body.defaultContact;
+        utility.smecsUsers = req.body.smecsUsers;
+        utility.sortID = req.body.sortID;
+        utility.save(function (err) {
+            if (err && (err.code === 11000 || err.code === 11001)) {
+                console.log(err);
+                return res.status(409).send('showAlert')
+            }else{
+                return res.send({redirect:'/utilities/showUtilities'})
+            }
+        });
+    });
+
+};
+/*-------------------------end of update Utilities*/
+
+/* DELETE UTILITY. */
+module.exports.delete = function(req, res) {
+    var utilityToDelete = req.params.id;
+        models.Utilities.remove({'_id': utilityToDelete}, function(err) {
+            //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
+            res.redirect('/utilities/showUtilities');
+        });
+};
+/* ------------ end of DELETE UTILITY. */

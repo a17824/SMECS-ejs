@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Utilities Users</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+<br>
+
+<% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+<button class="utilityUsers" id="utiUsr" onclick="location.href='/utilities/addUtilitiesUsers'">Add Utility User</button>
+<% } else { %>
+<button class="utilityUsers" id="utiUsr" onclick="location.href='/utilities/addUtilitiesUsers'" disabled>Add Utility User</button>
+<% } %>
+<% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
+<button class="DelUtilityUsers" id="DelUtiUsr" onclick="location.href='/utilities/deletedUtilityUsers'">Deleted Utility Users</button>
+<% } else { %>
+<button class="DelUtilityUsers" id="DelUtiUsr" onclick="location.href='/utilities/deletedUtilityUsers'" disabled>Deleted Utility Users</button>
+<% } %>
+<br>
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Note</th>
+        <th align="center">Update</th>
+        <th align="center">Delete</th>
+    </tr>
+    <tbody>
+    <% utilityUsers.forEach(function(user) { %>
+    <% if (user.softDeleted == null) { %>
+    <tr>
+        <td><%= user.email %></td>
+        <td><%= user.note %></td>
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                <a href="/utilities/updateUtilityUser/<%= user.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+                <a href="/utilities/updateUtilityUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                <a href="/utilities/softDelete/<%= user.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+                <a href="/utilities/softDelete/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/utilities/showUtilities">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

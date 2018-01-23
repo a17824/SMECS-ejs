@@ -1,0 +1,155 @@
+<html>
+<head>
+    <title>LMissing Child Alert</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/missChild.css' />
+    <script>
+
+
+        $(document).ready(function(){
+
+            /*********** Name and Picture of missing student **************/
+            var fullName, photo;
+            $("#dataList").on('input', function () {
+                var img = document.getElementById("studentImage");
+                var val = this.value; //user input in "datalist" box
+                //compares user input with datalist value option (case-insensitive)
+                if($('#students').find('option').filter(function(){
+                            return this.value.toUpperCase() === val.toUpperCase();
+                        }).length) {
+
+                    //changes user input and put first letter of each word capitalized
+                    // replaces: "fort collins, croton-on-hudson, harper's ferry, coeur d'alene, o'fallon"
+                    //with: "Fort Collins, Croton-On-Hudson, Harper's Ferry, Coeur D'Alene, O'Fallon"
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = val;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+
+                    //fixes words like: "Marty Mcfly"
+                    // with: "Marty McFly"
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                            {
+                                return 'Mc' + k[2].toUpperCase();
+                            }
+                    );
+                    //value2send = gets photo name from "datalist" (data-value)
+                    var value2send= document.querySelector('#students option[value="'+text+'"]').dataset.value;
+                    fullName = text;
+                    photo = value2send;
+                    if (value2send !== ''){
+                        //console.log('poe photo');
+                        img.src = "/photosStudents/" + encodeURIComponent(value2send);
+                    }
+                    else {
+                        //console.log('estudante nao tem photo');
+                        img.src = "/photosNotAvailable/photoNotAvailable.BMP";
+                    }
+                }
+                else{
+                    //console.log('nao existe estudante na base de dados');
+                    img.src = "/photosNotAvailable/photoNotAvailable.BMP";
+                }
+            });
+            /*********** end of Name and Picture of missing student **************/
+
+            var alert_ID, alertNameID, alertSlugName, student;
+            $("#<%= alert.id %>").click(function(){
+                alert_ID=$(this).attr('id');
+                alertNameID=$("#alertNameID").val();
+                alertSlugName=$("#alertSlugName").val();
+                student=$("#dataList").val();
+
+                //-----forms validation------------------------------------
+
+                if (student == "" && alertNameID == 4) {
+                    alert("NAME of missing child must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                //if student name doesn't exit on dataList put user input text as student name
+
+                if (typeof(fullName) !== "undefined" ){
+                var areEqual = fullName.toUpperCase() === student.toUpperCase();
+                }
+                if (typeof(fullName) === "undefined" || areEqual == false) {
+                    fullName = student;
+                    photo = 'photoNotAvailable.bmp';
+                }
+                $.ajax({
+                    url: '/alerts/sending/student',
+                    type: "POST",
+                    data: {
+                        alertToUpdate: alert_ID,
+                        alertNameID: alertNameID,
+                        student: fullName,
+                        photo: photo
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                            window.location = data.redirect;
+                    },
+                    error: function() {
+                        console.log('process error');
+                    }
+
+
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<% if (alert.testModeON == true ) {%>
+<h2 style="color: #34A7C1"> TEST MODE ON </h2>
+<% } %>
+
+<input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
+<input type="hidden" id="alertSlugName" value="<%= alert.alertSlugName %>">
+<input type="hidden" id="studentPhoto"  value="<%= alert.studentPhoto %>"> <!-- for back button/refresh -->
+
+<form>
+    <% if (alert.alertNameID == 4 ) { %>
+        <label for="studentName"><b>Name of missing child:</b></label>
+    <%  } else { %>
+        <label for="studentName"><b>Student name:</b>(optional)</label>
+    <% } %>
+    <input id="dataList" list="students" name="student" value="<%= alert.studentName %>" onkeydown = "return (event.keyCode!=13);" >
+    <datalist id="students">
+        <% student.forEach(function(student) { %>
+        <option data-value="<%= student.photo %>" value="<%= student.firstName %> <%= student.lastName %>" ></option>
+        <% }); %>
+    </datalist><br><br>
+
+    <% if (alert.studentPhoto) { %>
+    <img id="studentImage" src="/photosStudents/<%= alert.studentPhoto %>"><br><br>
+    <%  } else { %>
+    <img id="studentImage" src="/photosNotAvailable/photoNotAvailable.BMP"><br><br>
+    <% } %>
+
+    <input type="button" id="<%= alert.id %>" value="Next" ><br>
+</form>
+
+<% if (alert.alertNameID == 4 ||
+        alert.alertNameID == 5 ||
+        alert.alertNameID == 16 ||
+        alert.alertNameID == 17 ||
+        alert.alertNameID == 19 ) {%>
+
+<form action="/alerts/sending/chooseAlert">
+    <input type="submit" value="Exit Alert" >
+</form>
+<% } else { %>
+<button class="backButton" onclick="goBack()">Back</button>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+<% }%>
+</body>
+</html>

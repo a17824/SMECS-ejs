@@ -1,0 +1,139 @@
+<html>
+<head>
+    <title>add user</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var userToAddUpdate_ID;
+            var userPrivilegeID,userPrivilegeName;
+            $("#next").click(function(){
+                userToAddUpdate_ID=$("#userTempID").val();
+
+                userPrivilegeID=$("input:radio[name='userPrivilegeID']:checked").val();
+                userPrivilegeName = $("input:radio[name='userPrivilegeID']:checked + label").text();
+
+                //-----forms validation------------------------------------
+
+                if (userPrivilegeID == null ) {
+                    alert("USER PRIVILEGE must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/users/addUser/step3",{
+                    userToAddUpdate_ID: userToAddUpdate_ID,
+                    userPrivilegeID: userPrivilegeID,
+                    userPrivilegeName: userPrivilegeName
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Add User failed.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form>
+    <input type="hidden" id="userTempID"  value="<%= user._id %>">
+
+    <label for="userPrivilege"><b>User Privilege:</b></label><br>
+    <% privilege.forEach(function(privilege) { %>
+    <% if (userAuthID == 1) {%>
+        <% if (principalRole == 1 && privilege.privilegeID == 2) {%>
+            <input type="radio"
+            name="userPrivilegeID"
+            id=<%= privilege.privilegeName %>
+            value="<%= privilege.privilegeID %>" checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+            <small> - by default, has Full Access</small>
+        <% } else { %>
+            <% if (principalRole != 1 && privilege.privilegeID == 5) {%>
+                <input type="radio"
+                name="userPrivilegeID"
+                id=<%= privilege.privilegeName %>
+                value="<%= privilege.privilegeID %>" checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                <small> - by default, No Web Dashboard Access</small>
+            <% } else { %>
+                <input type="radio"
+                name="userPrivilegeID"
+                id=<%= privilege.privilegeName %>
+                value="<%= privilege.privilegeID %>" ><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                <% if (privilege.privilegeID == 2 ) { %>
+                    <small> - by default, has Full Access</small>
+                <% } %>
+                <% if (privilege.privilegeID == 3 ) { %>
+                    <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
+                <% } %>
+                <% if (privilege.privilegeID == 4 ) { %>
+                    <small> - by default, can Add/Delete Users</small>
+                <% } %>
+                <% if (privilege.privilegeID == 5 ) { %>
+                    <small> - by default, No Web Dashboard Access</small>
+                <% } %>
+            <% } %>
+    <% } %>
+    <br>
+    <% } else { %>
+        <% if (userAuthID != 1) {%>
+            <% if (principalRole == 1 && privilege.privilegeID == 2) {%>
+                <input type="radio"
+                name="userPrivilegeID"
+                id=<%= privilege.privilegeName %>
+                value="<%= privilege.privilegeID %>" checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                <small> - by default, has Full Access</small>
+            <% } else { %>
+                <input type="radio"
+                name="userPrivilegeID"
+                id=<%= privilege.privilegeName %>
+                value="<%= privilege.privilegeID %>" ><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                <% if (privilege.privilegeID == 2 ) { %>
+                    <small> - by default, has Full Access</small>
+                <% } %>
+                <% if (privilege.privilegeID == 3 ) { %>
+                    <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
+                <% } %>
+                <% if (privilege.privilegeID == 4 ) { %>
+                    <small> - by default, can Add/Delete Users</small>
+                <% } %>
+                <% if (privilege.privilegeID == 5 ) { %>
+                    <small> - by default, No Web Dashboard Access</small>
+                <% } %>
+            <% } %>
+        <% } %>
+    <% } %>
+
+    <% }); %>
+        <% if (aclShowPermissionsTable == null || aclShowPermissionsTable.checkBoxValue == true) {%>
+            <p>All Administrator Levels and Regular User permissions can be customized in: "<a href="/permissions/showPermissionsTable">Table: Permissions</a>"</p>
+        <% } else { %>
+            <p>All Administrator Levels and Regular User permissions can be customized in: Table: Permissions</p>
+        <% } %>
+</form>
+<form action="/users/showUsers">
+    <input type="submit" value="Cancel">
+</form>
+
+    <button class="backButton" onclick="goBack()">Back</button>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+<form>
+    <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+        <input type="button" id="next" value="Save" ><br>
+    <% } else { %>
+        <input type="button" id="next" value="Save" disabled><br>
+    <% } %>
+</form>
+
+</body>
+</html>

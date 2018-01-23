@@ -1,0 +1,113 @@
+<html>
+<head>
+    <title>Alert</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/sendAlert.css' />
+    <script>
+
+        var posx;var posy;
+
+        function capmouse(e){
+            // captures the mouse position
+            posx = 0; posy = 0;
+            if (!e){var e = window.event;}
+            if (e.pageX || e.pageY){
+                posx = e.pageX;
+                posy = e.pageY;
+            }
+            else {
+                if (e.clientX || e.clientY){
+                    posx = e.clientX;
+                    posy = e.clientY;
+                }
+            }
+        }
+        var x = '';
+        var y = '';
+        function showP(){
+            document.getElementById("div2").className="div3";
+            document.getElementById("div2").style.top =(posy-31)+'px';
+            document.getElementById("div2").style.left=(posx-32)+'px';
+            x = (posx-32+240)+'px';
+            y = (posy-31+40)+'px';
+        }
+
+        $(document).ready(function(){
+            var alert_ID, alertNameID, coordinateX, coordinateY;
+            $("#<%= alert.id %>").click(function(){
+                alert_ID=$(this).attr('id');
+                alertNameID=$("#alertNameID").val();
+                coordinateX= x;
+                coordinateY= y;
+
+                //-----forms validation------------------------------------
+
+                //--------------------------------forms validation end-------
+
+                $.ajax({
+                    url: '/alerts/sending/floorLocation',
+                    type: "POST",
+                    data: {
+                        alertToUpdate: alert_ID,
+                        alertNameID: alertNameID,
+                        coordinateX: coordinateX,
+                        coordinateY: coordinateY
+
+                    },
+                    dataType: 'json',
+                    //contentType: "application/json; charset=utf-8",
+                    //async:false,
+                    success: function(data) {
+                        //console.log('process success');
+                        //console.log(data);
+                        if (typeof data.redirect == 'string') {
+                            //console.log('if type of');
+                            window.location = data.redirect;
+                        }
+                    },
+                    error: function() {
+                        console.log('process error');
+                    }
+                });
+            });
+        });
+    </script>
+
+</head>
+<body onmousemove="capmouse(event)">
+
+<% if (alert.testModeON == true ) {%>
+<h2 style="color: #34A7C1"> TEST MODE ON </h2>
+<% } %>
+
+<% if (alert.alertNameID == 7) {%>
+    <h2>Touch/click for exact Evacuation Location EXIT</h2>
+<% } else { %>
+    <h2>Touch/click exact Floor Location</h2>
+<% }%>
+
+<input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
+
+<form>
+    <% floor.forEach(function(floor) { %>
+    <% if (alert.floorName == floor.floorName ) {%>
+    <input type="hidden" id="floorPhoto" value="<%= floor.floorPlan %>">
+    <div id="div1" class="div1">
+        <img src="/floorPlans/<%= floor.floorPlan %>" onclick="showP()">
+    </div>
+    <% } %>
+    <% }); %>
+    <div id="div2" class="div2">
+        <img src="/floorPlans/red_sniper.png" >
+    </div>
+</form>
+
+<input type="button" id="<%= alert.id %>" value="Next" ><br><br>
+<button class="backButton" onclick="goBack()">Back</button>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+</body>
+</html>

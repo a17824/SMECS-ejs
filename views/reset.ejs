@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>reset password</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var token, pin, confirmPin;
+            $("#btSubmit").click(function(){
+                token=$("#token").val();
+                pin=$("#pin").val();
+                confirmPin=$("#confirmPin").val();
+
+
+                //-----forms validation------------------------------------
+                var pinFormat=/^\d{4}$/;
+                if (!pinFormat.test(pin)) {
+                    alert("Pin code should be 4 digits ");
+                    return false;
+                }
+                if (!pinFormat.test(confirmPin)) {
+                    alert("Confirm Pin code should be 4 digits ");
+                    return false;
+                }
+                if (pin != confirmPin) {
+                    alert("Pin and Confirm Pin don't match!");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/reset/:token",{
+                    userToUpdate: token,
+                    pin: pin
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form>
+    <input type="hidden" id="token" size="40" value="<%= user.resetPasswordToken %>">
+
+    <label for="pin"><b>Pin:</b></label><br>
+    <input type="password" id="pin" size="40" placeholder="ex: 1234"><br><br>
+    <label for="confirmPin"><b>Confirm Pin:</b></label><br>
+    <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
+
+    <input type="button" id="btSubmit" value="Update Password">
+
+</form>
+
+
+
+
+</body>
+</html>

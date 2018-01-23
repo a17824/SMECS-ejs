@@ -1,0 +1,23 @@
+body {
+    text-align: center;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin-left: 25%;
+    margin-right: 25%;
+    border: 1px double #000000;
+    outline-style: double;
+
+}
+div {
+    height: 10em;
+    position: relative }
+div p {
+    margin: 0;
+    background: yellow;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%) }
+input[type=submit] {
+    width: 16em;  height: 2em;
+}

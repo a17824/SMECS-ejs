@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Medical</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+
+<form action="/medical/addMedical">
+    <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
+    <input type="submit" value="Add Medical">
+    <% } else { %>
+    <input type="submit" value="Add Medical" disabled>
+    <% } %>
+</form>
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th>Medical Emergency Name</th>
+        <% if (userAuthID == 1) {%>
+            <th>ID</th>
+        <% } %>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    <tbody>
+    <% medical.forEach(function(medical) { %>
+    <tr>
+
+        <td><%= medical.utilityName %></td>
+        <% if (userAuthID == 1) {%>
+        <td><%= medical.utilityID %></td>
+        <% } %>
+        <td align="center">
+            <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
+            <a href="/medical/updateMedical/<%= medical.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+            <a href="/medical/updateMedical/<%= medical.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if (aclDeleteMedical == null || aclDeleteMedical.checkBoxValue == true) {%>
+            <a href="/medical/deleteMedical/<%= medical.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/medical/deleteMedical/<%= medical.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+
+
+</body>
+</html>

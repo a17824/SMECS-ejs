@@ -1,0 +1,129 @@
+<html>
+<head>
+    <title>add Permissions</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+        $(document).ready(function(){
+            var oldSortID = $("#oldSortID").val();
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var select = '';
+            var myArray = $("#inUsePermissionsID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1){
+                    select += '<option val=' + i + '>' + i + '</option>';
+                }
+            }
+            $('#some_select').html(select);
+
+            var permissionsGroupID,permissionsGroupName,permissionsID,permissionsName,sortID;
+            $("#btSubmit").click(function(){
+                permissionsGroupID=$("input:radio[name='permissionsGroupID']:checked").val();
+                permissionsGroupName = $("input:radio[name='permissionsGroupID']:checked + label").text();
+                permissionsID=$("#some_select").val();
+                permissionsName=$("#permissionsName").val();
+                sortID=$("#sort_select").val();
+
+                //-----forms validation------------------------------------
+                if (permissionsName == "" ) {
+                    alert("Permissions NAME must be filled out");
+                    return false;
+                }
+                var numbers = /[0-99]|\./;
+                if (!numbers.test(permissionsID)) {
+                    alert("Permissions ID must be between 0 and 99 ");
+                    return false;
+                }
+                if (permissionsGroupID == null ) {
+                    alert("Permission Group must be filled out");
+                    return false;
+                }
+                /*error: function(error){
+                 if(error.responseText == 'showAlert')
+                 alert("Please enter correct user name and password.");
+                 }
+                 }*/
+                //--------------------------------forms validation end-------
+
+                $.post("/permissions/addPermissions",{
+                    permissionsGroupID: permissionsGroupID,
+                    permissionsGroupName: permissionsGroupName,
+                    permissionsID: permissionsID,
+                    permissionsName: permissionsName,
+                    sortID: sortID
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Permission NAME already already in use. Choose a different Name.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+
+<form>
+
+
+
+    <label for="permissionsName"><b>Permission Name:</b></label><br>
+    <input type="text" id="permissionsName" size="40" placeholder="ex: Users" ><br><br>
+
+    <label for="sortID"><b>Sort ID:</b></label><br>
+    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+    <select id='sort_select'></select><br><br>
+
+    <label for="permissionsID"><b>Permission ID:</b></label><br>
+    <input type="hidden" id="inUsePermissionsID" value="<%= array %>">
+    <select id='some_select'></select><br><br>
+
+    <form>
+        <label for="permissionsGroup"><b>Permissions Group:</b></label><br>
+        <% permissionsGroup.forEach(function(permissionsGroup) { %>
+        <input type="radio"
+               name="permissionsGroupID"
+               id=<%= permissionsGroup.sortID %>
+               value="<%= permissionsGroup.permissionsGroupID %>">
+        <label for="permissionsGroupName"><%= permissionsGroup.permissionsGroupName %></label><br>
+        <% }); %><br>
+
+        <% if (aclAddPermissions == null || aclAddPermissions.checkBoxValue == true) {%>
+        <input type="button" id="btSubmit" value="Submit" ><br>
+        <% } else { %>
+        <input type="button" id="btSubmit" value="Submit" disabled><br>
+        <% } %>
+
+    </form>
+</form>
+<form action="/permissions/showPermissions">
+    <% if (aclAddPermissions == null || aclAddPermissions.checkBoxValue == true) {%>
+    <input type="submit" value="Back" ><br>
+    <% } else { %>
+    <input type="submit" value="Back" disabled><br>
+    <% } %>
+
+</form>
+
+</body>
+</html>

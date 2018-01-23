@@ -1,0 +1,110 @@
+<html>
+<head>
+    <title>update Room</title>
+    <link rel='stylesheet' href='/stylesheets/addUtility.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <script>
+        $(document).ready(function(){
+            var oldRoomID = $("#oldRoomID").val();
+            var select = '';
+            var myArray = $("#inUseRoomID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldRoomID){
+                    if(i == oldRoomID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var id,floorName,floorID,roomName,roomID;
+            $("#<%= room.id %>").click(function(){
+                id=$(this).attr('id');
+                floorID=$("input:radio[name='floorID']:checked").val();
+                floorName = $("input:radio[name='floorID']:checked + label").text();
+                roomName=$("#roomName").val();
+                roomID=$("#some_select").val();
+
+                //-----forms validation------------------------------------
+                if (roomName == "" ) {
+                    alert("Room NAME must be filled out");
+                    return false;
+                }
+                if (roomName == "" ) {
+                    alert("Room ID must be filled out");
+                    return false;
+                }
+                if (floorID == null ) {
+                    alert("Floor must be filled out");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/options/updateRoom",{
+                    roomToUpdate: id,
+                    floorName: floorName,
+                    floorID: floorID,
+                    roomName: roomName,
+                    roomID: roomID,
+                    oldRoomID: oldRoomID //to update  aclPermission
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Room Name already already in use. Choose a different Name.")
+
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="roomName"><b>Room Name:</b></label><br>
+    <input type="text" id="roomName" size="40" value="<%= room.roomName %>"><br><br>
+
+    <input type="hidden" id="oldRoomID" value="<%= room.roomID %>">
+    <input type="hidden" id="inUseRoomID" value="<%= array %>">
+
+    <label for="floor"><b>Floor:</b></label><br>
+    <% floor.forEach(function(floor) { %>
+    <%if (floor.floorID == room.floorID) { %>
+    <input type="radio" name="floorID" id=<%= floor.floorName %> value="<%= floor.floorID %>" checked><label for="floorName"><%= floor.floorName %></label><br>
+    <% }else {%>
+    <input type="radio" name="floorID" id=<%= floor.floorName %> value="<%= floor.floorID %>"><label for="floorName"><%= floor.floorName %></label><br>
+    <% }%>
+    <% }); %><br>
+
+    <br>
+
+    <% if (userAuthID == 1) {%>
+    <label for="roomID"><b>Room ID:</b></label><br>
+    <select id='some_select'></select><br><br>
+    <% } else { %>
+    <select id='some_select' style="display:none;"></select>
+    <% } %>
+
+
+    <input type="button" id="<%= room.id %>" value="Submit">
+</form>
+<form action="/options/rooms">
+    <input type="submit" value="Back">
+</form>
+
+</body>
+</html>

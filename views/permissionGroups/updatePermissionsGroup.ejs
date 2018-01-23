@@ -1,0 +1,106 @@
+<html>
+<head>
+    <title>update Permissions Group</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var oldSortID = $("#oldSortID").val();
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var oldPermissionsGroupID = $("#oldPermissionsGroupID").val();
+            var select = '';
+            var myArray = $("#inUsePermissionsGroupID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldPermissionsGroupID){
+                    if(i == oldPermissionsGroupID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var permissionsGroup1,oldPermissionsGroupName,oldPermissionsGroupID,permissionsGroupID,permissionsGroupName, sortID;
+            $("#<%= permissionsGroup.id %>").click(function(){
+                permissionsGroup1=$(this).attr('id');
+                oldPermissionsGroupID=$("#oldPermissionsGroupID").val();
+                permissionsGroupID=$("#some_select").val();
+                oldPermissionsGroupName=$("#oldPermissionsGroupName").val();
+                permissionsGroupName=$("#permissionsGroupName").val();
+                sortID=$("#sort_select").val();
+
+                //-----forms validation------------------------------------
+                if (permissionsGroupName == "" ) {
+                    alert("Permission Group NAME must be filled out");
+                    return false;
+                }
+                if (permissionsGroupID == "" ) {
+                    alert("Permission Group ID must be filled out");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/permissionGroups/updatePermissionsGroup",{
+                    permissionsGroupToUpdate: permissionsGroup1,
+                    oldPermissionsGroupID: oldPermissionsGroupID,
+                    permissionsGroupID: permissionsGroupID,
+                    oldPermissionsGroupName: oldPermissionsGroupName,
+                    permissionsGroupName: permissionsGroupName,
+                    sortID: sortID
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Permission Group NAME already already in use. Choose a different Name.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="permissionsGroupName"><b>Permission Group Name:</b></label><br>
+    <input type="text" id="permissionsGroupName" size="40" value="<%= permissionsGroup.permissionsGroupName %>"><br><br>
+
+    <label for="sortID"><b>Sort ID:</b></label><br>
+    <input type="hidden" id="oldSortID" value="<%= permissionsGroup.sortID %>">
+    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+    <select id='sort_select'></select><br><br>
+
+    <label for="permissionsGroupID"><b>Permission Group ID:</b></label><br>
+    <input type="hidden" id="inUsePermissionsGroupID" value="<%= array %>">
+    <select id='some_select'></select><br><br>
+
+    <input type="hidden" id="oldPermissionsGroupName" value="<%= permissionsGroup.permissionsGroupName %>">
+    <input type="hidden" id="oldPermissionsGroupID" value="<%= permissionsGroup.permissionsGroupID %>"><br>
+
+    <input type="button" id="<%= permissionsGroup.id %>" value="Submit">
+</form>
+<form action="/permissionGroups/showPermissionsGroup">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

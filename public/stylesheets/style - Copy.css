@@ -1,0 +1,77 @@
+body {
+  padding: 30px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+h2 {
+	margin:0 0 .5em 0;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#wrapper {
+	padding-left:312px;
+	position:relative;
+}
+
+#userList {
+	margin:0 0 30px 0;
+}
+table {
+		border-collapse:separate;
+		border-spacing:1px;
+		background:#CCC;
+	}
+table th {
+			background:#EEE;
+			font-weight:400;
+			padding:10px 20px;
+			text-align:center;
+		}
+table tbody {
+			padding:0; margin:0;
+			border-collapse:collapse;
+			border-spacing:0px;
+		}
+table td {
+				background:#FFF;
+				padding:5px 10px;
+				text-align:center;
+			}
+
+
+
+#userInfo {
+	width:250px;
+	position:absolute;
+	top:0; left:0;
+}
+p {
+
+
+
+	}
+
+fieldset {
+	border:0;
+	padding:0; margin:0;
+}
+table {
+    counter-reset: rowNumber;
+}
+
+table tr:not(:first-child) {
+    counter-increment: rowNumber;
+}
+
+table tr td:first-child::before {
+    content: counter(rowNumber);
+    width: 20px;
+    min-width: 20em;
+    margin-right: 0.5em;
+}
+input[type=submit] {
+    width: 7em;  height: 1.7em;
+}

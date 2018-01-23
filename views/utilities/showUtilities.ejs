@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Utilities</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+
+
+<% if (aclAddUtilities == null || aclAddUtilities.checkBoxValue == true) {%>
+<button class="utilityButton" id="proc" onclick="location.href='/utilities/addUtilities'">Add Utility</button>
+<button class="utilityButton" id="exit" onclick="location.href='/utilities/showUtilitiesUsers'">Show Utility Users</button><br>
+<% } else { %>
+<button class="utilityButton" id="proc" onclick="location.href='/utilities/addUtilities'" disabled>Add Utility</button>
+<button class="utilityButton" id="exit" onclick="location.href='/utilities/showUtilitiesUsers'" disabled>Show Utility Users</button><br>
+<% } %>
+<br>
+
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Utility Name</th>
+        <% if (userAuthID == 1) {%>
+            <th>ID</th>
+        <% } %>
+        <th>Contact Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>SMECS app</th>
+        <th>SMECS user</th>
+        <th>Default Contact</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    <tbody>
+    <% utility.forEach(function(utility) { %>
+    <tr>
+        <td><%= utility.sortID %></td>
+        <td><%= utility.utilityName %></td>
+        <% if (userAuthID == 1) {%>
+        <td><%= utility.utilityID %></td>
+        <% } %>
+        <td><%= utility.contactName %></td>
+        <td><%= utility.phone %></td>
+        <td><%= utility.email %></td>
+        <% if (utility.smecsApp) {%>
+        <td>Yes</td>
+        <% } else { %>
+        <td>No</td>
+        <% } %>
+
+        <% if (utility.smecsUsers.length < 1 ) {%>
+        <td></td>
+        <% } else { %>
+        <td><a href="/utilities/users/<%= utility.id %>"><%= utility.smecsUsers.length %> users</a></td>
+        <% } %>
+        <td><%= utility.defaultContact %></td>
+        <td align="center">
+            <% if (aclModifyUtilities == null || aclModifyUtilities.checkBoxValue == true) {%>
+            <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+            <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if (aclDeleteUtilities == null || aclDeleteUtilities.checkBoxValue == true) {%>
+            <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+
+
+</body>
+</html>

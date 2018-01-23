@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show PA Users</title>
+    <link rel='stylesheet' href='/stylesheets/pa.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        EnableSubmit = function(val)
+        {
+            var sbmt = document.getElementById("btSave");
+            if (val.onchange)
+            {
+                sbmt.disabled = false;
+            }
+            else
+            {
+                sbmt.disabled = false;
+            }
+        };
+
+
+        $(document).ready(function() {
+            $("#myTable").tablesorter();
+
+            var searchUsersNotChecked = {};
+            $("#btSave").click(function(event) {
+                event.preventDefault();
+                searchUsersNotChecked = $('input[name="receptionCheckBox"]:not(:checked)').map(function () {
+                    return $(this).val();
+                }).get();
+                var searchUsersChecked = $('input[name="receptionCheckBox"]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                $.ajax({
+                    url:'/pa/showPa',
+                    type:'post',
+                    data:{
+                        searchUsersNotChecked:searchUsersNotChecked,
+                        searchUsersChecked:searchUsersChecked},
+                    success:function(response){
+                        console.log(response);
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated" action="/pa/showPa">
+                <input type="submit" value="Reception PA Users" disabled>&nbsp;&nbsp;
+            </form>
+            <form class="floated" action="/pa/showRecorded">
+                <% if (aclShowPAPreRecorded == null || aclShowPAPreRecorded.checkBoxValue == true) {%>
+                <input type="submit" value="Recorded Announcements">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Recorded Announcements" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+        </ul>
+        <br><br>
+    </div>
+</div>
+
+
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <!--
+    <tr>
+        <th colspan="4">Reception PA Users</th>
+    </tr>
+    -->
+    <tr>
+        <th width="60px">Reception</th>
+        <th>Role</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+    </tr>
+    <tbody>
+    <% users.forEach(function(user) { %>
+    <% if (user.softDeleted == null) { %>
+    <tr>
+        <td>
+            <% if (aclModifyPAUser == null || aclModifyPAUser.checkBoxValue == true){%>
+            <input type="checkbox"
+                   name="receptionCheckBox"
+                   value="<%= user.email %>"
+                    <% if (user.receptionPA == true) { %>
+                   checked
+                    <% } %>
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="receptionCheckBox"
+                   value="<%= user.email %>"
+                    <% if (user.receptionPA == true) { %>
+                   checked
+                    <% } %>
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <td><%= user.userRoleName %></td>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+<form>
+    <input type="submit" name="btSave" id="btSave" value="SAVE" disabled="true" onclick="this.disabled=true"><br><br>
+</form>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/dashboard">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

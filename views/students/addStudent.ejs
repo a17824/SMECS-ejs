@@ -1,0 +1,110 @@
+<html>
+<head>
+    <title>add student</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var studentID,firstName,lastName,photo;
+            $("#btSubmit").click(function(){
+                studentID=$("#studentID").val();
+                firstName=$("#firstName").val();
+                lastName=$("#lastName").val();
+                photo=$("#photo").val();
+
+                //-----forms validation------------------------------------
+                if (firstName == "" ) {
+                    alert("FIRST NAME must be filled out");
+                    return false;
+                }
+                if (lastName == "" ) {
+                    alert("LAST NAME must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                //--------------------------------Capitalize Words---------------------------
+                if (firstName != "" ) {
+                    //changes user input and put first letter of each word capitalized
+                    // replaces: "fort collins, croton-on-hudson, harper's ferry, coeur d'alene, o'fallon"
+                    //with: "Fort Collins, Croton-On-Hudson, Harper's Ferry, Coeur D'Alene, O'Fallon"
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = firstName;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+
+                    //fixes words like: "Marty Mcfly"
+                    // with: "Marty McFly"
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                            {
+                                return 'Mc' + k[2].toUpperCase();
+                            }
+                    );
+                }
+                firstName = text;
+
+                if (lastName != "" ) {
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = lastName;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                            {
+                                return 'Mc' + k[2].toUpperCase();
+                            }
+                    );
+                }
+                lastName = text;
+                //--------------------------------Capitalize Words end---------------------
+
+
+                $.post("/students/addStudent",{
+                    studentID: studentID,
+                    firstName: firstName,
+                    lastName: lastName,
+                    photo: photo
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Student ID already in use. Choose a different ID .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="firstName"><b>First Name:</b></label><br>
+    <input type="text" id="firstName" size="40" placeholder="ex: Manuel" ><br><br>
+    <label for="lastName"><b>Last Name:</b></label><br>
+    <input type="text" id="lastName" size="40" placeholder="ex: Neves"><br><br>
+
+    <label for="studentID"><b>Student ID:</b></label><br>
+    <input type="number" id="studentID" size="40" placeholder="ex: 1234"><br><br>
+
+    <input type="hidden" id="photo" >
+</form>
+<form>
+    <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
+    <input type="button" id="btSubmit" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="btSubmit" value="Submit" disabled><br>
+    <% } %>
+</form>
+<form action="/students/showStudents">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

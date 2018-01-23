@@ -1,0 +1,64 @@
+button {
+    width: 35px;
+    height: 35px;
+    font-size: 0;
+    background-color: red;
+    border: 0;
+    border-radius: 35px;
+    margin: 18px;
+    outline: none;
+}
+
+.notRec{
+    background-color: darkred;
+}
+
+.Rec{
+    animation-name: pulse;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes pulse{
+    0%{
+        box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+    }
+    65%{
+        box-shadow: 0px 0px 5px 13px rgba(173,0,0,.3);
+    }
+    90%{
+        box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);
+    }
+}
+
+div.disable {
+    background-color: ghostwhite;
+    border: solid 2px #ccc;
+    margin: auto 0em;
+    padding: 1em;
+    width: 300px;
+}
+
+ul.enable li {
+    background: #DEF url("./../miscPictures/cross_bright.png") no-repeat 98% center;
+    margin: 1px;
+    padding: 0.1em 0.3em;
+    cursor: pointer;
+    color: #46A;
+    font-weight: bold;
+    border: solid 1px #CDE;
+}
+ul.enable {
+    list-style-type: none;
+    width: 16.5em;
+    margin: 0.3em 0;
+    padding: 10px;
+    background: #ffffff;
+    border: solid 1px #ccc;
+}
+select.enable {
+    width: 20em;
+    color: #46A;
+    font-weight: bold;
+}

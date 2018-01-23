@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>Create Alert</title>
+    <link rel='stylesheet' href='/stylesheets/addUtility.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+
+
+
+        $(document).ready(function(){
+            var select = '';
+            var myArray = $("#inUseRoomID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1){
+                    select += '<option val=' + i + '>' + i + '</option>';
+                }
+            }
+            $('#some_select').html(select);
+
+
+            var floorID,floorName,roomID,roomName;
+            $("#btSubmit").click(function(){
+                floorID=$("input:radio[name='floorID']:checked").val();
+                floorName = $("input:radio[name='floorID']:checked + label").text();
+                roomID=$("#some_select").val();
+                roomName=$("#roomName").val();
+
+                //-----forms validation------------------------------------
+                if (roomName == "" ) {
+                    alert("Room NAME must be filled out");
+                    return false;
+                }
+                var numbers = /[0-99]|\./;
+                if (!numbers.test(roomID)) {
+                    alert("Room ID must be between 0 and 99 ");
+                    return false;
+                }
+                if (floorID == null ) {
+                    alert("Floor must be filled out");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/options/createRoom",{
+                    floorID: floorID,
+                    floorName: floorName,
+                    roomID: roomID,
+                    roomName: roomName
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Room NAME already in use. Choose a different Name.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+
+<form>
+    <label for="roomName"><b>Room Name:</b></label><br>
+    <input type="text" id="roomName" size="40" placeholder="ex: Room 15 or Lab" ><br><br>
+
+    <input type="hidden" id="inUseRoomID" value="<%= array %>">
+
+    <label for="floor"><b>Floor:</b></label><br>
+    <% floor.forEach(function(floor) { %>
+    <input type="radio" name="floorID" id=<%= floor.floorName %> value="<%= floor.floorID %>"><label for="floorName"><%= floor.floorName %></label><br>
+    <% }); %><br>
+
+    <br>
+
+    <% if (userAuthID == 1) {%>
+    <label for="roomID"><b>Room ID:</b></label><br>
+    <select id='some_select'></select><br><br>
+    <% } else { %>
+    <select id='some_select' style="display:none;"></select>
+    <% } %>
+
+    <% if (aclAddRooms == null || aclAddRooms.checkBoxValue == true) {%>
+    <input type="button" id="btSubmit" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="btSubmit" value="Submit" disabled><br>
+    <% } %>
+</form>
+
+<form action="/options/rooms">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

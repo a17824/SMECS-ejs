@@ -1,0 +1,86 @@
+<html>
+<head>
+    <title>add privilege</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var privilegeID,privilegeName;
+            var select = '';
+            var myArray = $("#inUsePrivilegeID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1){
+                    select += '<option val=' + i + '>' + i + '</option>';
+                }
+            }
+            $('#some_select').html(select);
+
+            $("#btSubmit").click(function(){
+                privilegeID=$("#some_select").val();
+                privilegeName=$("#privilegeName").val();
+
+                //-----forms validation------------------------------------
+                if (privilegeName == "" ) {
+                    alert("Privilege NAME must be filled out");
+                    return false;
+                }
+                var numbers = /[1-99]|\./;
+                if (!numbers.test(privilegeID)) {
+                    alert("Privilege ID must be between 1 and 99 ");
+                    return false;
+                }
+                /*error: function(error){
+                 if(error.responseText == 'showAlert')
+                 alert("Please enter correct user name and password.");
+                 }
+                 }*/
+                //--------------------------------forms validation end-------
+
+                $.post("/privilege/addPrivilege",{
+                    privilegeID: privilegeID,
+                    privilegeName: privilegeName
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Privilege NAME already already in use. Choose a different Name.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="privilegeName"><b>Privilege Name:</b></label><br>
+    <input type="text" id="privilegeName" size="40" placeholder="ex: super user" ><br><br>
+    <label for="privilegeID"><b>Privilege ID:</b></label><br>
+    <input type="hidden" id="inUsePrivilegeID" value="<%= array %>">
+    <select id='some_select'></select><br><br>
+
+    <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
+    <input type="button" id="btSubmit" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="btSubmit" value="Submit" disabled><br>
+    <% } %>
+
+</form>
+<form action="/privilege/showPrivilege">
+    <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
+    <input type="submit" value="Back" ><br>
+    <% } else { %>
+    <input type="submit" value="Back" disabled><br>
+    <% } %>
+
+</form>
+</body>
+</html>

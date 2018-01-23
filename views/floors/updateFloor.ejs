@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>update floor</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var oldFloorID = $("#oldFloorID").val();
+            var select = '';
+            var myArray = $("#inUseFloorID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldFloorID){
+                    if(i == oldFloorID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var floor_ID, floorName, floorID, floorPlan;
+            var oldFloorName,oldFloorID;
+            $("#<%= floor.id %>").click(function(){
+                floor_ID=$(this).attr('id');
+                oldFloorName=$("#oldFloorName").val();
+                floorName=$("#floorName").val();
+                oldFloorID=$("#oldFloorID").val();
+                floorID=$("#some_select").val();
+                floorPlan=$("#floorPlan").val();
+                //-----forms validation------------------------------------
+                if (floorName == "" ) {
+                    alert("FLOOR NAME must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/floors/updateFloor",{
+                    floorToUpdate: floor_ID,
+                    oldFloorName: oldFloorName,
+                    floorName: floorName,
+                    oldFloorID: oldFloorID,
+                    floorID: floorID,
+                    floorPlan: floorPlan
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Floor Name already in use. Choose a different Name .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="floorName"><b>Floor Name:</b></label><br>
+    <input type="text" id="floorName" size="40" value="<%= floor.floorName %>"><br><br>
+
+    <input type="hidden" id="inUseFloorID" value="<%= array %>">
+
+    <% if (userAuthID == 1) {%>
+    <label for="floorID"><b>Floor ID:</b></label><br>
+    <select id='some_select'></select><br><br>
+    <% } else { %>
+    <select id='some_select' style="display:none;"></select>
+    <% } %>
+
+    <input type="hidden" id="oldFloorName" value="<%= floor.floorName %>">
+    <input type="hidden" id="oldFloorID" value="<%= floor.floorID %>"><br>
+    <input type="hidden" id="floorPlan" >
+
+    <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
+    <input type="button" id="<%= floor.id %>" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="<%= floor.id %>" value="Submit" disabled><br>
+    <% } %>
+
+</form>
+<form action="/floors/showFloors">
+    <% if (aclShowFloors == null || aclShowFloors.checkBoxValue == true) {%>
+    <input type="submit" value="Back">
+    <% } else { %>
+    <input type="submit" value="Back" disabled>
+    <% } %>
+
+</form>
+
+</body>
+</html>

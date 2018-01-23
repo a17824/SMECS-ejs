@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show PA Users</title>
+    <link rel='stylesheet' href='/stylesheets/pa.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        EnableSubmit = function(val)
+        {
+            var sbmt = document.getElementById("btSave");
+            if (val.onchange)
+            {
+                sbmt.disabled = false;
+            }
+            else
+            {
+                sbmt.disabled = false;
+            }
+        };
+
+
+        $(document).ready(function() {
+            $("#myTable").tablesorter();
+
+            var searchActiveNotChecked = {};
+            $("#btSave").click(function(event) {
+                event.preventDefault();
+                searchActiveNotChecked = $('input[name="activeCheckBox"]:not(:checked)').map(function () {
+                    return $(this).val();
+                }).get();
+                var searchActiveChecked = $('input[name="activeCheckBox"]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                $.ajax({
+                    url:'/pa/showPa',
+                    type:'post',
+                    data:{
+                        searchActiveNotChecked:searchActiveNotChecked,
+                        searchActiveChecked:searchActiveChecked},
+                    success:function(response){
+                        console.log(response);
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated" action="/pa/showPa">
+                <% if (showPAUsers == null || showPAUsers.checkBoxValue == true) {%>
+                <input type="submit" value="Reception PA Users">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Reception PA Users" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+            <form class="floated" action="/pa/showRecorded">
+                <input type="submit" value="Recorded Announcements" disabled>&nbsp;&nbsp;
+            </form>
+        </ul>
+        <br><br>
+    </div>
+</div>
+
+
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <!--
+    <tr>
+        <th colspan="4">Reception PA Users</th>
+    </tr>
+    -->
+    <tr>
+        <th rowspan="2" width="35px">Active</th>
+        <th rowspan="2" width="200px">Title</th>
+        <th rowspan="2" width="25px">Play</th>
+        <!--
+        <% if (userAuthID == 1) {%>
+        <th rowspan="2" width="10px">ID</th>
+        <% } %>
+        -->
+        <th colspan="3">Schedule</th>
+        <th rowspan="2">who can Send</th>
+        <th rowspan="2">Copy</th>
+        <th rowspan="2">update</th>
+        <th rowspan="2">delete</th>
+    </tr>
+    <tr>
+        <th>Days</th>
+        <th>Time</th>
+        <th>Destination</th>
+    </tr>
+
+    <tbody>
+    <% recorded.forEach(function(rec) { %>
+    <tr>
+        <td>
+            <% if (aclModifyPAPreRecorded == null || aclModifyPAPreRecorded.checkBoxValue == true) {%>
+            <input type="checkbox"
+                   name="activeCheckBox"
+                   value="<%= rec.tileID %>"
+                    <% if (rec.active == true) { %>
+                   checked
+                    <% } %>
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="activeCheckBox"
+                   value="<%= rec.tileID %>"
+                    <% if (rec.active == true) { %>
+                   checked
+                    <% } %>
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <td><%= rec.titleName %></td>
+        <td>play</td>
+        <!--
+        <% if (userAuthID == 1) {%>
+        <td><%= rec.titleID %></td>
+        <% } %>
+        -->
+        <td>days</td>
+        <td>time</td>
+        <td>all school</td>
+        <td>who can send</td>
+        <td>copy</td>
+        <td>update</td>
+        <td>delete</td>
+    </tr>
+    <% }); %>
+    </tbody>
+    <tr>
+        <td></td>
+        <td>
+            <% if (aclAddPAPreRecorded == null || aclAddPAPreRecorded.checkBoxValue == true) {%>
+            <a href="/pa/newAnnouncement/" id="newAnnouncement"><button class="inTable_announcement">add announcement</button></a>
+            <% } else { %>
+            <a href="/pa/newAnnouncement/" id="newAnnouncement"><button class="inTable_announcement" disabled>add announcement</button></a>
+            <% } %>
+        </td>
+        <td></td>
+        <!--
+        <% if (userAuthID == 1) {%>
+        <td></td>
+        <% } %>
+        -->
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table><br>
+
+<form>
+    <input type="submit" name="btSave" id="btSave" value="SAVE" disabled="true" onclick="this.disabled=true"><br><br>
+</form>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/dashboard">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

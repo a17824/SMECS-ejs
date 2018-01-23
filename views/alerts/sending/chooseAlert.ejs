@@ -1,0 +1,144 @@
+<html>
+<head>
+    <title>Choose Alert</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/chooseAlert.css' />
+    <script>
+        $(document).ready(function(){
+
+            $('input[name=onoffswitch]').change(function(){
+                if($('#myonoffswitch').is(':checked')) {
+                    $('#testModeOFF').css('display', "none");
+                    $('#testModeON').css('display', "unset");
+                }
+                else{
+                    $('#testModeON').css('display', "none");
+                    $('#testModeOFF').css('display', "unset");
+                }
+            });
+
+            var alertID, alertGroupID, alertGroupName, alertName;
+            var testModeON = false;
+            $("#btSubmit").click(function(){
+                alertGroupID = $('input[name=alert]:checked').val();
+                alertID=$('input[name=alert]:checked').attr('id');
+                alertName = $("input:radio[name='alert']:checked + label").text();
+                alertGroupName = $("input:radio[name='alert']:checked + label").attr('id');
+
+
+                if ($('input[name=onoffswitch]:checked').length > 0) {
+                    testModeON = true;
+                }
+
+                //-----forms validation------------------------------------
+
+                if (alertGroupID == null ) {
+                    alert("You must choose one Alert");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+
+                $.post("/alerts/sending/chooseAlert",{
+                    alertGroupID: alertGroupID,
+                    alertGroupName: alertGroupName,
+                    alertID: alertID,
+                    alertName: alertName,
+                    testModeON: testModeON
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Alert not sent.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<% if ( error_messages ) { %>
+<p style="color: red"><%= error_messages %></p>
+<% } %>
+
+<!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
+
+
+
+
+
+        <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+
+
+
+
+
+
+
+<br>
+<form>
+
+    <div id='testModeOFF' name="testModeOFF">
+        <% for (var i=0; i < aclReal.length; i++ ){ %>
+
+        <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].groupID %>" >
+
+
+        <% if (aclReal[i].groupID == 1) {%>
+        <%= aclReal[i].alertID %> <label for="alert" style="color: red" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <% } if (aclReal[i].groupID == 2){ %>
+        <%= aclReal[i].alertID %> <label for="alert" style="color: red" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <% } if (aclReal[i].groupID == 3){ %>
+         <%= aclReal[i].alertID %> <label for="alert" style="color: green" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <% } if (aclReal[i].groupID == 4){ %>
+         <%= aclReal[i].alertID %> <label for="alert" style="color: blue" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <% } if (aclReal[i].groupID == 5){ %>
+         <%= aclReal[i].alertID %> <label for="alert" style="color: #e3c300" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <% } if (aclReal[i].groupID > 5){ %>
+         <%= aclReal[i].alertID %> <label for="alert" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <% } %>
+        <% } %>
+    </div>
+
+    <div id='testModeON' name="testModeON" style='display:none'>
+        <% for (var i=0; i < aclTest.length; i++ ){ %>
+        <input type="radio" name="alert" id=<%= aclTest.alertID %> value="<%= aclTest[i].alertSlugName %>" >
+        <% if (aclTest[i].groupID == 1) {%>
+        <%= aclTest[i].alertID %> <label for="alert" style="color: red"><%= aclTest[i].alertName %></label><br>
+        <% } if (aclTest[i].groupID == 2){ %>
+        <%= aclTest[i].alertID %>         <label for="alert" style="color: red"><%= aclTest[i].alertName %></label><br>
+        <% } if (aclTest[i].groupID == 3){ %>
+        <%= aclTest[i].alertID %>         <label for="alert" style="color: green"><%= aclTest[i].alertName %></label><br>
+        <% } if (aclTest[i].groupID == 4){ %>
+        <%= aclTest[i].alertID %>          <label for="alert" style="color: blue"><%= aclTest[i].alertName %></label><br>
+        <% } if (aclTest[i].groupID == 5){ %>
+        <%= aclTest[i].alertID %>          <label for="alert" style="color: #e3c300"><%= aclTest[i].alertName %></label><br>
+        <% } if (aclTest[i].groupID > 5){ %>
+        <%= aclTest[i].alertID %>          <label for="alert"><%= aclTest[i].alertName %></label><br>
+        <% } %>
+        <% } %>
+    </div>
+
+
+    <br>
+    <input type="button" style="width: 10em; height: 1.8em" id="btSubmit" value="Next" ><br>
+</form>
+<% // if (userAuthPrivilegeID !== 4) {%>
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+<% // } %>
+</body>
+</html>

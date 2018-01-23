@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Utility Users</title>
+    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th>Date</th>
+        <th>Utility</th>
+        <th>Details</th>
+        <th>Status</th>
+    </tr>
+    <tbody>
+    <% requestAssistance.forEach(function(request) { %>
+    <% for (var a = 0; a < request.smecsContacts.length; a++) { %>
+    <% console.log(request.smecsContacts[a] + ' == ' + userAuth.email); %>
+    <% if (request.smecsContacts[a] == userAuth.email) { %>
+    <tr>
+        <td ></td>
+        <td><%= request.sentTime %></td>
+        <td><%= request.utilityName %></td>
+        <td>details</td>
+        <td><%= request.status %></td>
+    </tr>
+    <% } %>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+<% if (userAuth.userPrivilegeID) { %>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/dashboard">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+<% } %>
+</body>
+</html>

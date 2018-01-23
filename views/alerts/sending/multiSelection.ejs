@@ -1,0 +1,133 @@
+<html>
+<head>
+    <title>Alert</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+
+        $(document).ready(function(){
+
+            var alert_ID, alertNameID, parties;
+            $("#<%= alert.id %>").click(function(){
+                alert_ID=$(this).attr('id');
+                alertNameID=$("#alertNameID").val();
+                parties=$("#parties").val();
+
+                var checkedID = [];
+                $.each($("input[name='checkbox']:checked"), function(){
+                    checkedID.push($(this).val());
+                });
+                var checkedName;
+                checkedName = $("input[name='checkbox']:checked").next('label').map(function(){
+                    return $(this).text();
+                }).get();
+
+
+                //-----forms validation------------------------------------
+
+                if (alertNameID == 26 && checkedID.length < 1) {
+                    alert("You must choose at least one");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+
+                $.post('/alerts/sending/multiSelection',{
+                    alertToUpdate: alert_ID,
+                    alertNameID: alertNameID,
+                    checkboxesNames: checkedName,
+                    checkboxesIDs: checkedID,
+                    medicalInjuredParties: parties
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Alert failed.")
+                });
+
+
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<% if (alert.testModeON == true ) {%>
+<h2 style="color: #34A7C1"> TEST MODE ON </h2>
+<% } %>
+
+<form>
+    <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
+    <input type="hidden" id="alertMultifunction"  value="<%= alert.multiSelectionNames %>"> <!-- for back button/refresh -->
+
+    <% if (alert.alertNameID == 18) {%>
+    <label for="situation"><b>Number of injured parties:</b> </label>
+    <input type="number" id="parties" name="parties" style="width:40px" min="0" value="<%= alert.medicalInjuredParties %>">&nbsp(optional)<br><br>
+    <% } %>
+
+    <% if (alert.alertNameID == 14 ||
+            alert.alertNameID == 18) {%>
+    <label for="situation"><b>Situation:</b> (optional)</label><br>
+    <% } %>
+    <% if (alert.alertNameID == 26 ) {%>
+    <label for="situation"><b>Situation:</b></label><br>
+    <% } %>
+
+    <% var typeOfDatabase; %>
+    <% if (alert.alertNameID == 14 ||
+            alert.alertNameID == 26) {%>
+    <% typeOfDatabase = utilities;  %>
+    <% } %>
+    <% if (alert.alertNameID == 18) {%>
+    <% typeOfDatabase = medical;  %>
+    <% } %>
+
+    <% typeOfDatabase.forEach(function(utility) { %>
+        <!-- back button/refresh write checkbox selected before -->
+        <% if (alert.multiSelectionNames.length >= 1) {%>
+            <% var check = 0;    %>
+            <% for (var i=0; i < alert.multiSelectionNames.length; i++) { %>
+                <% if (utility.utilityName == alert.multiSelectionNames[i]) { %>
+                    <input class="checkbox" type="checkbox" name="checkbox" id=<%= utility.utilityID %> value="<%= utility.utilityID %>" checked><label for="utilityName"><%= utility.utilityName %></label><br>
+                    <% check = 1; %>
+                <% }  %>
+            <% } %>
+            <% if (check == 0) {%>
+                <input class="checkbox" type="checkbox" name="checkbox" id=<%= utility.utilityID %> value="<%= utility.utilityID %>"><label for="utilityName"><%= utility.utilityName %></label><br>
+            <% } else { %>
+                <% check = 0; %>
+            <% } %>
+        <!-- END OF back button/refresh write checkbox selected before -->
+
+        <% } else { %> <!-- frist time entering/loading this page -->
+                <input class="checkbox" type="checkbox" name="checkbox" id=<%= utility.utilityID %> value="<%= utility.utilityID %>"><label for="utilityName"><%= utility.utilityName %></label><br>
+        <% } %>
+    <% }); %><br>
+
+
+
+    <input type="button" id="<%= alert.id %>" value="Next" ><br>
+</form>
+
+<% if (alert.alertNameID == 14 ||
+        alert.alertNameID == 18 ) {%>
+
+<form action="/alerts/sending/chooseAlert">
+    <input type="submit" value="Exit Alert" >
+</form>
+<% } else { %>
+<button class="backButton" onclick="goBack()">Back</button>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+<% }%>
+</body>
+</html>

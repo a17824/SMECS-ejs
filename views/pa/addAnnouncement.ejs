@@ -1,0 +1,159 @@
+<html>
+<head>
+    <title>add announcement</title>
+    <link rel='stylesheet' href='/stylesheets/paAddAnoun.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+
+        var choices;
+        function selectUser(select) {
+            var option = select.options[select.selectedIndex];
+            var ul = select.parentNode.getElementsByTagName('ul')[0];
+            choices = ul.getElementsByTagName('input');
+
+            for (var i = 0; i < choices.length; i++) {
+                if (choices[i].value == option.value){
+                    return;
+                }
+            }
+
+            var li = document.createElement('li');
+            var input = document.createElement('input');
+            var text = document.createTextNode(option.firstChild.data);
+
+            input.type = 'hidden';
+            input.name = 'users[]';
+            input.value = option.value;
+
+            li.appendChild(input);
+            li.appendChild(text);
+            li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
+
+            ul.appendChild(li);
+        }
+
+        $(document).ready(function(){
+
+            $('#recButton').addClass("notRec");
+
+            $('#recButton').click(function(){
+
+                if($('#recButton').hasClass('notRec')){
+                    $('#recButton').removeClass("notRec");
+                    $('#recButton').addClass("Rec");
+                }
+                else{
+                    $('#recButton').removeClass("Rec");
+                    $('#recButton').addClass("notRec");
+                }
+            });
+
+            $("#allDays").change(function(){
+                $('.checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            var titleName;
+            $("#btSubmit").click(function(){
+                <% console.log('33333333');%>
+                titleName=$("#titleName").val();
+
+
+                //-----forms validation------------------------------------
+                if (titleName == "" ) {
+                    alert("TITLE must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/users/addUser",{
+
+                    titleName: titleName
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("TITLE already in use. Please choose a different name for the TITLE .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+    <label for="titleName"><b>Announcement Title:</b></label><br>
+    <input type="text" id="titleName" size="40" placeholder="ex: Dismissal" ><br>
+</form>
+<label for="titleName"><b>Click the button to start/stop recording:</b></label><br>
+<button id="recButton"></button>
+
+<form>
+    <label for="schedule"><b>Schedule:</b></label><br>
+    <div id="smecsUserDiv" class="disable">
+        <input class="checkbox" type="checkbox" name="checkboxAll" id="allDays" value="allDays"><label for="utilityName">All Days</label>
+        &emsp;&emsp;&emsp; at <input type="time" name="allTime"><br><br>
+
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="monday" value="monday"><label for="utilityName">Monday</label>
+        &emsp;&emsp;&emsp;&thinsp; at <input type="time" name="allTime"><br>
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="tuesday" value="monday"><label for="utilityName">Tuesday</label>
+        &emsp;&emsp;&emsp;&thinsp; at <input type="time" name="allTime"><br>
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="wednesday" value="monday"><label for="utilityName">Wednesday</label>
+        &emsp;&ensp;&nbsp;&thinsp; at <input type="time" name="allTime"><br>
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="thursday" value="monday"><label for="utilityName">Thursday</label>
+        &emsp;&emsp;&ensp;&nbsp; at <input type="time" name="allTime"><br>
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="friday" value="monday"><label for="utilityName">Friday</label>
+        &emsp;&emsp;&emsp;&ensp;&thinsp;&thinsp; at <input type="time" name="allTime"><br>
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="saturday" value="monday"><label for="utilityName">Saturday</label>
+        &emsp;&emsp;&emsp; at <input type="time" name="allTime"><br>
+        <input class="checkbox" type="checkbox" name="checkboxDays" id="sunday" value="monday"><label for="utilityName">Sunday</label>
+        &emsp;&emsp;&emsp;&ensp; at <input type="time" name="allTime"><br>
+    </div>
+    <br>
+
+    <label for="where"><b>Where to send announcement:</b></label><br>
+    <div id="smecsUserDiv" class="disable">
+        <label for="smecsUserLabel" id="smecsUserLabel" >Rooms Selected:</label><br>
+
+        <ul id="smecsUserUl" class="enable">
+
+        </ul>
+
+        <input type="radio" name="smecsApp" value="false" checked> All Rooms <br>
+        <input type="radio" name="smecsApp" value="true"> Custom Floors<br>
+        <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+            <!–– <option selected disabled hidden> -- select a user -- </option> ––>
+            <option disabled selected value> -- select a floor from dropdown list -- </option>
+            <% floors.forEach(function(floor) { %>
+            <option value="<%= floor.floorName %>"><%= floor.floorName %></option>
+            <% }); %>
+        </select>
+        <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+        <br><br>
+
+        <input type="radio" name="smecsApp" value="true"> Custom Rooms<br>
+        <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+            <!–– <option selected disabled hidden> -- select a user -- </option> ––>
+            <option disabled selected value> -- select a room from dropdown list -- </option>
+            <% rooms.forEach(function(room) { %>
+            <option value="<%= room.roomName %>" ><%= room.roomName %></option>
+            <% }); %>
+        </select>
+        <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+        <br><br>
+    </div>
+</form>
+<form action="/pa/showRecorded">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

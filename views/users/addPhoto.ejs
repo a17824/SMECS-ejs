@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>add photo</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/users/addPhoto/:id" enctype="multipart/form-data" method="post">
+
+
+
+    <input name="<%= user.id %>" type="hidden"/>
+
+    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input single="single" name="upload" type="file" accept="image/*" required/><br><br>
+    <% } else { %>
+    <input single="single" name="upload" type="file" accept="image/*" required disabled/><br><br>
+    <% } %>
+
+
+    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input type="submit" value="Upload" ><br>
+    <% } else { %>
+    <input type="submit" value="Upload" disabled><br>
+    <% } %>
+
+</form>
+</body>
+</html>

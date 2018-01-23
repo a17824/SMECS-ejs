@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>add floorPlan</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/floors/addFloorPlan/:id" enctype="multipart/form-data" method="post">
+
+
+
+    <input name="<%= floor.id %>" type="hidden"/>
+    <input single="single" name="upload" type="file" accept="image/jpeg" required/><br><br>
+    <input type="submit" value="Upload" />
+</form>
+</body>
+</html>

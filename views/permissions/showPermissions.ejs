@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Permissions</title>
+
+</head>
+<body>
+<h1><%= title %></h1>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+<script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+<script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+<link rel='stylesheet' href='/stylesheets/style.css' />
+
+<script type = "text/javascript">
+    $(document).ready(function()
+            {
+                $("#myTable").tablesorter();
+            }
+    );
+    $("#permissionLink").live("click", function () {
+        $.ajax({
+            url: '/permissions/showPermissions',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+
+            error: function(error){
+                if(error.responseText == 'showAlert')
+                    alert("Permission NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
+            }
+        });
+    });
+</script>
+<form action="/permissions/addPermissions">
+    <% if (aclAddPermissions == null || aclAddPermissions.checkBoxValue == true) {%>
+    <input type="submit" value="Add Permission"><br><br>
+    <% } else { %>
+    <input type="submit" value="Add Permission" disabled><br><br>
+    <% } %>
+</form>
+
+<table id="myTable" class="tablesorter">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th>Group #</th>
+        <th>Permission Group</th>
+        <th>Permission #</th>
+        <th>Permission Name</th>
+        <th>Permission ID</th>
+        <th>Update</th>
+        <th>Delete</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <% permissionsGroup.forEach(function(permissionGroup) { %>
+    <% permissions.forEach(function(permission) { %>
+    <% if(permissionGroup.permissionsGroupName == permission.permissionsGroupName) { %>
+    <tr>
+        <td><%= permissionGroup.sortID %></td>
+        <td><%= permissionGroup.permissionsGroupName %></td>
+        <td><%= permission.sortID %></td>
+        <td><%= permission.permissionsName %></td>
+        <td><%= permission.permissionsID %></td>
+        <td>
+            <% if (aclModifyPermissions == null || aclModifyPermissions.checkBoxValue == true) {%>
+            <a href="/permissions/updatePermissions/<%= permission.id %>"><button>update</button></a>
+            <% } else { %>
+            <a href="/permissions/updatePermissions/<%= permission.id %>"><button disabled>update</button></a>
+            <% } %>
+        </td>
+        <td>
+            <% if (aclDeletePermissions == null || aclDeletePermissions.checkBoxValue == true) {%>
+            <a href="/permissions/showPermissions/<%= permission.id %>" id="permissionLink"><button>delete</button></a>
+            <% } else { %>
+            <a href="/permissions/showPermissions/<%= permission.id %>" id="permissionLink"><button disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+    <% }); %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Privileges</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+        $("#privilegeLink").live("click", function () {
+            $.ajax({
+                url: '/privilege/showPrivilege',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+
+                error: function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("User Privilege NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/privilege/addPrivilege">
+    <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
+    <input type="submit" value="Add Privilege"><br><br>
+    <% } else { %>
+    <input type="submit" value="Add Privilege" disabled><br><br>
+    <% } %>
+</form>
+<table id="myTable" class="tablesorter">
+    <thead>
+    <tr>
+        <th>Privilege Name</th>
+        <th>Privilege ID</th>
+        <th>Update</th>
+        <th>Delete</th>
+
+    </tr>
+    <tbody>
+    <% privilege.forEach(function(privilege) { %>
+    <tr>
+        <td><%= privilege.privilegeName %></td>
+        <td><%= privilege.privilegeID %></td>
+        <td>
+            <% if (aclModifyPrivilege == null || aclModifyPrivilege.checkBoxValue == true) {%>
+            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button>update</button></a>
+            <% } else { %>
+            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button disabled>update</button></a>
+            <% } %>
+        </td>
+        <td>
+            <% if (aclDeletePrivilege == null || aclDeletePrivilege.checkBoxValue == true) {%>
+            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button>delete</button></a>
+            <% } else { %>
+            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

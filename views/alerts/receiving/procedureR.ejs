@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title></title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/stylesheets/receiveAlert.css' />
+    <script src="/ckeditor/ckeditor.js"></script>
+</head>
+
+<body>
+
+<% alert.forEach(function(alert) { %>
+<% if (info.alertName == alert.alertName ) {%>
+<textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="30" disabled><%= alert.alertProcedure %></textarea>
+<script>
+    var editor = CKEDITOR.inline( 'editor1', {
+        removePlugins: 'toolbar',
+        allowedContent: true
+    } );
+</script>
+<% }}); %>
+
+<button class="backButton" onclick="goBack()">Back</button>
+<script>function goBack() {window.history.back();}</script>
+
+</body>
+</html>

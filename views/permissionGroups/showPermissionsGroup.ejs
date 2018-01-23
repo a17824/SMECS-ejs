@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Permissions Group</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+        $("#permissionGroupLink").live("click", function () {
+            $.ajax({
+                url: '/permissionGroups/showPermissionsGroup',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+
+                error: function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Permission Group NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/permissionGroups/addPermissionsGroup">
+    <% if (aclAddPermissions == null || aclAddPermissions.checkBoxValue == true) {%>
+    <input type="submit" value="Add Perm. Group"><br><br>
+    <% } else { %>
+    <input type="submit" value="Add Perm. Group" disabled><br><br>
+    <% } %>
+</form>
+<table id="myTable" class="tablesorter">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Permission Group Name</th>
+        <th>Permission Group ID</th>
+        <th>Update</th>
+        <th>Delete</th>
+
+    </tr>
+    <tbody>
+    <% permissionsGroup.forEach(function(permissionGroup) { %>
+    <tr>
+        <td><%= permissionGroup.sortID %></td>
+        <td><%= permissionGroup.permissionsGroupName %></td>
+        <td><%= permissionGroup.permissionsGroupID %></td>
+        <td>
+            <% if (aclModifyPermissions == null || aclModifyPermissions.checkBoxValue == true) {%>
+            <a href="/permissionGroups/updatePermissionsGroup/<%= permissionGroup.id %>"><button>update</button></a>
+            <% } else { %>
+            <a href="/permissionGroups/updatePermissionsGroup/<%= permissionGroup.id %>"><button disabled>update</button></a>
+            <% } %>
+        </td>
+        <td>
+            <% if (aclDeletePermissions == null || aclDeletePermissions.checkBoxValue == true) {%>
+            <a href="/permissionGroups/showPermissionsGroup/<%= permissionGroup.id %>" id="permissionGroupLink"><button>delete</button></a>
+            <% } else { %>
+            <a href="/permissionGroups/showPermissionsGroup/<%= permissionGroup.id %>" id="permissionGroupLink"><button disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<html>
+<head>
+    <title>add user</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var userToAddUpdate_ID;
+            var firstName,lastName,email,pin,confirmPin,photo, companyName;
+            $("#next").click(function(){
+                userToAddUpdate_ID=$("#userTempID").val();
+                //userToAddUpdate_ID=$(this).attr('id');
+
+                firstName=$("#firstName").val();
+                lastName=$("#lastName").val();
+                email=$("#email").val();
+                pin=$("#pin").val();
+                confirmPin=$("#confirmPin").val();
+                photo=$("#photo").val();
+                companyName=$("#companyName").val();
+
+
+                //-----forms validation------------------------------------
+
+                if (firstName == "" ) {
+                    alert("FIRST NAME must be filled out");
+                    return false;
+                }
+                if (lastName == "" ) {
+                    alert("LAST NAME must be filled out");
+                    return false;
+                }
+                var mailFormat = /^([a-z A-Z 0-9 _\.\-])+\@(([a-z A-Z 0-9\-])+\.)+([a-z A-z 0-9]{2,4})+$/;
+                if (!mailFormat.test(email)) {
+                    alert("Please input a valid EMAIL address!");
+                    return false;
+                }
+                var pinFormat=/^\d{4}$/;
+                if (!pinFormat.test(pin)) {
+                    alert("Pin code should be 4 digits ");
+                    return false;
+                }
+                if (!pinFormat.test(confirmPin)) {
+                    alert("Confirm Pin code should be 4 digits ");
+                    return false;
+                }
+                if (pin != confirmPin) {
+                    alert("Pin and Confirm Pin don't match!");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/users/addUser/step2",{
+                    userToAddUpdate_ID: userToAddUpdate_ID,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    pin: pin,
+                    photo: photo,
+                    companyName: companyName
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Email already in use. Choose a different Email .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form>
+    <input type="hidden" id="userTempID"  value="<%= user._id %>">
+
+    <% /* if user as 1 or more Roles different from Parents or utilityUsers*/%>
+    <% if (anyOtherRole == 1) {%>
+        <label for="firstName"><b>First Name:</b></label><br>
+        <input type="text" id="firstName" size="40" placeholder="ex: Manuel" ><br><br>
+        <label for="lastName"><b>Last Name:</b></label><br>
+        <input type="text" id="lastName" size="40" placeholder="ex: Neves"><br><br>
+        <label for="email"><b>Email:</b></label><br>
+        <input type="email" id="email" size="40" placeholder="ex: Manuel.Neves@gmail.com"><br><br>
+        <label for="pin"><b>Pin:</b></label><br>
+        <input type="password" id="pin" size="40" placeholder="ex: 1234"><br><br>
+        <label for="confirmPin"><b>Confirm Pin:</b></label><br>
+        <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
+        <input type="hidden" id="photo" >
+        <% /* if user as 1 or more Roles and one is Parents Role and  has no UtilityUsers Role*/%>
+        <% if (parentRole == 1 && utilityUserRole == 0 ) {%>
+            <label for="student"><b>Student:</b></label><br>
+            <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
+        <% } %>
+        <% /* if user as 1 or more Roles and one is UtilityUsers Role and  has no Parent Role*/%>
+        <% if (parentRole == 0 && utilityUserRole == 1 ) {%>
+            <label for="companyName"><b>Company Name / Note:</b></label><br>
+            <input type="text" id="companyName" size="40" placeholder="ex1: Gas company / ex2: IT issues - Pedro" ><br>
+
+        <% } %>
+        <% /* if user as 1 or more Roles and one is Parent Role and  another is UtilityUsers Role*/%>
+        <% if (parentRole == 1 && utilityUserRole == 1 ) {%>
+            <label for="companyName"><b>Company Name:</b></label><br>
+            <input type="text" id="companyName" size="40" placeholder="ex: Gas company or IT issues - Pedro or water related Problems" ><br><br>
+
+            <label for="student"><b>Student:</b></label><br>
+            <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
+        <% } %>
+    <% } %>
+
+    <% /* if user as only Parent Role */%>
+    <% if (anyOtherRole == 0 && parentRole == 1 && utilityUserRole == 0 ) {%>
+        <label for="firstName"><b>First Name:</b></label><br>
+        <input type="text" id="firstName" size="40" placeholder="ex: Manuel" ><br><br>
+        <label for="lastName"><b>Last Name:</b></label><br>
+        <input type="text" id="lastName" size="40" placeholder="ex: Neves"><br><br>
+        <label for="email"><b>Email:</b></label><br>
+        <input type="email" id="email" size="40" placeholder="ex: Manuel.Neves@gmail.com"><br><br>
+        <label for="pin"><b>Pin:</b></label><br>
+        <input type="password" id="pin" size="40" placeholder="ex: 1234"><br><br>
+        <label for="confirmPin"><b>Confirm Pin:</b></label><br>
+        <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
+        <input type="hidden" id="photo" >
+        <label for="student"><b>Student:</b></label><br>
+        <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
+    <% } %>
+    <% /* if user as only Parent Role and UtilityUser Role */%>
+    <% if (anyOtherRole == 0 && parentRole == 1 && utilityUserRole == 1 ) {%>
+        <label for="firstName"><b>First Name:</b></label><br>
+        <input type="text" id="firstName" size="40" placeholder="ex: Manuel" ><br><br>
+        <label for="lastName"><b>Last Name:</b></label><br>
+        <input type="text" id="lastName" size="40" placeholder="ex: Neves"><br><br>
+        <label for="email"><b>Email:</b></label><br>
+        <input type="email" id="email" size="40" placeholder="ex: Manuel.Neves@gmail.com"><br><br>
+        <label for="pin"><b>Pin:</b></label><br>
+        <input type="password" id="pin" size="40" placeholder="ex: 1234"><br><br>
+        <label for="confirmPin"><b>Confirm Pin:</b></label><br>
+        <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
+        <input type="hidden" id="photo" >
+        <label for="companyName"><b>Company Name:</b></label><br>
+        <input type="text" id="companyName" size="40" placeholder="ex: Gas company or IT issues - Pedro or water related Problems" ><br><br>
+
+        <label for="student"><b>Student:</b></label><br>
+        <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
+    <% } %>
+    <% /* if user as only UtilityUser Role */%>
+    <% if (anyOtherRole == 0 && parentRole == 0 && utilityUserRole == 1 ) {%>
+        <label for="email"><b>Email:</b></label><br>
+        <input type="email" id="email" size="40" placeholder="ex: Manuel.Neves@gmail.com"><br><br>
+        <label for="pin"><b>Pin:</b></label><br>
+        <input type="password" id="pin" size="40" placeholder="ex: 1234"><br><br>
+        <label for="confirmPin"><b>Confirm Pin:</b></label><br>
+        <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
+        <label for="companyName"><b>Company Name:</b></label><br>
+        <input type="text" id="companyName" size="40" placeholder="ex: Gas company or IT issues - Pedro or water related Problems" ><br><br>
+    <% } %>
+</form>
+
+<form>
+    <form action="/dashboard">
+        <input type="submit" value="Cancel">
+    </form>
+    <button class="backButton" onclick="goBack()">Back</button>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+        <input type="button" id="next" value="Next" ><br>
+    <% } else { %>
+        <input type="button" id="next" value="Next" disabled><br>
+    <% } %>
+</form>
+
+</body>
+</html>

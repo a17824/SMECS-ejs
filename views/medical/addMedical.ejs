@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>add medical</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var select = '';
+            var myArray = $("#inUseMedicalID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1){
+                    select += '<option val=' + i + '>' + i + '</option>';
+                }
+            }
+            $('#some_select').html(select);
+
+            var utilityID,utilityName;
+            $("#btSubmit").click(function(){
+                utilityID=$("#some_select").val();
+                utilityName=$("#utilityName").val();
+
+                //-----forms validation------------------------------------
+                if (utilityName == "" ) {
+                    alert("MEDICAL  NAME must be filled out");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/medical/addmedical",{
+                    utilityID: utilityID,
+                    utilityName: utilityName
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Medical ID already in use. Choose a different ID .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="utilityName"><b>Medical Emergeny Name:</b></label><br>
+    <input type="text" id="utilityName" size="40" placeholder="ex: Gas" ><br><br>
+
+    <input type="hidden" id="inUseMedicalID" value="<%= array %>">
+
+    <% if (userAuthID == 1) {%>
+    <label for="utilityID"><b>Medical ID:</b></label><br>
+    <select id='some_select'></select><br><br>
+    <% } else { %>
+    <select id='some_select' style="display:none;"></select>
+    <% } %>
+
+</form>
+<form>
+    <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
+    <input type="button" id="btSubmit" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="btSubmit" value="Submit" disabled><br>
+    <% } %>
+</form>
+<form action="/medical/showMedical">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

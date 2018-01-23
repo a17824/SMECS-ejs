@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title>procedure Alert</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script src="/ckeditor/ckeditor.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+            var id;
+            $("#<%= alert.id %>").click(function(){
+                id=$(this).attr('id');
+                //var alertProcedure=$("#alertProcedure").val();
+                var data = CKEDITOR.instances.editor1.getData();
+
+                //-----forms validation------------------------------------
+
+                //--------------------------------forms validation end-------
+
+                $.post("/alerts/procedure",{
+                    alertToUpdate: id,
+                    alertProcedure: data //alertProcedure
+
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Alert Name already already in use. Choose a different Name.")
+
+                });
+            });
+        });
+        // function to resize textarea box --------------
+        (function($) {
+            jQuery.fn.cke_resize = function() {
+                return this.each(function() {
+                    var $this = $(this);
+                    var rows = $this.attr('rows');
+                    var height = rows * 20;
+                    $this.next("div.cke").find(".cke_contents").css("height", height);
+                });
+            };
+        })(jQuery);
+
+        CKEDITOR.on( 'instanceReady', function(){
+            $("textarea.ckeditor").cke_resize();
+        })
+        // ------------ end of function to resize textarea box
+    </script>
+</head>
+<body>
+<h1></h1>
+
+<form>
+    <p>
+        <input id="<%= alert.id %>" onclick="toggleReadOnly();" type="button" value="Save" style="display:none">
+        <input id="readOnlyOff" onclick="toggleReadOnly( false );" type="button" value="Edit Text" style="display:none">
+    </p>
+
+    <% if (aclModifyProcedure == null || aclModifyProcedure.checkBoxValue == true) {%>
+    <textarea class="ckeditor" cols="40" id="editor1" name="editor1" rows="25"><%= alert.alertProcedure %></textarea><br>
+
+
+    <script>
+        var editor;
+
+
+        // The instanceReady event is fired when an instance of CKEditor has finished
+        // its initialization.
+        CKEDITOR.on( 'instanceReady', function ( ev ) {
+            editor = ev.editor;
+
+            // Show this "on" button. (on page load puts button state "Edit Text" and Edit Only)
+            document.getElementById( 'readOnlyOff' ).style.display = '';
+            editor.setReadOnly( true );
+
+            // Event fired when the readOnly property changes.
+            editor.on( 'readOnly', function () {
+                document.getElementById( '<%= alert.id %>' ).style.display = this.readOnly ? 'none' : '';
+                document.getElementById( 'readOnlyOff' ).style.display = this.readOnly ? '' : 'none';
+            } );
+        } );
+
+
+        function toggleReadOnly( isReadOnly ) {
+            // Change the read-only state of the editor.
+            // http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setReadOnly
+            editor.setReadOnly( isReadOnly );
+        }
+    </script>
+
+
+
+    <% } else { %>
+    <textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="30" disabled><%= alert.alertProcedure %></textarea>
+    <script>
+        var editor = CKEDITOR.inline( 'editor1', {
+            removePlugins: 'toolbar',
+            allowedContent: true
+        } );
+    </script>
+    <% } %>
+
+
+    <button class="backButton" onclick="goBack()">Back</button>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deleted Utilities Users</title>
+    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th>Email</th>
+        <th>Note</th>
+        <th align="center">Deleted</th>
+        <th align="center">Restore User</th>
+        <th align="center">Erase</th>
+    </tr>
+    <tbody>
+    <% utilityUsers.forEach(function(user) { %>
+    <% if (user.softDeleted !== null) { %>
+    <tr>
+        <td ></td>
+        <td><%= user.email %></td>
+        <td><%= user.note %></td>
+        <td><%= user.softDeleted %></td>
+        <td align="center">
+            <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+            <a href="/utilities/restoreUtilityUser/<%= user.id %>"><button class="inTable">restore</button></a>
+            <% } else { %>
+            <a href="/utilities/restoreUtilityUser/<%= user.id %>"><button class="inTable" disabled>restore</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if (aclEraseUsers == null || aclEraseUsers.checkBoxValue == true) {%>
+                <a href="/utilities/eraseUtilityUser/<%= user.id %>"><button class="inTable">erase</button></a>
+            <% } else { %>
+                <a href="/utilities/eraseUtilityUser/<%= user.id %>"><button class="inTable" disabled>erase</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/utilities/showUtilitiesUsers">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

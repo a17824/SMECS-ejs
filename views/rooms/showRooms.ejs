@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Alerts</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+        $("#roomLink").live("click", function () {
+            $.ajax({
+                url: '/rooms/showRooms',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+
+                error: function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Room not deleted.")
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/options/createRoom">
+    <% if (aclAddRoom == null || aclAddRoom.checkBoxValue == true) {%>
+    <input type="submit" value="Add Room"><br><br>
+    <% } else { %>
+    <input type="submit" value="Create Alert" disabled><br><br>
+    <% } %>
+</form>
+
+<table id="myTable" class="tablesorter">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th>Floor</th>
+        <th>Room</th>
+        <% if (userAuthID == 1) {%>
+        <th>Room ID</th>
+        <% } %>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    <tbody>
+    <% floor.forEach(function(floor) { %>
+    <% room.forEach(function(room) { %>
+    <% if(floor.floorName == room.floorName) { %>
+
+    <tr>
+
+        <td><%= room.floorName %></td>
+        <td><%= room.roomName %></td>
+        <% if (userAuthID == 1) {%>
+        <td><%= room.roomID %></td>
+        <% } %>
+        <td>
+            <% if (aclModifyRoom == null || aclModifyRoom.checkBoxValue == true) {%>
+            <a href="/options/updateRoom/<%= room.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+            <a href="/options/updateRoom/<%= room.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td>
+            <% if (aclDeleteRoom == null || aclDeleteRoom.checkBoxValue == true) {%>
+            <a href="/options/deleteRoom/<%= room.id %>" id="roomLink"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/options/deleteRoom/<%= room.id %>" id="roomLink"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+
+    <% } %>
+    <% }); %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

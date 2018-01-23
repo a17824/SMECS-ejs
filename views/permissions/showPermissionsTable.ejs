@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PermissionsTable</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        EnableSubmit = function(val)
+        {
+            var sbmt = document.getElementById("btSave");
+            if (val.onchange)
+            {
+                sbmt.disabled = false;
+            }
+            else
+            {
+                sbmt.disabled = false;
+            }
+        };
+
+        $(document).ready(function(){
+
+            $('.chk-all').on('change', function(){
+                $('.' + $(this).data('child')).prop('checked', this.checked);
+            });
+
+            var searchIDsNotChecked = {};
+            $("#btSave").click(function(event) {
+                event.preventDefault();
+                searchIDsNotChecked = $('input[name="aclPermissionsCheckBox"]:not(:checked)').map(function () {
+                    return $(this).val();
+                }).get();
+                var searchIDsChecked = $('input[name="aclPermissionsCheckBox"]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+                //console.log("NOT selected::::" + searchIDsNotChecked);
+                //console.log("selected::::" + searchIDsChecked);
+                $.ajax({
+                    url:'/permissions/showPermissionsTable',
+                    type:'post',
+                    data:{searchIDsNotChecked:searchIDsNotChecked, searchIDsChecked:searchIDsChecked},
+                    success:function(response){
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<!--<p>
+<form action="/users/addUser">
+    <input type="submit" value="Add User"><br><br>
+</form>
+</p>-->
+<!--<p> </p>-->
+<form>
+    <input type="submit" name="btSave" id="btSave" value="SAVE" disabled="true" onclick="this.disabled=true"><br><br>
+</form>
+
+
+
+<table id="myTable" class="table">
+    <caption></caption>
+    <thead>
+    <tr>
+        <td></td>
+        <% privilege.forEach(function(privilege) { %>
+        <th id="<%= privilege.privilegeName %>" scope="col"><b><%= privilege.privilegeName %></b></th>
+        <% }); %>
+    </tr>
+    </thead>
+    <tbody>
+    <% permissionsGroup.forEach(function(permissionsGroup) { %>
+    <tr>
+
+
+        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= permissionsGroup.permissionsGroupName %></b></th>
+        <% privilege.forEach(function(privilege) { %>
+        <td headers="users " align="center" bgcolor="#f5f5f5">
+            <% if ((aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) && userAuthID < privilege.privilegeID) {%>
+            <input type="checkbox"
+                   name="multi"
+                   class="chk-all"
+                   data-child="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="multi"
+                   class="chk-all"
+                   data-child="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <% }); %>
+    </tr>
+    <% permissions.forEach(function(permissions) { %>
+    <% if (permissionsGroup.permissionsGroupID == permissions.permissionsGroupID) { %>
+    <tr>
+        <th align="left" headers="users" id="<%= permissions.permissionsName %>"><%= permissions.permissionsName %></th>
+        <% privilege.forEach(function(privilege) { %>
+        <td headers="users <%= permissions.permissionsName %>  <%= privilege.privilegeName %>">
+            <% if ((aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) &&
+                    (userAuthID < privilege.privilegeID) &&
+                    (permissions.permissionsName != 'Show Permissions') &&
+                    (permissions.permissionsName != 'Add Permission')  &&
+                    (permissions.permissionsName != 'Modify Permission')  &&
+                    (permissions.permissionsName != 'Delete Permission')  &&
+                    (permissions.permissionsName != 'Show Privileges')  &&
+                    (permissions.permissionsName != 'Add Privilege')  &&
+                    (permissions.permissionsName != 'Modify Privilege')  &&
+                    (permissions.permissionsName != 'Delete Privilege')  &&
+                    (permissions.permissionsName != 'Add Alert Group')  &&
+                    (permissions.permissionsName != 'Delete Alert Group')
+            ) {%>
+            <input type="checkbox"
+                   name="aclPermissionsCheckBox"
+                   value="<%= privilege.privilegeID %><%= permissions.permissionsID %>"
+                   class="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
+                    <% var checkBoxNumber = privilege.privilegeID+''+permissions.permissionsID %>
+                    <% aclPermissions.forEach(function(acl) { %>
+                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                   checked
+                    <% } %>
+                    <% }); %>
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="aclPermissionsCheckBox"
+                   value="<%= privilege.privilegeID %><%= permissions.permissionsID %>"
+                   class="chk-all"
+                    <% var checkBoxNumber = privilege.privilegeID+''+permissions.permissionsID %>
+                    <% aclPermissions.forEach(function(acl) { %>
+                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                   checked
+                    <% } %>
+                    <% }); %>
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <% }); %>
+    </tr>
+    <% } %>
+    <% }); %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+
+</body>
+</html>

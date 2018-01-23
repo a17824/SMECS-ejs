@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>add photo</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/students/addPhoto/:id" enctype="multipart/form-data" method="post">
+
+
+
+    <input name="<%= student.id %>" type="hidden"/>
+    <input single="single" name="upload" type="file" accept="image/*" required/><br><br>
+    <input type="submit" value="Upload" />
+</form>
+</body>
+</html>

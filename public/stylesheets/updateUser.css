@@ -1,0 +1,129 @@
+div.disable {
+    background-color: ghostwhite;
+    border: solid 2px #ccc;
+    margin: auto 4em;
+    padding: 1em;
+    width: 290px;
+}
+div.enable {
+    background-color: #fff;
+    border: solid 2px #ccc;
+    margin: auto 4em;
+    padding: 1em;
+    width: 290px;
+}
+
+div.checkboxRadioboxDiv {
+    margin: auto 3em;
+    padding: 1em;
+    width: 560px;
+}
+
+div.labelsDivEnable {
+    margin: auto 3em;
+    padding: 1em;
+    width: 560px;
+    color: #000000;
+}
+div.labelsDivDisable {
+    margin: auto 3em;
+    padding: 1em;
+    width: 550px;
+    color: #444444;
+
+}
+
+ul.enable {
+    list-style-type: none;
+    width: 15.3em;
+    margin: 0.3em 0;
+    padding: 10px;
+    background: #ffffff;
+    border: solid 1px #ccc;
+}
+ul.disable {
+    list-style-type: none;
+    width: 15.3em;
+    margin: 0.3em 0;
+    padding: 10px;
+    background: #ffffff;
+    pointer-events: none;
+    border: solid 1px #ccc;
+}
+
+ul.enable li {
+    background: #DEF url("./../miscPictures/cross_bright.png") no-repeat 98% center;
+    margin: 1px;
+    padding: 0.1em 0.3em;
+    cursor: pointer;
+    color: #46A;
+    font-weight: bold;
+    border: solid 1px #CDE;
+}
+ul.disable li {
+    background: #ced8ec url("./../miscPictures/cross_bright_disable.png") no-repeat 98% center;
+    margin: 1px;
+    padding: 0.1em 0.3em;
+    cursor: default;
+    color: #444444;
+    font-weight: bold;
+    border: solid 1px #CDE;
+    pointer-events: none;
+}
+
+select.enable {
+    width: 20em;
+    color: #46A;
+    font-weight: bold;
+}
+select.disable {
+    width: 20em;
+    pointer-events: none;
+    cursor: default;
+    font-weight: bold;
+}
+
+img.enable {
+    content:url("./../miscPictures/add.png");
+    cursor: pointer;
+}
+img.disable {
+    content:url("./../miscPictures/add_disable.png");
+    pointer-events: none;
+    cursor: default;
+}
+
+label.enable {
+    color: #000000;
+    font-weight: unset;
+}
+
+label.disable {
+    color: #444444;
+    font-weight: unset;
+}
+input.enable {
+    color: #000000;
+    cursor: auto;
+    font-weight: unset;
+    width: 18em;
+}
+input.disable {
+    color: #444444;
+    background: ghostwhite;
+    pointer-events: none;
+    cursor: default;
+    font-weight: unset;
+    width: 18em;
+}
+
+a.enable {
+    color: #46A;
+    font-weight: bold;
+}
+a.disable {
+    color: #444444;
+    font-weight: bold;
+    pointer-events: none;
+    cursor: default;
+}

@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>add photo</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+         var socket = io.connect();
+
+         socket.on('uploadProgress' , function (percent){
+         alert(percent);
+         //$('#percent').text(percent);
+         });
+
+    </script> -->
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/students/addMultiImage" enctype="multipart/form-data" method="post">
+
+
+
+    <input multiple="multiple" name="upload" id="upload" type="file" accept="image/*" /><br><br>
+    <input type="submit" value="Upload" onclick="progressBarSim()"/><br><br>
+</form>
+
+<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+<span id="status"></span>
+<h1 id="finalMessage"></h1>
+
+<script>
+    var al = 0;
+    function progressBarSim() {
+        var bar = document.getElementById('progressBar');
+        var status = document.getElementById('status');
+        status.innerHTML = al+"%";
+        bar.value = al;
+        al++;
+        var sim = setTimeout("progressBarSim("+al+")",5);
+        if(al == 100){
+            status.innerHTML = "100%";
+            bar.value = 100;
+            clearTimeout(sim);
+            var finalMessage = document.getElementById('finalMessage');
+            finalMessage.innerHTML = "Process almost complete! please wait...";
+        }
+    }
+</script>
+</body>
+</html>

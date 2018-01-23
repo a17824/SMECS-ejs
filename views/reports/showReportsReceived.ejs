@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Reports</title>
+    <link rel='stylesheet' href='/stylesheets/showReportsReceived.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<table id="myTable" class="tablesorter" width="70%" style="float: left ">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th colspan="4" ><b><%= reportSent.alertTypeName %> - <%= reportSent.alertName %></b></th>
+    </tr>
+    <tr>
+        <th>Scope</th>
+        <th>Alert sent To</th>
+        <th>Received</th>
+        <th>Alert viewed</th>
+    </tr>
+    <tbody>
+    <% reportReceived.forEach(function(reportS) { %>
+    <tr>
+        <td><%= reportS.scope %></td>
+        <td><%= reportS.to %></td>
+        <td><%= reportS.received %></td>
+        <td><%= reportS.viewed %></td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table>
+
+<table width="25%" style="float: right">
+    <tr>
+        <th>Average Users time to view this Alert</th>
+    </tr>
+    <tr>
+        <td>11 sec.</td>
+    </tr>
+</table><br><br><br><br><br><br><br><br>
+
+<table width="25%" style="float: right">
+    <tr>
+        <th>Fastest User to view this Alert</th>
+        <th>time</th>
+    </tr>
+    <tr>
+        <td>Joana Gomes</td>
+        <td>6 sec.</td>
+    </tr>
+</table><br><br><br><br><br><br><br><br>
+
+<table width="25%" style="float: right">
+    <tr>
+        <th>Slowest User to view this </th>
+        <th>time</th>
+    </tr>
+    <tr>
+        <td>Ariel Fisher</td>
+        <td>1 day</td>
+    </tr>
+</table>
+
+
+
+<form action="/reports/showReports">
+    <input type="submit" value="Back">
+</form>
+</body>
+</html>

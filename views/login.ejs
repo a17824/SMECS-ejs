@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>login</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1>SMECS Login</h1>
+
+<% if (error) { %>
+<p class="error" style="color: red"><%= error %></p>
+<% } %>
+
+<form action="/login"  method="post">
+
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <label for="email"><b>Email:</b></label><br>
+    <input type="email" name="email" size="40" placeholder="ex: Manuel.Neves@gmail.com" required="true"><br><br>
+    <label for="pin"><b>Pin:</b></label><br>
+    <input type="password" name="pin" size="40" placeholder="ex: 1234" required="true"><br><br>
+
+    <input type="submit" id="btSubmit" value="Login">
+    <a href="/forgot">Forgot Password?</a>
+</form>
+</body>
+</html>

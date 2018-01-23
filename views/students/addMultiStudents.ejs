@@ -1,0 +1,44 @@
+<html>
+<head>
+    <title>add multi students</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        var _validFileExtensions = [".CSV", ".TXT"];
+        function ValidateSingleInput(oInput) {
+
+            if (oInput.type == "file") {
+                var sFileName = oInput.value;
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+
+                    if (!blnValid) {
+                        alert("Invalid file type. File extensions allowed: " + _validFileExtensions.join(", "));
+                        oInput.value = "";
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/students/addMultiStudents" enctype="multipart/form-data" method="post">
+
+
+
+    <input type="file" name="file1" onchange="ValidateSingleInput(this);" /><br><br>
+    <input type="submit" value="Upload" />
+</form>
+</body>
+</html>
