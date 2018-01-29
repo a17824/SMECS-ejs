@@ -19,6 +19,7 @@ var UsersSchema = new mongoose.Schema({
         studentLastName: String
     }],
     companyName: String,
+    contactName: String,
     softDeleted: { type: String, default: null},
     resetPasswordToken: String,
     resetPasswordExpires: Date,

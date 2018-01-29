@@ -404,20 +404,13 @@ module.exports.update = function(req, res) {
                 if (user.userRoleID[i] == 98) { //if user has Parent Role
                     ifUserHasParentRole = 1;
                     user.parentOf.forEach(function (student) {
-                        /*for (var k in student) {
-                            console.log(student[k]);
-                        }
-*/
                         studentsIdArray.push(student.studentID);
                     });
-
                 }else{
 
                 }
 
             }
-            console.log('array');
-            console.log(studentsIdArray);
             callback(
                 null,
                 user,
@@ -494,8 +487,6 @@ module.exports.updatePost = function(req, res) {
     async.waterfall([
         function (callback) {
             models.Users.findById({'_id': userToAddUpdate_ID}, function(err, user){
-                console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
-                console.log(user);
                 user.userRoleID = req.body.userRoleID;
                 user.userRoleName = req.body.userRoleName;
                 user.userPrivilegeID = req.body.userPrivilegeID;
@@ -520,8 +511,11 @@ module.exports.updatePost = function(req, res) {
         },
         function (user, callback) {
             //Parent User: update "ParentOf" field
-
+            console.log('TTTTTTTTTTTTTTTTTTTTTTT');
+            console.log(parentOf);
             if (ifUserHasParentRole == 1) {
+                console.log('"parentOf = "DDDDDDDDDDDDDDDDDDDDDDDDDDD');
+
                 user.parentOf = [];
                 models.Students.find({'studentID': parentOf}, function (err, students) {
                     for (var i=0; i < students.length; i++) {
@@ -544,8 +538,10 @@ module.exports.updatePost = function(req, res) {
             //Utility user: delete or save "Company Name" field
             if (ifUserHasUtilityUserRole == 1) {
                 user.companyName = req.body.companyName;
+                user.contactName = req.body.contactName;
             }else{
                 user.companyName = undefined;
+                user.contactName = undefined;
             }
             callback(null, user);
         }

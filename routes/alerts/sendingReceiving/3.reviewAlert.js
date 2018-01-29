@@ -110,16 +110,6 @@ module.exports.postReviewAlert = function(req, res, next) {
 
     ], function (err, tempAlert) {
 
-        if(err) {
-            console.log(err);
-            res.send({message: 'something went wrong'});
-        } else {
-
-            var pushTokenArray = [];
-            tempAlert.sentUsersScope.forEach(function (users) {
-                if (users.userPushToken)
-                    pushTokenArray.push(users.userPushToken);
-            });
 
             /********************************
              *                              *
@@ -128,7 +118,6 @@ module.exports.postReviewAlert = function(req, res, next) {
              * *****************************/
 
             res.send({redirect: '/dashboard/'});
-        }
     });
 };
 

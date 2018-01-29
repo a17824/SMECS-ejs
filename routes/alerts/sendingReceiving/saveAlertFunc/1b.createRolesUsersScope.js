@@ -1,7 +1,7 @@
 //Dependencies
 var models = require('./../../../models');
 var async = require("async");
-var mongoose =  require('mongoose');
+
 
 
 /**
@@ -46,9 +46,14 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
 
                 //save to AlertSentTemp all ROLES and USERS that will receive alert
                 models.AlertSentTemp.findById({'_id': alert._id}, function(error, alertUpdate) {
-                    if(error){
+                    if(error ||
+                        alertUpdate.sentRoleIDScope == null ||
+                        alertUpdate.sentRoleNameScope == null ||
+                        arrayRoleID == null ||
+                        arrayRoleName == null){
                         console.log('erro da primeira vez que se escolhe um alerta');
-                        req.flash('error_messages', 'An error occurred. Please try again and contact the administrator');
+                        req.flash('error_messages',
+                            'Please try again and contact the administrator if this message continues to show');
                         res.send({redirect: '/alerts/sending/chooseAlert/'});
                     }else {
                         alertUpdate.sentRoleIDScope = arrayRoleID;

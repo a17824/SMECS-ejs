@@ -8,31 +8,33 @@
         var choices;
         function selectUser(select)
         {
-            var option = select.options[select.selectedIndex];
-            if(option.id != 'studentList') {
+            var option = $("#dataList").val();
+            //get datalist data-value to value2send
+            var value2send= document.querySelector('#students option[value="'+option+'"]').dataset.value;
+
                 var ul = select.parentNode.getElementsByTagName('ul')[0];
                 choices = ul.getElementsByTagName('input');
 
                 for (var i = 0; i < choices.length; i++) {
-                    if (choices[i].value == option.value) {
+
+                    if (choices[i].value == value2send) {
                         return;
                     }
                 }
-
                 var li = document.createElement('li');
                 var input = document.createElement('input');
-                var text = document.createTextNode(option.firstChild.data);
+                var text = document.createTextNode(option);
 
                 input.type = 'hidden';
                 input.name = 'users[]';
-                input.value = option.value;
+                input.value = value2send;
 
                 li.appendChild(input);
                 li.appendChild(text);
                 li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
 
                 ul.appendChild(li);
-            }
+
 
         }
         var usersToRemove = [];
@@ -77,8 +79,8 @@
             });
 
             function checkBoxOffParents() {
-                $('#smecsUserSelect').removeClass().addClass('disable');
-                $("#smecsUserSelect").attr('disabled',true);
+                $('#dataList').removeClass().addClass('disable');
+                $("#dataList").attr('disabled',true);
                 $('#imgAdd').removeClass().addClass('disable');
                 $('#smecsUserLabel').removeClass().addClass('disable');
                 $('#smecsUserDiv').removeClass().addClass('disable');
@@ -86,8 +88,8 @@
                 $('#clickHere').removeClass().addClass('disable');
             }
             function checkBoxOnParents() {
-                $('#smecsUserSelect').removeClass().addClass('enable');
-                $("#smecsUserSelect").attr('disabled',false);
+                $('#dataList').removeClass().addClass('enable');
+                $("#dataList").attr('disabled',false);
                 $('#imgAdd').removeClass().addClass('enable');
                 $('#smecsUserLabel').removeClass().addClass('enable');
                 $('#smecsUserDiv').removeClass().addClass('enable');
@@ -117,11 +119,15 @@
             function checkBoxOffUtilityName() {
                 $('#companyName').removeClass().addClass('disable');
                 $('#companyNameText').removeClass().addClass('disable');
+                $('#contactName').removeClass().addClass('disable');
+                $('#contactNameText').removeClass().addClass('disable');
                 $('#labelsDiv3').removeClass().addClass('labelsDivDisable');
             }
             function checkBoxOnUtilityName() {
                 $('#companyName').removeClass().addClass('enable');
                 $('#companyNameText').removeClass().addClass('enable');
+                $('#companyName').removeClass().addClass('enable');
+                $('#contactNameText').removeClass().addClass('enable');
                 $('#labelsDiv3').removeClass().addClass('labelsDivEnable');
             }
 
@@ -144,7 +150,7 @@
                 }
             });
 
-            var userID,userPrivilegeName,userPrivilegeID,firstName,lastName,email,newPin, oldPin,confirmPin,photo,companyNameText;
+            var userID,userPrivilegeName,userPrivilegeID,firstName,lastName,email,newPin, oldPin,confirmPin,photo,companyNameText,contactNameText;
             $("#<%= users.id %>").click(function(){
                 userID=$(this).attr('id');
 
@@ -167,6 +173,7 @@
                 confirmPin=$("#confirmPin").val();
                 photo=$("#photo").val();
                 companyNameText=$("#companyNameText").val();
+                contactNameText=$("#contactNameText").val();
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -285,6 +292,7 @@
                     pin: pin,
                     parentOf: arrayUsers,
                     companyName: companyNameText,
+                    contactName: contactNameText,
                     photo: photo
                 },function(data){
                     if(data==='done')
@@ -322,7 +330,8 @@
         <input type="password" id="confirmPin" size="40" value="<%= users.pin %>"><br>
 
         <input type="hidden" id="savedValueSmecsUsers" value="<%= studentsIdArray %>">
-        <input type="hidden" id="oldUtilityName" value="<%= users.companyNameText %>">
+        <input type="hidden" id="oldUtilityName" value="<%= users.companyName %>">
+        <input type="hidden" id="oldUtilityContact" value="<%= users.contactName %>">
         <input type="hidden" id="oldUtilityID" value="<%= users.utilityID %>">
         <input type="hidden" id="photo" >
     </div>
@@ -330,30 +339,29 @@
     <label for="userRole"><b>User Role:</b></label><br>
     <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">
         <% roles2.forEach(function(role2) { %>
-        <% var check = 0;    %>
-        <% for (var i=0; i < users.userRoleID.length; i++) { %>
-        <%if (role2.roleID != 99) { %>
-        <%if (role2.roleID == users.userRoleID[i]) { %>
-
-        <%if (role2.roleID == 98 && role2.roleID == users.userRoleID[i]) { %>
-        <input class="other" type="checkbox" id="parents" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
-        <% check = 1; %>
-        <% } else {%>
-
-        <input class="other" type="checkbox" id="parents" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
-        <% check = 1; %>
-        <% }  %>
-        <% }  %>
-        <% }  %>
-
-        <% } %>
-        <% if (check == 0) {%>
-        <%if (role2.roleID != 98 && role2.roleID != 99) { %>
-        <input class="other" type="checkbox" name="checkbox" value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
-
-        <% } %>
-
-        <% } %>
+            <% var check = 0;    %>
+            <% for (var i=0; i < users.userRoleID.length; i++) { %>
+                <%if (role2.roleID != 99) { %>
+                    <%if (role2.roleID == users.userRoleID[i]) { %>
+                        <%if (role2.roleID == 98 && role2.roleID == users.userRoleID[i]) { %>
+                            <input class="other" type="checkbox" id="parents" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
+                            <% check = 1; %>
+                        <% } else {%>
+                            <input class="other" type="checkbox" class="checkbox" name="checkbox" value="<%= role2.roleID %>" checked><label for="roleName"><%= role2.roleName %></label><br>
+                            <% check = 1; %>
+                        <% }  %>
+                    <% }  %>
+                <% }  %>
+            <% } %>
+            <% if (check == 0) {%>
+                <%if (role2.roleID != 99) { %>
+                    <%if (role2.roleID == 98) { %>
+                        <input class="other" type="checkbox" id="parents" name="checkbox" value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+                    <% } else {%>
+                        <input class="other" type="checkbox" class="checkbox" name="checkbox" value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+                    <% }  %>
+                <% } %>
+            <% } %>
         <% }); %>
 
         <div id="labelsDiv2" class="labelsDiv2">
@@ -373,15 +381,24 @@
                 </ul>
 
 
-                <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
-                    <!–– <option selected disabled hidden> -- select a student -- </option> ––>
-                    <option disabled selected id="studentList"> - select a student from dropdown list - </option>
+
+
+                <input
+                        class="enable"
+                        id="dataList" list="students"
+                        name="student"
+                        placeholder="type student name"
+                        value="<%= students.studentName %>"
+                        onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
+                <dataList id="students">
                     <% students.forEach(function(student) { %>
-
-                    <option value="<%= student.studentID %>" ><%= student.firstName %> <%= student.lastName %> </option>
-
+                    <option data-value="<%= student.studentID %>" value="<%= student.firstName %> <%= student.lastName %>"></option>
                     <% }); %>
-                </select>
+                </dataList>
+
+
+
+
                 <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
                 <br><br>
                 If you want to add a new student to dropdown list <a id="clickHere" class="enable"href="/students/addStudent">click here</a>.
@@ -413,7 +430,9 @@
 
         <div id="labelsDiv3" class="labelsDiv3">
             Company Name:
-            <input type="text" id="companyNameText" size="40" value="<%= users.companyName %>" class="disable">
+            <input type="text" id="companyNameText" size="40" value="<%= users.companyName %>" placeholder="ex: Gas Company" class="disable"><br>
+            Contact Name (optional):
+            <input type="text" id="contactNameText" size="40" value="<%= users.contactName %>" class="disable">
         </div>
     </div>
 
