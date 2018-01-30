@@ -140,6 +140,9 @@ module.exports.addStep2 = function(req, res) {
         function(callback){
             models.UsersAddUpdateTemp.findById(req.params.id).exec(callback);
         },
+        function(callback){
+            models.Students.find().sort({"firstName":1}).exec(callback);
+        },
         function(callback){aclPermissions.addUsers(req, res, callback);} //aclPermissions addUsers
 
     ],function(err, results){
@@ -173,7 +176,8 @@ module.exports.addStep2 = function(req, res) {
                 utilityUserRole: ifUserHasUtilityUserRole,
                 anyOtherRole: ifUserHasAnyOtherRole,
                 user: results[0],
-                aclAddUsers: results[1] //aclPermissions addUsers
+                students: results[1],
+                aclAddUsers: results[2] //aclPermissions addUsers
             });
         }
     })
@@ -195,7 +199,13 @@ module.exports.addStep2Post = function(req, res) {
             user.pin = hash;
             user.photo = req.body.photo;
             user.companyName = req.body.companyName;
-
+            if (req.body.anyOtherRole == 1 && req.body.utilityUserRole == 1 ||
+                req.body.utilityUserRole == 1 && req.body.parentRole == 1
+            ) {
+                user.contactName = req.body.firstName + ' ' + req.body.lastName;
+            } else {
+                user.contactName = req.body.contactName;
+            }
             user.save(function (err) {
                 //check is email already exit in USERS database
                 models.Users.findOne({'email': req.body.email.toLowerCase()}, function (err, result) {
@@ -280,11 +290,29 @@ module.exports.addStep3Post = function(req, res) {
         else {
             user.userPrivilegeID = req.body.userPrivilegeID;
             user.userPrivilegeName = req.body.userPrivilegeName;
+            var hash = bcrypt.hashSync(user.pin, bcrypt.genSaltSync(10));
 
             user.save(function (err) {
                 if (err) {
                     console.log('Error ' + err);
                 } else {
+                    var ifUserHasParentRole = 0;
+                    var ifUserHasUtilityUserRole = 0;
+                    var ifUserHasAnyOtherRole = 0;
+                    for (var i = 0; i < user.userRoleID.length; i++) {
+                        //if user as a role different from Parent or UtilityUser Role
+                        if (user.userRoleID[i] != 98 && user.userRoleID[i] != 99) {
+                            ifUserHasAnyOtherRole = 1;
+                        }
+                        //if user has UtilityUser Role
+                        if (user.userRoleID[i] == 99) {
+                            ifUserHasUtilityUserRole = 1;
+                        }
+                        //if user has Parent Role
+                        if (user.userRoleID[i] == 98) {
+                            ifUserHasParentRole = 1;
+                        }
+                    }
                     var user1 = new models.Users({
                         userRoleID: user.userRoleID,
                         userRoleName: user.userRoleName,
@@ -293,13 +321,45 @@ module.exports.addStep3Post = function(req, res) {
                         firstName: user.firstName,
                         lastName: user.lastName,
                         email: user.email,
-                        pin: user.hash, //req.body.pin,
+                        pin: hash,
                         photo: user.photo
                     });
+
+                    /*
+
+                    */
+                    if(user1.parentOf.length < 1){
+                        user1.parentOf = undefined;
+                    }
+                    if(ifUserHasAnyOtherRole == 1 && ifUserHasUtilityUserRole == 1){
+                        user1.companyName = user.companyName;
+                        user1.contactName = user.firstName + ' ' + user.lastName;
+                    }
+                    if(ifUserHasAnyOtherRole == 0 && ifUserHasUtilityUserRole == 1){
+                        user1.companyName = user.companyName;
+                        user1.contactName = user.contactName;
+                    }
+                    if (ifUserHasParentRole == 1) {
+                        user.parentOf = [];
+                        models.Students.find({'studentID': parentOf}, function (err, students) {
+                            for (var i=0; i < students.length; i++) {
+                                var student = {
+                                    _id: students[i]._id,
+                                    studentID: students[i].studentID,
+                                    studentFirstName: students[i].firstName,
+                                    studentLastName: students[i].lastName
+                                };
+                                user.parentOf.push(student);
+                            }
+                            console.log('"parentOf" added successfully');
+                        });
+                    }
+
                     user1.save(function (err) {
                         if (err && (err.code === 11000 || err.code === 11001)) {
                             return res.status(409).send('showAlert')
                         }else{
+
                             return res.send({redirect:'/users/showUsers'})
                         }
                     });
@@ -368,9 +428,6 @@ module.exports.update = function(req, res) {
                     //if user as a role different from Parent or UtilityUser Role
                     if (user.userRoleID[i] != 98 && user.userRoleID[i] != 99) {
                         ifUserHasAnyOtherRole = 1;
-                    }
-                    if (user.userRoleID[i] == 1) { //if user has Principal Role
-                        ifUserHasPrincipalRole = 1;
                     }
                 }
                 callback(
@@ -511,15 +568,16 @@ module.exports.updatePost = function(req, res) {
         },
         function (user, callback) {
             //Parent User: update "ParentOf" field
-            console.log('TTTTTTTTTTTTTTTTTTTTTTT');
-            console.log(parentOf);
             if (ifUserHasParentRole == 1) {
-                console.log('"parentOf = "DDDDDDDDDDDDDDDDDDDDDDDDDDD');
-
                 user.parentOf = [];
                 models.Students.find({'studentID': parentOf}, function (err, students) {
                     for (var i=0; i < students.length; i++) {
-                        var student = {_id: students[i]._id, studentID: students[i].studentID, studentFirstName: students[i].firstName, studentLastName: students[i].lastName};
+                        var student = {
+                            _id: students[i]._id,
+                            studentID: students[i].studentID,
+                            studentFirstName: students[i].firstName,
+                            studentLastName: students[i].lastName
+                        };
                         user.parentOf.push(student);
                     }
                     console.log('"parentOf" updated successfully');
@@ -575,219 +633,6 @@ module.exports.updatePost = function(req, res) {
 };
 /*-------------------------------------------end of update user*/
 
-/* UPDATE USERS STEP1. ---------------------------------------------------*/
-module.exports.updateStep1 = function(req, res) {
-    async.parallel([
-        function(callback){
-            models.Users.findById(req.params.id).exec(callback);
-        },
-        function(callback){
-            models.Roles2.find().sort({"roleID":1}).exec(callback);
-        },
-        function(callback){aclPermissions.modifyUsers(req, res, callback);} //aclPermissions modifyUsers
-
-    ],function(err, results){
-        if (results[2].checkBoxValue == false) {
-            console.log(err);
-            console.log('No Permission');
-            req.flash('error_messages', 'No permission to update User info ');
-            res.redirect('/users/showUsers/');
-            //res.send({redirect: '/users/showUsers/'});
-        }
-        else {
-            res.render('users/updateUserStep1', {
-                title: 'UPDATE USER: Step 1',
-                userAuthID: req.user.userPrivilegeID,
-                user: results[0],
-                roles2: results[1],
-                aclModifyUsers: results[2]  //aclPermissions modifyUsers
-            });
-        }
-    })
-};
-module.exports.updateStep1Post = function(req, res) {
-    var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
-    models.Users.findById({'_id': userToAddUpdate_ID}, function(err, user){
-        user.userRoleID = req.body.userRoleID;
-        user.userRoleName = req.body.userRoleName;
-        user.save(function (er) {
-            if (er) {
-                console.log('error updating user step1');
-                return res.status(409).send('showAlert');
-            }else{
-                console.log('user role updated');
-                return res.send({redirect: '/users/updateUser/step2/' + userToAddUpdate_ID})}
-        });
-    });
-};
-/*-------------------------------------------end of update Step1 user*/
-
-/* UPDATE USERS STEP2. ---------------------------------------------------*/
-module.exports.updateStep2 = function(req, res) {
-    async.parallel([
-        function(callback){
-            models.Users.findById(req.params.id).exec(callback);
-        },
-        function(callback){aclPermissions.modifyUsers(req, res, callback);} //aclPermissions addUsers
-
-    ],function(err, results){
-        if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'No user found');
-            res.redirect('/users/showUsers/');
-        }
-        else {
-            var ifUserHasParentRole = 0;
-            var ifUserHasUtilityUserRole = 0;
-            var ifUserHasAnyOtherRole = 0;
-            for (var i=0; i < results[0].userRoleID.length; i++) {
-
-                if (results[0].userRoleID[i] == 98 ) { //if user has Parent Role
-                    ifUserHasParentRole = 1;
-                }
-                if (results[0].userRoleID[i] == 99 ) { //if user has UtilityUser Role
-                    ifUserHasUtilityUserRole = 1;
-                }
-                if (results[0].userRoleID[i] != 98 && results[0].userRoleID[i] != 99 ) { //if user as a role different from Parent or UtilityUser Role
-                    ifUserHasAnyOtherRole = 1;
-                }
-            }
-            res.render('users/updateUserStep2', {
-                title: 'UPDATE USER: Step 2',
-                userAuthID: req.user.userPrivilegeID,
-                parentRole: ifUserHasParentRole,
-                utilityUserRole: ifUserHasUtilityUserRole,
-                anyOtherRole: ifUserHasAnyOtherRole,
-                user: results[0],
-                aclModifyUsers: results[1] //aclPermissions modifyUsers
-            });
-        }
-    })
-};
-module.exports.updateStep2Post = function(req, res) {
-    var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
-    var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
-    models.Users.findById({'_id': userToAddUpdate_ID}, function (err, user) {
-        if (!user) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'No user found');
-            res.send({redirect: '/users/showUsers/'});
-        }
-        else {
-            user.firstName = req.body.firstName;
-            user.lastName = req.body.lastName;
-            user.email = req.body.email.toLowerCase();
-            if (req.body.pin != "oldPin"){
-                user.pin = hash; //req.body.pin;
-            }
-            user.photo = req.body.photo;
-            user.companyName = req.body.companyName;
-
-            //check if email already exit in USERS database
-            models.Users.find({'email': req.body.email.toLowerCase()}, function (err, result) {
-                var userID;
-                if(result.length < 1){
-                    console.log('user role updated');
-                    user.save();
-                    return res.send({redirect: '/users/updateUser/step3/' + userToAddUpdate_ID})
-                }else{
-                    result.forEach(function (userEmail) {
-                        userID = userEmail._id;
-                        if (userID == userToAddUpdate_ID) {
-                            console.log('user role updated');
-                            user.save();
-                            return res.send({redirect: '/users/updateUser/step3/' + userToAddUpdate_ID})
-                        }else{
-                            console.log('user email already in use');
-                            return res.status(409).send('showAlert')
-                        }
-                    });
-                }
-
-            });
-
-
-        }
-    });
-};
-/*-------------------------------------------end of update Step2 user*/
-
-/* UPDATE USERS STEP3. ---------------------------------------------------*/
-module.exports.updateStep3 = function(req, res) {
-    async.parallel([
-        function(callback){
-            models.Users.findById(req.params.id).exec(callback);
-        },
-        function(callback){
-            models.Privilege.find().sort({"privilegeID":1}).exec(callback);
-        },
-        function(callback){aclPermissions.modifyUsers(req, res, callback);}, //aclPermissions addUsers
-        function(callback){aclPermissions.showPermissionsTable(req, res, callback);},   //aclPermissions showPermissionsTable
-
-
-    ],function(err, results){
-        if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'No user found');
-            res.redirect('/users/showUsers/');
-        }
-        else {
-            var ifUserHasPrincipalRole = 0;
-            var ifUserHasParentRole = 0;
-            var ifUserHasUtilityUserRole = 0;
-            var ifUserHasAnyOtherRole = 0;
-            for (var i=0; i < results[0].userRoleID.length; i++) {
-                if (results[0].userRoleID[i] == 1 ) { //if user has Principal Role
-                    ifUserHasPrincipalRole = 1;
-                }
-                if (results[0].userRoleID[i] == 98 ) { //if user has Parent Role
-                    ifUserHasParentRole = 1;
-                }
-                if (results[0].userRoleID[i] == 99 ) { //if user has UtilityUser Role
-                    ifUserHasUtilityUserRole = 1;
-                }
-                if (results[0].userRoleID[i] != 98 && results[0].userRoleID[i] != 99 ) { //if user as a role different from Parent or UtilityUser Role
-                    ifUserHasAnyOtherRole = 1;
-                }
-            }
-            res.render('users/updateUserStep3', {
-                title: 'UPDATE USER: Step 3',
-                userAuthID: req.user.userPrivilegeID,
-                principalRole: ifUserHasPrincipalRole,
-                parentRole: ifUserHasParentRole,
-                utilityUserRole: ifUserHasUtilityUserRole,
-                anyOtherRole: ifUserHasAnyOtherRole,
-                user: results[0],
-                privilege: results[1],
-                aclModifyUsers: results[2], //aclPermissions addUsers
-                aclShowPermissionsTable: results[3]    //aclPermissions showPermissionsTable
-
-            });
-
-        }
-    })
-};
-module.exports.updateStep3Post = function(req, res) {
-    var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
-    models.Users.findById({'_id': userToAddUpdate_ID}, function (err, user) {
-        user.userPrivilegeID = req.body.userPrivilegeID;
-        user.userPrivilegeName = req.body.userPrivilegeName;
-        user.save(function (err) {
-            if (err) {
-                return res.status(409).send('showAlert')
-            }else{
-                return res.send({redirect:'/users/showUsers'})
-            }
-        });
-
-    });
-};
-/*-------------------------------------------end of update Step3 user*/
-
-
 /* SoftDeleted USERS. */
 module.exports.softDelete = function(req, res) {
     var userToSoftDelete = req.params.id;
@@ -822,7 +667,7 @@ module.exports.erase = function(req, res) {
     models.Users.findById({'_id': userToDelete}, function(err, user) {
         var newUser = "";
         var photo = user.photo;
-        if (photo != newUser) { //delete old photo if exists
+        if ((photo) && photo != newUser) { //delete old photo if exists
             fs.unlinkSync('./public/photosUsers/' + photo);
             console.log('successfully deleted ' + photo);
         }// ------------end delete photo before delete user
@@ -944,7 +789,7 @@ module.exports.deletePhoto = function(req, res) {
             console.log('successfully deleted ' + photoToDelete);
         }
         user.photo = "";
-        user.save()
+        user.save();
         res.redirect('/users/showUsers');
     });
 };

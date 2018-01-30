@@ -1,14 +1,57 @@
 <html>
 <head>
     <title>add user</title>
+    <link rel='stylesheet' href='/stylesheets/addUser.css' />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
+
+        var choices;
+        function selectUser(select)
+        {
+            var option = $("#dataList").val();
+            //get datalist data-value to value2send
+            var value2send= document.querySelector('#students option[value="'+option+'"]').dataset.value;
+
+            var ul = select.parentNode.getElementsByTagName('ul')[0];
+            choices = ul.getElementsByTagName('input');
+
+            for (var i = 0; i < choices.length; i++) {
+
+                if (choices[i].value == value2send) {
+                    return;
+                }
+            }
+            var li = document.createElement('li');
+            var input = document.createElement('input');
+            var text = document.createTextNode(option);
+
+            input.type = 'hidden';
+            input.name = 'users[]';
+            input.value = value2send;
+
+            li.appendChild(input);
+            li.appendChild(text);
+            li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
+
+            ul.appendChild(li);
+
+
+        }
+        var usersToRemove = [];
+        function removeUser(user){
+            var choice = user.getElementsByTagName('input');
+            usersToRemove.push(choice[0].value);
+        }
+
+
         $(document).ready(function(){
             var userToAddUpdate_ID;
-            var firstName,lastName,email,pin,confirmPin,photo, companyName;
+            var firstName,lastName,email,pin,confirmPin,photo,companyName,contactName,anyOtherRole,utilityUserRole,parentRole;
             $("#next").click(function(){
                 userToAddUpdate_ID=$("#userTempID").val();
-                //userToAddUpdate_ID=$(this).attr('id');
+                anyOtherRole=$("#anyOtherRole").val();
+                utilityUserRole=$("#utilityUserRole").val();
+                parentRole=$("#parentRole").val();
 
                 firstName=$("#firstName").val();
                 lastName=$("#lastName").val();
@@ -17,7 +60,31 @@
                 confirmPin=$("#confirmPin").val();
                 photo=$("#photo").val();
                 companyName=$("#companyName").val();
+                contactName=$("#contactName").val();
 
+
+                var arrayUsers = [];
+                if (choices === undefined){
+                    arrayUsers = $("#savedValueSmecsUsers").val().split(",");
+                    for (var a = 0; a < usersToRemove.length; a++) {
+                        for (var i = 0; i < arrayUsers.length; i++) {
+                            if (usersToRemove[a] == arrayUsers[i]){
+                                arrayUsers.splice(i, 1);
+                            }
+                        }
+                    }
+                } else {
+                    if(choices.length > 0) {
+                        for (var a = 0; a < choices.length; a++) {
+                            arrayUsers.push(choices[a].value);
+                        }
+                    }
+                }
+
+                if(arrayUsers.length == 1 && arrayUsers[0] == "") {
+                    var index = arrayUsers.indexOf(5);
+                    arrayUsers.splice(index, 1);
+                }
 
                 //-----forms validation------------------------------------
 
@@ -47,17 +114,27 @@
                     alert("Pin and Confirm Pin don't match!");
                     return false;
                 }
+                if (utilityUserRole == 1 && companyName == '' ||
+                    parentRole == 1 && companyName == ''
+                ) {
+                    alert("Company Name must be filled out");
+                    return false;
+                }
 
                 //--------------------------------forms validation end-------
 
                 $.post("/users/addUser/step2",{
                     userToAddUpdate_ID: userToAddUpdate_ID,
+                    anyOtherRole: anyOtherRole,
+                    utilityUserRole: utilityUserRole,
+                    parentRole: parentRole,
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
                     pin: pin,
                     photo: photo,
-                    companyName: companyName
+                    companyName: companyName,
+                    contactName: contactName
 
                 },function(data){
                     if(data==='done')
@@ -78,6 +155,9 @@
 
 <form>
     <input type="hidden" id="userTempID"  value="<%= user._id %>">
+    <input type="hidden" id="anyOtherRole"  value="<%= anyOtherRole %>">
+    <input type="hidden" id="utilityUserRole"  value="<%= utilityUserRole %>">
+    <input type="hidden" id="parentRole"  value="<%= parentRole %>">
 
     <% /* if user as 1 or more Roles different from Parents or utilityUsers*/%>
     <% if (anyOtherRole == 1) {%>
@@ -99,14 +179,15 @@
         <% } %>
         <% /* if user as 1 or more Roles and one is UtilityUsers Role and  has no Parent Role*/%>
         <% if (parentRole == 0 && utilityUserRole == 1 ) {%>
-            <label for="companyName"><b>Company Name / Note:</b></label><br>
-            <input type="text" id="companyName" size="40" placeholder="ex1: Gas company / ex2: IT issues - Pedro" ><br>
-
+            <label for="companyName"><b>Company Name:</b></label><br>
+            <input type="text" id="companyName" size="40" placeholder="ex: Gas company" ><br><br>
         <% } %>
         <% /* if user as 1 or more Roles and one is Parent Role and  another is UtilityUsers Role*/%>
         <% if (parentRole == 1 && utilityUserRole == 1 ) {%>
             <label for="companyName"><b>Company Name:</b></label><br>
-            <input type="text" id="companyName" size="40" placeholder="ex: Gas company or IT issues - Pedro or water related Problems" ><br><br>
+            <input type="text" id="companyName" size="40" placeholder="ex: Gas company" ><br><br>
+            <label for="contactName" ><b>Contact Name:</b>(optional)</label><br>
+            <input type="text" id="contactName" size="40" placeholder="ex: Pedro Reis"><br><br>
 
             <label for="student"><b>Student:</b></label><br>
             <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
@@ -126,8 +207,37 @@
         <label for="confirmPin"><b>Confirm Pin:</b></label><br>
         <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
         <input type="hidden" id="photo" >
-        <label for="student"><b>Student:</b></label><br>
-        <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
+
+    <label for="students"><b>Parent of:</b></label><br>
+    <div id="labelsDiv2" class="labelsDiv2">
+        <div id="smecsUserDiv" class="enable">
+            <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Students:</label><br>
+
+
+            <ul id="smecsUserUl" class="enable">
+
+
+            </ul>
+
+            <input
+                    class="enable"
+                    id="dataList" list="students"
+                    name="student"
+                    placeholder="type student name"
+                    value="<%= students.studentName %>"
+                    onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
+            <dataList id="students">
+                <% students.forEach(function(student) { %>
+                <option data-value="<%= student.studentID %>" value="<%= student.firstName %> <%= student.lastName %>"></option>
+                <% }); %>
+            </dataList>
+
+            <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+            <br><br>
+            If you want to add a new student to dropdown list <a id="clickHere" class="enable"href="/students/addStudent">click here</a>.
+        </div>
+    </div>
+
     <% } %>
     <% /* if user as only Parent Role and UtilityUser Role */%>
     <% if (anyOtherRole == 0 && parentRole == 1 && utilityUserRole == 1 ) {%>
@@ -143,7 +253,9 @@
         <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
         <input type="hidden" id="photo" >
         <label for="companyName"><b>Company Name:</b></label><br>
-        <input type="text" id="companyName" size="40" placeholder="ex: Gas company or IT issues - Pedro or water related Problems" ><br><br>
+        <input type="text" id="companyName" size="40" placeholder="ex: Gas company" ><br><br>
+        <label for="contactName" ><b>Contact Name:</b>(optional)</label><br>
+        <input type="text" id="contactName" size="40" placeholder="ex: Pedro Reis"><br><br>
 
         <label for="student"><b>Student:</b></label><br>
         <input type="text" id="student" size="40" placeholder="ex: Manuel" ><br><br>
@@ -157,7 +269,9 @@
         <label for="confirmPin"><b>Confirm Pin:</b></label><br>
         <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
         <label for="companyName"><b>Company Name:</b></label><br>
-        <input type="text" id="companyName" size="40" placeholder="ex: Gas company or IT issues - Pedro or water related Problems" ><br><br>
+        <input type="text" id="companyName" size="40" placeholder="ex: Gas company" ><br><br>
+        <label for="contactName" ><b>Contact Name:</b>(optional)</label><br>
+        <input type="text" id="contactName" size="40" placeholder="ex: Pedro Reis"><br><br>
     <% } %>
 </form>
 

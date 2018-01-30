@@ -46,11 +46,10 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
 
                 //save to AlertSentTemp all ROLES and USERS that will receive alert
                 models.AlertSentTemp.findById({'_id': alert._id}, function(error, alertUpdate) {
-                    if(error ||
-                        alertUpdate.sentRoleIDScope == null ||
-                        alertUpdate.sentRoleNameScope == null ||
-                        arrayRoleID == null ||
-                        arrayRoleName == null){
+                    alertUpdate.sentRoleIDScope = [];
+                    alertUpdate.sentRoleNameScope = [];
+                    console.log('arrayRoleID = ',arrayRoleID);
+                    if(error || arrayRoleID == null || arrayRoleName == null){
                         console.log('erro da primeira vez que se escolhe um alerta');
                         req.flash('error_messages',
                             'Please try again and contact the administrator if this message continues to show');
@@ -76,6 +75,9 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
                                 console.log('something went wrong');
                             } else {
                                 console.log('the tempAlert has been saved');
+                                console.log('alertUpdate.sentRoleIDScope = ',alertUpdate.sentRoleIDScope);
+                                console.log('alertUpdate.sentRoleNameScope = ',alertUpdate.sentRoleNameScope);
+                                //console.log('alertUpdate.sentUsersScope = ',alertUpdate.sentUsersScope);
                             }
                         });
                     }

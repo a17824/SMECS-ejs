@@ -69,12 +69,12 @@
     <thead>
     <tr>
         <th width="5px"></th>
+        <th align="center">Photo</th>
         <th>First Name</th>
         <th>Last Name</th>
         <th>Email</th>
         <th>Role</th>
         <th>Privilege</th>
-        <th align="center">Photo</th>
         <th align="center">Update</th>
         <th align="center">Move to Trash</th>
     </tr>
@@ -83,12 +83,7 @@
     <% if (user.softDeleted == null) { %>
     <tr>
         <td ></td>
-        <td><%= user.firstName %></td>
-        <td><%= user.lastName %></td>
-        <td><%= user.email %></td>
-        <td><%= user.userRoleName %></td>
-        <td><%= user.userPrivilegeName %></td>
-        <% if (user.photo == "") { %>
+        <% if (user.photo == "" || user.photo == undefined) { %>
         <td align="center">
             <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
             <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
@@ -109,17 +104,18 @@
             <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
             <% } %>
             <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                <% if ((user.userRoleID.length == 1 && user.userRoleID[0] == 98)) {%>
-                    <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
-                <% } else { %>
-                    <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">trash</button></a>
-                <% } %>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
             <% } else { %>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
             <% } %>
-
         </td>
         <% } %>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+        <td><%= user.email %></td>
+        <td><%= user.userRoleName %></td>
+        <td><%= user.userPrivilegeName %></td>
+
         <td align="center">
             <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
                 <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
@@ -130,9 +126,9 @@
         <td align="center">
             <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
                 <% if ((user.userRoleID.length == 1 && user.userRoleID[0] == 98)) {%>
-                    <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
+                    <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
                 <% } else { %>
-                    <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">trash</button></a>
+                    <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
                 <% } %>
             <% } else { %>
                 <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>

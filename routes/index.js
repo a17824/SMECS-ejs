@@ -96,22 +96,7 @@ router.get('/users/updateUser/:id', auth.simpleAuth, auth.requireLogin, users.up
 router.post('/users/updateUser', auth.simpleAuth, auth.requireLogin, users.updatePost, function(req, res) {
 });
 /*
-// UPDATE USERS STEP1. ---------------------------------------------------
-router.get('/users/updateUser/step1/:id', auth.simpleAuth, auth.requireLogin, users.updateStep1, function(req, res) {
-});
-router.post('/users/updateUser/step1', auth.simpleAuth, auth.requireLogin, users.updateStep1Post, function(req, res) {
-});
-// UPDATE USERS STEP2. ---------------------------------------------------
-router.get('/users/updateUser/step2/:id', auth.simpleAuth, auth.requireLogin, users.updateStep2, function(req, res) {
-});
-router.post('/users/updateUser/step2', auth.simpleAuth, auth.requireLogin, users.updateStep2Post, function(req, res) {
-});
-// UPDATE USERS STEP3. ---------------------------------------------------
-router.get('/users/updateUser/step3/:id', auth.simpleAuth, auth.requireLogin, users.updateStep3, function(req, res) {
-});
-router.post('/users/updateUser/step3', auth.simpleAuth, auth.requireLogin, users.updateStep3Post, function(req, res) {
-});
-*/
+
 /* SHOW SoftDelete USERS. */
 router.get('/users/deletedUsers', auth.simpleAuth, auth.requireLogin, users.showSoftDeleted, function(req, res, next) {
 });
