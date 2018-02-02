@@ -44,7 +44,7 @@ module.exports.show = function(req, res, next) {
     })
 };
 module.exports.showPost = function(req, res) {
-    var usersAddUpdateTemp = new models.UsersAddUpdateTemp({});
+    var usersAddUpdateTemp = new models.UsersAddTemp({});
     usersAddUpdateTemp.save(function (err) {
         if (err) {
             console.log('Err - NOT SAVED ON DATABASE' + err);
@@ -90,7 +90,7 @@ module.exports.showSoftDeleted = function(req, res, next) {
 module.exports.addStep1 = function(req, res) {
     async.parallel([
         function(callback){
-            models.UsersAddUpdateTemp.findById(req.params.id).exec(callback);
+            models.UsersAddTemp.findById(req.params.id).exec(callback);
         },
         function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
@@ -118,7 +118,7 @@ module.exports.addStep1 = function(req, res) {
 };
 module.exports.addStep1Post = function(req, res) {
     var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
-    models.UsersAddUpdateTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
+    models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
         if (!user) {
             console.log(err);
             console.log('TTL EXPIRED');
@@ -138,7 +138,7 @@ module.exports.addStep1Post = function(req, res) {
 module.exports.addStep2 = function(req, res) {
     async.parallel([
         function(callback){
-            models.UsersAddUpdateTemp.findById(req.params.id).exec(callback);
+            models.UsersAddTemp.findById(req.params.id).exec(callback);
         },
         function(callback){
             models.Students.find().sort({"firstName":1}).exec(callback);
@@ -183,41 +183,83 @@ module.exports.addStep2 = function(req, res) {
     })
 };
 module.exports.addStep2Post = function(req, res) {
-    var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
-    var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
-    models.UsersAddUpdateTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
-        if (!user) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.send({redirect: '/users/showUsers/'});
-        }
-        else {
-            user.firstName = req.body.firstName;
-            user.lastName = req.body.lastName;
-            user.email = req.body.email.toLowerCase();
-            user.pin = hash;
-            user.photo = req.body.photo;
-            user.companyName = req.body.companyName;
-            if (req.body.anyOtherRole == 1 && req.body.utilityUserRole == 1 ||
-                req.body.utilityUserRole == 1 && req.body.parentRole == 1
-            ) {
-                user.contactName = req.body.firstName + ' ' + req.body.lastName;
-            } else {
-                user.contactName = req.body.contactName;
-            }
-            user.save(function (err) {
-                //check is email already exit in USERS database
-                models.Users.findOne({'email': req.body.email.toLowerCase()}, function (err, result) {
-                    if (err || result) {
-                        return res.status(409).send('showAlert')
+    async.waterfall([
+        function (callback) {
+            var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
+            var parentOf = req.body.parentOf;
+            models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
+                if (!user) {
+                    console.log(err);
+                    console.log('TTL EXPIRED');
+                    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
+                    res.send({redirect: '/users/showUsers/'});
+                }
+                else {
+                    if (req.body.pin != "oldPin") {
+                        var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
+                    } else{
+                        var hash = user.pin;
+                    }
+                    user.firstName = req.body.firstName;
+                    user.lastName = req.body.lastName;
+                    user.email = req.body.email.toLowerCase();
+                    user.pin = hash;
+                    user.photo = req.body.photo;
+                    user.companyName = req.body.companyName;
+                    user.parentOfOld = parentOf;
+                    if (req.body.anyOtherRole == 1 && req.body.utilityUserRole == 1 ||
+                        req.body.utilityUserRole == 1 && req.body.parentRole == 1
+                    ) {
+                        user.contactName = req.body.firstName + ' ' + req.body.lastName;
+                    } else {
+                        user.contactName = req.body.contactName;
+                    }
+                    if (req.body.parentRole == 1) {
+                        user.parentOf = [];
+                        models.Students.find({'studentID': parentOf}, function (err, students) {
+                            for (var i=0; i < students.length; i++) {
+                                var student = {
+                                    _id: students[i]._id,
+                                    studentID: students[i].studentID,
+                                    studentFirstName: students[i].firstName,
+                                    studentLastName: students[i].lastName
+                                };
+                                user.parentOf.push(student);
+                            }
+                            console.log('"parentOf" added successfully');
+                            callback(null, user);
+                        });
                     }else{
-                        return res.send({redirect: '/users/addUser/step3/' + userToAddUpdate_ID})}
-                });
-
+                        callback(null, user);
+                    }
+                }
             });
         }
+    ], function (err, user) {
+        models.Users.find({'email': user.email}, function (err, result) {
+            var userID;
+            if(result.length < 1){
+                console.log('user updated');
+                user.save();
+                return res.send({redirect: '/users/addUser/step3/' + user._id})
+            }else{
+                result.forEach(function (userEmail) {
+                    userID = userEmail._id;
+                    if (userID == user._id) {
+                        console.log('user updated');
+                        user.save();
+                        return res.send({redirect: '/users/addUser/step3/' + user._id})
+                    }else{
+                        console.log('user email already in use');
+                        return res.status(409).send('showAlert')
+                    }
+                });
+            }
+        });
     });
+
+
+
 };
 /*-------------------------------------------end of adding Step2 user*/
 
@@ -225,7 +267,7 @@ module.exports.addStep2Post = function(req, res) {
 module.exports.addStep3 = function(req, res) {
     async.parallel([
         function(callback){
-            models.UsersAddUpdateTemp.findById(req.params.id).exec(callback);
+            models.UsersAddTemp.findById(req.params.id).exec(callback);
         },
         function(callback){
             models.Privilege.find().sort({"privilegeID":1}).exec(callback);
@@ -272,100 +314,58 @@ module.exports.addStep3 = function(req, res) {
                 privilege: results[1],
                 aclAddUsers: results[2], //aclPermissions addUsers
                 aclShowPermissionsTable: results[3]    //aclPermissions showPermissionsTable
-
             });
-
         }
     })
 };
 module.exports.addStep3Post = function(req, res) {
     var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
-    models.UsersAddUpdateTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
-        if (!user) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.send({redirect: '/users/showUsers/'});
-        }
-        else {
-            user.userPrivilegeID = req.body.userPrivilegeID;
-            user.userPrivilegeName = req.body.userPrivilegeName;
-            var hash = bcrypt.hashSync(user.pin, bcrypt.genSaltSync(10));
-
-            user.save(function (err) {
-                if (err) {
-                    console.log('Error ' + err);
-                } else {
-                    var ifUserHasParentRole = 0;
-                    var ifUserHasUtilityUserRole = 0;
-                    var ifUserHasAnyOtherRole = 0;
-                    for (var i = 0; i < user.userRoleID.length; i++) {
-                        //if user as a role different from Parent or UtilityUser Role
-                        if (user.userRoleID[i] != 98 && user.userRoleID[i] != 99) {
-                            ifUserHasAnyOtherRole = 1;
-                        }
-                        //if user has UtilityUser Role
-                        if (user.userRoleID[i] == 99) {
-                            ifUserHasUtilityUserRole = 1;
-                        }
-                        //if user has Parent Role
-                        if (user.userRoleID[i] == 98) {
-                            ifUserHasParentRole = 1;
-                        }
-                    }
-                    var user1 = new models.Users({
-                        userRoleID: user.userRoleID,
-                        userRoleName: user.userRoleName,
-                        userPrivilegeID: user.userPrivilegeID,
-                        userPrivilegeName: user.userPrivilegeName,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        email: user.email,
-                        pin: hash,
-                        photo: user.photo
-                    });
-
-                    /*
-
-                    */
-                    if(user1.parentOf.length < 1){
-                        user1.parentOf = undefined;
-                    }
-                    if(ifUserHasAnyOtherRole == 1 && ifUserHasUtilityUserRole == 1){
-                        user1.companyName = user.companyName;
-                        user1.contactName = user.firstName + ' ' + user.lastName;
-                    }
-                    if(ifUserHasAnyOtherRole == 0 && ifUserHasUtilityUserRole == 1){
-                        user1.companyName = user.companyName;
-                        user1.contactName = user.contactName;
-                    }
-                    if (ifUserHasParentRole == 1) {
-                        user.parentOf = [];
-                        models.Students.find({'studentID': parentOf}, function (err, students) {
-                            for (var i=0; i < students.length; i++) {
-                                var student = {
-                                    _id: students[i]._id,
-                                    studentID: students[i].studentID,
-                                    studentFirstName: students[i].firstName,
-                                    studentLastName: students[i].lastName
-                                };
-                                user.parentOf.push(student);
-                            }
-                            console.log('"parentOf" added successfully');
-                        });
-                    }
-
-                    user1.save(function (err) {
-                        if (err && (err.code === 11000 || err.code === 11001)) {
-                            return res.status(409).send('showAlert')
-                        }else{
-
-                            return res.send({redirect:'/users/showUsers'})
-                        }
-                    });
+    async.waterfall([
+        function (callback) {
+            models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
+                var hash = bcrypt.hashSync(user.pin, bcrypt.genSaltSync(10));
+                if (!user) {
+                    console.log(err);
+                    console.log('TTL EXPIRED');
+                    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
+                    res.send({redirect: '/users/showUsers/'});
+                }
+                else {
+                    user.userPrivilegeID = req.body.userPrivilegeID;
+                    user.userPrivilegeName = req.body.userPrivilegeName;
+                    user.save();
+                    callback(null, user, hash);
                 }
             });
+        },
+        function (user, hash, callback) {
+            var user1 = new models.Users({
+                userRoleID: user.userRoleID,
+                userRoleName: user.userRoleName,
+                userPrivilegeID: user.userPrivilegeID,
+                userPrivilegeName: user.userPrivilegeName,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                pin: hash,
+                parentOf: user.parentOf,
+                companyName: user.companyName,
+                contactName: user.contactName,
+                photo: user.photo
+            });
+            if(user1.parentOf.length < 1){
+                user1.parentOf = undefined;
+            }
+            callback(null, user1);
         }
+    ], function (err, user1) {
+        user1.save(function (err) {
+            if (err && (err.code === 11000 || err.code === 11001)) {
+                return res.status(409).send('showAlert')
+            }else{
+                return res.send({redirect:'/users/showUsers'})
+            }
+        });
     });
 };
 /*-------------------------------------------end of adding Step3 user*/
@@ -693,11 +693,11 @@ module.exports.addUpdatePhoto = function (req, res){
 // res.writeHead(200, {'Content-Type': 'text/html' });
 // var form = '<form action="/users/addPhoto/:id" enctype="multipart/form-data" method="post">Add a title: <input name="title" type="text" /><br><br><input single="single" name="upload" type="file" /><br><br><input type="submit" value="Upload" /></form>';
 // res.end(form);
-/*
-    models.Users.findById(req.params.id,function(error, user) {
-        res.render('users/addPhoto', { title: 'ADD PHOTO', user: user });
-    });
-*/
+    /*
+        models.Users.findById(req.params.id,function(error, user) {
+            res.render('users/addPhoto', { title: 'ADD PHOTO', user: user });
+        });
+    */
 
     async.parallel([
         function(callback){

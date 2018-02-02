@@ -271,7 +271,7 @@
                     alert("USER PRIVILEGE must be filled out");
                     return false;
                 }
-
+                console.log(arrayUsers);
                 //--------------------------------forms validation end-------
                 var pin;
                 if (newPin !== oldPin) {
@@ -321,7 +321,7 @@
     <hr>
     <label for="userCredentials"><b>User Email/pin:</b></label><br>
     <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">
-        Email:</b>&nbsp
+        Email:&nbsp
         <input type="email" id="email" size="40" value="<%= users.email %>"><br>
         Pin:&nbsp
         <input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">

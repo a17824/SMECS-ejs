@@ -219,6 +219,16 @@ module.exports.delete = function(req, res) {
 
 
         }// ------------end delete photo before delete user
+        /*
+        models.Users.find({'parentOf': parentOf}, function (err, students) {
+
+
+
+
+            console.log('"parentOf" added successfully');
+            callback(null, user);
+        });
+        */
 
         models.Students.remove({'_id': studentToDelete}, function(err) {
             //res.send((err === null) ? { msg: 'User not deleted' } : { msg:'error: ' + err });

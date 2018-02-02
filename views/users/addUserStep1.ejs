@@ -56,19 +56,20 @@
     <% }); %><br>
 </form>
 <form>
-    <form action="/dashboard">
-        <input type="submit" value="Cancel">
-    </form>
-    <form action="/users/showUsers">
-        <input type="submit" value="Back">
-    </form>
-
+    <button class="backButton" onclick="goBack()">Back</button>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
     <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-        <input type="button" id="next" value="Next" ><br>
+    <input type="button" id="next" value="Next" ><br>
     <% } else { %>
-        <input type="button" id="next" value="Next" disabled><br>
+    <input type="button" id="next" value="Next" disabled><br>
     <% } %>
 </form>
-
+<form action="/users/showUsers">
+    <input type="submit" value="Cancel">
+</form>
 </body>
 </html>

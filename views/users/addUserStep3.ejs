@@ -41,7 +41,7 @@
 </head>
 <body>
 <h1><%= title %></h1>
-
+<%= user.firstName %>
 <form>
     <input type="hidden" id="userTempID"  value="<%= user._id %>">
 
@@ -117,22 +117,22 @@
             <p>All Administrator Levels and Regular User permissions can be customized in: Table: Permissions</p>
         <% } %>
 </form>
-<form action="/users/showUsers">
-    <input type="submit" value="Cancel">
-</form>
 
-    <button class="backButton" onclick="goBack()">Back</button>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
-<form>
-    <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-        <input type="button" id="next" value="Save" ><br>
-    <% } else { %>
-        <input type="button" id="next" value="Save" disabled><br>
-    <% } %>
+<button class="backButton" onclick="goBack()">Back</button>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+<% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+<input type="button" id="next" value="Save" ><br>
+<% } else { %>
+<input type="button" id="next" value="Save" disabled>
+<% } %>
+
+
+<form action="/users/showUsers">
+    <br><input type="submit" value="Cancel">
 </form>
 
 </body>

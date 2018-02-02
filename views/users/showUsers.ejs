@@ -125,11 +125,7 @@
         </td>
         <td align="center">
             <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                <% if ((user.userRoleID.length == 1 && user.userRoleID[0] == 98)) {%>
-                    <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
-                <% } else { %>
-                    <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
-                <% } %>
+                <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
             <% } else { %>
                 <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
             <% } %>
