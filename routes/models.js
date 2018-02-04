@@ -47,6 +47,7 @@ var UsersAddTempSchema = new mongoose.Schema({
         studentLastName: String,
     }],
     parentOfOld: [],    //for back button on ejs to be able to get values
+    studentsWithParents: [],
     companyName: String,
     contactName: String
 
@@ -77,8 +78,14 @@ var StudentsSchema = new mongoose.Schema({
     studentID: { type: Number, unique: true },
     firstName: String,
     lastName: String,
-    photo: String
-}, {collection:"Students"}); //stops Mongoose of giving plurals to our collections names
+    photo: String,
+    parentOf: [{
+        parentID: Number,
+        parentFirstName: String,
+        parentLastName: String,
+    }]
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"Students"}); //stops Mongoose of giving plurals to our collections names
 var Students;
 module.exports.Students = mongoose.model("Students", StudentsSchema);
 
