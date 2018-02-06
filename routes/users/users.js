@@ -818,7 +818,6 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
                 flagExists = 0;
                 for (var x=0; x < newParentsArray.length; x++) {
                     if (oldParentArray[i].toString() == newParentsArray[x].toString()){
-                        console.log('ENTRIOU');
                         flagExists = 1;
                         break;
                     }
