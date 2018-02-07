@@ -128,7 +128,7 @@ module.exports.addMultiplePost = function (req, res){
                             Students: {
                                 headers: ['firstName', 'lastName', 'studentID', 'photo']
                             }
-                        }
+                        };
                         csv.importFile(new_location + file_name, csvHeaders.Students.headers, 'Students');
 
                     }
@@ -219,22 +219,40 @@ module.exports.delete = function(req, res) {
 
 
         }// ------------end delete photo before delete user
-        /*
-        models.Users.find({'parentOf': parentOf}, function (err, students) {
 
+        //If student has parent(s), deletes user(parentOf) from Users document ------------------------------
+        if(student.parentOf.length > 0) {
 
-
-
-            console.log('"parentOf" added successfully');
-            callback(null, user);
-        });
-        */
+            var arrayToDelete = [];
+            for (var i = 0; i < student.parentOf.length; i++) {
+                arrayToDelete.push(student.parentOf[i]._id)
+            }
+            //if user is only parent of this student, then deletes user
+            models.Users.remove({'_id': arrayToDelete, 'parentOf.1': { "$exists": false }}, function(err) {
+                if(err){
+                    console.log('err - deleting user from Users document');
+                }
+                console.log('successfully deleted user from Users document');
+            });
+            //if user is parent of 2 or more studesnts, then delete only this student from User parentOf document
+            models.Users.update({'_id': arrayToDelete, 'parentOf.1': { "$exists": true } }, {$pull: {"parentOf": {"_id": student._id}}}, {
+                safe: true,
+                multi: true
+            }, function (err) {
+                if (err) {
+                    console.log('err - finding students from student._id');
+                }
+                console.log('successfully deleted parent from Users document');
+            });
+        }
+        //----------end of If user is parent, deletes user(parentOf) from Student document --------------
 
         models.Students.remove({'_id': studentToDelete}, function(err) {
             //res.send((err === null) ? { msg: 'User not deleted' } : { msg:'error: ' + err });
             res.redirect('/students/showStudents');
             console.log('successfully deleted student');
         });
+
     })
 };
 /* ------------ end of DELETE STUDENT. */

@@ -80,7 +80,7 @@ var StudentsSchema = new mongoose.Schema({
     lastName: String,
     photo: String,
     parentOf: [{
-        parentID: Number,
+        parentID: Number,   //access this value by: parentOf._id
         parentFirstName: String,
         parentLastName: String,
     }]

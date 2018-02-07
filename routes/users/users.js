@@ -240,9 +240,7 @@ module.exports.addStep2Post = function(req, res) {
     ], function (err, user) {
         models.Users.find({'email': user.email}, function (err, result) {
             if(result.length < 1){
-                console.log('user updated');
-                console.log('jjjjjjjjjjjjjjjjjjjjjjjjj');
-                console.log(user.studentsWithParents);
+                console.log('user updated = ',user.studentsWithParents);
                 user.save();
                 return res.send({redirect: '/users/addUser/step3/' + user._id})
             }else{
@@ -653,6 +651,22 @@ module.exports.softDelete = function(req, res) {
         var wrapped = moment(new Date());
         user.softDeleted = wrapped.format('YYYY-MM-DD, h:mm:ss a') + "  by " + whoDeleted;
         user.save();
+
+        //If user is parent, deletes user(parentOf) from Student document ------------------------------
+        if(user.parentOf.length > 0) {
+            models.Students.update({}, {$pull: {"parentOf": {"_id": user._id}}}, {
+                safe: true,
+                multi: true
+            }, function (err) {
+                if (err) {
+                    console.log('err - finding students from arrayToDelete');
+                } else {
+                    console.log('success - parent(s) removed from Student document');
+                }
+            });
+        }
+        //----------end of If user is parent, deletes user(parentOf) from Student document --------------
+
         res.redirect('/users/showUsers');
     })
 };
@@ -665,6 +679,13 @@ module.exports.restoreUser = function(req, res) {
     models.Users.findById({'_id': userToRestore}, function(err, user){
         user.softDeleted = null;
         user.save();
+
+        //restore parent to Student document --------------
+        if(user.parentOf.length > 0){
+            saveParentInStudentDocument(user, user.parentOf);
+        }
+        //----------end of restore parent to Student document
+
         res.redirect('/users/deletedUsers');
     })
 };
@@ -829,10 +850,18 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
             callback(null, user, arrayParentsToDelete);
         }
     ], function (err, user, arrayParentsToDelete) {
-
         console.log('arrayParentsToDelete = ', arrayParentsToDelete);
-        //delete form database
-
+        if (arrayParentsToDelete.length < 1 ){
+            console.log('No parents from Students collection to delete');
+        } else {
+            models.Students.update({ _id: arrayParentsToDelete }, { $pull: { "parentOf": { "_id": user._id } }}, { safe: true, multi:true }, function(err) {
+                if(err){
+                    console.log('err - finding students from arrayToDelete');
+                }else{
+                    console.log('success - parent removed from Student document');
+                }
+            });
+        }
     });
 }
 //-------------- end of Function to delete parent in Student database
