@@ -873,6 +873,7 @@ function saveParentInStudentDocument(user, newParentsArray) {
         parentFirstName: user.firstName,
         parentLastName: user.lastName
     };
+
     for (var i=0; i < newParentsArray.length; i++) {
         //find student with id = to 'parents[i]' -> {'_id': parents[i]
         //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
@@ -888,5 +889,19 @@ function saveParentInStudentDocument(user, newParentsArray) {
                 }
             });
     }
+    /*
+    var arr = ['5a596979ea2d7a360c75948b','5a596979ea2d7a360c75948c'];
+    models.Students.update({_id: arr, 'parentOf._id': {$ne: parent._id}},
+        { $push: { "parentOf": parent } },
+        { "new": true},
+        function (err) {
+            if(err){
+                console.log('student not updated successfully');
+                throw err;
+            }else {
+                console.log('"parentOf" added successfully on STUDENT database');
+            }
+        });
+        */
     //-------------- end of save parent in Student database
 }

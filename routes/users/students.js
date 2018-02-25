@@ -7,17 +7,18 @@ var csv = require('./csv');
 var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
+var usersJs = require('./users.js');
 
 
 /* SHOW ALL STUDENTS. */
 module.exports.show = function(req, res, next) {
-/*
-    models.Students.find(function(err, students) {
-        //res.json(students);
-        console.log("blu blu blu blu");
-        res.render('students/showStudents', { title: 'STUDENTS', students: students });
-    }).sort({"firstName":1});
-*/
+    /*
+        models.Students.find(function(err, students) {
+            //res.json(students);
+            console.log("blu blu blu blu");
+            res.render('students/showStudents', { title: 'STUDENTS', students: students });
+        }).sort({"firstName":1});
+    */
     async.parallel([
         function(callback){
             models.Students.find().sort({"firstName":1}).exec(callback);
@@ -66,15 +67,14 @@ module.exports.addPost = function(req, res) {
     });
     student1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
             return res.status(409).send('showAlert')
         }else{
-            //console.log("11111111111111111111");
             return res.send({redirect:'/students/showStudents'})
         }
     });
-};
-/* -------------------------------end of ADD STUDENT. */
+};/* -------------------------------end of ADD STUDENT. */
+
+
 
 //  ADD MULTIPLE STUDENTS--------------
 module.exports.addMultiple = function (req, res){
@@ -83,7 +83,7 @@ module.exports.addMultiple = function (req, res){
 module.exports.addMultiplePost = function (req, res){
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
-        console.log(util.inspect({fields: fields, files: files}));
+        //console.log(util.inspect({fields: fields, files: files}));
     });
     form.on('end', function(fields, files) {
         /* Temporary location of our uploaded file */
@@ -94,7 +94,6 @@ module.exports.addMultiplePost = function (req, res){
         var new_location = 'public/csvFiles/';
 
         if (this.openedFiles[0].name){ // if a file is selected do this
-
             //delete all Photos and other files in Student Photo folder before copy new photos
             if (this.openedFiles[0].name) {// if a file is selected do this
                 var photos_location = 'public/photosStudents/';
@@ -110,39 +109,35 @@ module.exports.addMultiplePost = function (req, res){
                     }
             } //-----------END of delete all Photos and other files in Student Photo folder before copy new photos
 
-
-            //delete all old Students database
-            models.Students.count(function(err, count) {
-
-                if (count !== 0) {
-                    models.Students.remove({}, function (err, numberRemoved) {
-                        console.log("inside remove call back" + numberRemoved);
-                    });
-                }
-                //if old Students database don't exits or has been deleted, then save new file
-                fs.copy(temp_path, new_location + file_name, function (err) { // save file
+            function removeStudentsAndCopyNewStudents (callback) {
+                //delete all old Students database
+                models.Students.remove({}, function (err, numberRemoved) {
                     if (err) {
-                        console.error(err);
+                        console.log('err = ', err);
                     } else {
-                        var csvHeaders = {
-                            Students: {
-                                headers: ['firstName', 'lastName', 'studentID', 'photo']
+                        //if old Students database don't exits or has been deleted, then save new file
+                        fs.copy(temp_path, new_location + file_name, function (err) { // save file
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                var csvHeaders = {
+                                    Students: {
+                                        headers: ['firstName', 'lastName', 'studentID', 'photo']
+                                    }
+                                };
+                                csv.importFile(new_location + file_name, csvHeaders.Students.headers, 'Students');
                             }
-                        };
-                        csv.importFile(new_location + file_name, csvHeaders.Students.headers, 'Students');
-
+                            fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
+                                if (err) {
+                                    return res.send(500, 'Something went wrong');
+                                }
+                                callback('now is the time to run something else...');
+                            });//------------------------------#end - unlink
+                        });
                     }
-                    fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
-                        if (err) {
-                            //return res.send(500, 'Something went wrong');
-                        }
-                    });//------------------------------#end - unlink
-                    res.redirect('/students/showStudents');
-                })
-
-            });
-            //--------end of ADD MULTI STUDENT
-
+                });
+                //--------end of ADD MULTI STUDENT
+            }
         } else { // if no file is selected delete temp file
             console.log('no files added');
             //delete file from temp folder-------
@@ -153,9 +148,19 @@ module.exports.addMultiplePost = function (req, res){
             });
             //------------------#end - unlink
         }
+        removeStudentsAndCopyNewStudents (function (result, err) {
+            if(err){
+                console.log('err = ', err);
+            }else{
+                //console.log('result = ', result); //callback('now is the time to run something else...')
+                addDeleteStudentsParents(res);
+            }
+        });
     });
+    //-----------end ADD MULTIPLE STUDENTS
 };
-//-----------end ADD MULTIPLE STUDENTS
+
+
 
 /* UPDATE STUDENTS. -------------------------------*/
 module.exports.update = function(req, res) {
@@ -175,7 +180,6 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var studentToUpdate1 = req.body.studentToUpdate;
-    //console.log(req.body.userRoleID);
     models.Students.findById({'_id': studentToUpdate1}, function(err, student){
         student.studentID = req.body.studentID;
         student.firstName = req.body.firstName;
@@ -183,10 +187,8 @@ module.exports.updatePost = function(req, res) {
         student.photo = req.body.photo;
         student.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
                 return res.status(409).send('showAlert')
             }else{
-                //console.log("11111111111111111111");
                 return res.send({redirect:'/students/showStudents'})
             }
         });
@@ -208,7 +210,6 @@ module.exports.delete = function(req, res) {
 
             fs.access(path, function(err) {
                 if (!err) {
-                    console.log('mmmmmmmm');
                     fs.unlinkSync('./public/photosStudents/' + photo);
                     console.log('successfully deleted ' + photo);
                 } else {
@@ -440,8 +441,75 @@ module.exports.deletePhoto = function(req, res) {
             console.log('successfully deleted ' + photoToDelete);
         }
         student.photo = "";
-        student.save()
+        student.save();
         res.redirect('/students/showStudents');
     });
 };
 //----------------end delete STUDENT photo
+
+
+
+//Function to add parents to Student Collection or delete parents from Users collection --------------------
+function addDeleteStudentsParents(res) {
+    models.Users.find({'parentOf.0': { "$exists": true } }, function (err, users) {
+        if (err) {
+            console.log('err - finding parents');
+        }else{
+            async.eachSeries(users, function (user, callback) { //loop through array
+                var parent = {
+                    _id: user._id,
+                    parentFirstName: user.firstName,
+                    parentLastName: user.lastName
+                };
+                async.eachSeries(user.parentOf, function (child, callback1) { //loop through array
+                    if (!child) {
+                        console.log('child undefined');
+                    }else{
+                        models.Students.findOneAndUpdate({'studentID': child.studentID},
+                            {"$push": {"parentOf": parent}},
+                            {"new": true},
+                            function (err, foundStudent) {
+                                if (err) {
+                                    console.log('student not updated successfully');
+                                    throw err;
+                                } else {
+                                    if (!foundStudent) { //if student doesn't exits, checks users collection
+                                        if (user.userRoleID.length < 2 && user.parentOf.length < 2) { //delete user if user is parent of only 1 student and that student doesn't exits anymore.
+                                            console.log('user ' + user.firstName + ' ' + user.lastName + ' removed from Users collection = ' );
+                                            user.remove();
+                                        }
+                                        else { //if user is parent of more than 1 student deletes only the student that doesn't exists
+                                            console.log('child ' + child.studentFirstName + ' ' + child.studentLastName +
+                                                ' removed from ' + user.firstName + ' ' + user.lastName + ' document');
+                                            child.remove();
+                                            user.save(function (err) {
+                                                if (err) {
+                                                    console.log('error removing student removed from user parentOf database = ');
+                                                } else {
+                                                    console.log('successfully saved');
+                                                }
+                                            });
+
+                                        }
+                                    }else{
+                                        console.log('foundStudent =',foundStudent.firstName + ' ' + foundStudent.lastName);
+                                        console.log(user.firstName + ' ' + user.lastName + ' added to ' +
+                                            child.studentFirstName + ' ' + child.studentLastName + ' as his/her parent.');
+                                    }
+                                }
+
+                            });
+                    }
+                    callback1();
+                },function (err) {
+                    //console.log("InnerLoopFinished");
+                    callback();
+                });
+            }, function (err) {
+                //console.log("OuterLoopFinished");
+                console.log('Process Finished');
+                res.redirect('/students/showStudents');
+            });
+        }
+    });
+}
