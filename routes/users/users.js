@@ -356,7 +356,7 @@ module.exports.addStep3Post = function(req, res) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 return res.status(409).send('showAlert')
             }else{
-                saveParentInStudentDocument(user, user.parentOf);
+                addParentInStudentDocument(user, user.parentOf);
                 return res.send({redirect:'/users/showUsers'})
             }
         });
@@ -620,7 +620,8 @@ module.exports.updatePost = function(req, res) {
                     console.log('user updated');
                     user.save();
                     deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
-                    saveParentInStudentDocument(user, studentsWithParents);
+                    addParentInStudentDocument(user, studentsWithParents);
+                    updateParentInStudentDocument(user);
                     return res.send({redirect: '/users/showUsers'})
                 }else{
                     result.forEach(function (userEmail) {
@@ -629,7 +630,8 @@ module.exports.updatePost = function(req, res) {
                             console.log('user updated');
                             user.save();
                             deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
-                            saveParentInStudentDocument(user, studentsWithParents);
+                            addParentInStudentDocument(user, studentsWithParents);
+                            updateParentInStudentDocument(user);
                             return res.send({redirect: '/users/showUsers'})
                         }else{
                             console.log('user email already in use');
@@ -682,7 +684,7 @@ module.exports.restoreUser = function(req, res) {
 
         //restore parent to Student document --------------
         if(user.parentOf.length > 0){
-            saveParentInStudentDocument(user, user.parentOf);
+            addParentInStudentDocument(user, user.parentOf);
         }
         //----------end of restore parent to Student document
 
@@ -854,26 +856,40 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
         if (arrayParentsToDelete.length < 1 ){
             console.log('No parents from Students collection to delete');
         } else {
-            models.Students.update({ _id: arrayParentsToDelete }, { $pull: { "parentOf": { "_id": user._id } }}, { safe: true, multi:true }, function(err) {
-                if(err){
-                    console.log('err - finding students from arrayToDelete');
-                }else{
-                    console.log('success - parent removed from Student document');
-                }
-            });
+            for (var i=0; i < arrayParentsToDelete.length; i++) {
+                models.Students.findOneAndUpdate({ _id: arrayParentsToDelete[i] }, { $pull: { "parentOf": { "_id": user._id } }}, { safe: true, multi:true }, function(err, ifOneParent) {
+                    if(err){
+                        console.log('err - finding students from arrayToDelete');
+                    }else{
+                        console.log('empty parentOf', ifOneParent);
+                        if( ifOneParent != null && ifOneParent.parentOf.length < 2 ){ // If student parentOf if empty
+                            ifOneParent.parentOf = undefined;
+                            ifOneParent.save(function (err) {
+                                if (err) {
+                                    console.log('error removing student removed from user parentOf database = ');
+                                } else {
+                                    console.log('successfully saved');
+                                }
+                            });
+                        }
+
+                        console.log('success - parent removed from Student document');
+                    }
+                });
+            }
+
         }
     });
 }
 //-------------- end of Function to delete parent in Student database
 
-function saveParentInStudentDocument(user, newParentsArray) {
+function addParentInStudentDocument(user, newParentsArray) {
     //save parent in Student database --------------------
     var parent = {
         _id: user._id,
         parentFirstName: user.firstName,
         parentLastName: user.lastName
     };
-
     for (var i=0; i < newParentsArray.length; i++) {
         //find student with id = to 'parents[i]' -> {'_id': parents[i]
         //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
@@ -889,19 +905,34 @@ function saveParentInStudentDocument(user, newParentsArray) {
                 }
             });
     }
-    /*
-    var arr = ['5a596979ea2d7a360c75948b','5a596979ea2d7a360c75948c'];
-    models.Students.update({_id: arr, 'parentOf._id': {$ne: parent._id}},
-        { $push: { "parentOf": parent } },
-        { "new": true},
-        function (err) {
-            if(err){
-                console.log('student not updated successfully');
-                throw err;
-            }else {
-                console.log('"parentOf" added successfully on STUDENT database');
-            }
-        });
-        */
-    //-------------- end of save parent in Student database
 }
+//Function to update user child in user document --------------------
+function updateParentInStudentDocument(user) {
+    var parent = {
+        _id: user._id,
+        parentFirstName: user.firstName,
+        parentLastName: user.lastName
+    };
+    models.Students.find({'parentOf._id': user._id}, function (err, students) {
+        if(err){
+            console.log('user not updated successfully');
+            throw err;
+        }else {
+            students.forEach(function (student) {
+                for (var i = 0; i < student.parentOf.length; i++) {
+                    if (student.parentOf[i]._id.toString() == user._id.toString()) {
+                        student.parentOf[i] = parent;
+                        student.save(function (err) {
+                            if (err) {
+                                console.log('error updating user.parentOf document');
+                            } else {
+                                console.log('"parentOf" UPDATED successfully on USER database');
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
+//-------------- end of Function to update user child in user document

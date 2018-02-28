@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Parents</title>
+    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                    $("#btSubmit").click(function(){
+
+                        $.post("/students/showUser",{
+
+
+                        },function(data){
+                            if(data==='done')
+                            {
+                                alert("login success");
+                            }
+                            window.location = data.redirect
+                        });
+                    });
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<% if ( error_messages ) { %>
+<p style="color: red"><%= error_messages %></p>
+<% } %>
+
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated">
+                <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+                <input type="submit" id="btSubmit" value="Add User">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" id="btSubmit" value="Add User" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+            <form class="floated" action="/users/deletedUsers">
+                <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
+                <input type="submit" value="Delete All Parents">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+            <form class="floated" action="/users/deletedUsers">
+                <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
+                <input type="submit" value="Trashed Users">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Trashed Users" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+        </ul>
+    </div>
+</div>
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th align="center">Photo</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Privilege</th>
+        <th align="center">Update</th>
+        <th align="center">Move to Trash</th>
+    </tr>
+    <tbody>
+    <% users.forEach(function(user) { %>
+    <% if (user.softDeleted == null) { %>
+    <tr>
+        <td ></td>
+        <% if (user.photo == "" || user.photo == undefined) { %>
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
+            <% } else { %>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>add</button></a>
+            <% } %>
+        </td>
+        <% } else { %>
+        <td align="center">
+            <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable">show</button></a>
+            <% } else { %>
+            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable" disabled>show</button></a>
+            <% } %>
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">change</button></a>
+            <% } else { %>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
+            <% } %>
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+        <% } %>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+        <td><%= user.email %></td>
+        <td><%= user.userRoleName %></td>
+        <td><%= user.userPrivilegeName %></td>
+
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+                <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
+            <% } else { %>
+                <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated"></form>
+            <form action="/dashboard">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

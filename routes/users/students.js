@@ -58,19 +58,30 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
-    //console.log(req.body.roleID);
-    var student1 = new models.Students({
-        studentID: req.body.studentID,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        photo: req.body.photo
-    });
-    student1.save(function (err) {
-        if (err && (err.code === 11000 || err.code === 11001)) {
-            return res.status(409).send('showAlert')
-        }else{
-            return res.send({redirect:'/students/showStudents'})
+    var parent = [];
+    async.waterfall([
+        function (callback) {
+            var student1 = new models.Students({
+                studentID: req.body.studentID,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                photo: req.body.photo,
+                parentOf: parent
+            });
+            if(student1.parentOf.length < 1){
+                student1.parentOf = undefined;
+            }
+            callback(null, student1);
         }
+    ], function (err, student1) {
+        student1.save(function (err) {
+            if (err && (err.code === 11000 || err.code === 11001)) {
+                return res.status(409).send('showAlert')
+            }else{
+
+                return res.send({redirect:'/students/showStudents'})
+            }
+        });
     });
 };/* -------------------------------end of ADD STUDENT. */
 
@@ -185,10 +196,14 @@ module.exports.updatePost = function(req, res) {
         student.firstName = req.body.firstName;
         student.lastName = req.body.lastName;
         student.photo = req.body.photo;
+        if(student.parentOf.length < 1){
+            student.parentOf = undefined;
+        }
         student.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 return res.status(409).send('showAlert')
             }else{
+                updateParentInUserDocument(student);
                 return res.send({redirect:'/students/showStudents'})
             }
         });
@@ -465,6 +480,7 @@ function addDeleteStudentsParents(res) {
                     if (!child) {
                         console.log('child undefined');
                     }else{
+                        var foundStudentArray = [];
                         models.Students.findOneAndUpdate({'studentID': child.studentID},
                             {"$push": {"parentOf": parent}},
                             {"new": true},
@@ -478,21 +494,42 @@ function addDeleteStudentsParents(res) {
                                             console.log('user ' + user.firstName + ' ' + user.lastName + ' removed from Users collection = ' );
                                             user.remove();
                                         }
-                                        else { //if user is parent of more than 1 student deletes only the student that doesn't exists
-                                            console.log('child ' + child.studentFirstName + ' ' + child.studentLastName +
-                                                ' removed from ' + user.firstName + ' ' + user.lastName + ' document');
-                                            child.remove();
-                                            user.save(function (err) {
-                                                if (err) {
-                                                    console.log('error removing student removed from user parentOf database = ');
-                                                } else {
-                                                    console.log('successfully saved');
+                                        else {
+                                            //if user has more than one role and has only one child -> removes parent role and child
+                                            if (user.userRoleID.length > 1 && user.parentOf.length < 2) {
+                                                console.log('BBBBBBBBBBBBBBBBBBBBBBB');
+                                                child.remove();
+                    /* FIX THIS (if user has more than one role and has only one child that doesn't exit anymore -> removes parent role and child)
+                                                for (var z = 0; z < user.userRoleID.length; z++) {
+                                                    var index = z;
+                                                    if (user.userRoleID[z] == 98 ){
+                                                        user.userRoleID.splice(index,1);
+                                                        user.save(function (err) {
+                                                            if (err) {
+                                                                console.log('error removing student removed from user parentOf database = ');
+                                                            } else {
+                                                                console.log('successfully saved');
+                                                            }
+                                                        });
+                                                    }
                                                 }
-                                            });
+                    */
+                                            }else{ //if user is parent of more than 1 student deletes only the student that doesn't exists
+                                                console.log('child ' + child.studentFirstName + ' ' + child.studentLastName +
+                                                    ' removed from ' + user.firstName + ' ' + user.lastName + ' document');
+                                                child.remove();
+                                                user.save(function (err) {
+                                                    if (err) {
+                                                        console.log('error removing student removed from user parentOf database = ');
+                                                    } else {
+                                                        console.log('successfully saved');
+                                                    }
+                                                });
+                                            }
+
 
                                         }
                                     }else{
-                                        console.log('foundStudent =',foundStudent.firstName + ' ' + foundStudent.lastName);
                                         console.log(user.firstName + ' ' + user.lastName + ' added to ' +
                                             child.studentFirstName + ' ' + child.studentLastName + ' as his/her parent.');
                                     }
@@ -507,9 +544,51 @@ function addDeleteStudentsParents(res) {
                 });
             }, function (err) {
                 //console.log("OuterLoopFinished");
-                console.log('Process Finished');
+                models.Students.find({'parentOf': {$size: 0}}, function (err, students) {
+                        students.forEach(function (student) {
+                            student.parentOf = undefined;
+                            student.save(function (err) {
+                                if (err) {
+                                    return res.status(409).send('showAlert')
+                                } else {
+                                    console.log('successfully removed empty parentOf array');
+                                }
+                            });
+                        });                    });
+                //console.log('Process Finished');
                 res.redirect('/students/showStudents');
             });
         }
     });
 }
+//Function to update user child in user document --------------------
+function updateParentInUserDocument(student) {
+
+    var parent = {
+        studentID: student.studentID,
+        studentFirstName: student.firstName,
+        studentLastName: student.lastName
+    };
+    models.Users.find({'parentOf.studentID': student.studentID}, function (err, users) {
+        if(err){
+            console.log('user not updated successfully');
+            throw err;
+        }else {
+            users.forEach(function (user) {
+                for (var i = 0; i < user.parentOf.length; i++) {
+                    if (user.parentOf[i].studentID == student.studentID) {
+                        user.parentOf[i] = parent;
+                        user.save(function (err) {
+                            if (err) {
+                                console.log('error updating user.parentOf document');
+                            } else {
+                                console.log('"parentOf" UPDATED successfully on USER database');
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
+//-------------- end of Function to update user child in user document
