@@ -119,39 +119,12 @@
         <label for="studentName"><b>Student name:</b>(optional)</label>
     <% } %>
 
-
-
-
-
-
-    <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
-        <!–– <option selected disabled hidden> -- select a student -- </option> ––>
-        <option disabled selected id="studentList"> - select a student from dropdown list - </option>
-        <% students.forEach(function(student) { %>
-
-        <option value="<%= student.studentID %>" ><%= student.firstName %> <%= student.lastName %> </option>
-
-        <% }); %>
-    </select>
-
-
-
-
-
-
-
     <input id="dataList" list="students" name="student" value="<%= alert.studentName %>" onkeydown = "return (event.keyCode!=13);" >
     <datalist id="students">
         <% student.forEach(function(student) { %>
         <option data-value="<%= student.photo %>" value="<%= student.firstName %> <%= student.lastName %>" ></option>
         <% }); %>
     </datalist><br><br>
-
-
-
-
-
-
 
 
     <% if (alert.studentPhoto) { %>
