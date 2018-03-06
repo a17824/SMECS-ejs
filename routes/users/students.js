@@ -12,13 +12,23 @@ var usersJs = require('./users.js');
 
 /* SHOW ALL STUDENTS. */
 module.exports.show = function(req, res, next) {
-    /*
-        models.Students.find(function(err, students) {
-            //res.json(students);
-            console.log("blu blu blu blu");
-            res.render('students/showStudents', { title: 'STUDENTS', students: students });
-        }).sort({"firstName":1});
-    */
+    //this should be after -> console.log("OuterLoopFinished");
+    console.log('Process Finished');
+    models.Students.find({'parentOf': {$size: 0}}, function (err, students) {
+        students.forEach(function (student) {
+            student.parentOf = undefined;
+            student.save(function (err) {
+                if (err) {
+                    return res.status(409).send('showAlert')
+                } else {
+                    console.log('successfully removed empty parentOf array');
+                }
+            });
+
+        });
+    });
+    //end of---- this should be after -> console.log("OuterLoopFinished");
+
     async.parallel([
         function(callback){
             models.Students.find().sort({"firstName":1}).exec(callback);
@@ -78,8 +88,7 @@ module.exports.addPost = function(req, res) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 return res.status(409).send('showAlert')
             }else{
-
-                return res.send({redirect:'/students/showStudents'})
+                return res.send({redirect:'/students/showStudents'});
             }
         });
     });
@@ -165,6 +174,9 @@ module.exports.addMultiplePost = function (req, res){
             }else{
                 //console.log('result = ', result); //callback('now is the time to run something else...')
                 addDeleteStudentsParents(res);
+                setTimeout(function(){
+                    res.redirect('/students/showStudents');
+                }, 5000);
             }
         });
     });
@@ -179,13 +191,23 @@ module.exports.update = function(req, res) {
         function(callback){
             models.Students.findById(req.params.id).exec(callback);
         },
+        function(callback){
+            models.Users.find({'parentOf.0': { "$exists": true }, 'softDeleted': null }).sort({"firstName":1}).exec(callback);
+        },
         function(callback){aclPermissions.modifyStudent(req, res, callback);} //aclPermissions modifyStudent
 
     ],function(err, results){
+        var parentsIdArray = [];
+        results[0].parentOf.forEach(function (parent) {
+            parentsIdArray.push(parent._id);
+        });
+
         res.render('students/updateStudent',{
             title:'Update Student',
             students: results[0],
-            aclModifyStudent: results[1]  //aclPermissions modifyStudent
+            users: results[1],
+            parentsIdArray: parentsIdArray,//student that has parents. This array contains their parents ID (user._id)
+            aclModifyStudent: results[2]  //aclPermissions modifyStudent
         });
     })
 };
@@ -480,49 +502,60 @@ function addDeleteStudentsParents(res) {
                     if (!child) {
                         console.log('child undefined');
                     }else{
-                        var foundStudentArray = [];
                         models.Students.findOneAndUpdate({'studentID': child.studentID},
                             {"$push": {"parentOf": parent}},
                             {"new": true},
                             function (err, foundStudent) {
+                                console.log('0- foundStudent = ',foundStudent);
+                                console.log('0- child.studentID) ' + child.studentID + ' ' + child.studentFirstName + ' ' + child.studentLastName);
                                 if (err) {
                                     console.log('student not updated successfully');
                                     throw err;
                                 } else {
                                     if (!foundStudent) { //if student doesn't exits, checks users collection
                                         if (user.userRoleID.length < 2 && user.parentOf.length < 2) { //delete user if user is parent of only 1 student and that student doesn't exits anymore.
-                                            console.log('user ' + user.firstName + ' ' + user.lastName + ' removed from Users collection = ' );
+                                            console.log('1) user ' + user.firstName + ' ' + user.lastName + ' removed from Users collection = ' );
                                             user.remove();
                                         }
                                         else {
+                                            console.log('AAAAAAAAAAA');
+                                            console.log('user.firstName = ',user.firstName );
+                                            console.log('user.userRoleID.length = ',user.userRoleID.length );
+                                            console.log('user.parentOf.length = ',user.parentOf.length );
+                                            console.log('AAAAAAAAAAA');
                                             //if user has more than one role and has only one child -> removes parent role and child
                                             if (user.userRoleID.length > 1 && user.parentOf.length < 2) {
-                                                console.log('BBBBBBBBBBBBBBBBBBBBBBB');
+                                                console.log('2) BBBBBBBBBBBBBBBBBBBBBBB');
                                                 child.remove();
-                    /* FIX THIS (if user has more than one role and has only one child that doesn't exit anymore -> removes parent role and child)
+                                                //removes userRoleID and userRoleName
                                                 for (var z = 0; z < user.userRoleID.length; z++) {
+                                                    console.log('2) cccccc');
                                                     var index = z;
                                                     if (user.userRoleID[z] == 98 ){
+                                                        console.log('user.userRoleID before = ',user.userRoleID);
                                                         user.userRoleID.splice(index,1);
+                                                        user.userRoleName.splice(index,1);
+                                                        console.log('user.userRoleID after = ',user.userRoleID);
                                                         user.save(function (err) {
                                                             if (err) {
                                                                 console.log('error removing student removed from user parentOf database = ');
                                                             } else {
-                                                                console.log('successfully saved');
+                                                                console.log('2) successfully saved');
                                                             }
                                                         });
                                                     }
+                                                    console.log('2) cccccc');
                                                 }
-                    */
+                                                console.log('2) BBBBBBBBBBBBBBBBBBBBBBB');
                                             }else{ //if user is parent of more than 1 student deletes only the student that doesn't exists
-                                                console.log('child ' + child.studentFirstName + ' ' + child.studentLastName +
+                                                console.log('3) child ' + child.studentFirstName + ' ' + child.studentLastName +
                                                     ' removed from ' + user.firstName + ' ' + user.lastName + ' document');
                                                 child.remove();
                                                 user.save(function (err) {
                                                     if (err) {
                                                         console.log('error removing student removed from user parentOf database = ');
                                                     } else {
-                                                        console.log('successfully saved');
+                                                        console.log('3) successfully saved');
                                                     }
                                                 });
                                             }
@@ -530,12 +563,12 @@ function addDeleteStudentsParents(res) {
 
                                         }
                                     }else{
-                                        console.log(user.firstName + ' ' + user.lastName + ' added to ' +
+                                        console.log('4) ' + user.firstName + ' ' + user.lastName + ' added to ' +
                                             child.studentFirstName + ' ' + child.studentLastName + ' as his/her parent.');
                                     }
                                 }
-
                             });
+
                     }
                     callback1();
                 },function (err) {
@@ -543,20 +576,8 @@ function addDeleteStudentsParents(res) {
                     callback();
                 });
             }, function (err) {
-                //console.log("OuterLoopFinished");
-                models.Students.find({'parentOf': {$size: 0}}, function (err, students) {
-                        students.forEach(function (student) {
-                            student.parentOf = undefined;
-                            student.save(function (err) {
-                                if (err) {
-                                    return res.status(409).send('showAlert')
-                                } else {
-                                    console.log('successfully removed empty parentOf array');
-                                }
-                            });
-                        });                    });
-                //console.log('Process Finished');
-                res.redirect('/students/showStudents');
+                console.log("OuterLoopFinished");
+                //res.redirect('/students/showStudents');
             });
         }
     });

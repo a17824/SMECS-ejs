@@ -514,7 +514,7 @@ module.exports.update = function(req, res) {
 module.exports.updatePost = function(req, res) {
     var userToAddUpdate_ID = req.body.userToUpdate;
     var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
-    var userRoleArray = req.body.userRoleID;
+    var newUserRoleArray = req.body.userRoleID;
     var parentOf = req.body.parentOf;
     var emailLowerCase = req.body.email.toLowerCase();
 
@@ -522,25 +522,43 @@ module.exports.updatePost = function(req, res) {
     var ifUserHasParentRole = 0;
     var ifUserHasUtilityUserRole = 0;
 
-    for (var i = 0; i < userRoleArray.length; i++) {
+    var oldIfUserHasAnyOtherRole = 0;
+    var oldIfUserHasParentRole = 0;
+    var oldIfUserHasUtilityUserRole = 0;
+
+    for (var i = 0; i < newUserRoleArray.length; i++) {
 
         //if user as a role different from UtilityUser Role
-        if (userRoleArray[i] != 99 && ifUserHasAnyOtherRole == 0) {
+        if (newUserRoleArray[i] != 99 && ifUserHasAnyOtherRole == 0) {
             ifUserHasAnyOtherRole = 1;
         }
         //if user has Parent Role
-        if (userRoleArray[i] == 98 && ifUserHasParentRole == 0) {
+        if (newUserRoleArray[i] == 98 && ifUserHasParentRole == 0) {
             ifUserHasParentRole = 1;
         }
         //if user has UtilityUser Role
-        if (userRoleArray[i] == 99 && ifUserHasUtilityUserRole == 0) {
+        if (newUserRoleArray[i] == 99 && ifUserHasUtilityUserRole == 0) {
             ifUserHasUtilityUserRole = 1;
         }
     }
-
     async.waterfall([
         function (callback) {
             models.Users.findById({'_id': userToAddUpdate_ID}, function(err, user){
+                for (var i = 0; i < user.userRoleID.length; i++) {
+
+                    //if user had a role different from UtilityUser Role
+                    if (user.userRoleID[i] != 99) {
+                        oldIfUserHasAnyOtherRole = 1;
+                    }
+                    //if user had Parent Role
+                    if (user.userRoleID[i] == 98) {
+                        oldIfUserHasParentRole = 1;
+                    }
+                    //if user had UtilityUser Role
+                    if (user.userRoleID[i] == 99) {
+                        oldIfUserHasUtilityUserRole = 1;
+                    }
+                }
                 user.userRoleID = req.body.userRoleID;
                 user.userRoleName = req.body.userRoleName;
                 user.userPrivilegeID = req.body.userPrivilegeID;
@@ -549,10 +567,10 @@ module.exports.updatePost = function(req, res) {
                     user.pin = hash; //req.body.pin;
                 }
                 user.photo = req.body.photo;
-                callback(null, user);
+                callback(null, user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole);
             });
         },
-        function (user, callback) {
+        function (user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole, callback) {
             //iifUserHasAnyOtherRole: delete or saves "FirstName" and "LastName" field
             if (ifUserHasAnyOtherRole == 1) {
                 user.firstName = req.body.firstName;
@@ -561,33 +579,56 @@ module.exports.updatePost = function(req, res) {
                 user.firstName = undefined;
                 user.lastName = undefined;
             }
-            callback(null, user);
+            callback(null, user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole);
         },
-        function (user, callback) {
+        function (user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole, callback) {
             //Parent User: update "ParentOf" field
             var oldParentArray = [];
+            var oldParentArrayStudentID =[];
             var studentsWithParents = [];
-            if (ifUserHasParentRole == 1) {
+            if (ifUserHasParentRole == 1 || oldIfUserHasParentRole == 1) {
                 if (typeof user.parentOf !== 'undefined' && user.parentOf.length > 0) {
                     // the array is defined and has at least one element
                     for (var i=0; i < user.parentOf.length; i++) {
-                        oldParentArray.push(user.parentOf[i]._id);
+                        if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
+                            oldParentArray.push(user.parentOf[i].studentID);
+                            oldParentArrayStudentID.push(user.parentOf[i].studentID);
+                        }else{
+                            oldParentArray.push(user.parentOf[i].studentID);
+                        }
                     }
+                }
+                if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
+                    parentOf = oldParentArrayStudentID;
                 }
                 user.parentOf = [];
                 models.Students.find({'studentID': parentOf}, function (err, students) {
-                    for (var i=0; i < students.length; i++) {
-                        var student = {
-                            _id: students[i]._id,
-                            studentID: students[i].studentID,
-                            studentFirstName: students[i].firstName,
-                            studentLastName: students[i].lastName
-                        };
-                        user.parentOf.push(student);
-                        studentsWithParents.push(students[i]._id);
+                    if(err){
+                        console.log('err = ', err);
+                    }else{
+                        for (var i=0; i < students.length; i++) {
+                            var student = {
+                                _id: students[i]._id,
+                                studentID: students[i].studentID,
+                                studentFirstName: students[i].firstName,
+                                studentLastName: students[i].lastName
+                            };
+                            if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
+                                console.log('999999999 BBB');
+                                //studentsWithParents.push(students[i]._id);
+                            }else{
+                                console.log('0000000000 AAA');
+                                user.parentOf.push(student);
+                                studentsWithParents.push(students[i].studentID);
+                            }
+                        }
+                        if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
+                            user.parentOf = undefined;
+                        }
+                        console.log('"parentOf" updated successfully');
+                        callback(null, user, studentsWithParents, oldParentArray);
                     }
-                    console.log('"parentOf" updated successfully');
-                    callback(null, user, studentsWithParents, oldParentArray);
+
                 });
             }else{
                 user.parentOf = undefined;
@@ -621,7 +662,7 @@ module.exports.updatePost = function(req, res) {
                     user.save();
                     deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
                     addParentInStudentDocument(user, studentsWithParents);
-                    updateParentInStudentDocument(user);
+                    //updateParentInStudentDocument(user);
                     return res.send({redirect: '/users/showUsers'})
                 }else{
                     result.forEach(function (userEmail) {
@@ -631,7 +672,7 @@ module.exports.updatePost = function(req, res) {
                             user.save();
                             deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
                             addParentInStudentDocument(user, studentsWithParents);
-                            updateParentInStudentDocument(user);
+                            //updateParentInStudentDocument(user);
                             return res.send({redirect: '/users/showUsers'})
                         }else{
                             console.log('user email already in use');
@@ -684,7 +725,11 @@ module.exports.restoreUser = function(req, res) {
 
         //restore parent to Student document --------------
         if(user.parentOf.length > 0){
-            addParentInStudentDocument(user, user.parentOf);
+            var ArrayStudentsWithStudentID = [];
+            user.parentOf.forEach(function (student) {
+                ArrayStudentsWithStudentID.push(student.studentID);
+            });
+            addParentInStudentDocument(user, ArrayStudentsWithStudentID);
         }
         //----------end of restore parent to Student document
 
@@ -761,8 +806,6 @@ module.exports.addUpdatePhotoPost = function (req, res){
 
     //save user id from field value to "fields"
     form.on('field', function (field, value) {
-        //console.log(field);
-        //console.log(value);
         fields[field] = value;
 
         form.on('end', function(fields, files) {
@@ -840,7 +883,7 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
             for (var i=0; i < oldParentArray.length; i++) {
                 flagExists = 0;
                 for (var x=0; x < newParentsArray.length; x++) {
-                    if (oldParentArray[i].toString() == newParentsArray[x].toString()){
+                    if (oldParentArray[i] == newParentsArray[x]){
                         flagExists = 1;
                         break;
                     }
@@ -852,17 +895,15 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
             callback(null, user, arrayParentsToDelete);
         }
     ], function (err, user, arrayParentsToDelete) {
-        console.log('arrayParentsToDelete = ', arrayParentsToDelete);
         if (arrayParentsToDelete.length < 1 ){
             console.log('No parents from Students collection to delete');
         } else {
             for (var i=0; i < arrayParentsToDelete.length; i++) {
-                models.Students.findOneAndUpdate({ _id: arrayParentsToDelete[i] }, { $pull: { "parentOf": { "_id": user._id } }}, { safe: true, multi:true }, function(err, ifOneParent) {
+                models.Students.findOneAndUpdate({ 'studentID': arrayParentsToDelete[i] }, { $pull: { "parentOf": { "_id": user._id } }}, { safe: true, multi:true }, function(err, ifOneParent) {
                     if(err){
                         console.log('err - finding students from arrayToDelete');
                     }else{
-                        console.log('empty parentOf', ifOneParent);
-                        if( ifOneParent != null && ifOneParent.parentOf.length < 2 ){ // If student parentOf if empty
+                        if( ifOneParent != null && ifOneParent.parentOf.length < 2 ){ // If student parentOf is empty
                             ifOneParent.parentOf = undefined;
                             ifOneParent.save(function (err) {
                                 if (err) {
@@ -872,12 +913,10 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
                                 }
                             });
                         }
-
                         console.log('success - parent removed from Student document');
                     }
                 });
             }
-
         }
     });
 }
@@ -893,7 +932,7 @@ function addParentInStudentDocument(user, newParentsArray) {
     for (var i=0; i < newParentsArray.length; i++) {
         //find student with id = to 'parents[i]' -> {'_id': parents[i]
         //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
-        models.Students.findOneAndUpdate({'_id': newParentsArray[i], 'parentOf._id': {$ne: parent._id}},
+        models.Students.findOneAndUpdate({'studentID': newParentsArray[i], 'parentOf._id': {$ne: parent._id}},
             { "$push": { "parentOf": parent } },
             { "new": true},
             function (err) {
@@ -908,6 +947,7 @@ function addParentInStudentDocument(user, newParentsArray) {
 }
 //Function to update user child in user document --------------------
 function updateParentInStudentDocument(user) {
+    console.log('QQQQQQQQQQQQQ');
     var parent = {
         _id: user._id,
         parentFirstName: user.firstName,

@@ -34,11 +34,31 @@
 <h1><%= title %></h1>
 
 <form action="/students/addMultiStudents" enctype="multipart/form-data" method="post">
-
-
-
     <input type="file" name="file1" onchange="ValidateSingleInput(this);" /><br><br>
-    <input type="submit" value="Upload" />
+    <input type="submit" value="Upload" onclick="progressBarSim()"/>
 </form>
+
+<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+<span id="status"></span>
+<h1 id="finalMessage"></h1>
+
+<script>
+    var al = 0;
+    function progressBarSim() {
+        var bar = document.getElementById('progressBar');
+        var status = document.getElementById('status');
+        status.innerHTML = al+"%";
+        bar.value = al;
+        al++;
+        var sim = setTimeout("progressBarSim("+al+")",10);
+        if(al == 100){
+            status.innerHTML = "100%";
+            bar.value = 200;
+            clearTimeout(sim);
+            var finalMessage = document.getElementById('finalMessage');
+            finalMessage.innerHTML = "Process almost complete! please wait...";
+        }
+    }
+</script>
 </body>
 </html>

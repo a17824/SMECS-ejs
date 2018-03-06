@@ -113,7 +113,13 @@
         <td><%= user.firstName %></td>
         <td><%= user.lastName %></td>
         <td><%= user.email %></td>
-        <td><%= user.userRoleName %></td>
+        <td >
+            <% if (user.userRoleName.length > 0) { %>
+                <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                <pre style="text-align: left"><%= user.userRoleName[x] %> </pre>
+                <% } %>
+            <% } %>
+        </td>
         <td><%= user.userPrivilegeName %></td>
 
         <td align="center">

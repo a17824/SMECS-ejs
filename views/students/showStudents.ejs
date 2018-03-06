@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Show Users</title>
+    <title>Show Students</title>
     <link rel='stylesheet' href='/stylesheets/showStudents.css' />
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
@@ -100,7 +100,13 @@
 
 
 
-        <td ></td>
+        <td >
+            <% if (student.parentOf.length > 0) { %>
+            <% for (var x = 0; x < student.parentOf.length; x++) {%>
+            <pre style="text-align: left"><%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%></pre>
+            <% } %>
+            <% } %>
+        </td>
 
 
         <td align="center">
