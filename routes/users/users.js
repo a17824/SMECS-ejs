@@ -614,10 +614,8 @@ module.exports.updatePost = function(req, res) {
                                 studentLastName: students[i].lastName
                             };
                             if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
-                                console.log('999999999 BBB');
                                 //studentsWithParents.push(students[i]._id);
                             }else{
-                                console.log('0000000000 AAA');
                                 user.parentOf.push(student);
                                 studentsWithParents.push(students[i].studentID);
                             }
@@ -628,7 +626,6 @@ module.exports.updatePost = function(req, res) {
                         console.log('"parentOf" updated successfully');
                         callback(null, user, studentsWithParents, oldParentArray);
                     }
-
                 });
             }else{
                 user.parentOf = undefined;

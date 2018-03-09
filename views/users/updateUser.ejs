@@ -271,7 +271,7 @@
                     alert("USER PRIVILEGE must be filled out");
                     return false;
                 }
-                console.log(arrayUsers);
+
                 //--------------------------------forms validation end-------
                 var pin;
                 if (newPin !== oldPin) {
@@ -385,7 +385,7 @@
                         id="dataList" list="students"
                         name="student"
                         placeholder="type student name"
-                        value="<%= students.studentName %>"
+                        value="<%= students.studentID %>"
                         onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
                 <dataList id="students">
                     <% students.forEach(function(student) { %>

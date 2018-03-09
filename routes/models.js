@@ -25,7 +25,8 @@ var UsersSchema = new mongoose.Schema({
     resetPasswordExpires: Date,
     receptionPA: { type: Boolean, default: false},
     pushToken: String
-}, {collection:"Users"}); //stops Mongoose of giving plurals to our collections names
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"Users"}); //stops Mongoose of giving plurals to our collections names
 var Users;
 module.exports.Users = mongoose.model("Users", UsersSchema);
 
@@ -80,7 +81,6 @@ var StudentsSchema = new mongoose.Schema({
     lastName: String,
     photo: String,
     parentOf: [{
-        parentID: Number,   //access this value by: parentOf._id
         parentFirstName: String,
         parentLastName: String,
     }]

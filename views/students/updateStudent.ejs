@@ -5,17 +5,13 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
         var choices;
-        function selectUser(select)
-        {
+        function selectUser(select) {
             var option = $("#dataList").val();
             //get datalist data-value to value2send
-            var value2send= document.querySelector('#users option[value="'+option+'"]').dataset.value;
-
+            var value2send= document.querySelector('#students option[value="'+option+'"]').dataset.value;
             var ul = select.parentNode.getElementsByTagName('ul')[0];
             choices = ul.getElementsByTagName('input');
-
             for (var i = 0; i < choices.length; i++) {
-
                 if (choices[i].value == value2send) {
                     return;
                 }
@@ -23,18 +19,13 @@
             var li = document.createElement('li');
             var input = document.createElement('input');
             var text = document.createTextNode(option);
-
             input.type = 'hidden';
             input.name = 'users[]';
             input.value = value2send;
-
             li.appendChild(input);
             li.appendChild(text);
             li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
             ul.appendChild(li);
-
-
         }
         var usersToRemove = [];
         function removeUser(user){
@@ -43,83 +34,6 @@
         }
 
         $(document).ready(function(){
-
-            //This will check the status of radio button on page load/page refresh
-            $('input[class=other]').each(function() {
-                var checkVal = $('.other:checked');
-                if (checkVal.length < 1){
-                    checkBoxOffOther();
-                } else {
-                    checkBoxOnOther();
-                }
-            });
-            //This will check the status of radio button onclick
-            $('input:checkbox[class=other]').change(function() {
-                var checkVal = $('.other:checked');
-                if (checkVal.length < 1){
-                    checkBoxOffOther();
-                } else {
-                    checkBoxOnOther();
-                }
-            });
-
-            function checkBoxOffParents() {
-                $('#dataList').removeClass().addClass('disable');
-                $("#dataList").attr('disabled',true);
-                $('#imgAdd').removeClass().addClass('disable');
-                $('#smecsUserLabel').removeClass().addClass('disable');
-                $('#smecsUserDiv').removeClass().addClass('disable');
-                $('#smecsUserUl').removeClass().addClass('disable');
-                $('#clickHere').removeClass().addClass('disable');
-            }
-            function checkBoxOnParents() {
-                $('#dataList').removeClass().addClass('enable');
-                $("#dataList").attr('disabled',false);
-                $('#imgAdd').removeClass().addClass('enable');
-                $('#smecsUserLabel').removeClass().addClass('enable');
-                $('#smecsUserDiv').removeClass().addClass('enable');
-                $('#smecsUserUl').removeClass().addClass('enable');
-                $('#clickHere').removeClass().addClass('enable');
-            }
-
-            //This will check the status of radio button on page load/page refresh
-            $('input[id=parents]').each(function() {
-                var checkVal = $(this).is(':checked');
-                if (checkVal == false){
-                    checkBoxOffParents();
-                } else {
-                    checkBoxOnParents();
-                }
-            });
-            //This will check the status of radio button onclick
-            $('input:checkbox[id=parents]').change(function() {
-                var checkVal = $(this).is(':checked');
-                if (checkVal == false){
-                    checkBoxOffParents();
-                } else {
-                    checkBoxOnParents();
-                }
-            });
-
-            //This will check the status of radio button on page load/page refresh
-            $('input[class=utilityCompany]').each(function() {
-                var checkVal = $(this).is(':checked');
-                if (checkVal == false){
-                    checkBoxOffUtilityName();
-                } else {
-                    checkBoxOnUtilityName();
-                }
-            });
-            //This will check the status of radio button onclick
-            $('input:checkbox[class=utilityCompany]').change(function() {
-                var checkVal = $(this).is(':checked');
-                if (checkVal == false){
-                    checkBoxOffUtilityName();
-                } else {
-                    checkBoxOnUtilityName();
-                }
-            });
-
             var student_ID,firstName,lastName,studentID,photo;
             $("#<%= students.id %>").click(function(){
                 student_ID=$(this).attr('id');
@@ -145,7 +59,6 @@
                         }
                     }
                 }
-
                 if(arrayUsers.length == 1 && arrayUsers[0] == "") {
                     var index = arrayUsers.indexOf(5);
                     arrayUsers.splice(index, 1);
@@ -160,52 +73,14 @@
                     alert("LAST NAME must be filled out");
                     return false;
                 }
-                if (arrayUsers.length < 1) {
-                    alert("Parent Role is checked. Please choose a student that belong to this parent or uncheck Parent Role from this user.");
-                    return false;
-                }
                 //--------------------------------forms validation end-------
-
-                //--------------------------------Capitalize Words---------------------------
-                if (firstName != "" ) {
-                    //changes user input and put first letter of each word capitalized
-                    // replaces: "fort collins, croton-on-hudson, harper's ferry, coeur d'alene, o'fallon"
-                    //with: "Fort Collins, Croton-On-Hudson, Harper's Ferry, Coeur D'Alene, O'Fallon"
-                    var re = /(\b[a-z](?!\s))/g;
-                    var s = firstName;
-                    s = s.replace(re, function(x){return x.toUpperCase();});
-
-                    //fixes words like: "Marty Mcfly"
-                    // with: "Marty McFly"
-                    var text = s;
-                    text = text.replace(/Mc[a-z]/, function (k)
-                            {
-                                return 'Mc' + k[2].toUpperCase();
-                            }
-                    );
-                }
-                firstName = text;
-
-                if (lastName != "" ) {
-                    var re = /(\b[a-z](?!\s))/g;
-                    var s = lastName;
-                    s = s.replace(re, function(x){return x.toUpperCase();});
-                    var text = s;
-                    text = text.replace(/Mc[a-z]/, function (k)
-                            {
-                                return 'Mc' + k[2].toUpperCase();
-                            }
-                    );
-                }
-                lastName = text;
-                //--------------------------------Capitalize Words end---------------------
-                console.log('minha foto e esta = ' + photo);
 
                 $.post("/students/updateStudent",{
                     studentToUpdate: student_ID,
                     firstName: firstName,
                     lastName: lastName,
                     studentID: studentID,
+                    parentOf: arrayUsers,
                     photo: photo
                 },function(data){
                     if(data==='done')
@@ -240,10 +115,10 @@
     <input type="hidden" id="savedValueSmecsUsers" value="<%= parentsIdArray %>">
     <input type="hidden" id="photo" value="<%= students.photo %>">
 
-
+    <label for="parents"><b>Parents:</b>(optional)</label><br>
     <div id="labelsDiv2" class="labelsDiv2">
         <div id="smecsUserDiv" class="enable">
-            <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parent of:</label><br>
+            <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parents associate to this Student:</label><br>
 
 
             <ul id="smecsUserUl" class="enable">
@@ -261,8 +136,8 @@
                     class="enable"
                     id="dataList" list="students"
                     name="student"
-                    placeholder="type student name"
-                    value="<%= users.studentName %>"
+                    placeholder="type parent name"
+                    value="<%= users._id %>"
                     onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
             <dataList id="students">
                 <% users.forEach(function(user) { %>
