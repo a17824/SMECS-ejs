@@ -66,10 +66,17 @@
 <form>
     <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
 
-    <% if (alert.alertNameID == 7) {%>
-        <label for="floor"><b>Floor to use to Evacuate:</b> (optional)</label><br>
+    <% if (alert.alertNameID == 5 ||
+            alert.alertNameID == 7) {%>
+
+        <% if (alert.alertNameID == 5) {%>
+            <label for="floor"><b>Student location:</b> (optional)</label><br>
+        <% }%>
+        <% if (alert.alertNameID == 7) {%>
+            <label for="floor"><b>Floor(s) to evacuate:</b> (optional)</label><br>
+        <% }%>
     <% } else { %>
-        <label for="floor"><b>Floor:</b> (optional)</label><br>
+        <label for="floor"><b>Location:</b> (optional)</label><br>
     <% }%>
     <% floor.forEach(function(floor) { %>
         <% if (floor.floorName == alert.floorName) {%> <!-- for back button/refresh -->
