@@ -29,18 +29,24 @@ module.exports.show = function(req, res, next) {
 
 
     ],function(err, results){
+        if (!results[0]) {
+            console.log('err = ',err);
+        }
+        else {
 
-        res.render('users/showUsers',{
-            title:'USERS',
-            users: results[0],
-            userAuthID: req.user.userPrivilegeID,
-            aclShowDeletedUsers: results[1], //aclPermissions showDeletedUsers
-            aclShowUsers: results[2], //aclPermissions showUsers
-            aclAddUsers: results[3], //aclPermissions addUsers
-            aclModifyUsers: results[4],  //aclPermissions modifyUsers
-            aclDeleteUsers: results[5]  //aclPermissions deleteUsers
+            res.render('users/showUsers',{
+                title:'USERS',
+                users: results[0],
+                userAuthID: req.user.userPrivilegeID,
+                aclShowDeletedUsers: results[1], //aclPermissions showDeletedUsers
+                aclShowUsers: results[2], //aclPermissions showUsers
+                aclAddUsers: results[3], //aclPermissions addUsers
+                aclModifyUsers: results[4],  //aclPermissions modifyUsers
+                aclDeleteUsers: results[5]  //aclPermissions deleteUsers
 
-        });
+            });
+        }
+
     })
 };
 module.exports.showPost = function(req, res) {
@@ -226,7 +232,7 @@ module.exports.addStep2Post = function(req, res) {
                                     studentLastName: students[i].lastName
                                 };
                                 user.parentOf.push(student);
-                                user.studentsWithParents.push(students[i]._id);
+                                user.studentsWithParents.push(students[i].studentID);
                             }
                             console.log('"parentOf" added successfully');
                             callback(null, user);
@@ -331,6 +337,10 @@ module.exports.addStep3Post = function(req, res) {
             });
         },
         function (user, hash, callback) {
+
+            userType(user, user.userRoleID);
+
+
             var user1 = new models.Users({
                 _id: user._id,
                 userRoleID: user.userRoleID,
@@ -344,7 +354,10 @@ module.exports.addStep3Post = function(req, res) {
                 parentOf: user.parentOf,
                 companyName: user.companyName,
                 contactName: user.contactName,
-                photo: user.photo
+                photo: user.photo,
+                internal: user.internal,
+                parent: user.parent,
+                external: user.external
             });
             if(user1.parentOf.length < 1){
                 user1.parentOf = undefined;
@@ -356,7 +369,7 @@ module.exports.addStep3Post = function(req, res) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 return res.status(409).send('showAlert')
             }else{
-                addParentInStudentDocument(user, user.parentOf);
+                addParentInStudentDocument(user, user.studentsWithParents);
                 return res.send({redirect:'/users/showUsers'})
             }
         });
@@ -526,8 +539,8 @@ module.exports.updatePost = function(req, res) {
     var oldIfUserHasParentRole = 0;
     var oldIfUserHasUtilityUserRole = 0;
 
+    //NEW user Roles
     for (var i = 0; i < newUserRoleArray.length; i++) {
-
         //if user as a role different from UtilityUser Role
         if (newUserRoleArray[i] != 99 && ifUserHasAnyOtherRole == 0) {
             ifUserHasAnyOtherRole = 1;
@@ -544,8 +557,10 @@ module.exports.updatePost = function(req, res) {
     async.waterfall([
         function (callback) {
             models.Users.findById({'_id': userToAddUpdate_ID}, function(err, user){
-                for (var i = 0; i < user.userRoleID.length; i++) {
+                userType(user, newUserRoleArray);
 
+                //OLD user Roles
+                for (var i = 0; i < user.userRoleID.length; i++) {
                     //if user had a role different from UtilityUser Role
                     if (user.userRoleID[i] != 99) {
                         oldIfUserHasAnyOtherRole = 1;
@@ -558,7 +573,9 @@ module.exports.updatePost = function(req, res) {
                     if (user.userRoleID[i] == 99) {
                         oldIfUserHasUtilityUserRole = 1;
                     }
-                }
+                };
+
+
                 user.userRoleID = req.body.userRoleID;
                 user.userRoleName = req.body.userRoleName;
                 user.userPrivilegeID = req.body.userPrivilegeID;
@@ -567,10 +584,15 @@ module.exports.updatePost = function(req, res) {
                     user.pin = hash; //req.body.pin;
                 }
                 user.photo = req.body.photo;
+                console.log('END AAAAAAAAAAAAAAAAAAAAA');
                 callback(null, user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole);
             });
         },
         function (user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole, callback) {
+            console.log('BBBBBBBB');
+            console.log('user.internal = ',user.internal);
+            console.log('user.parent = ',user.parent);
+            console.log('user.external = ',user.external);
             //iifUserHasAnyOtherRole: delete or saves "FirstName" and "LastName" field
             if (ifUserHasAnyOtherRole == 1) {
                 user.firstName = req.body.firstName;
@@ -690,10 +712,9 @@ module.exports.softDelete = function(req, res) {
         var whoDeleted = req.session.user.firstName + " " + req.session.user.lastName;
         var wrapped = moment(new Date());
         user.softDeleted = wrapped.format('YYYY-MM-DD, h:mm:ss a') + "  by " + whoDeleted;
-        user.save();
 
         //If user is parent, deletes user(parentOf) from Student document ------------------------------
-        if(user.parentOf.length > 0) {
+        if(user.parentOf && user.parentOf.length > 0) {
             models.Students.update({}, {$pull: {"parentOf": {"_id": user._id}}}, {
                 safe: true,
                 multi: true
@@ -704,7 +725,10 @@ module.exports.softDelete = function(req, res) {
                     console.log('success - parent(s) removed from Student document');
                 }
             });
+        }else{
+            user.parentOf = undefined;
         }
+        user.save();
         //----------end of If user is parent, deletes user(parentOf) from Student document --------------
 
         res.redirect('/users/showUsers');
@@ -718,7 +742,6 @@ module.exports.restoreUser = function(req, res) {
 
     models.Users.findById({'_id': userToRestore}, function(err, user){
         user.softDeleted = null;
-        user.save();
 
         //restore parent to Student document --------------
         if(user.parentOf.length > 0){
@@ -727,7 +750,10 @@ module.exports.restoreUser = function(req, res) {
                 ArrayStudentsWithStudentID.push(student.studentID);
             });
             addParentInStudentDocument(user, ArrayStudentsWithStudentID);
+        }else{
+            user.parentOf = undefined;
         }
+        user.save();
         //----------end of restore parent to Student document
 
         res.redirect('/users/deletedUsers');
@@ -871,6 +897,50 @@ module.exports.deletePhoto = function(req, res) {
 //----------------end delete user photo
 
 
+
+
+//Function to check if user is Intern, External or Parent --------------------
+function userType(user, newUserRoleArray) {
+    var internal = 0;
+    var parent = 0;
+    var external = 0;
+
+    //NEW user Roles
+    for (var i = 0; i < newUserRoleArray.length; i++) {
+        //if user as a role different from Parent and UtilityUser Role
+        if (newUserRoleArray[i] != 98 && newUserRoleArray[i] != 99 && internal == 0) {
+            internal = 1;
+        }
+        //if user has Parent Role
+        if (newUserRoleArray[i] == 98) {
+            parent = 1;
+        }
+        //if user has UtilityUser Role
+        if (newUserRoleArray[i] == 99) {
+            external = 1;
+        }
+    }
+
+
+    if (internal == 1) {
+        user.internal = true;
+    } else {
+        user.internal = false;
+    }
+    if (parent == 1) {
+        user.parent = true;
+    } else {
+        user.parent = false;
+    }
+    if (external == 1) {
+        user.external = true;
+    } else {
+        user.external = false;
+    }
+
+    //user.save();
+}
+
 //Function to delete parent in Student database --------------------
 function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
     async.waterfall([
@@ -926,6 +996,7 @@ function addParentInStudentDocument(user, newParentsArray) {
         parentFirstName: user.firstName,
         parentLastName: user.lastName
     };
+
     for (var i=0; i < newParentsArray.length; i++) {
         //find student with id = to 'parents[i]' -> {'_id': parents[i]
         //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
@@ -940,6 +1011,7 @@ function addParentInStudentDocument(user, newParentsArray) {
                     console.log('"parentOf" added successfully on STUDENT database');
                 }
             });
+
     }
 }
 //Function to update user child in user document --------------------

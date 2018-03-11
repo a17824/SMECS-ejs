@@ -3,12 +3,22 @@
 <head>
     <title>Show Users</title>
     <link rel='stylesheet' href='/stylesheets/showStudents.css' />
+    <link rel='stylesheet' href='/stylesheets/custom.min.css' />
+
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
 
     <script type = "text/javascript">
         $(document).ready(function()
                 {
+                    $('input[type="radio"]').change(function(){
+                        if (this.checked){
+                            $('.showUsers').toggle(this.value === 'users');
+                            $('.showParents').toggle(this.value === 'parents');
+                            $('.showExternal').toggle(this.value === 'external');
+                        }
+                    }).change();
+
                     $("#myTable").tablesorter();
                     $("#btSubmit").click(function(){
 
@@ -35,6 +45,12 @@
 <p style="color: red"><%= error_messages %></p>
 <% } %>
 
+<div >
+<label><input type="radio" value="users" name="showHide" checked="checked" />School employees</label>&emsp;&emsp;&emsp;
+<label><input type="radio" value="parents" name="showHide" />Parents</label>&emsp;&emsp;&emsp;
+<label><input type="radio" value="external" name="showHide" />External/Companies</label>
+</div>
+<br>
 <div class="main-container">
     <div class="fixer-container">
         <ul class="list-of-floating-elements">
@@ -62,7 +78,7 @@
         </ul>
     </div>
 </div>
-<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+<table id="myTable" class="tablesorter showUsers" style="width:100%;table-layout: fixed;">
     <caption>
         TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
     </caption>
@@ -80,7 +96,7 @@
     </tr>
     <tbody>
     <% users.forEach(function(user) { %>
-    <% if (user.softDeleted == null) { %>
+    <% if (user.softDeleted == null && user.internal == true) { %>
     <tr>
         <td ></td>
         <% if (user.photo == "" || user.photo == undefined) { %>
@@ -138,9 +154,184 @@
         </td>
     </tr>
     <% } %>
+
     <% }); %>
     </tbody>
 </table><br>
+
+
+
+
+<table id="myTable"  class="tablesorter showParents" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th align="center">Parents</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Privilege</th>
+        <th align="center">Update</th>
+        <th align="center">Move to Trash</th>
+    </tr>
+    <tbody>
+    <% users.forEach(function(user) { %>
+    <% if (user.softDeleted == null && user.parent == true) { %>
+    <tr>
+        <td ></td>
+        <% if (user.photo == "" || user.photo == undefined) { %>
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
+            <% } else { %>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>add</button></a>
+            <% } %>
+        </td>
+        <% } else { %>
+        <td align="center">
+            <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable">show</button></a>
+            <% } else { %>
+            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable" disabled>show</button></a>
+            <% } %>
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">change</button></a>
+            <% } else { %>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
+            <% } %>
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+        <% } %>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+        <td><%= user.email %></td>
+        <td >
+            <% if (user.userRoleName.length > 0) { %>
+            <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+            <pre style="text-align: left"><%= user.userRoleName[x] %> </pre>
+            <% } %>
+            <% } %>
+        </td>
+        <td><%= user.userPrivilegeName %></td>
+
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+            <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
+            <% } else { %>
+            <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+
+
+<table id="myTable"  class="tablesorter showExternal" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th align="center">External</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Privilege</th>
+        <th align="center">Update</th>
+        <th align="center">Move to Trash</th>
+    </tr>
+    <tbody>
+    <% users.forEach(function(user) { %>
+
+
+    <% if (user.softDeleted == null && user.external == true) { %>
+    <tr>
+        <td ></td>
+        <% if (user.photo == "" || user.photo == undefined) { %>
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
+            <% } else { %>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>add</button></a>
+            <% } %>
+        </td>
+        <% } else { %>
+        <td align="center">
+            <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable">show</button></a>
+            <% } else { %>
+            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable" disabled>show</button></a>
+            <% } %>
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">change</button></a>
+            <% } else { %>
+            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
+            <% } %>
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+        <% } %>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+        <td><%= user.email %></td>
+        <td >
+            <% if (user.userRoleName.length > 0) { %>
+            <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+            <pre style="text-align: left"><%= user.userRoleName[x] %> </pre>
+            <% } %>
+            <% } %>
+        </td>
+        <td><%= user.userPrivilegeName %></td>
+
+        <td align="center">
+            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+            <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+            <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
+            <% } else { %>
+            <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% } %>
+
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+
 <div class="main-container">
     <div class="fixer-container">
         <ul class="list-of-floating-elements">

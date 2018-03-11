@@ -13,6 +13,9 @@ var UsersSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     pin: String,
     photo: String,
+    internal: { type: Boolean, default: false},
+    parent: { type: Boolean, default: false},
+    external: { type: Boolean, default: false},
     parentOf: [{
         studentID: Number,
         studentFirstName: String,
