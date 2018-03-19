@@ -1,176 +1,31 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>dashboard</title>
-    <link rel='stylesheet' href='/stylesheets/center.css' />
-  </head>
-  <body>
-    <h1>SMECS</h1>
+<% include header.ejs %>
 
-    <% if ( success_messages ) { %>
-    <p style="color: green"><strong><%= success_messages %></strong></p>
-    <% } %>
+  <!-- page content -->
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="page-title">
+        <div class="title_left">
+          <h3>Page</h3>
+        </div>
+      </div>
 
-    <p><span style="color: deepskyblue"><%= userAuthName %></span>, Welcome to your dashboard! You are now logged in. </p>
-    <p>School Mobile Emergency Communication System </p>
+      <div class="clearfix"></div>
 
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>Plain Page</h2>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              Add content to the page ...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /page content -->
 
-
-    <form action="/users/showUsers">
-        <% if (aclShowUsers == null || aclShowUsers.checkBoxValue == true) {%>
-        <input type="submit" id="btSubmit" value="Show Users" >
-        <% } else { %>
-        <input type="submit" id="btSubmit" value="Show Users" disabled>
-        <% } %>
-    </form>
-
-
-    <form action="/students/showStudents">
-        <% if (aclShowStudents == null || aclShowStudents.checkBoxValue == true) {%>
-        <input type="submit" value="Show Students" ><br><br>
-        <% } else { %>
-        <input type="submit" value="Show Students" disabled><br><br>
-        <% } %>
-    </form>
-
-
-    <form action="/roles2/showRoles2">
-        <% if (aclShowRoles2 == null || aclShowRoles2.checkBoxValue == true) {%>
-        <input type="submit" value="Show Roles" >
-        <% } else { %>
-        <input type="submit" value="Show Roles" disabled>
-        <% } %>
-    </form>
-    <form action="/privilege/showPrivilege">
-        <% if (aclShowPrivilege == null || aclShowPrivilege.checkBoxValue == true) {%>
-        <input type="submit" value="Show Privileges" ><br><br>
-        <% } else { %>
-        <input type="submit" value="Show Privileges" disabled><br><br>
-        <% } %>
-    </form>
-
-
-    <form action="/alertGroups/showAlertGroups">
-        <% if (aclShowAlertGroups == null || aclShowAlertGroups.checkBoxValue == true) {%>
-        <input type="submit" value="Show Alert Groups" >
-        <% } else { %>
-        <input type="submit" value="Show Alert Groups" disabled>
-        <% } %>
-    </form>
-    <form action="/alerts/showAlerts">
-        <% if (aclShowAlerts == null || aclShowAlerts.checkBoxValue == true) {%>
-        <input type="submit" value="Show Alerts" >
-        <% } else { %>
-        <input type="submit" value="Show Alerts" disabled>
-        <% } %>
-    </form>
-    <br>
-    <form action="/alerts/showAlertPermissionsTableReal">
-        <% if (aclShowAlertsTable == null || aclShowAlertsTable.checkBoxValue == true) {%>
-        <input type="submit" id="real" value="Who can send/receive Alerts" ><br>
-        <% } else { %>
-        <input type="submit" id="real" value="Who can send/receive Alerts" disabled><br>
-        <% } %>
-    </form>
-    <form action="/alerts/showAlertPermissionsTableTest">
-        <% if (aclShowAlertsTable == null || aclShowAlertsTable.checkBoxValue == true) {%>
-        <input type="submit" id="test" value="Who can send/receive Test Alerts" ><br><br>
-        <% } else { %>
-        <input type="submit" id="test" value="Who can send/receive Test Alerts" disabled><br><br>
-        <% } %>
-    </form>
-
-    <form action="/permissionGroups/showPermissionsGroup">
-        <% if (aclShowPermissions == null || aclShowPermissions.checkBoxValue == true) {%>
-        <input type="submit" value="Show PermissionsGroups" >
-        <% } else { %>
-        <input type="submit" value="Show PermissionsGroups" disabled>
-        <% } %>
-    </form>
-    <form action="/permissions/showPermissions">
-        <% if (aclShowPermissions == null || aclShowPermissions.checkBoxValue == true) {%>
-        <input type="submit" value="Show Permissions" >
-        <% } else { %>
-        <input type="submit" value="Show Permissions" disabled>
-        <% } %>
-    </form>
-    <form action="/permissions/showPermissionsTable">
-        <% if (aclShowPermissionsTable == null || aclShowPermissionsTable.checkBoxValue == true) {%>
-        <input type="submit" value="Table: Permissions" ><br><br>
-        <% } else { %>
-        <input type="submit" value="Table: Permissions" disabled><br><br>
-        <% } %>
-    </form>
-
-
-    <form action="/floors/showFloors">
-        <% if (aclShowFloors == null || aclShowFloors.checkBoxValue == true) {%>
-        <input type="submit" value="Floors" >
-        <% } else { %>
-        <input type="submit" value="Floors" disabled>
-        <% } %>
-    </form>
-
-    <form action="/options/rooms">
-        <% if (aclShowRooms == null || aclShowRooms.checkBoxValue == true) {%>
-        <input type="submit" value="ClassRoom" ><br><br>
-        <% } else { %>
-        <input type="submit" value="ClassRoom" disabled><br><br>
-        <% } %>
-    </form>
-
-    <form action="/utilities/showUtilities">
-        <% if (aclShowUtilities == null || aclShowUtilities.checkBoxValue == true) {%>
-        <input type="submit" value="Utilities Failures" >
-        <% } else { %>
-        <input type="submit" value="Utilities Failures" disabled>
-        <% } %>
-    </form>
-
-    <form action="/medical/showMedical">
-        <% if (aclShowMedical == null || aclShowMedical.checkBoxValue == true) {%>
-        <input type="submit" value="Medical Emergencies" >
-        <% } else { %>
-        <input type="submit" value="Medical Emergencies" disabled>
-        <% } %>
-    </form>
-
-    <% if (showPAUsers == null || showPAUsers.checkBoxValue == true) {%>
-    <form action="/pa/showPa">
-        <input type="submit" value="PA System" ><br><br>
-    </form>
-    <% } else { %>
-        <% if (aclShowPAPreRecorded == null || aclShowPAPreRecorded.checkBoxValue == true) {%>
-            <form action="/pa/showRecorded">
-                <input type="submit" value="PA System" ><br><br>
-            </form>
-        <% } else { %>
-            <form action="/pa/showPa">
-                <input type="submit" value="PA System" disabled><br><br>
-            </form>
-        <% } %>
-    <% } %>
-
-
-    <hr>
-    <form action="/reports/showReports">
-        <% if (aclShowReports == null || aclShowReports.checkBoxValue == true) {%>
-        <input type="submit" value="Show Reports" ><br>
-        <% } else { %>
-        <input type="submit" value="Show Reports" disabled><br>
-        <% } %>
-    </form>
-    <hr>
-    <form action="/alerts/sending/chooseAlert">
-        <input type="submit" value="Send Alert" ><br><br>
-    </form>
-
-    <% utilityUsers.forEach(function(utilityUser) { %>
-    <% if (utilityUser.email == userAuthEmail) {%>
-    <form action="/reports/requestAssistance">
-        <input type="submit" value="Requested Assistance" ><br><br>
-    </form>
-    <% } %>
-    <% }); %>
-  </body>
-</html>
+  <% include footer.ejs %>

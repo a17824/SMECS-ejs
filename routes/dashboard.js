@@ -32,7 +32,7 @@ module.exports.show = function(req, res, next) {
 
             //res.status('dashboard').json({
             res.render('dashboard',{
-                userAuthName: req.user.firstName,
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 aclShowUsers: results[0],               //aclPermissions showUsers
                 aclShowStudents: results[1],            //aclPermissions showStudents
                 aclShowReports: results[2],             //aclPermissions showAlertsReports

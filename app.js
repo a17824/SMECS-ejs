@@ -54,6 +54,8 @@ app.use(function(req, res, next){
     next();
 });
 
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 app.use('/', routes);
 app.use('/', login);
 
@@ -62,8 +64,10 @@ app.use('/', login);
 mongoose.Promise = require('bluebird');
 
 //connecting to database
-mongoose.connect('mongodb://a17824:Abington2018@localhost:2999/SMECS_database', { useMongoClient: true });
-//mongoose.connect('mongodb://ricky:database2>@ds249415.mlab.com:49415/smecs_database');
+
+//mongoose.connect('mongodb://a17824:Abington2018@192.168.3.248:2999/SMECS_database', { useMongoClient: true });
+mongoose.connect('mongodb://a17824:Abington2018@76.118.200.189:2999/SMECS_database', { useMongoClient: true });
+
 //if we connect successfully or if a connection error occurs
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {

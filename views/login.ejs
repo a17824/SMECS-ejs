@@ -1,26 +1,99 @@
-<html>
-<head>
-    <title>login</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
-<body>
-<h1>SMECS Login</h1>
 
-<% if (error) { %>
-<p class="error" style="color: red"><%= error %></p>
-<% } %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<form action="/login"  method="post">
+    <title>SMECS Login</title>
 
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <!-- Bootstrap -->
+    <link href="../public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../public/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="../public/gentelella/vendors/animate.css/animate.min.css" rel="stylesheet">
 
-    <label for="email"><b>Email:</b></label><br>
-    <input type="email" name="email" size="40" placeholder="ex: Manuel.Neves@gmail.com" required="true"><br><br>
-    <label for="pin"><b>Pin:</b></label><br>
-    <input type="password" name="pin" size="40" placeholder="ex: 1234" required="true"><br><br>
+    <!-- Custom Theme Style -->
+    <link href="../public/gentelella/build/css/custom.min.css" rel="stylesheet">
+  </head>
 
-    <input type="submit" id="btSubmit" value="Login">
-    <a href="/forgot">Forgot Password?</a>
-</form>
-</body>
+  <body class="login">
+      <div>
+        <a class="hiddenanchor" id="signup"></a>
+        <a class="hiddenanchor" id="signin"></a>
+  
+        <div class="login_wrapper">
+          <div class="animate form login_form">
+            <section class="login_content">
+              <form action="/login"  method="post">
+
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <h1>Login Form</h1>
+                <div>
+                  <input type="email" name="email" class="form-control" placeholder="Email" required="" />
+                </div>
+                <div>
+                  <input type="password" name="pin" class="form-control" placeholder="Pin" required="" />
+                </div>
+                <div>
+                  <button class="btn btn-default submit" type="submit" id="btSubmit" value="Login">Login</button>
+                  <a class="reset_pass" href="#signup">Lost your password?</a>
+                </div>
+  
+                <div class="clearfix"></div>
+  
+                <div class="separator">
+  
+                  <div class="clearfix"></div>
+                  <br />
+  
+                  <div>
+                      <h1>
+                        <i class="fa fa-graduation-cap"></i> SMECS</h1>
+                      <p>©2018 All Rights Reserved.</p>
+                    </div>
+                </div>
+              </form>
+            </section>
+          </div>
+  
+          <div id="register" class="animate form registration_form">
+            <section class="login_content">
+              <form>
+                <h1>Reset Pin</h1>
+                  <form action="/forgot" method="post">
+                  
+                    <input type="email" name="email" class="form-control" placeholder="Email" required="" />
+                  
+                    <button class="btn btn-default submit" type="submit" id="btSubmit">Reset Password</button>
+                 
+                    <div class="clearfix"></div>
+                  
+                    <div class="separator">
+                      <p class="change_link">Already a member ?
+                        <a href="#signin" class="to_register"> Log in </a>
+                      </p>
+                  
+                      <div class="clearfix"></div>
+                      <br />
+                  
+                      <div>
+                        <h1>
+                          <i class="fa fa-graduation-cap"></i> SMECS</h1>
+                        <p>©2018 All Rights Reserved.</p>
+                      </div>
+                    </div>
+                  </form>
+            </section>
+          </div>
+        </div>
+      </div>
+    </body>
 </html>

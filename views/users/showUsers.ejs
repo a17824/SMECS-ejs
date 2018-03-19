@@ -1,346 +1,288 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Show Users</title>
-    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
-    <link rel='stylesheet' href='/stylesheets/custom.min.css' />
-
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
-
-    <script type = "text/javascript">
-        $(document).ready(function()
-                {
-                    $('input[type="radio"]').change(function(){
-                        if (this.checked){
-                            $('.showUsers').toggle(this.value === 'users');
-                            $('.showParents').toggle(this.value === 'parents');
-                            $('.showExternal').toggle(this.value === 'external');
-                        }
-                    }).change();
-
-                    $("#myTable").tablesorter();
-                    $("#btSubmit").click(function(){
-
-                        $.post("/users/showUser",{
-
-
-                        },function(data){
-                            if(data==='done')
-                            {
-                                alert("login success");
-                            }
-                            window.location = data.redirect
-                        });
-                    });
-                }
-        );
-    </script>
-
-</head>
-<body>
-<h1><%= title %></h1>
+<% include ../header.ejs %>
 
 <% if ( error_messages ) { %>
 <p style="color: red"><%= error_messages %></p>
 <% } %>
+<div class="right_col" role="main">
+<div class="clearfix"></div>
 
-<div >
-<label><input type="radio" value="users" name="showHide" checked="checked" />School employees</label>&emsp;&emsp;&emsp;
-<label><input type="radio" value="parents" name="showHide" />Parents</label>&emsp;&emsp;&emsp;
-<label><input type="radio" value="external" name="showHide" />External/Companies</label>
-</div>
-<br>
-<div class="main-container">
-    <div class="fixer-container">
-        <ul class="list-of-floating-elements">
-            <form class="floated">
-                <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                <input type="submit" id="btSubmit" value="Add User">&nbsp;&nbsp;
-                <% } else { %>
-                <input type="submit" id="btSubmit" value="Add User" disabled>&nbsp;&nbsp;
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_content">
+        <form>
+          <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+          <input class="btn btn-primary" type="submit" id="btSubmit" value="Add User">&nbsp;&nbsp;
+          <% } else { %>
+          <input class="btn btn-primary" type="submit" id="btSubmit" value="Add User" disabled>&nbsp;&nbsp;
+          <% } %>
+        </form>
+        <form action="/users/deletedUsers">
+          <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
+          <input class="btn btn-primary" type="submit" value="Delete All Parents">&nbsp;&nbsp;
+          <% } else { %>
+          <input class="btn btn-primary" type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
+          <% } %>
+        </form>
+        <form action="/users/deletedUsers">
+          <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
+          <input class="btn btn-primary" type="submit" value="Trash">&nbsp;&nbsp;
+          <% } else { %>
+          <input class="btn btn-primary" type="submit" value="Trash" disabled>&nbsp;&nbsp;
+          <% } %>
+        </form>
+        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+          <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#tab_content1" id="schoolStaff-tab" role="tab" data-toggle="tab" aria-expanded="true">School Staff</a>
+            </li>
+            <li role="presentation" class=""><a href="#tab_content2" role="tab" id="parents-tab" data-toggle="tab" aria-expanded="false">Parents</a>
+            </li>
+            <li role="presentation" class=""><a href="#tab_content3" role="tab" id="utilityWorkers-tab2" data-toggle="tab" aria-expanded="false">Utility Workers</a>
+            </li>
+          </ul>
+        </div>
+        <div id="myTabContent" class="tab-content">
+          <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
+            <table id="datatable-buttons" class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr>
+                    <th align="center">Photo</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Privilege</th>
+                    <th align="center">Update</th>
+                    <th align="center">Move to Trash</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(function(user) { %>
+                <% if (user.softDeleted == null && user.internal == true) { %>
+                <tr>
+                  <% if (user.photo == "" || user.photo == undefined) { %>
+                  <td align="center">
+                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                    <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                    <% } else { %>
+                    <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                    <% } %>
+                  </td>
+                  <% } else { %>
+                  <td align="center">
+                    <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                    <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary">show</button></a>
+                    <% } else { %>
+                    <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>show</button></a>
+                    <% } %>
+                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                    <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">change</button></a>
+                    <% } else { %>
+                    <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>change</button></a>
+                    <% } %>
+                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                    <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-primary">delete</button></a>
+                    <% } else { %>
+                    <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-primary" disabled>delete</button></a>
+                    <% } %>
+                  </td>
+                  <% } %>
+                  <td><%= user.firstName %></td>
+                  <td><%= user.lastName %></td>
+                  <td><%= user.email %></td>
+                  <td >
+                    <% if (user.userRoleName.length > 0) { %>
+                      <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                      <%= user.userRoleName[x] %><br>
+                      <% } %>
+                    <% } %>
+                  </td>
+                  <td><%= user.userPrivilegeName %></td>
+
+                  <td align="center">
+                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                        <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
+                    <% } else { %>
+                        <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                    <% } %>
+                  </td>
+                  <td align="center">
+                    <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                        <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                    <% } else { %>
+                        <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
+                    <% } %>
+                  </td>
+                </tr>
                 <% } %>
-            </form>
-            <form class="floated" action="/users/deletedUsers">
-                <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                <input type="submit" value="Delete All Parents">&nbsp;&nbsp;
+
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <div role="tabpanel" class="tab-pane fade" id="tab_content2">
+            <table id="datatable" class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr>
+                    <th align="center">Parents</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Privilege</th>
+                    <th align="center">Update</th>
+                    <th align="center">Move to Trash</th>
+                </tr>
+              </thead>
+              <tbody>
+              <% users.forEach(function(user) { %>
+              <% if (user.softDeleted == null && user.parent == true) { %>
+              <tr>
+                <% if (user.photo == "" || user.photo == undefined) { %>
+                <td align="center">
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                  <% } else { %>
+                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                  <% } %>
+                </td>
                 <% } else { %>
-                <input type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
+                <td align="center">
+                  <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary">show</button></a>
+                  <% } else { %>
+                  <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>show</button></a>
+                  <% } %>
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">change</button></a>
+                  <% } else { %>
+                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>change</button></a>
+                  <% } %>
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-primary">delete</button></a>
+                  <% } else { %>
+                  <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-primary" disabled>delete</button></a>
+                  <% } %>
+                </td>
                 <% } %>
-            </form>
-            <form class="floated" action="/users/deletedUsers">
-                <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                <input type="submit" value="Trashed Users">&nbsp;&nbsp;
+                <td><%= user.firstName %></td>
+                <td><%= user.lastName %></td>
+                <td><%= user.email %></td>
+                <td >
+                  <% if (user.userRoleName.length > 0) { %>
+                  <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                  <%= user.userRoleName[x] %><br>
+                  <% } %>
+                  <% } %>
+                </td>
+                <td><%= user.userPrivilegeName %></td>
+
+                <td align="center">
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-secondary">update</button></a>
+                  <% } else { %>
+                  <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-secondary" disabled>update</button></a>
+                  <% } %>
+                </td>
+                <td align="center">
+                  <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                  <% } else { %>
+                  <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
+                  <% } %>
+                </td>
+              </tr>
+              <% } %>
+              <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="utilityWorkers-tab">
+            <table id="datatable-fixed-header" class="table table-striped table-bordered table-hover">
+              <thead>
+              <tr>
+                <th align="center">External</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Privilege</th>
+                <th align="center">Update</th>
+                <th align="center">Move to Trash</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% users.forEach(function(user) { %>
+
+
+              <% if (user.softDeleted == null && user.external == true) { %>
+              <tr>
+                <% if (user.photo == "" || user.photo == undefined) { %>
+                <td align="center">
+                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                    <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                    <% } else { %>
+                    <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                    <% } %>
+                </td>
                 <% } else { %>
-                <input type="submit" value="Trashed Users" disabled>&nbsp;&nbsp;
+                <td align="center">
+                  <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary">show</button></a>
+                  <% } else { %>
+                  <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>show</button></a>
+                  <% } %>
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-secondary">change</button></a>
+                  <% } else { %>
+                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-secondary" disabled>change</button></a>
+                  <% } %>
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-danger">delete</button></a>
+                  <% } else { %>
+                  <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-danger" disabled>delete</button></a>
+                  <% } %>
+                </td>
                 <% } %>
-            </form>
-        </ul>
+                <td><%= user.firstName %></td>
+                <td><%= user.lastName %></td>
+                <td><%= user.email %></td>
+                <td >
+                  <% if (user.userRoleName.length > 0) { %>
+                  <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                  <%= user.userRoleName[x] %><br>
+                  <% } %>
+                  <% } %>
+                </td>
+                <td><%= user.userPrivilegeName %></td>
+
+                <td align="center">
+                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-secondary">update</button></a>
+                  <% } else { %>
+                  <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-secondary" disabled>update</button></a>
+                  <% } %>
+                </td>
+                <td align="center">
+                  <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                  <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                  <% } else { %>
+                  <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
+                  <% } %>
+                </td>
+              </tr>
+              <% } %>
+
+              <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-<table id="myTable" class="tablesorter showUsers" style="width:100%;table-layout: fixed;">
-    <caption>
-        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
-    </caption>
-    <thead>
-    <tr>
-        <th width="5px"></th>
-        <th align="center">Photo</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Privilege</th>
-        <th align="center">Update</th>
-        <th align="center">Move to Trash</th>
-    </tr>
-    <tbody>
-    <% users.forEach(function(user) { %>
-    <% if (user.softDeleted == null && user.internal == true) { %>
-    <tr>
-        <td ></td>
-        <% if (user.photo == "" || user.photo == undefined) { %>
-        <td align="center">
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
-            <% } else { %>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>add</button></a>
-            <% } %>
-        </td>
-        <% } else { %>
-        <td align="center">
-            <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable">show</button></a>
-            <% } else { %>
-            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable" disabled>show</button></a>
-            <% } %>
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">change</button></a>
-            <% } else { %>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
-            <% } %>
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
-            <% } else { %>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
-            <% } %>
-        </td>
-        <% } %>
-        <td><%= user.firstName %></td>
-        <td><%= user.lastName %></td>
-        <td><%= user.email %></td>
-        <td >
-            <% if (user.userRoleName.length > 0) { %>
-                <% for (var x = 0; x < user.userRoleName.length; x++) {%>
-                <pre style="text-align: left"><%= user.userRoleName[x] %> </pre>
-                <% } %>
-            <% } %>
-        </td>
-        <td><%= user.userPrivilegeName %></td>
 
-        <td align="center">
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
-            <% } else { %>
-                <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
-            <% } %>
-        </td>
-        <td align="center">
-            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
-            <% } else { %>
-                <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
-            <% } %>
-        </td>
-    </tr>
-    <% } %>
-
-    <% }); %>
-    </tbody>
-</table><br>
-
-
-
-
-<table id="myTable"  class="tablesorter showParents" style="width:100%;table-layout: fixed;">
-    <caption>
-        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
-    </caption>
-    <thead>
-    <tr>
-        <th width="5px"></th>
-        <th align="center">Parents</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Privilege</th>
-        <th align="center">Update</th>
-        <th align="center">Move to Trash</th>
-    </tr>
-    <tbody>
-    <% users.forEach(function(user) { %>
-    <% if (user.softDeleted == null && user.parent == true) { %>
-    <tr>
-        <td ></td>
-        <% if (user.photo == "" || user.photo == undefined) { %>
-        <td align="center">
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
-            <% } else { %>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>add</button></a>
-            <% } %>
-        </td>
-        <% } else { %>
-        <td align="center">
-            <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable">show</button></a>
-            <% } else { %>
-            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable" disabled>show</button></a>
-            <% } %>
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">change</button></a>
-            <% } else { %>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
-            <% } %>
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
-            <% } else { %>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
-            <% } %>
-        </td>
-        <% } %>
-        <td><%= user.firstName %></td>
-        <td><%= user.lastName %></td>
-        <td><%= user.email %></td>
-        <td >
-            <% if (user.userRoleName.length > 0) { %>
-            <% for (var x = 0; x < user.userRoleName.length; x++) {%>
-            <pre style="text-align: left"><%= user.userRoleName[x] %> </pre>
-            <% } %>
-            <% } %>
-        </td>
-        <td><%= user.userPrivilegeName %></td>
-
-        <td align="center">
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
-            <% } else { %>
-            <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
-            <% } %>
-        </td>
-        <td align="center">
-            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
-            <% } else { %>
-            <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
-            <% } %>
-        </td>
-    </tr>
-    <% } %>
-    <% }); %>
-    </tbody>
-</table><br>
-
-
-
-
-
-<table id="myTable"  class="tablesorter showExternal" style="width:100%;table-layout: fixed;">
-    <caption>
-        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
-    </caption>
-    <thead>
-    <tr>
-        <th width="5px"></th>
-        <th align="center">External</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Privilege</th>
-        <th align="center">Update</th>
-        <th align="center">Move to Trash</th>
-    </tr>
-    <tbody>
-    <% users.forEach(function(user) { %>
-
-
-    <% if (user.softDeleted == null && user.external == true) { %>
-    <tr>
-        <td ></td>
-        <% if (user.photo == "" || user.photo == undefined) { %>
-        <td align="center">
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">add</button></a>
-            <% } else { %>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>add</button></a>
-            <% } %>
-        </td>
-        <% } else { %>
-        <td align="center">
-            <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable">show</button></a>
-            <% } else { %>
-            <a href="/users/showPhoto/<%= user.id %>"><button class="inTable" disabled>show</button></a>
-            <% } %>
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable">change</button></a>
-            <% } else { %>
-            <a href="/users/addPhoto/<%= user.id %>"><button class="inTable" disabled>change</button></a>
-            <% } %>
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable">delete</button></a>
-            <% } else { %>
-            <a href="/users/deletePhoto/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
-            <% } %>
-        </td>
-        <% } %>
-        <td><%= user.firstName %></td>
-        <td><%= user.lastName %></td>
-        <td><%= user.email %></td>
-        <td >
-            <% if (user.userRoleName.length > 0) { %>
-            <% for (var x = 0; x < user.userRoleName.length; x++) {%>
-            <pre style="text-align: left"><%= user.userRoleName[x] %> </pre>
-            <% } %>
-            <% } %>
-        </td>
-        <td><%= user.userPrivilegeName %></td>
-
-        <td align="center">
-            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
-            <% } else { %>
-            <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
-            <% } %>
-        </td>
-        <td align="center">
-            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-            <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
-            <% } else { %>
-            <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
-            <% } %>
-        </td>
-    </tr>
-    <% } %>
-
-    <% }); %>
-    </tbody>
-</table><br>
-
-
-
-
-<div class="main-container">
-    <div class="fixer-container">
-        <ul class="list-of-floating-elements">
-            <form class="floated"></form>
-            <form action="/dashboard">
-                <input type="submit" value="Back">
-            </form>
-        </ul>
-    </div>
-</div>
-</body>
-</html>
+<% include ../footer.ejs %>
