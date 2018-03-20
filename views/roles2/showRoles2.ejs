@@ -1,45 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
     <title>Show Roles</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
-
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script> 
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet">
     <script type = "text/javascript">
         $(document).ready(function()
-                {
-                    $("#myTable").tablesorter();
-                }
-        );
-        $("#role2Link").live("click", function () {
-            $.ajax({
-                url: '/roles2/showRoles2',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-
-                error: function(error){
-                    if(error.responseText == 'showAlert')
-                        alert("Role Name or ROLE ID already already in use. Choose a different Name or number between 0 and 99.")
-                }
-            });
+        {
+            $("#myTable").tablesorter();
+        }
+    );
+    $("#role2Link").live("click", function () {
+        $.ajax({
+            url: '/roles2/showRoles2',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            
+            error: function(error){
+                if(error.responseText == 'showAlert')
+                alert("Role Name or ROLE ID already already in use. Choose a different Name or number between 0 and 99.")
+            }
         });
+    });
     </script>
 
 </head>
-<body>
-<h1><%= title %></h1>
+<% include ../headers/header.ejs %>
+<div class="right_col" role="main">
+  <div class="clearfix"></div>  
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_content">
 
+<h1><%= title %></h1>
+<div class="" role="tabpanel" data-example-id="togglable-tabs">
+    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#tab_content1" role="tab" data-toggle="tab" aria-expanded="true">Roles</a>
+      </li>
+      <li role="presentation" class=""><a href="#tab_content2" role="tab" data-toggle="tab" aria-expanded="false">Privileges</a>
+      </li>
+    </ul>
+  </div>
+  <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
 <form action="/roles2/addRole2">
     <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
-    <input type="submit" value="Add Role"><br><br>
+    <button class="btn btn-primary" type="submit" value="Add Role">Add Role</button><br><br>
     <% } else { %>
-    <input type="submit" value="Add Role" disabled><br><br>
+    <button class="btn btn-primary" type="submit" value="Add Role" disabled>Add Role</button><br><br>
     <% } %>
 </form>
-<table id="myTable" class="tablesorter">
+<table id="datatable" class="table table-hover">
     <thead>
         <tr>
             <th>Sort #</th>
@@ -61,27 +71,30 @@
                 <% } %>
                 <td>
                     <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
-                    <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>
+                    <a href="/roles2/updateRole2/<%= role2.id %>"><button class="btn btn-primary">update</button></a>
                     <% } else { %>
-                    <a href="/roles2/updateRole2/<%= role2.id %>"><button disabled>update</button></a>
+                    <a href="/roles2/updateRole2/<%= role2.id %>"><button class="btn btn-primary" disabled>update</button></a>
                     <% } %>
                 </td>
                 <td>
                     <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true) {%>
-                    <a href="/roles2/showRoles2/<%= role2.id %>" id="roleLink"><button>delete</button></a>
+                    <a href="/roles2/showRoles2/<%= role2.id %>" id="roleLink"><button class="btn btn-primary">delete</button></a>
                     <% } else { %>
-                    <a href="/roles2/showRoles2/<%= role2.id %>" id="role2Link"><button disabled>delete</button></a>
+                    <a href="/roles2/showRoles2/<%= role2.id %>" id="role2Link"><button class="btn btn-primary" disabled>delete</button></a>
                     <% } %>
                 </td>
             </tr>
         <% }); %>
     </tbody>
-</table><br>
+</table>
+</div>
+<div role="tabpanel" class="tab-pane fade" id="tab_content2">
 
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-
-<form action="/dashboard">
-    <input type="submit" value="Back">
-</form>
-</body>
-</html>
+<% include ../footers/footer.ejs %>

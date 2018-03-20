@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alert Permissions</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <script>
+        EnableSubmit = function(val)
+        {
+            var sbmt = document.getElementById("btSave");
+            if (val.onchange)
+            {
+                sbmt.disabled = false;
+            }
+            else
+            {
+                sbmt.disabled = false;
+            }
+        };
+
+        $(document).ready(function(){
+            $('.chk-all').on('change', function(){
+                $('.' + $(this).data('child')).prop('checked',this.checked);
+            });
+            var searchIDsNotChecked = {};
+            var typeAclAlert;
+            $("#btSave").click(function(event) {
+                event.preventDefault();
+                searchIDsNotChecked = $('input[name="aclAlertCheckBox"]:not(:checked)').map(function () {
+                    return $(this).val();
+                }).get();
+                var searchIDsChecked = $('input[name="aclAlertCheckBox"]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+                typeAclAlert=$("#typeAclAlert").val();
+
+                $.ajax({
+                    url:'/alerts/showAlertPermissionsTable',
+                    type:'post',
+                    data:{
+                        searchIDsNotChecked:searchIDsNotChecked,
+                        searchIDsChecked:searchIDsChecked,
+                        typeAclAlert:typeAclAlert
+                    },
+                    success:function(response){
+                        console.log(response);
+                    }
+                });
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<input type="hidden" id="typeAclAlert"  value="<%= typeAclAlert %>">
+
+<form>
+    <input type="submit" name="btSave" id="btSave" value="SAVE" disabled="true" onclick="this.disabled=true"><br><br>
+</form>
+
+<table id="myTable" class="table">
+
+
+
+    <caption>
+        <% if (typeAclAlert == 'AclAlertsReal'){ %>
+        NOTE: Here you can choose who can send REAL alerts and who will receive REAL alerts!
+        <% } %>
+        <% if (typeAclAlert == 'AclAlertsTest'){ %>
+        NOTE: Here you can choose who can send TEST alerts and who will receive TEST alerts!
+        <% } %>
+    </caption>
+    <thead>
+    <tr>
+        <td></td>
+        <% roles2.forEach(function(roles2) { %>
+        <th id="<%= roles2.roleName %>" scope="col"><b><%= roles2.roleName %></b></th>
+        <% }); %>
+    </tr>
+    </thead>
+    <tbody>
+    <th id="send" class="span" colspan="<%= roles2Count + 1 %>" scope="colgroup" align="left"><b>SEND ALERTS</b></th>
+    <% alertGroup.forEach(function(alertGroup) { %>
+    <tr>
+        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
+        <% roles2.forEach(function(roles2) { %>
+        <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+            <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
+            <input type="checkbox"
+                   name="multi"
+                   id="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   class="chk-all"
+                   data-child="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="multi"
+                   id="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   class="chk-all"
+                   data-child="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <% }); %>
+    </tr>
+    <% alert.forEach(function(alert) { %>
+    <% if (alert.softDeleted == false) { %>
+    <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+    <tr>
+        <th align="left" headers="users" id="send_<%= alert.alertName %>"><%= alert.alertName %></th>
+        <% roles2.forEach(function(roles2) { %>
+        <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>">
+            <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
+            <input type="checkbox"
+                   name="aclAlertCheckBox"
+                   value="s<%= roles2.roleID %><%= alert.alertID %>"
+                   class="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                    <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
+                    <% aclAlerts.forEach(function(acl) { %>
+                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                   checked
+                    <% } %>
+                    <% }); %>
+                   onClick="EnableSubmit(this)" />
+            <% } else { %>
+            <input type="checkbox"
+                   name="aclAlertCheckBox"
+                   value="s<%= roles2.roleID %><%= alert.alertID %>"
+                   class="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                    <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
+                    <% aclAlerts.forEach(function(acl) { %>
+                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                   checked
+                    <% } %>
+                    <% }); %>
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <% }); %>
+    </tr>
+    <% } %>
+    <% } %>
+    <% }); %>
+    <% }); %>
+    <th id="send" class="span" colspan="<%= roles2Count + 1 %>" scope="colgroup" align="left"><b>RECEIVE ALERTS</b></th>
+    <% alertGroup.forEach(function(alertGroup) { %>
+    <tr>
+        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
+        <% roles2.forEach(function(roles2) { %>
+        <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+            <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
+            <input type="checkbox"
+                   name="multi"
+                   id="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   class="chk-all"
+                   data-child="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="multi"
+                   id="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   class="chk-all"
+                   data-child="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <% }); %>
+    </tr>
+
+    <% alert.forEach(function(alert) { %>
+    <% if (alert.softDeleted == false) { %>
+    <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+    <tr>
+        <th align="left" headers="users" id="receive_<%= alert.alertName %>"><%= alert.alertName %></th>
+        <% roles2.forEach(function(roles2) { %>
+        <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>">
+            <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
+            <input type="checkbox"
+                   name="aclAlertCheckBox"
+                   value="r<%= roles2.roleID %><%= alert.alertID %>"
+                   class="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                    <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
+                    <% aclAlerts.forEach(function(acl) { %>
+                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                   checked
+                    <% } %>
+                    <% }); %>
+                   onClick="EnableSubmit(this)"/>
+            <% } else { %>
+            <input type="checkbox"
+                   name="aclAlertCheckBox"
+                   value="r<%= roles2.roleID %><%= alert.alertID %>"
+                   class="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                    <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
+                    <% aclAlerts.forEach(function(acl) { %>
+                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                   checked
+                    <% } %>
+                    <% }); %>
+                   onClick="EnableSubmit(this)" disabled/>
+            <% } %>
+        </td>
+        <% }); %>
+    </tr>
+    <% } %>
+    <% } %>
+    <% }); %>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<form action="/dashboard">
+    <input type="submit" value="Back">
+</form>
+
+</body>
+</html>

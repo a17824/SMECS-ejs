@@ -66,6 +66,22 @@ div.dataTables_wrapper div.dataTables_processing {
   padding: 1em 0;
 }
 
+table {
+counter-reset: rowNumber 1;
+}
+
+table tr:not(:first-child) {
+counter-increment: rowNumber;
+
+}
+
+table tr td:first-child::before {
+content: counter(rowNumber);
+width: 20px;
+min-width: 20em;
+margin-right: 0.5em;
+}
+
 table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
 table.dataTable thead > tr > td.sorting_asc,
 table.dataTable thead > tr > td.sorting_desc,

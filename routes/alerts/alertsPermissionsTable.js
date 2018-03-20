@@ -8,13 +8,13 @@ var aclPermissions = require('./../acl/aclPermissions');
 /* SHOW ALERT PERMISSIONS TABLE. ---------------------------------------------------*/
 module.exports.showReal = function(req, res) {
     var typeAclAlert = 'AclAlertsReal';
-    var title = 'Who can sen/receive alerts';
+    var title = 'Who can send/receive alerts';
     showTable(req, res, typeAclAlert, title);
 };
 
 module.exports.showTest = function(req, res) {
     var typeAclAlert = 'AclAlertsTest';
-    var title = 'Who can sen/receive TEST alerts';
+    var title = 'Who can send/receive TEST alerts';
     showTable(req, res, typeAclAlert, title);
 };
 

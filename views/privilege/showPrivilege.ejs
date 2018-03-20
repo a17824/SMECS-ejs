@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
+<% include ../headers/header.ejs %>
+<div class="right_col" role="main">
+  <div class="clearfix"></div>  
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_content">
     <title>Show Privileges</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
-
+    
     <script type = "text/javascript">
         $(document).ready(function()
                 {
@@ -31,15 +31,27 @@
 </head>
 <body>
 <h1><%= title %></h1>
+<div class="" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+          <li role="presentation" class=""><a href="#tab_content1" role="tab" data-toggle="tab" aria-expanded="true">Roles</a>
+          </li>
+          <li role="presentation" class="active"><a href="#tab_content2" role="tab" data-toggle="tab" aria-expanded="false">Privileges</a>
+          </li>
+        </ul>
+      </div>
+      <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
 
+                </div>
+                <div role="tabpanel" class="tab-pane fade active in" id="tab_content2"></div>
 <form action="/privilege/addPrivilege">
     <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
-    <input type="submit" value="Add Privilege"><br><br>
+    <button class="btn btn-primary" type="submit" value="Add Privilege">Add Privilege</button>
     <% } else { %>
-    <input type="submit" value="Add Privilege" disabled><br><br>
+        <button class="btn btn-primary" type="submit" value="Add Privilege" disabled>Add Privilege</button>
     <% } %>
 </form>
-<table id="myTable" class="tablesorter">
+<table id="myTable" class="table table-hover">
     <thead>
     <tr>
         <th>Privilege Name</th>
@@ -55,27 +67,23 @@
         <td><%= privilege.privilegeID %></td>
         <td>
             <% if (aclModifyPrivilege == null || aclModifyPrivilege.checkBoxValue == true) {%>
-            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button>update</button></a>
+            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary">update</button></a>
             <% } else { %>
-            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button disabled>update</button></a>
+            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary" disabled>update</button></a>
             <% } %>
         </td>
         <td>
             <% if (aclDeletePrivilege == null || aclDeletePrivilege.checkBoxValue == true) {%>
-            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button>delete</button></a>
+            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button class="btn btn-primary">delete</button></a>
             <% } else { %>
-            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button disabled>delete</button></a>
+            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button class="btn btn-primary" disabled>delete</button></a>
             <% } %>
         </td>
     </tr>
     <% }); %>
     </tbody>
 </table><br>
+</div>
 
 
-
-<form action="/dashboard">
-    <input type="submit" value="Back">
-</form>
-</body>
-</html>
+<% include ../footers/footer.ejs %>
