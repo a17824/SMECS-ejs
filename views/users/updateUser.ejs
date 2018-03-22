@@ -46,22 +46,8 @@
 
         $(document).ready(function(){
             var newPhoto;
-            function readURL(input) {
+            var pathPhoto;
 
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-
-                    reader.onload = function(e) {
-                        $('#blah').attr('src', e.target.result);
-                    }
-                    newPhoto = input.files[0].name;
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-
-            $("#newPhoto").change(function() {
-                readURL(this);
-            });
 
             function checkBoxOffOther() {
                 $('#other').removeClass().addClass('disable');
@@ -192,8 +178,6 @@
                 companyNameText=$("#companyNameText").val();
                 contactNameText=$("#contactNameText").val();
 
-                console.log('oldPhoto = ', oldPhoto);
-                console.log('newPhoto = ', newPhoto);
                 var arrayUsers = [];
                 if (choices === undefined){
                     arrayUsers = $("#savedValueSmecsUsers").val().split(",");
@@ -313,8 +297,10 @@
                     parentOf: arrayUsers,
                     companyName: companyNameText,
                     contactName: contactNameText,
+                    pathPhoto: pathPhoto,
                     oldPhoto: oldPhoto,
                     newPhoto: newPhoto
+
                 },function(data){
                     if(data==='done')
                     {
@@ -335,29 +321,30 @@
 <form action="/dashboard">
     <input type="submit" value="Home"><br>
 </form>
-<form>
-    <input type="hidden" id="oldPhoto" value="<%= users.photo %>">
-
-
-        <hr>
-        <label for="userPhoto"><b>User Photo:</b></label><br>
+<input type="hidden" id="oldPhoto" value="<%= users.photo %>">
 
 
 
-    <%if (users.internal == true || users.parent == true ) { %>
-    <form id="form1" runat="server">
 
-        <% if (users.photo === '' ) {%>
-            <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" />
-        <% } else { %>
-        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" />
-        <% } %>
-
-    </form>
-    <input single="single" name="upload" id="newPhoto" type="file" accept="image/*" required/><br><br>
+<%if (users.internal == true || users.parent == true ) { %>
+    <hr>
+    <label for="userPhoto"><b>User Photo:</b></label><br>
+    <% if (users.photo === '' || users.photo == undefined) {%>
+        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
+    <% } else { %>
+        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" /><br><br>
     <% } %>
 
+    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (users.userPrivilegeID != 1 || userAuthID == 1)) {%>
+        <a href="/users/addPhoto/<%= users.id %>"><button>Change</button></a>
+    <% } else { %>
+        <a href="/users/addPhoto/<%= users.id %>"><button disabled>Change</button></a>
+    <% } %>
+    <br>
+<% } %>
+<br>
 
+<form>
     <hr>
     <label for="userCredentials"><b>User Email/pin:</b></label><br>
     <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">

@@ -557,7 +557,6 @@ module.exports.updatePost = function(req, res) {
     async.waterfall([
         function (callback) {
             models.Users.findById({'_id': userToAddUpdate_ID}, function(err, user){
-                //addUpdatePhotoPost(req, res, user); //ADD CHANGE PHOTO
                 userType(user, newUserRoleArray);
 
                 //OLD user Roles
@@ -792,6 +791,115 @@ module.exports.showPhoto = function(req, res) {
     });
 };
 
+//--ADD or UPDATE user photo -------------------------------------
+module.exports.addUpdatePhoto = function (req, res){
+// res.writeHead(200, {'Content-Type': 'text/html' });
+// var form = '<form action="/users/addPhoto/:id" enctype="multipart/form-data" method="post">Add a title: <input name="title" type="text" /><br><br><input single="single" name="upload" type="file" /><br><br><input type="submit" value="Upload" /></form>';
+// res.end(form);
+    /*
+        models.Users.findById(req.params.id,function(error, user) {
+            res.render('users/addPhoto', { title: 'ADD PHOTO', user: user });
+        });
+    */
+
+    async.parallel([
+        function(callback){
+            models.Users.findById(req.params.id).exec(callback);
+        },
+        function(callback){aclPermissions.modifyUsers(req, res, callback);}   //aclPermissions modifyUsers
+
+    ],function(err, results){
+        res.render('users/addPhoto',{
+            title:'Add Photo',
+            user: results[0],
+            aclModifyUsers: results[1] //aclPermissions modifyUsers
+        });
+    })
+};
+
+module.exports.addUpdatePhotoPost = function (req, res){
+    console.log('req.body');
+    //console.log(req.header('Referer') || '/');
+    //console.log(req.body.redirectTo);
+
+    var fields =[];
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function(err, fields, files) {
+        //res.writeHead(200, {'content-type': 'text/plain'});
+        //res.write('received upload:\n\n');
+        //console.log(util.inspect({fields: fields, files: files}));
+    });
+
+    //save user id from field value to "fields"
+    form.on('field', function (field, value) {
+        fields[field] = value;
+
+        form.on('end', function(fields, files) {
+            /* Temporary location of our uploaded file */
+            var temp_path = this.openedFiles[0].path;
+            /* The file name of the uploaded file */
+            var file_name = this.openedFiles[0].name;
+            /* Location where we want to copy the uploaded file */
+            var new_location = 'public/photosUsers/';
+
+            if (this.openedFiles[0].name){ // if a file is selected do this
+                models.Users.findById({'_id': field}, function(err, user){
+                    var oldPhoto = user.photo;
+                    var newUser = "";
+
+                    if (oldPhoto) {
+                        if ((file_name != oldPhoto) && (oldPhoto != newUser)) { //delete old photo if exists
+                        fs.unlinkSync(new_location + oldPhoto);
+                        console.log('successfully deleted ' + oldPhoto);
+                    }}
+
+                    //check if new file exists in public\photosUsers
+                    fs.stat(new_location + user.id + '_' + file_name, function(err, stat) {
+                        if(err == null) {
+                            console.log('File exists');
+
+                        } else if(err.code == 'ENOENT') { // file does not exist
+
+                            //save new file
+                            fs.copy(temp_path, new_location + user.id + '_' + file_name, function (err) { // save file
+                                if (err) {
+                                    console.error(err);
+                                } else {
+                                    user.photo = user.id + '_' + file_name; //save uploaded file name to user.photo
+                                    user.save();
+                                    console.log("success! saved " + file_name);
+                                }
+                                fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
+                                    if (err) {
+                                        //return res.send(500, 'Something went wrong');
+                                    }
+                                });//------------------------------#end - unlink
+                                res.redirect('/users/showUsers');
+                                //res.redirect(backURL);
+                            })
+
+                        } else {
+                            console.log('Some other error: ', err.code);
+                        }
+                    });
+
+                });//--------end of user.photo
+
+            } else { // if no file is selected delete temp file
+                console.log('no files added');
+                //delete file from temp folder-------
+                fs.unlink(temp_path, function (err) {
+                    if (err) {
+                        return res.send(500, 'Something went wrong');
+                    }
+                });
+                //------------------#end - unlink
+            }
+        });
+    });
+};
+//-----------------------------------------end ADD or CHANGE user photo
 
 // delete user photo------------------
 module.exports.deletePhoto = function(req, res) {
@@ -809,72 +917,6 @@ module.exports.deletePhoto = function(req, res) {
 };
 //----------------end delete user photo
 
-
-
-//Function to add change delete Photo --------------------
-function addUpdatePhotoPost(req, res, user){
-    var fields =[];
-    var form = new formidable.IncomingForm();
-
-    form.parse(req, function(err, fields, files) {
-        //res.writeHead(200, {'content-type': 'text/plain'});
-        //res.write('received upload:\n\n');
-        console.log(util.inspect({fields: fields, files: files}));
-    });
-
-    //save user id from field value to "fields"
-    form.on('field', function (field, value) {
-        fields[field] = value;
-
-        form.on('end', function(fields, files) {
-            /* Temporary location of our uploaded file */
-            var temp_path = this.openedFiles[0].path;
-            /* The file name of the uploaded file */
-            var file_name = this.openedFiles[0].name;
-            console.log('file_name--------------- ' + file_name);
-            /* Location where we want to copy the uploaded file */
-            var new_location = 'public/photosUsers/';
-
-            if (this.openedFiles[0].name){ // if a file is selected do this
-                models.Users.findById({'_id': field}, function(err, user){
-                    var oldPhoto = user.photo;
-                    var newUser = "";
-                    if ((file_name != oldPhoto) && (oldPhoto != newUser )) { //delete old photo if exists
-                        fs.unlinkSync(new_location + oldPhoto);
-                        console.log('successfully deleted ' + oldPhoto);
-                    }
-                    //if old photo doesn't exits or has been deleted, save new file
-                    fs.copy(temp_path, new_location + file_name, function (err) { // save file
-                        if (err) {
-                            console.error(err);
-                        } else {
-                            user.photo = file_name; //save uploaded file name to user.photo
-                            user.save();
-                            console.log("success! saved " + file_name);
-                        }
-                        fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
-                            if (err) {
-                                //return res.send(500, 'Something went wrong');
-                            }
-                        });//------------------------------#end - unlink
-
-                    })
-                });//--------end of user.photo
-
-            } else { // if no file is selected delete temp file
-                console.log('no files added');
-                //delete file from temp folder-------
-                fs.unlink(temp_path, function (err) {
-                    if (err) {
-                        return res.send(500, 'Something went wrong');
-                    }
-                });
-                //------------------#end - unlink
-            }
-        });
-    });
-};
-//-------------------- end of Function to add change delete Photo
 
 
 
@@ -993,34 +1035,3 @@ function addParentInStudentDocument(user, newParentsArray) {
 
     }
 }
-//Function to update user child in user document --------------------
-function updateParentInStudentDocument(user) {
-    console.log('QQQQQQQQQQQQQ');
-    var parent = {
-        _id: user._id,
-        parentFirstName: user.firstName,
-        parentLastName: user.lastName
-    };
-    models.Students.find({'parentOf._id': user._id}, function (err, students) {
-        if(err){
-            console.log('user not updated successfully');
-            throw err;
-        }else {
-            students.forEach(function (student) {
-                for (var i = 0; i < student.parentOf.length; i++) {
-                    if (student.parentOf[i]._id.toString() == user._id.toString()) {
-                        student.parentOf[i] = parent;
-                        student.save(function (err) {
-                            if (err) {
-                                console.log('error updating user.parentOf document');
-                            } else {
-                                console.log('"parentOf" UPDATED successfully on USER database');
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    });
-}
-//-------------- end of Function to update user child in user document

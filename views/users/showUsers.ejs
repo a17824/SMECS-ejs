@@ -1,7 +1,6 @@
 <% include ../headers/headerShowUsers.ejs %>
 
 
-
 <% if ( error_messages ) { %>
 <p style="color: red"><%= error_messages %></p>
 <% } %>
@@ -74,8 +73,7 @@
                   </td>
                   <% } else { %>
                   <td>
-                      <img src="/photosUsers/<%= user.photo %>" alt="Avatar" class="avatar">
-
+                    <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" alt="Avatar" class="xAvatar"></a>
                   </td>
                   <% } %>
                   <td><%= user.firstName %></td>
@@ -135,31 +133,18 @@
               <% if (user.softDeleted == null && user.parent == true) { %>
               <tr>
                   <td></td>
-                <% if (user.photo == "" || user.photo == undefined) { %>
+                <td></td>
+                  <% if (user.photo == "" || user.photo == undefined) { %>
                 <td align="center">
-                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
                   <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
-                  <% } else { %>
+                    <% } else { %>
                   <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
-                  <% } %>
+                    <% } %>
                 </td>
-                <% } else { %>
-                <td align="center">
-                  <% if ((aclShowUsers == null || aclShowUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                  <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary">show</button></a>
                   <% } else { %>
-                  <a href="/users/showPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>show</button></a>
-                  <% } %>
-                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">change</button></a>
-                  <% } else { %>
-                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>change</button></a>
-                  <% } %>
-                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                  <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-primary">delete</button></a>
-                  <% } else { %>
-                  <a href="/users/deletePhoto/<%= user.id %>"><button class="btn btn-primary" disabled>delete</button></a>
-                  <% } %>
+                <td>
+                  <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" alt="Avatar" class="xAvatar"></a>
                 </td>
                 <% } %>
                 <td><%= user.firstName %></td>
