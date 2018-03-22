@@ -47,7 +47,7 @@ module.exports.post = function(req, res, next) {
                 service: 'gmail',
                 auth: {
                     user: 'pdcpadr@gmail.com',
-                    pass: '123pdcpadr'
+                    pass: 'X'
                 }
             };
             var transporter = nodemailer.createTransport(smtpTransport(options));

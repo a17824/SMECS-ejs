@@ -1,4 +1,5 @@
 <% include ../headers/header.ejs %>
+<link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet">
 <div class="right_col" role="main">
   <div class="clearfix"></div>  
     <div class="row">
@@ -54,6 +55,7 @@
 <table id="myTable" class="table table-hover">
     <thead>
     <tr>
+        <th></th>
         <th>Privilege Name</th>
         <th>Privilege ID</th>
         <th>Update</th>
@@ -63,6 +65,7 @@
     <tbody>
     <% privilege.forEach(function(privilege) { %>
     <tr>
+        <td></td>
         <td><%= privilege.privilegeName %></td>
         <td><%= privilege.privilegeID %></td>
         <td>

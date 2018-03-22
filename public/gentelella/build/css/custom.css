@@ -2919,16 +2919,7 @@ ul.messages li,
     padding: 8px 0
 }
 ul.messages li img.avatar,
-img.avatar {
-    height: 32px;
-    width: 32px;
-    float: left;
-    display: inline-block;
-    border-radius: 2px;
-    padding: 2px;
-    background: #f7f7f7;
-    border: 1px solid #e6e6e6
-}
+
 ul.messages li .message_date {
     float: right;
     text-align: right

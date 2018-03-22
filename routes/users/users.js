@@ -557,6 +557,7 @@ module.exports.updatePost = function(req, res) {
     async.waterfall([
         function (callback) {
             models.Users.findById({'_id': userToAddUpdate_ID}, function(err, user){
+                //addUpdatePhotoPost(req, res, user); //ADD CHANGE PHOTO
                 userType(user, newUserRoleArray);
 
                 //OLD user Roles
@@ -791,33 +792,27 @@ module.exports.showPhoto = function(req, res) {
     });
 };
 
-//--ADD or UPDATE user photo -------------------------------------
-module.exports.addUpdatePhoto = function (req, res){
-// res.writeHead(200, {'Content-Type': 'text/html' });
-// var form = '<form action="/users/addPhoto/:id" enctype="multipart/form-data" method="post">Add a title: <input name="title" type="text" /><br><br><input single="single" name="upload" type="file" /><br><br><input type="submit" value="Upload" /></form>';
-// res.end(form);
-    /*
-        models.Users.findById(req.params.id,function(error, user) {
-            res.render('users/addPhoto', { title: 'ADD PHOTO', user: user });
-        });
-    */
 
-    async.parallel([
-        function(callback){
-            models.Users.findById(req.params.id).exec(callback);
-        },
-        function(callback){aclPermissions.modifyUsers(req, res, callback);}   //aclPermissions modifyUsers
-
-    ],function(err, results){
-        res.render('users/addPhoto',{
-            title:'Add Photo',
-            user: results[0],
-            aclModifyUsers: results[1] //aclPermissions modifyUsers
-        });
-    })
+// delete user photo------------------
+module.exports.deletePhoto = function(req, res) {
+    var new_location = 'public/photosUsers/';
+    models.Users.findById({'_id': req.params.id}, function(err, user){
+        var photoToDelete = user.photo;
+        if (fs.existsSync(new_location + photoToDelete)) { //delete old photo if exists
+            fs.unlinkSync(new_location + photoToDelete);
+            console.log('successfully deleted ' + photoToDelete);
+        }
+        user.photo = "";
+        user.save();
+        res.redirect('/users/showUsers');
+    });
 };
+//----------------end delete user photo
 
-module.exports.addUpdatePhotoPost = function (req, res){
+
+
+//Function to add change delete Photo --------------------
+function addUpdatePhotoPost(req, res, user){
     var fields =[];
     var form = new formidable.IncomingForm();
 
@@ -836,6 +831,7 @@ module.exports.addUpdatePhotoPost = function (req, res){
             var temp_path = this.openedFiles[0].path;
             /* The file name of the uploaded file */
             var file_name = this.openedFiles[0].name;
+            console.log('file_name--------------- ' + file_name);
             /* Location where we want to copy the uploaded file */
             var new_location = 'public/photosUsers/';
 
@@ -861,7 +857,7 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                 //return res.send(500, 'Something went wrong');
                             }
                         });//------------------------------#end - unlink
-                        res.redirect('/users/showUsers');
+
                     })
                 });//--------end of user.photo
 
@@ -878,24 +874,7 @@ module.exports.addUpdatePhotoPost = function (req, res){
         });
     });
 };
-//-----------------------------------------end ADD or CHANGE user photo
-
-// delete user photo------------------
-module.exports.deletePhoto = function(req, res) {
-    var new_location = 'public/photosUsers/';
-    models.Users.findById({'_id': req.params.id}, function(err, user){
-        var photoToDelete = user.photo;
-        if (fs.existsSync(new_location + photoToDelete)) { //delete old photo if exists
-            fs.unlinkSync(new_location + photoToDelete);
-            console.log('successfully deleted ' + photoToDelete);
-        }
-        user.photo = "";
-        user.save();
-        res.redirect('/users/showUsers');
-    });
-};
-//----------------end delete user photo
-
+//-------------------- end of Function to add change delete Photo
 
 
 

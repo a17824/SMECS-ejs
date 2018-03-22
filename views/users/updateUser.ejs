@@ -45,6 +45,23 @@
 
 
         $(document).ready(function(){
+            var newPhoto;
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#blah').attr('src', e.target.result);
+                    }
+                    newPhoto = input.files[0].name;
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#newPhoto").change(function() {
+                readURL(this);
+            });
 
             function checkBoxOffOther() {
                 $('#other').removeClass().addClass('disable');
@@ -150,7 +167,7 @@
                 }
             });
 
-            var userID,userPrivilegeName,userPrivilegeID,firstName,lastName,email,newPin, oldPin,confirmPin,photo,companyNameText,contactNameText;
+            var userID,userPrivilegeName,userPrivilegeID,firstName,lastName,email,newPin, oldPin,confirmPin,oldPhoto,companyNameText,contactNameText;
             $("#<%= users.id %>").click(function(){
                 userID=$(this).attr('id');
 
@@ -171,10 +188,12 @@
                 oldPin=$("#oldPin").val();
                 newPin=$("#newPin").val();
                 confirmPin=$("#confirmPin").val();
-                photo=$("#photo").val();
+                oldPhoto=$("#oldPhoto").val();
                 companyNameText=$("#companyNameText").val();
                 contactNameText=$("#contactNameText").val();
 
+                console.log('oldPhoto = ', oldPhoto);
+                console.log('newPhoto = ', newPhoto);
                 var arrayUsers = [];
                 if (choices === undefined){
                     arrayUsers = $("#savedValueSmecsUsers").val().split(",");
@@ -197,6 +216,7 @@
                     var index = arrayUsers.indexOf(5);
                     arrayUsers.splice(index, 1);
                 }
+
 
 
                     //-----forms validation------------------------------------
@@ -293,7 +313,8 @@
                     parentOf: arrayUsers,
                     companyName: companyNameText,
                     contactName: contactNameText,
-                    photo: photo
+                    oldPhoto: oldPhoto,
+                    newPhoto: newPhoto
                 },function(data){
                     if(data==='done')
                     {
@@ -315,7 +336,26 @@
     <input type="submit" value="Home"><br>
 </form>
 <form>
+    <input type="hidden" id="oldPhoto" value="<%= users.photo %>">
 
+
+        <hr>
+        <label for="userPhoto"><b>User Photo:</b></label><br>
+
+
+
+    <%if (users.internal == true || users.parent == true ) { %>
+    <form id="form1" runat="server">
+
+        <% if (users.photo === '' ) {%>
+            <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" />
+        <% } else { %>
+        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" />
+        <% } %>
+
+    </form>
+    <input single="single" name="upload" id="newPhoto" type="file" accept="image/*" required/><br><br>
+    <% } %>
 
 
     <hr>
@@ -333,7 +373,7 @@
         <input type="hidden" id="oldUtilityName" value="<%= users.companyName %>">
         <input type="hidden" id="oldUtilityContact" value="<%= users.contactName %>">
         <input type="hidden" id="oldUtilityID" value="<%= users.utilityID %>">
-        <input type="hidden" id="photo" >
+
     </div>
     <hr>
     <label for="userRole"><b>User Role:</b></label><br>

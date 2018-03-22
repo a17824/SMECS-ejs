@@ -120,11 +120,12 @@ router.get('/users/showPhoto/:id', auth.simpleAuth, auth.requireLogin, users.sho
 });
 
 //--ADD or UPDATE user photo -------------------------------------
+/*
 router.get('/users/addPhoto/:id', auth.simpleAuth, auth.requireLogin, users.addUpdatePhoto, function (req, res){
 });
 router.post('/users/addPhoto/:id', auth.simpleAuth, auth.requireLogin, users.addUpdatePhotoPost, function (req, res){
 });
-
+*/
 // delete user photo------------------
 router.get('/users/deletePhoto/:id', auth.simpleAuth, auth.requireLogin, users.deletePhoto, function(req, res) {
 });
