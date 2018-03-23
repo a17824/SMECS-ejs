@@ -38,53 +38,6 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
 
-    <script>
-      EnableSubmit = function(val)
-      {
-          var sbmt = document.getElementById("btSave");
-          if (val.onchange)
-          {
-              sbmt.disabled = false;
-          }
-          else
-          {
-              sbmt.disabled = false;
-          }
-      };
-    
-      $(document).ready(function(){
-          $('.chk-all').on('change', function(){
-              $('.' + $(this).data('child')).prop('checked',this.checked);
-          });
-          var searchIDsNotChecked = {};
-          var typeAclAlert;
-          $("#btSave").click(function(event) {
-              event.preventDefault();
-              searchIDsNotChecked = $('input[name="aclAlertCheckBox"]:not(:checked)').map(function () {
-                  return $(this).val();
-              }).get();
-              var searchIDsChecked = $('input[name="aclAlertCheckBox"]:checked').map(function () {
-                  return $(this).val();
-              }).get();
-              typeAclAlert=$("#typeAclAlert").val();
-    
-              $.ajax({
-                  url:'/alerts/showAlertPermissionsTable',
-                  type:'post',
-                  data:{
-                      searchIDsNotChecked:searchIDsNotChecked,
-                      searchIDsChecked:searchIDsChecked,
-                      typeAclAlert:typeAclAlert
-                  },
-                  success:function(response){
-                      console.log(response);
-                  }
-              });
-          });
-      });
-    
-    
-    </script>
   </head>
 
   <body class="nav-md">
