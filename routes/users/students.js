@@ -42,6 +42,7 @@ module.exports.show = function(req, res, next) {
         //console.log(results[2]);
         res.render('students/showStudents',{
             title:'STUDENTS',
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
             students: results[0],
             aclAddStudent: results[1], //aclPermissions addStudent
             aclAddMultiStudent: results[2], //aclPermissions addMultiStudent

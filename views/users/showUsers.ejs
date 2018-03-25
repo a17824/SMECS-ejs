@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+      <link href="/public/gentelella/build/css/showUsers.css" rel="stylesheet">
+
     
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
@@ -141,7 +143,7 @@
                             </td>
                             <% } else { %>
                             <td>
-                              <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" alt="Avatar" class="xAvatar"></a>
+                              <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>"  class="center-cropped"></a>
                             </td>
                             <% } %>
                             <td><%= user.firstName %></td>
@@ -211,7 +213,7 @@
                           </td>
                             <% } else { %>
                           <td>
-                            <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" alt="Avatar" class="xAvatar"></a>
+                            <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="xAvatar"></a>
                           </td>
                           <% } %>
                           <td><%= user.firstName %></td>

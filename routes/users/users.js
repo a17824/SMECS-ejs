@@ -37,6 +37,7 @@ module.exports.show = function(req, res, next) {
                 title:'USERS',
                 users: results[0],
                 userAuthID: req.user.userPrivilegeID,
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 aclShowDeletedUsers: results[1], //aclPermissions showDeletedUsers
                 aclShowUsers: results[2], //aclPermissions showUsers
                 aclAddUsers: results[3], //aclPermissions addUsers
