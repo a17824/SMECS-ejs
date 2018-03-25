@@ -1,0 +1,14 @@
+.xAvatar {
+    border-radius: 10%;
+    width: 70%;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+
+.center-cropped {
+    object-fit: none; /* Do not scale the image */
+    object-position: top; /* Center the image within the element */
+    height: 100px;
+    width: 100px;
+}
