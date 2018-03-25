@@ -8,7 +8,8 @@
 
 .center-cropped {
     object-fit: none; /* Do not scale the image */
-    object-position: top; /* Center the image within the element */
+    object-position: 50% 20%; /* Center the image within the element */
     height: 100px;
     width: 100px;
+    border-radius: 100%;
 }
