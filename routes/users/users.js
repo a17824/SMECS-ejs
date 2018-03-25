@@ -8,6 +8,7 @@ var bcrypt = require('bcryptjs');
 var models = require('./../models');
 var moment = require('moment');
 var aclPermissions = require('./../acl/aclPermissions');
+var redirect = require('./../functions');
 
 /* SHOW Active USERS. */
 module.exports.show = function(req, res, next) {
@@ -26,14 +27,12 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
         function(callback){aclPermissions.deleteUsers(req, res, callback);}         //aclPermissions deleteUsers
-
-
     ],function(err, results){
         if (!results[0]) {
             console.log('err = ',err);
         }
         else {
-
+            redirect.redirectTo(req,res,'showUsers');
             res.render('users/showUsers',{
                 title:'USERS',
                 users: results[0],
@@ -507,6 +506,7 @@ module.exports.update = function(req, res) {
         ifUserHasParentRole,
         studentsIdArray){
 
+        redirect.redirectTo(req,res,'updateUser');
         res.render('users/updateUser', {
             title: 'UPDATE USER:',
             userAuthID: req.user.userPrivilegeID,
@@ -583,16 +583,10 @@ module.exports.updatePost = function(req, res) {
                 if (req.body.pin != "oldPin"){
                     user.pin = hash; //req.body.pin;
                 }
-                user.photo = req.body.photo;
-                console.log('END AAAAAAAAAAAAAAAAAAAAA');
                 callback(null, user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole);
             });
         },
         function (user, oldIfUserHasAnyOtherRole, oldIfUserHasParentRole, oldIfUserHasUtilityUserRole, callback) {
-            console.log('BBBBBBBB');
-            console.log('user.internal = ',user.internal);
-            console.log('user.parent = ',user.parent);
-            console.log('user.external = ',user.external);
             //iifUserHasAnyOtherRole: delete or saves "FirstName" and "LastName" field
             if (ifUserHasAnyOtherRole == 1) {
                 user.firstName = req.body.firstName;
@@ -818,10 +812,6 @@ module.exports.addUpdatePhoto = function (req, res){
 };
 
 module.exports.addUpdatePhotoPost = function (req, res){
-    console.log('req.body');
-    //console.log(req.header('Referer') || '/');
-    //console.log(req.body.redirectTo);
-
     var fields =[];
     var form = new formidable.IncomingForm();
 
@@ -848,17 +838,35 @@ module.exports.addUpdatePhotoPost = function (req, res){
                     var oldPhoto = user.photo;
                     var newUser = "";
 
-                    if (oldPhoto) {
-                        if ((file_name != oldPhoto) && (oldPhoto != newUser)) { //delete old photo if exists
-                        fs.unlinkSync(new_location + oldPhoto);
-                        console.log('successfully deleted ' + oldPhoto);
-                    }}
+
+
+                    //check if old file exists in public\photosUsers
+                    fs.stat(new_location + oldPhoto, function(err, stat) {
+                        if(err == null) {
+                            console.log('Old Photo File exists');
+                            if (oldPhoto) {
+                                if ((user.id + '_' + file_name != oldPhoto) && (oldPhoto != newUser)) { //delete old photo if exists
+                                    fs.unlinkSync(new_location + oldPhoto);
+                                    console.log('successfully deleted ' + oldPhoto);
+                                }}
+
+                        } else if(err.code == 'ENOENT') { // file does not exist
+
+
+                        } else {
+                            console.log('Some other error: ', err.code);
+                        }
+                    });
+
 
                     //check if new file exists in public\photosUsers
                     fs.stat(new_location + user.id + '_' + file_name, function(err, stat) {
                         if(err == null) {
                             console.log('File exists');
-
+                            if(req.user.redirect == 'showUsers')
+                                res.redirect('/users/showUsers');
+                            else
+                                res.redirect('/users/updateUser/' + user.id);
                         } else if(err.code == 'ENOENT') { // file does not exist
 
                             //save new file
@@ -875,9 +883,11 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                         //return res.send(500, 'Something went wrong');
                                     }
                                 });//------------------------------#end - unlink
-                                res.redirect('/users/showUsers');
-                                //res.redirect(backURL);
-                            })
+                                if(req.user.redirect == 'showUsers')
+                                    res.redirect('/users/showUsers');
+                                else
+                                    res.redirect('/users/updateUser/' + user.id);
+                            });
 
                         } else {
                             console.log('Some other error: ', err.code);
@@ -906,13 +916,16 @@ module.exports.deletePhoto = function(req, res) {
     var new_location = 'public/photosUsers/';
     models.Users.findById({'_id': req.params.id}, function(err, user){
         var photoToDelete = user.photo;
-        if (fs.existsSync(new_location + photoToDelete)) { //delete old photo if exists
+        if (fs.existsSync(new_location + photoToDelete) && photoToDelete !== "") { //delete old photo if exists
             fs.unlinkSync(new_location + photoToDelete);
             console.log('successfully deleted ' + photoToDelete);
         }
         user.photo = "";
         user.save();
-        res.redirect('/users/showUsers');
+        if(req.user.redirect == 'showUsers')
+            res.redirect('/users/showUsers');
+        else
+            res.redirect('/users/updateUser/' + user.id);
     });
 };
 //----------------end delete user photo

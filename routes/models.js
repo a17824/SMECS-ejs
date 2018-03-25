@@ -27,7 +27,8 @@ var UsersSchema = new mongoose.Schema({
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     receptionPA: { type: Boolean, default: false},
-    pushToken: String
+    pushToken: String,
+    redirect: { type: String, default: 'home'}
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Users"}); //stops Mongoose of giving plurals to our collections names
 var Users;

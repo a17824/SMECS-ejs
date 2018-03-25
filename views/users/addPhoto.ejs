@@ -46,13 +46,6 @@
     <input type="submit" id="btSubmit" value="Delete photo" disabled>
     <% } %>
 </form>
-<form action="/users/showUsers">
-    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-    <input type="submit" id="btSubmit" value="Cancel / Back" >
-    <% } else { %>
-    <input type="submit" id="btSubmit" value="Cancel / Back" disabled>
-    <% } %>
-</form>
 <button onclick="GoBackWithRefresh()">Back</button>
 <script>
  function GoBackWithRefresh() {
