@@ -30,7 +30,25 @@ module.exports.show = function(req, res, next) {
 
         ],function(err, results){
 
-            //res.status('dashboard').json({
+            var show = {
+                users: results[0],
+                students: results[1],
+                reports: results[2],
+                alertGroups: results[3],
+                alerts: results[4],
+                alertsTable: results[5],
+                roles2: results[6],
+                privilege: results[7],
+                permissions: results[8],
+                permissionsTable: results[9],
+                floors: results[10],
+                rooms: results[11],
+                utilities: results[12],
+                medical: results[13],
+                pAUsers: results[14],
+                pAPreRecorded: results[15]
+            };
+
             res.render('dashboard',{
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 aclShowUsers: results[0],               //aclPermissions showUsers

@@ -3,7 +3,7 @@
         <% if (user.photo == "" || user.photo == undefined) { %>
             <img src="/photosNotAvailable/photoNotAvailable.bmp" alt="..." class="img-circle profile_img">
         <% } else { %>
-            <img src="/photosUsers/<%= user.photo %>" alt="..." class="img-circle profile_img">
+            <img src="/photosUsers/<%= userAuthPhoto %>" alt="..." class="img-circle profile_img">
         <% } %>
     </div>
     <div class="profile_info">

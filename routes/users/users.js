@@ -8,41 +8,37 @@ var bcrypt = require('bcryptjs');
 var models = require('./../models');
 var moment = require('moment');
 var aclPermissions = require('./../acl/aclPermissions');
-var redirect = require('./../functions');
+var functions = require('./../functions');
 
 /* SHOW Active USERS. */
 module.exports.show = function(req, res, next) {
-    /*
-    models.Users.find(function(err, users) {
-        //res.json(users);
-        res.render('users/showUsers', { title: 'USERS', users: users });
-    }).sort({"firstName":1});
-*/
     async.parallel([
         function(callback){
             models.Users.find().sort({"firstName":1}).exec(callback);
         },
         function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
-        function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
-        function(callback){aclPermissions.deleteUsers(req, res, callback);}         //aclPermissions deleteUsers
+        function(callback){aclPermissions.deleteUsers(req, res, callback);},         //aclPermissions deleteUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if (!results[0]) {
             console.log('err = ',err);
         }
         else {
-            redirect.redirectTo(req,res,'showUsers');
+            functions.redirect(req,res,'showUsers');
             res.render('users/showUsers',{
                 title:'USERS',
                 users: results[0],
                 userAuthID: req.user.userPrivilegeID,
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 aclShowDeletedUsers: results[1], //aclPermissions showDeletedUsers
-                aclShowUsers: results[2], //aclPermissions showUsers
-                aclAddUsers: results[3], //aclPermissions addUsers
-                aclModifyUsers: results[4],  //aclPermissions modifyUsers
-                aclDeleteUsers: results[5]  //aclPermissions deleteUsers
+                aclAddUsers: results[2], //aclPermissions addUsers
+                aclModifyUsers: results[3],  //aclPermissions modifyUsers
+                aclDeleteUsers: results[4],  //aclPermissions deleteUsers
+                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
 
             });
         }
@@ -66,17 +62,13 @@ module.exports.showPost = function(req, res) {
 
 /* SHOW SoftDeleted USERS. */
 module.exports.showSoftDeleted = function(req, res, next) {
-    /*
-    models.Users.find(function(err, users) {
-        res.render('users/deletedUsers', { title: 'Deleted Users', users: users });
-    }).sort({"firstName":1});
-    */
     async.parallel([
         function(callback){
             models.Users.find().sort({"firstName":1}).exec(callback);
         },
         function(callback){aclPermissions.addUsers(req, res, callback);},   //aclPermissions addUsers
-        function(callback){aclPermissions.eraseUsers(req, res, callback);} //aclPermissions eraseUsers
+        function(callback){aclPermissions.eraseUsers(req, res, callback);}, //aclPermissions eraseUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('users/deletedUsers',{
@@ -84,7 +76,10 @@ module.exports.showSoftDeleted = function(req, res, next) {
             userAuthID: req.user.userPrivilegeID,
             users: results[0],
             aclAddUsers: results[1], //aclPermissions addUsers
-            aclEraseUsers: results[2]  //aclPermissions eraseUsers
+            aclEraseUsers: results[2],  //aclPermissions eraseUsers
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 
@@ -101,7 +96,8 @@ module.exports.addStep1 = function(req, res) {
         function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
-        function(callback){aclPermissions.addUsers(req, res, callback);} //aclPermissions addUsers
+        function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -117,7 +113,10 @@ module.exports.addStep1 = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 user: results[0],
                 roles2: results[1],
-                aclAddUsers: results[2] //aclPermissions addUsers
+                aclAddUsers: results[2], //aclPermissions addUsers
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     })
@@ -149,7 +148,8 @@ module.exports.addStep2 = function(req, res) {
         function(callback){
             models.Students.find().sort({"firstName":1}).exec(callback);
         },
-        function(callback){aclPermissions.addUsers(req, res, callback);} //aclPermissions addUsers
+        function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -183,7 +183,10 @@ module.exports.addStep2 = function(req, res) {
                 anyOtherRole: ifUserHasAnyOtherRole,
                 user: results[0],
                 students: results[1],
-                aclAddUsers: results[2] //aclPermissions addUsers
+                aclAddUsers: results[2], //aclPermissions addUsers
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     })
@@ -272,7 +275,7 @@ module.exports.addStep3 = function(req, res) {
         },
         function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
         function(callback){aclPermissions.showPermissionsTable(req, res, callback);},   //aclPermissions showPermissionsTable
-
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -311,7 +314,10 @@ module.exports.addStep3 = function(req, res) {
                 user: results[0],
                 privilege: results[1],
                 aclAddUsers: results[2], //aclPermissions addUsers
-                aclShowPermissionsTable: results[3]    //aclPermissions showPermissionsTable
+                aclShowPermissionsTable: results[3],    //aclPermissions showPermissionsTable
+                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     })
@@ -415,7 +421,11 @@ module.exports.update = function(req, res) {
                 callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers);
             });
         },
-        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, callback){
+        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers,callback) {
+        functions.aclSideMenu(req, res, function (sideMenu) {
+            callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu);});}, //aclPermissions sideMenu
+
+        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu, callback){
             if (aclShowPermissionsTable.checkBoxValue == false) {
                 console.log(err);
                 console.log('No Permission');
@@ -448,6 +458,7 @@ module.exports.update = function(req, res) {
                     privileges,
                     aclShowPermissionsTable,
                     aclModifyUsers,
+                    sideMenu,
                     ifUserHasPrincipalRole,
                     ifUserHasUtilityUserRole,
                     ifUserHasAnyOtherRole);
@@ -460,6 +471,7 @@ module.exports.update = function(req, res) {
             privileges,
             aclShowPermissionsTable,
             aclModifyUsers,
+            sideMenu,
             ifUserHasPrincipalRole,
             ifUserHasUtilityUserRole,
             ifUserHasAnyOtherRole,
@@ -486,6 +498,7 @@ module.exports.update = function(req, res) {
                 privileges,
                 aclShowPermissionsTable,
                 aclModifyUsers,
+                sideMenu,
                 ifUserHasPrincipalRole,
                 ifUserHasUtilityUserRole,
                 ifUserHasAnyOtherRole,
@@ -501,13 +514,14 @@ module.exports.update = function(req, res) {
         privileges,
         aclShowPermissionsTable,
         aclModifyUsers,
+        sideMenu,
         ifUserHasPrincipalRole,
         ifUserHasUtilityUserRole,
         ifUserHasAnyOtherRole,
         ifUserHasParentRole,
         studentsIdArray){
 
-        redirect.redirectTo(req,res,'updateUser');
+        functions.redirect(req,res,'updateUser');
         res.render('users/updateUser', {
             title: 'UPDATE USER:',
             userAuthID: req.user.userPrivilegeID,
@@ -521,7 +535,10 @@ module.exports.update = function(req, res) {
             parentRole: ifUserHasParentRole,
             utilityUserRole: ifUserHasUtilityUserRole,
             anyOtherRole: ifUserHasAnyOtherRole,
-            studentsIdArray: studentsIdArray    //user that is a parent of these children
+            studentsIdArray: studentsIdArray,    //user that is a parent of these children
+            aclSideMenu: sideMenu,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -779,35 +796,40 @@ module.exports.erase = function(req, res) {
 /* ------------ end of DELETE USERS. */
 
 module.exports.showPhoto = function(req, res) {
-
-    models.Users.findById(req.params.id,function(error, user) {
-        res.render('users/showPhoto', { title: 'User Photo', users: user });
-
-    });
-};
-
-//--ADD or UPDATE user photo -------------------------------------
-module.exports.addUpdatePhoto = function (req, res){
-// res.writeHead(200, {'Content-Type': 'text/html' });
-// var form = '<form action="/users/addPhoto/:id" enctype="multipart/form-data" method="post">Add a title: <input name="title" type="text" /><br><br><input single="single" name="upload" type="file" /><br><br><input type="submit" value="Upload" /></form>';
-// res.end(form);
-    /*
-        models.Users.findById(req.params.id,function(error, user) {
-            res.render('users/addPhoto', { title: 'ADD PHOTO', user: user });
-        });
-    */
-
     async.parallel([
         function(callback){
             models.Users.findById(req.params.id).exec(callback);
         },
-        function(callback){aclPermissions.modifyUsers(req, res, callback);}   //aclPermissions modifyUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        res.render('users/showPhoto',{
+            title:'User Photo',
+            users: results[0],
+            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
+        });
+    })
+};
+
+//--ADD or UPDATE user photo -------------------------------------
+module.exports.addUpdatePhoto = function (req, res){
+    async.parallel([
+        function(callback){
+            models.Users.findById(req.params.id).exec(callback);
+        },
+        function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('users/addPhoto',{
             title:'Add Photo',
             user: results[0],
-            aclModifyUsers: results[1] //aclPermissions modifyUsers
+            aclModifyUsers: results[1], //aclPermissions modifyUsers
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };

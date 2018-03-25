@@ -3,7 +3,6 @@ var models = require('./../../../models');
 var async = require("async");
 
 module.exports.getRealTestAlerts = function(req, callback) {
-    var async = require('async');
     async.waterfall([
         function (cb) {
             var arrayAlerts = [];
