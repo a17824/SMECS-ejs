@@ -65,8 +65,8 @@ mongoose.Promise = require('bluebird');
 
 //connecting to database
 
-mongoose.connect('mongodb://a17824:Abington2018@192.168.3.248:2999/SMECS_database', { useMongoClient: true });
-//mongoose.connect('mongodb://a17824:Abington2018@76.118.200.189:2999/SMECS_database', { useMongoClient: true });
+//mongoose.connect('mongodb://a17824:Abington2018@192.168.3.248:2999/SMECS_database', { useMongoClient: true });
+mongoose.connect('mongodb://a17824:Abington2018@76.118.200.189:2999/SMECS_database', { useMongoClient: true });
 
 //if we connect successfully or if a connection error occurs
 db.on('error', console.error.bind(console, 'connection error:'));

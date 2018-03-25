@@ -1,31 +1,96 @@
-<% include headers/header.ejs %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- page content -->
-  <div class="right_col" role="main">
-    <div class="">
-      <div class="page-title">
-        <div class="title_left">
-          <h3>Page</h3>
-        </div>
-      </div>
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
 
-      <div class="clearfix"></div>
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
+  </head>
 
-      <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="x_panel">
-            <div class="x_title">
-              <h2>Plain Page</h2>
-              <div class="clearfix"></div>
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="/dashboard" class="site_title"><i class="fa fa-graduation-cap"></i> <span>Dashboard</span></a>
             </div>
-            <div class="x_content">
-              Add content to the page ...
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <% include ./layout/menuProfile.ejs %>
+            <!-- /menu profile quick info -->
+            
+            <br />
+            <!-- sidebar menu -->
+            <% include ./layout/sideMenu.ejs %>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Page</h3>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Plain Page</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    Add content to the page ...
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <!-- /page content -->
+        <!-- /page content -->
 
-  <% include footers/footer.ejs %>
+   <!-- footer content -->
+   <% include ./layout/footer.ejs %>
+  <!-- /footer content -->
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
+
+</body>
+
+</html>

@@ -1,92 +1,146 @@
-<% include ../headers/header.ejs %>
-<link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet">
-<div class="right_col" role="main">
-  <div class="clearfix"></div>  
-    <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
-          <div class="x_content">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
     <title>Show Privileges</title>
-    
-    <script type = "text/javascript">
-        $(document).ready(function()
-                {
-                    $("#myTable").tablesorter();
-                }
-        );
-        $("#privilegeLink").live("click", function () {
-            $.ajax({
-                url: '/privilege/showPrivilege',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-                error: function(error){
-                    if(error.responseText == 'showAlert')
-                        alert("User Privilege NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
-                }
-            });
-        });
-    </script>
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+  </head>
 
-</head>
-<body>
-<h1><%= title %></h1>
-<div class="" role="tabpanel" data-example-id="togglable-tabs">
-        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-          <li role="presentation" class=""><a href="#tab_content1" role="tab" data-toggle="tab" aria-expanded="true">Roles</a>
-          </li>
-          <li role="presentation" class="active"><a href="#tab_content2" role="tab" data-toggle="tab" aria-expanded="false">Privileges</a>
-          </li>
-        </ul>
-      </div>
-      <div id="myTabContent" class="tab-content">
-            <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="/dashboard" class="site_title"><i class="fa fa-graduation-cap"></i> <span>Dashboard</span></a>
+            </div>
 
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <% include ../layout/menuProfile.ejs %>
+            <!-- /menu profile quick info -->
+            
+            <br />
+            <!-- sidebar menu -->
+            <% include ../layout/sideMenu.ejs %>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+          <div class="clearfix"></div>  
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_content">
+                  <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                      <li role="presentation" class=""><a href="#tab_content1" role="tab" data-toggle="tab" aria-expanded="true">Roles</a>
+                      </li>
+                      <li role="presentation" class="active"><a href="#tab_content2" role="tab" data-toggle="tab" aria-expanded="false">Privileges</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content2">
+                      <form action="/privilege/addPrivilege">
+                        <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
+                        <button class="btn btn-primary" type="submit" value="Add Privilege">Add Privilege</button>
+                        <% } else { %>
+                            <button class="btn btn-primary" type="submit" value="Add Privilege" disabled>Add Privilege</button>
+                        <% } %>
+                      </form>
+                      <table id="myTable" class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Privilege Name</th>
+                            <th>Privilege ID</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% privilege.forEach(function(privilege) { %>
+                          <tr>
+                            <td></td>
+                            <td><%= privilege.privilegeName %></td>
+                            <td><%= privilege.privilegeID %></td>
+                            <td>
+                              <% if (aclModifyPrivilege == null || aclModifyPrivilege.checkBoxValue == true) {%>
+                              <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary">update</button></a>
+                              <% } else { %>
+                              <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary" disabled>update</button></a>
+                              <% } %>
+                            </td>
+                            <td>
+                              <% if (aclDeletePrivilege == null || aclDeletePrivilege.checkBoxValue == true) {%>
+                              <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button class="btn btn-primary">delete</button></a>
+                              <% } else { %>
+                              <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button class="btn btn-primary" disabled>delete</button></a>
+                              <% } %>
+                            </td>
+                          </tr>
+                          <% }); %>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- footer content -->
+                    <% include ../layout/footer.ejs %>
+                    <!-- /footer content -->
+
+                  </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade active in" id="tab_content2"></div>
-<form action="/privilege/addPrivilege">
-    <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
-    <button class="btn btn-primary" type="submit" value="Add Privilege">Add Privilege</button>
-    <% } else { %>
-        <button class="btn btn-primary" type="submit" value="Add Privilege" disabled>Add Privilege</button>
-    <% } %>
-</form>
-<table id="myTable" class="table table-hover">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Privilege Name</th>
-        <th>Privilege ID</th>
-        <th>Update</th>
-        <th>Delete</th>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    </tr>
-    <tbody>
-    <% privilege.forEach(function(privilege) { %>
-    <tr>
-        <td></td>
-        <td><%= privilege.privilegeName %></td>
-        <td><%= privilege.privilegeID %></td>
-        <td>
-            <% if (aclModifyPrivilege == null || aclModifyPrivilege.checkBoxValue == true) {%>
-            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary">update</button></a>
-            <% } else { %>
-            <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary" disabled>update</button></a>
-            <% } %>
-        </td>
-        <td>
-            <% if (aclDeletePrivilege == null || aclDeletePrivilege.checkBoxValue == true) {%>
-            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button class="btn btn-primary">delete</button></a>
-            <% } else { %>
-            <a href="/privilege/showPrivilege/<%= privilege.id %>" id="privilegeLink"><button class="btn btn-primary" disabled>delete</button></a>
-            <% } %>
-        </td>
-    </tr>
-    <% }); %>
-    </tbody>
-</table><br>
-</div>
+    <!-- jQuery -->
+    <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+    <!-- Bootstrap -->
+    <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- FastClick -->
+    <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
+    <!-- Datatables -->
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 
-<% include ../footers/footer.ejs %>
+    <!-- Custom Theme Scripts -->
+    <script src="/public/gentelella/build/js/custom.js"></script>
+    <!-- Google Analytics -->
+
+  </body>
+
+</html>

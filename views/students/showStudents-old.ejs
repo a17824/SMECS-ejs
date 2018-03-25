@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Students</title>
+    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+
+    <script type = "text/javascript">
+        $(document).ready(function()
+                {
+                    $("#myTable").tablesorter();
+                }
+        );
+    </script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated" action="/students/addStudent">
+                <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
+                <input type="submit" value="Add Student">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Add Student" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+            <form class="floated" action="/students/addMultiStudents">
+                <% if (aclAddMultiStudent == null || aclAddMultiStudent.checkBoxValue == true) {%>
+                <input type="submit" value="Add Multiple Students">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Add Multiple Students" disabled>&nbsp;&nbsp;
+                <% } %>
+            </form>
+            <form class="floated" action="/students/addMultiImage">
+                <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+                <input type="submit" value="Add Multiple Students Photos">&nbsp;&nbsp;
+                <% } else { %>
+                <input type="submit" value="Add Multiple Students Photos" disabled>&nbsp;&nbsp;
+                <% } %><br><br>
+            </form>
+        </ul>
+    </div>
+</div>
+
+
+<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
+    <caption>
+        TIP! Sort multiple columns simultaneously by holding down the shift key and clicking a second column header!
+    </caption>
+    <thead>
+    <tr>
+        <th width="5px"></th>
+        <th>Photo</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>ID</th>
+        <th>Parent</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    <tbody>
+    <% students.forEach(function(student) { %>
+    <tr>
+        <td ></td>
+        <% if (student.photo == "") { %>
+        <td align="center">
+            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+            <a href="/students/addPhoto/<%= student.id %>"><button class="inTable">add</button></a>
+            <% } else { %>
+            <a href="/students/addPhoto/<%= student.id %>"><button class="inTable" disabled>add</button></a>
+            <% } %>
+        </td>
+        <% } else { %>
+        <td>
+            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+            <a href="/students/showPhoto/<%= student.id %>"><button class="inTable">show</button></a>
+            <% } else { %>
+            <a href="/students/showPhoto/<%= student.id %>"><button class="inTable" disabled>show</button></a>
+            <% } %>
+            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+            <a href="/students/addPhoto/<%= student.id %>"><button class="inTable">change</button></a>
+            <% } else { %>
+            <a href="/students/addPhoto/<%= student.id %>"><button class="inTable" disabled>change</button></a>
+            <% } %>
+            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+            <a href="/students/deletePhoto/<%= student.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/students/deletePhoto/<%= student.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+
+        </td>
+        <% } %>
+        <td><%= student.firstName %></td>
+        <td><%= student.lastName %></td>
+        <td><%= student.studentID %></td>
+
+
+
+        <td >
+            <% if (student.parentOf.length > 0) { %>
+            <% for (var x = 0; x < student.parentOf.length; x++) {%>
+            <pre style="text-align: left"><%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%></pre>
+            <% } %>
+            <% } %>
+        </td>
+
+
+        <td align="center">
+            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+            <a href="/students/updateStudent/<%= student.id %>"><button class="inTable">update</button></a>
+            <% } else { %>
+            <a href="/students/updateStudent/<%= student.id %>"><button class="inTable" disabled>update</button></a>
+            <% } %>
+        </td>
+        <td align="center">
+            <% if (aclDeleteStudent == null || aclDeleteStudent.checkBoxValue == true) {%>
+            <a href="/students/deleteStudent/<%= student.id %>"><button class="inTable">delete</button></a>
+            <% } else { %>
+            <a href="/students/deleteStudent/<%= student.id %>"><button class="inTable" disabled>delete</button></a>
+            <% } %>
+        </td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table><br>
+
+
+
+<div class="main-container">
+    <div class="fixer-container">
+        <ul class="list-of-floating-elements">
+            <form class="floated" action="/dashboard">
+                <input type="submit" value="Back">
+            </form>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
