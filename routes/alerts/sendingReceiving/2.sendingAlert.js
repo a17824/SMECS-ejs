@@ -213,52 +213,53 @@ module.exports.postNotes = function(req, res) {
         else {
             alert.note = req.body.note;
 
-            if (alert.alertNameID == 2 ||
-                alert.alertNameID == 3 ||
-                alert.alertNameID == 6 ||
-                alert.alertNameID == 8 ||
-                alert.alertNameID == 9 ||
-                alert.alertNameID == 10 ||
-                alert.alertNameID == 11 ||
-                alert.alertNameID == 12 ||
-                alert.alertNameID == 13 ||
-                alert.alertNameID == 14 ||
-                alert.alertNameID == 15 ||
-                alert.alertNameID == 16 ||
-                alert.alertNameID == 17 ||
-                alert.alertNameID == 18 ||
-                alert.alertNameID == 19 ||
-                alert.alertNameID == 20 ||
-                alert.alertNameID == 21 ||
-                alert.alertNameID == 22 ||
-                alert.alertNameID == 23 ) {
-
-                alert.save();
-            }
-            if (alert.alertNameID == 4 ) {
-
-                alert.missingChildLastTimeSeen = req.body.lastTimeSeen;
-                alert.missingChildLastPlaceSeen = req.body.lastPlaceSeen;
-                alert.missingChildClothesWearing = req.body.clothesWearing;
-                alert.save();
-            }
-            if (alert.alertNameID == 5 ) {
-
-                alert.studentWithGunSeated = req.body.seat;
-                alert.studentWithGunBehaviour = req.body.studentBehaviour;
-                alert.save();
-            }
-            if (alert.alertNameID == 7 ) {
-
-                alert.evacuateWhereTo = req.body.whereToEvacuate;
-                alert.save();
-            }
             if (alert.alertNameID == 26 ) {
-
                 alert.save();
+                res.send({redirect:'/alerts/sending/multiSelection/' + alertToUpdate1});
+            }else {
+                if (alert.alertNameID == 2 ||
+                    alert.alertNameID == 3 ||
+                    alert.alertNameID == 6 ||
+                    alert.alertNameID == 8 ||
+                    alert.alertNameID == 9 ||
+                    alert.alertNameID == 10 ||
+                    alert.alertNameID == 11 ||
+                    alert.alertNameID == 12 ||
+                    alert.alertNameID == 13 ||
+                    alert.alertNameID == 14 ||
+                    alert.alertNameID == 15 ||
+                    alert.alertNameID == 16 ||
+                    alert.alertNameID == 17 ||
+                    alert.alertNameID == 18 ||
+                    alert.alertNameID == 19 ||
+                    alert.alertNameID == 20 ||
+                    alert.alertNameID == 21 ||
+                    alert.alertNameID == 22 ||
+                    alert.alertNameID == 23 ) {
 
+                    alert.save();
+                }
+                if (alert.alertNameID == 4 ) {
+
+                    alert.missingChildLastTimeSeen = req.body.lastTimeSeen;
+                    alert.missingChildLastPlaceSeen = req.body.lastPlaceSeen;
+                    alert.missingChildClothesWearing = req.body.clothesWearing;
+                    alert.save();
+                }
+                if (alert.alertNameID == 5 ) {
+
+                    alert.studentWithGunSeated = req.body.seat;
+                    alert.studentWithGunBehaviour = req.body.studentBehaviour;
+                    alert.save();
+                }
+                if (alert.alertNameID == 7 ) {
+
+                    alert.evacuateWhereTo = req.body.whereToEvacuate;
+                    alert.save();
+                }
+                res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});
             }
-            res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});
+
         }
     });
 };
@@ -370,10 +371,33 @@ module.exports.postMultiSelection = function(req, res) {
         else {
             alert.multiSelectionNames = req.body.checkboxesNames;
             alert.multiSelectionIDs = req.body.checkboxesIDs;
-            alert.save();
+
+
             //ALERT Utilities Failures,
+
             if (alert.alertNameID == 14 ) {
-                res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
+                models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
+                    alert.requestAssistance = [];
+                    utils.forEach(function (util) {
+                        var req = {
+                            utilityID: util.utilityID,
+                            utilityName:  util.utilityName,
+                            contactName: util.contactName,
+                            phone: util.phone,
+                            email: util.email,
+                            smecsApp: util.smecsApp,
+                            sentReqSmecsApp: util.sentReqSmecsApp,
+                            sentReqEmail: util.sentReqEmail,
+                            sentReqCall: util.sentReqCall
+                        };
+                        alert.requestAssistance.push(req);
+
+                    });
+                    alert.save();
+                    res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
+                });
+
+
             }
             //ALERT Medical Emergencies
             if (alert.alertNameID == 18 ) {
@@ -383,7 +407,7 @@ module.exports.postMultiSelection = function(req, res) {
             }
             //ALERT Request Assistance,
             if (alert.alertNameID == 26 ) {
-                res.send({redirect:'/alerts/sending/requestAssistance/' + alertToUpdate1});
+                res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});
             }
 
         }
@@ -393,27 +417,13 @@ module.exports.postMultiSelection = function(req, res) {
 //          REQUEST ASSISTANCE          \\
 module.exports.showRequestAssistance = function(req, res) {
     async.parallel([
-        function(callback){
-            models.AlertSentTemp.findById(req.params.id).exec(callback);
-        },
-        function(callback){
-            models.Floors.find().exec(callback);
-        },
-        function(callback){
-            models.Utilities.find().exec(callback);
-        },
-        function(callback){
-            models.RequestAssistance.find().exec(callback);
-        },
-        function(callback){
-            models.Alerts.find().exec(callback);
-        },
-        function(callback){
-            models.AclAlertsReal.find().exec(callback);
-        },
-        function(callback){
-            models.AclAlertsTest.find().exec(callback);
-        }
+        function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
+        function(callback){models.Floors.find().exec(callback);},
+        function(callback){models.Utilities.find().exec(callback);},
+        function(callback){models.RequestAssistance.find().exec(callback);},
+        function(callback){models.Alerts.find().exec(callback);},
+        function(callback){models.AclAlertsReal.find().exec(callback);},
+        function(callback){models.AclAlertsTest.find().exec(callback);}
 
     ],function(err, results){
         if (!results[0]) {

@@ -35,43 +35,52 @@ module.exports.showPost = function(req, res) {
     async.waterfall([
         function (callback) {
             models.Alerts.find({'alertID': req.body.alertID}, function (err, alert) {
+                if(err){
+                    console.log('err');
+                    console.log(alert);
+                }else{
+                    var placeholderNote;
+                    if (req.body.alertID == 2){placeholderNote = 'ex: Stranger is on my classroom and refuses to leave';}
+                    if (req.body.alertID == 3){placeholderNote = 'ex: Many people will be working on the corridors. Please follow the procedure for Lockdown';}
+                    if (req.body.alertID == 4){placeholderNote = 'ex: Anna said he went to pick food';}
+                    if (req.body.alertID == 5){placeholderNote = 'ex: gun is in his pants, left front pocket';}
+                    if (req.body.alertID == 6){placeholderNote = 'ex: Corrosives and Flammable spill at lab';}
+                    if (req.body.alertID == 7){placeholderNote = 'ex: there is a strange strong smell on the entire building';}
+                    if (req.body.alertID == 8){placeholderNote = 'ex: the caller said bomb will detonate in 5 hours';}
+                    if (req.body.alertID == 9){placeholderNote = 'ex: bomb is located behind door of classroom 12';}
+                    if (req.body.alertID == 10){placeholderNote = 'ex: computer is on fire. Students are safe';}
+                    if (req.body.alertID == 11){placeholderNote = 'ex: powder leaking from package';}
+                    if (req.body.alertID == 12){placeholderNote = 'ex: SUV crash against us. No students got hurt';}
+                    if (req.body.alertID == 13){placeholderNote = 'ex: road power pole broken. Don\'t use any school front door';}
+                    if (req.body.alertID == 14 || req.body.alertID == 26 ){placeholderNote = 'ex: water is dark and smells gas on 1 floor';}
+                    if (req.body.alertID == 15){placeholderNote = 'ex: gun is under student desk. It\'s first desk of second row';}
+                    if (req.body.alertID == 16){placeholderNote = 'ex: student selling drugs in the restroom';}
+                    if (req.body.alertID == 17){placeholderNote = 'ex: Mary is saying she saw Tom trying to cut his wrist';}
+                    if (req.body.alertID == 18){placeholderNote = 'ex: Emma and Peter felt in stairs. Emma loss consciousness and Peter head is bleeding';}
+                    if (req.body.alertID == 19){placeholderNote = 'ex: Charlotte cut her wrist';}
+                    if (req.body.alertID == 20){placeholderNote = 'ex: Media are here because of Arthur incident.';}
+                    if (req.body.alertID == 21){placeholderNote = 'ex: remember to not touch anything and put yellow tape around area.';}
+                    if (req.body.alertID == 22){placeholderNote = 'ex: .';}
+                    if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
 
-                var placeholderNote;
-                if (req.body.alertID == 2){placeholderNote = 'ex: Stranger is on my classroom and refuses to leave';}
-                if (req.body.alertID == 3){placeholderNote = 'ex: Many people will be working on the corridors. Please follow the procedure for Lockdown';}
-                if (req.body.alertID == 4){placeholderNote = 'ex: Anna said he went to pick food';}
-                if (req.body.alertID == 5){placeholderNote = 'ex: gun is in his pants, left front pocket';}
-                if (req.body.alertID == 6){placeholderNote = 'ex: Corrosives and Flammable spill at lab';}
-                if (req.body.alertID == 7){placeholderNote = 'ex: there is a strange strong smell on the entire building';}
-                if (req.body.alertID == 8){placeholderNote = 'ex: the caller said bomb will detonate in 5 hours';}
-                if (req.body.alertID == 9){placeholderNote = 'ex: bomb is located behind door of classroom 12';}
-                if (req.body.alertID == 10){placeholderNote = 'ex: computer is on fire. Students are safe';}
-                if (req.body.alertID == 11){placeholderNote = 'ex: powder leaking from package';}
-                if (req.body.alertID == 12){placeholderNote = 'ex: SUV crash against us. No students got hurt';}
-                if (req.body.alertID == 13){placeholderNote = 'ex: road power pole broken. Don\'t use any school front door';}
-                if (req.body.alertID == 14 || req.body.alertID == 26 ){placeholderNote = 'ex: water is dark and smells gas on 1 floor';}
-                if (req.body.alertID == 15){placeholderNote = 'ex: gun is under student desk. It\'s first desk of second row';}
-                if (req.body.alertID == 16){placeholderNote = 'ex: student selling drugs in the restroom';}
-                if (req.body.alertID == 17){placeholderNote = 'ex: Mary is saying she saw Tom trying to cut his wrist';}
-                if (req.body.alertID == 18){placeholderNote = 'ex: Emma and Peter felt in stairs. Emma loss consciousness and Peter head is bleeding';}
-                if (req.body.alertID == 19){placeholderNote = 'ex: Charlotte cut her wrist';}
-                if (req.body.alertID == 20){placeholderNote = 'ex: Media are here because of Arthur incident.';}
-                if (req.body.alertID == 21){placeholderNote = 'ex: remember to not touch anything and put yellow tape around area.';}
-                if (req.body.alertID == 22){placeholderNote = 'ex: .';}
-                if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
 
-                var alertTemp1 = new models.AlertSentTemp({
-                    alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
-                    alertGroupName: req.body.alertGroupName,
-                    alertNameID: req.body.alertID,
-                    alertName: req.body.alertName,
-                    testModeON: req.body.testModeON,
-                    request911Call: alert[0].alertRequest911Call,
-                    whoCanCall911: alert[0].whoCanCall911,
-                    placeholderNote: placeholderNote
-                });
-                alertTemp1.save();
-                callback(null, alertTemp1);
+                    console.log('req.body.testModeON = ',req.body.testModeON);
+                    console.log('alert');
+                    console.log(alert);
+
+                    var alertTemp1 = new models.AlertSentTemp({
+                        alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
+                        alertGroupName: req.body.alertGroupName,
+                        alertNameID: req.body.alertID,
+                        alertName: req.body.alertName,
+                        testModeON: req.body.testModeON,
+                        request911Call: alert[0].alertRequest911Call,
+                        whoCanCall911: alert[0].whoCanCall911,
+                        placeholderNote: placeholderNote
+                    });
+                    alertTemp1.save();
+                    callback(null, alertTemp1);
+                }
             });
         },
         function (alertTemp1, callback) {

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+      EnableSubmit = function(val)
+      {
+        var sbmt = document.getElementById("btSave");
+        if (val.onchange)
+        {
+                sbmt.disabled = false;
+              }
+              else
+              {
+                sbmt.disabled = false;
+              }
+            };
+            
+            $(document).ready(function(){
+              $('.chk-all').on('change', function(){
+                $('.' + $(this).data('child')).prop('checked',this.checked);
+              });
+              var searchIDsNotChecked = {};
+            var typeAclAlert;
+            $("#btSave").click(function(event) {
+                event.preventDefault();
+                searchIDsNotChecked = $('input[name="aclAlertCheckBox"]:not(:checked)').map(function () {
+                  return $(this).val();
+                }).get();
+                var searchIDsChecked = $('input[name="aclAlertCheckBox"]:checked').map(function () {
+                  return $(this).val();
+                }).get();
+                typeAclAlert=$("#typeAclAlert").val();
+                
+                $.ajax({
+                  url:'/alerts/showAlertPermissionsTable',
+                  type:'post',
+                  data:{
+                    searchIDsNotChecked:searchIDsNotChecked,
+                    searchIDsChecked:searchIDsChecked,
+                    typeAclAlert:typeAclAlert
+                  },
+                  success:function(response){
+                    console.log(response);
+                  }
+                });
+              });
+            });
+            
+            
+            </script>
+  </head>
+  <title><%= title %></title>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="/dashboard" class="site_title"><i class="fa fa-graduation-cap"></i> <span>Dashboard</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+<<<<<<< HEAD
+            <% include ../layout/menuProfile.ejs %>
+=======
+            <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="\public\photosNotAvailable\photoNotAvailable.bmp" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Welcome,</span>
+                <!--<h2></h2>-->
+              </div>
+              <div class="clearfix"></div>
+            </div>
+>>>>>>> b160e6e856d8b8a4b344e402e4d99597b40e94e9
+            <!-- /menu profile quick info -->
+
+            <br />
+            <!-- sidebar menu -->
+<<<<<<< HEAD
+            <% include ../layout/sideMenu.ejs %>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+=======
+            <% include ../sideMenu.ejs %>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+>>>>>>> b160e6e856d8b8a4b344e402e4d99597b40e94e9
+        <div class="right_col" role="main">
+          <div class="clearfix"></div>
+        <body>
+
+    <input type="hidden" id="typeAclAlert"  value="<%= typeAclAlert %>">
+
+    <form>
+        <input type="submit" name="btSave" id="btSave" value="SAVE" disabled="true" onclick="this.disabled=true" class="btn btn-primary"><br><br>
+    </form>
+
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_content">
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#tab_content1" id="schoolStaff-tab" role="tab" data-toggle="tab" aria-expanded="true">Send Alerts</a>
+                  </li>
+                  <li role="presentation" class=""><a href="#tab_content2" role="tab" id="parents-tab" data-toggle="tab" aria-expanded="false">Receive Alerts</a>
+                  </li>
+                </ul>
+              </div>
+              <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
+                  <table id="datatable" class="table table-striped table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <td></td>
+                            <% roles2.forEach(function(roles2) { %>
+                            <th id="<%= roles2.roleName %>" scope="col"><b><%= roles2.roleName %></b></th>
+                            <% }); %>
+                        </tr>
+                      </thead>
+                    <tbody>
+                      <th id="send" class="span" colspan="<%= roles2Count + 1 %>" scope="colgroup"><b>SEND ALERTS</b></th>
+                      <% alertGroup.forEach(function(alertGroup) { %>
+                      <tr>
+                        <th align="center">&nbsp&nbsp&nbsp<b><%= alertGroup.alertTypeName %></b></th>
+                          <% roles2.forEach(function(roles2) { %>
+                        <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
+                          
+                        </td>
+                        <% }); %>
+                      </tr>
+                      <% alert.forEach(function(alert) { %>
+                      <% if (alert.softDeleted == false) { %>
+                      <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+                      <tr>
+                        <th align="left" headers="users" id="send_<%= alert.alertName %>"><%= alert.alertName %></th>
+                          <% roles2.forEach(function(roles2) { %>
+                        <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
+                          <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
+                            <input type="checkbox"
+                                  name="aclAlertCheckBox"
+                                  value="s<%= roles2.roleID %><%= alert.alertID %>"
+                                  class="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                                    <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
+                                    <% aclAlerts.forEach(function(acl) { %>
+                                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                      checked
+                                    <% } %>
+                                    <% }); %>
+                                      onClick="EnableSubmit(this)" />
+                          <% } else { %>
+                            <input type="checkbox"
+                                  name="aclAlertCheckBox"
+                                  value="s<%= roles2.roleID %><%= alert.alertID %>"
+                                  class="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                                    <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
+                                    <% aclAlerts.forEach(function(acl) { %>
+                                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                      checked
+                                    <% } %>
+                                    <% }); %>
+                                      onClick="EnableSubmit(this)" disabled/>
+                                    <% } %>
+                                    <% }); %>
+                        </td>
+                      </tr>
+                      <% } %>
+                      <% } %>
+                      <% }); %>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="tab_content2">
+                  <table id="datatable" class="table table-striped table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <% roles2.forEach(function(roles2) { %>
+                        <th id="<%= roles2.roleName %>" scope="col"><b><%= roles2.roleName %></b></th>
+                        <% }); %>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <th id="send" class="span" colspan="<%= roles2Count + 1 %>" scope="colgroup" align="left"><b>RECEIVE ALERTS</b></th>
+                    <% alertGroup.forEach(function(alertGroup) { %>
+                    <tr>
+                      <th align="center">&nbsp&nbsp&nbsp<b><%= alertGroup.alertTypeName %></b></th>
+                        <% roles2.forEach(function(roles2) { %>
+                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
+                        
+                      </td>
+                      <% }); %>
+                    </tr>
+
+                    <% alert.forEach(function(alert) { %>
+                    <% if (alert.softDeleted == false) { %>
+                    <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+                    <tr>
+                      <th align="left" headers="users" id="receive_<%= alert.alertName %>"><%= alert.alertName %></th>
+                        <% roles2.forEach(function(roles2) { %>
+                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
+                        <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
+                        <input type="checkbox"
+                              name="aclAlertCheckBox"
+                              value="r<%= roles2.roleID %><%= alert.alertID %>"
+                              class="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                                <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
+                                <% aclAlerts.forEach(function(acl) { %>
+                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                              checked
+                                <% } %>
+                                <% }); %>
+                              onClick="EnableSubmit(this)"/>
+                        <% } else { %>
+                        <input type="checkbox"
+                              name="aclAlertCheckBox"
+                              value="r<%= roles2.roleID %><%= alert.alertID %>"
+                              class="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                                <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
+                                <% aclAlerts.forEach(function(acl) { %>
+                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                              checked
+                                <% } %>
+                                <% }); %>
+                              onClick="EnableSubmit(this)" disabled/>
+                        <% } %>
+                      </td>
+                      <% }); %>
+                    </tr>
+                    <% } %>
+                    <% } %>
+                    <% }); %>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+
+<<<<<<< HEAD
+      <!-- footer content -->
+      <% include ../layout/footer.ejs %>
+      <!-- /footer content -->
+=======
+  <!-- footer content -->
+  <footer>
+      <div class="pull-right">
+        Made by
+        <a href="https://bansheeus.com">Banshee Computer Solutions</a>
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    <!-- /footer content -->
+>>>>>>> b160e6e856d8b8a4b344e402e4d99597b40e94e9
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+  <!-- Bootstrap -->
+  <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+  <!-- FastClick -->
+  <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+  <!-- NProgress -->
+  <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+  <!-- iCheck -->
+  <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+  
+  <!-- Datatables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+  
+  <!-- Custom Theme Scripts -->
+  <script src="/public/gentelella/build/js/custom.js"></script>
+  <!-- Google Analytics -->
+  
+  </body>
+  
+  </html>

@@ -194,9 +194,22 @@ var AlertSentInfoSchema = new mongoose.Schema({
     multiSelectionNames: [String],
     multiSelectionIDs: [String],
     askedForAssistance: Boolean,
-    medicalInjuredParties: Number
+    medicalInjuredParties: Number,
+    requestAssistance: [{
+        utilityID: Number,
+        utilityName: String,
+        contactName: String,
+        phone: String,
+        email: String,
+        smecsApp: { type: Boolean, default: false },
 
-}, {collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names
+        sentReqSmecsApp: { type: Boolean, default: false },
+        sentReqEmail: { type: Boolean, default: false },
+        sentReqCall: { type: Boolean, default: false },
+    }]
+
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names
 var AlertSentInfo;
 module.exports.AlertSentInfo = mongoose.model("AlertSentInfo", AlertSentInfoSchema);
 
@@ -242,9 +255,22 @@ var AlertSentTempSchema = new mongoose.Schema({
     busAccidentLocation2: String,           //Location of Principal CellPhone
     multiSelectionNames: [String],          // Utilities in Failure or Medical Emergencies
     multiSelectionIDs: [String],
-    medicalInjuredParties: Number          //comboBox, listBox
+    medicalInjuredParties: Number,          //comboBox, listBox
+    requestAssistance: [{
+        utilityID: Number,
+        utilityName: String,
+        contactName: String,
+        phone: String,
+        email: String,
+        smecsApp: { type: Boolean, default: false },
 
-}, {collection:"AlertSentTemp"}); //stops Mongoose of giving plurals to our collections names
+        sentReqSmecsApp: { type: Boolean, default: false },
+        sentReqEmail: { type: Boolean, default: false },
+        sentReqCall: { type: Boolean, default: false },
+    }]
+
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"AlertSentTemp"}); //stops Mongoose of giving plurals to our collections names
 var AlertSentTemp;
 module.exports.AlertSentTemp = mongoose.model("AlertSentTemp", AlertSentTempSchema);
 // Fix for Mongoose not creating the TTL indexes (see https://github.com/LearnBoost/mongoose/issues/2459#issuecomment-62802096 )

@@ -8,6 +8,7 @@ var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
 var moment = require('moment');
+var functions = require('./../functions');
 
 /* SHOW ALL STUDENTS. */
 module.exports.show = function(req, res, next) {
@@ -35,35 +36,39 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.addStudent(req, res, callback);},   //aclPermissions addStudent
         function(callback){aclPermissions.addMultiStudent(req, res, callback);},   //aclPermissions addMultiStudent
         function(callback){aclPermissions.modifyStudent(req, res, callback);}, //aclPermissions modifyStudent
-        function(callback){aclPermissions.deleteStudent(req, res, callback);} //aclPermissions deleteStudent
+        function(callback){aclPermissions.deleteStudent(req, res, callback);}, //aclPermissions deleteStudent
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
 
     ],function(err, results){
         //console.log(results[2]);
         res.render('students/showStudents',{
             title:'STUDENTS',
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
             students: results[0],
             aclAddStudent: results[1], //aclPermissions addStudent
             aclAddMultiStudent: results[2], //aclPermissions addMultiStudent
             aclModifyStudent: results[3],  //aclPermissions modifyStudent
-            aclDeleteStudent: results[4]  //aclPermissions deleteStudent
-
+            aclDeleteStudent: results[4],  //aclPermissions deleteStudent
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
 
 /* ADD STUDENT. -------------------------------*/
 module.exports.add = function(req, res) {
-    //res.render('students/addStudent', { title: 'ADD STUDENT'});
-
     async.parallel([
-        function(callback){aclPermissions.addStudent(req, res, callback);}   //aclPermissions addStudent
+        function(callback){aclPermissions.addStudent(req, res, callback);},   //aclPermissions addStudent
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('students/addStudent',{
             title:'ADD STUDENT',
-            aclAddStudent: results[0] //aclPermissions addStudent
+            aclAddStudent: results[0], //aclPermissions addStudent
+            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -98,7 +103,17 @@ module.exports.addPost = function(req, res) {
 
 //  ADD MULTIPLE STUDENTS--------------
 module.exports.addMultiple = function (req, res){
-    res.render('students/addMultiStudents', { title: 'ADD MULTIPLE STUDENTS'});
+    functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
+        res.render('students/addMultiStudents', {
+            title: 'ADD MULTIPLE STUDENTS',
+            aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
+        });
+    });
+
+
+
 };
 module.exports.addMultiplePost = function (req, res){
     var form = new formidable.IncomingForm();
@@ -194,7 +209,8 @@ module.exports.update = function(req, res) {
         function(callback){
             models.Users.find({'parentOf.0': { "$exists": true }, 'softDeleted': null }).sort({"firstName":1}).exec(callback);
         },
-        function(callback){aclPermissions.modifyStudent(req, res, callback);} //aclPermissions modifyStudent
+        function(callback){aclPermissions.modifyStudent(req, res, callback);}, //aclPermissions modifyStudent
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var parentsIdArray = [];
@@ -207,7 +223,10 @@ module.exports.update = function(req, res) {
             students: results[0],
             users: results[1],
             parentsIdArray: parentsIdArray,//student that has parents. This array contains their parents ID (user._id)
-            aclModifyStudent: results[2]  //aclPermissions modifyStudent
+            aclModifyStudent: results[2],  //aclPermissions modifyStudent
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -281,8 +300,6 @@ module.exports.updatePost = function(req, res) {
             });
         }
     ], function (err, student, addParentArray, oldParentArray) {
-        console.log('333333333 newParentArray');
-
         student.studentID = req.body.studentID;
         student.firstName = req.body.firstName;
         student.lastName = req.body.lastName;
@@ -374,7 +391,14 @@ module.exports.delete = function(req, res) {
 // show STUDENT photo-------------------------------
 module.exports.showPhoto = function(req, res) {
     models.Students.findById(req.params.id,function(error, student) {
-        res.render('students/showPhoto', { title: 'Student Photo', students: student });
+        functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
+            res.render('students/showPhoto', {
+                title: 'Student Photo', students: student,
+                aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+        });
     });
 };
 // -----------------------------end show STUDENT photo
@@ -382,7 +406,14 @@ module.exports.showPhoto = function(req, res) {
 //--ADD or CHANGE STUDENT photo -------------------------------------
 module.exports.addUpdatePhoto = function (req, res){
     models.Students.findById(req.params.id,function(error, student) {
-        res.render('students/addPhoto', { title: 'ADD PHOTO', student: student });
+        functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
+            res.render('students/addPhoto', {
+                title: 'ADD PHOTO', student: student,
+                aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+        });
     });
 };
 module.exports.addUpdatePhotoPost = function (req, res){
@@ -450,7 +481,14 @@ module.exports.addUpdatePhotoPost = function (req, res){
 
 // ADD MULTIPLE PHOTOS AND DELETE ALL OLD PHOTOS IN STUDENTS PHOTOS FOLDER--------------
 module.exports.addMultiplePhotos = function (req, res){
-    res.render('students/addMultiImage', { title: 'ADD MULTIPLE PHOTOS'});
+    functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
+        res.render('students/addMultiImage', {
+            title: 'ADD MULTIPLE PHOTOS',
+            aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
+        });
+    });
 };
 
 //var io = require('socket.io');

@@ -65,7 +65,6 @@ module.exports.savePost = function(req, res) {
     if (searchIDsChecked != null ){
         for (var i=0; i<searchIDsChecked.length; i++) {
             models[typeAclAlert].findOne({"checkBoxID": {"$in": searchIDsChecked[i]}}).exec(function (err, check) {
-                //console.log(check);
                 check.checkBoxValue = true;
                 check.save();
             });
@@ -74,9 +73,17 @@ module.exports.savePost = function(req, res) {
     if (searchIDsNotChecked != null){
         for (var i=0; i<searchIDsNotChecked.length; i++) {
             models[typeAclAlert].findOne({"checkBoxID": {"$in": searchIDsNotChecked[i]}}).exec(function (err, check) {
-                //console.log(check);
-                check.checkBoxValue = false;
-                check.save();
+                if(err){
+                    console.log('111');
+                }else{
+                    if(check){
+                        check.checkBoxValue = false;
+                        check.save();
+                    }else{
+                        console.log('333');
+                    }
+
+                }
             });
         }
     }

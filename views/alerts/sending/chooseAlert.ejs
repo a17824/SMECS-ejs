@@ -25,8 +25,9 @@
                 alertName = $("input:radio[name='alert']:checked + label").text();
                 alertGroupName = $("input:radio[name='alert']:checked + label").attr('id');
 
-
+                console.log('111');
                 if ($('input[name=onoffswitch]:checked').length > 0) {
+                    console.log('222');
                     testModeON = true;
                 }
 
@@ -37,8 +38,8 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
-
-
+                console.log('333');
+                console.log(testModeON);
                 $.post("/alerts/sending/chooseAlert",{
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
@@ -114,7 +115,7 @@
 
     <div id='testModeON' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
-        <input type="radio" name="alert" id=<%= aclTest.alertID %> value="<%= aclTest[i].alertSlugName %>" >
+        <input type="radio" name="alert" id=<%= aclTest[i].alertID %> value="<%= aclTest[i].groupID %>" >
         <% if (aclTest[i].groupID == 1) {%>
         <%= aclTest[i].alertID %> <label for="alert" style="color: red"><%= aclTest[i].alertName %></label><br>
         <% } if (aclTest[i].groupID == 2){ %>

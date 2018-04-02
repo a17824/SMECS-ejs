@@ -5,7 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/receiveAlert.css' />
 
     <!-- Alert that requires FLOOR -->
-    <% if (info.alertNameID == 26  ) { %>
+    <% if (info.alertNameID == 14  ) { %>
     <script>
         var x, y;
         function showP(){
@@ -26,7 +26,7 @@
 
         $(document).ready(function(){
             var alert_ID, alertNameID, alertName, requestAssistance, utilityName, smecsApp, email, call;
-            $("button").click(function() {
+            $("#request").click(function() {
                 requestAssistance = $(this).attr('id');
 
                 if (requestAssistance != 'back') {
@@ -39,6 +39,12 @@
                     email = $('#' + requestAssistance + '_email').is(':checked');
                     call = $('#' + requestAssistance + '_call').is(':checked');
 
+                    var searchIDsChecked = $('input[name="checkboxRequest"]:checked').map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    console.log('searchIDsChecked');
+                    console.log(searchIDsChecked);
 
                     //-----forms validation------------------------------------
                     if ((alertNameID == 14 || alertNameID == 26) && smecsApp == false && email == false && call == false) {
@@ -84,19 +90,18 @@
 <input type="hidden" id="alertNameID"  value="<%= info.alertNameID %>">
 <input type="hidden" id="alertName"  value="<%= info.alertName %>">
 
-<% var typeAclAlert = aclReal; %>
+
 <% if (info.testModeON == true ) {%>
 <h2 style="color: #34A7C1"> TEST MODE ON </h2>
-<% typeAclAlert = aclTest; %>
 <% } %>
 
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 26  ) {%>
+<% if (info.alertNameID == 14  ) {%>
     <input type="hidden" id="x" size="40" value="<%= info.sniperCoordinateX %>">
     <input type="hidden" id="y" size="40" value="<%= info.sniperCoordinateY %>">
     <form>
-        <% if (info.floorPhoto !== '' && info.floorName !== '' && info.floorName !== 'Multiple floors') {%>
+        <% if (info.floorPhoto !== '' && info.floorName !== '' && info.floorName !== 'Multiple floors' && info.floorName !== 'user skipped floor') {%>
             <div id="div1" class="div1">
             <img src="/floorPlans/<%= info.floorPhoto %>">
             </div>
@@ -104,6 +109,7 @@
         <div id="div2" class="div2" >
             <img src="/floorPlans/red_sniper.png" >
         </div>
+
 </form>
 <% } %>
 
@@ -112,7 +118,7 @@
 
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 26 ) {%>
+<% if (info.alertNameID == 14 ) {%>
 
     <% if (info.floorName) {%>
         <label for="floor"><b>Floor:</b></label>
@@ -129,7 +135,7 @@
 
 
 <!-- Alert UTILITY FAILURE -->
-<% if (info.alertNameID == 26 ) {%>
+<% if (info.alertNameID == 14 ) {%>
     <label for="situation"><b>Situation:</b></label><br>
 
     <!-- checkBox of utility failure -->
@@ -140,85 +146,84 @@
 
         <!-- Alerts.forEach to check if alert is softDeleted (or if school owns license)-->
         <% alerts.forEach(function(alert) { %>
-        <% if (alert.alertID == 26 && alert.softDeleted == false) {%>
-        <!-- end -->
-
-        <!-- check if user has rights to Request Assistance -->
-        <% typeAclAlert.forEach(function(typeAclAlert) { %>
-        <% if (typeAclAlert.checkBoxID == 's' + userAuthID + 26 && typeAclAlert.checkBoxValue == true) {%>
+        <% if (alert.alertID == 14 && alert.softDeleted == false) {%>
         <!-- end -->
 
 
-<% var flagDisableRequestButton = 0; %> <!-- trigger to disable Request Assistance buttons -->
-<% var arrayLabels = ["smecs app", "send email", "call"]; %>
-<% var arrayIDs = ["_smecsApp", "_email", "_call"]; %>
-<% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
 
-<% for (var x=0; x < arrayLabels.length; x++) { %>
 
-<!-- ON/OFF switch button for "smecs App"-->
-<% utilities.forEach(function(utility) { %>
-    <% var arrayUtilitiesContact = [utility.smecsApp, utility.email, utility.phone]; %>
-    <% if (info.multiSelectionNames[i] == utility.utilityName &&
-            (arrayUtilitiesContact[x] !== false && arrayUtilitiesContact[x] !== "" )) {%>
-        <% if (arrayLabels[x] !== "call") {%>
-            &emsp;&emsp;&emsp;
-            <label for="utilityName"><%= arrayLabels[x] %></label> <!-- contact label for smecs App and email-->
-            &emsp;
-        <% } else { %>
-            &emsp;&emsp;&emsp;
-            <label for="utilityName"><%= arrayLabels[x] %></label> <!-- contact label call -->
-            &emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <% }%>
+<% if (canRequestAssistance == true) {%>
+    <% var flagDisableRequestButton = 0; %> <!-- trigger to disable Request Assistance buttons -->
+    <% var arrayLabels = ["smecs app", "send email", "call"]; %>
+    <% var arrayIDs = ["_smecsApp", "_email", "_call"]; %>
+    <% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
 
-<% var flagOn = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
-<% var flagOff = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
+    <% for (var x=0; x < arrayLabels.length; x++) { %>
+    <!-- ON/OFF switch button for "smecs App"-->
+        <% utilities.forEach(function(utility) { %>
 
-<!-- IF TRUE, check on RequestAssistance db ON OFF values-->
-<% if (info.askedForAssistance == true) {%>
-    <% request.forEach(function(request) { %>
-        <% var arrayRequestAssistanceType =
-            [request.requestAssistanceSmecsApp, request.requestAssistanceEmail, request.requestAssistanceCall]; %>
+            <% var arrayUtilitiesContact = [utility.smecsApp, utility.email, utility.phone]; %>
+                <% if (info.multiSelectionNames[i] == utility.utilityName &&
+                    (arrayUtilitiesContact[x] !== false && arrayUtilitiesContact[x] !== "" )) {%>
 
-        <% if (request.idAlert == info._id && request.utilityID == info.multiSelectionIDs[i] &&
-            (request.requestAssistanceSmecsApp == true ||
-            request.requestAssistanceEmail == true ||
-            request.requestAssistanceCall == true)) {%>
+                    <% if (arrayLabels[x] !== "call") {%>
+                    &emsp;&emsp;&emsp;
+                        <label for="utilityName"><%= arrayLabels[x] %></label> <!-- contact label for smecs App and email-->
+                        &emsp;
+                    <% } else { %>
+                        &emsp;&emsp;&emsp;
+                        <label for="utilityName"><%= arrayLabels[x] %></label> <!-- contact label call -->
+                        &emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <% }%>
 
-            <% if (arrayRequestAssistanceType[x] == true) {%>
-                <div class="onoffswitchSent" style="display:inline-block;">
-                    <input type="checkbox" class="onoffswitch-checkboxSent"
-                       id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked disabled>
-                    <label class="onoffswitch-labelSent"
-                       for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
-                    <span class="onoffswitch-innerSent"></span><span class="onoffswitch-switchSent"></span>
-                    </label>
-                </div>
-                <% flagOn = 1; %>
-                <% flagDisableRequestButton = 1; %>
-            <% } else { %>
-                <div class="onoffswitch" style="display:inline-block;">
-                    <input type="checkbox" class="onoffswitch-checkbox"
-                       id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>" disabled>
-                    <label class="onoffswitch-label"
-                       for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
-                        <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-                    </label>
-                </div>
-                <% flagOff = 1; %>
-            <% }%>
-        <% }%>
-    <% }); %>
-<% } %>
+                <% var flagOn = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
+                <% var flagOff = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
+
+                <!-- IF TRUE, check on RequestAssistance db ON OFF values-->
+                <% if (info.askedForAssistance == true) {%>
+                    <% request.forEach(function(request) { %>
+                        <% var arrayRequestAssistanceType =
+                            [request.requestAssistanceSmecsApp, request.requestAssistanceEmail, request.requestAssistanceCall]; %>
+
+                        <% if (request.idAlert == info._id && request.utilityID == info.multiSelectionIDs[i] &&
+                            (request.requestAssistanceSmecsApp == true ||
+                            request.requestAssistanceEmail == true ||
+                            request.requestAssistanceCall == true)) {%>
+
+                            <% if (arrayRequestAssistanceType[x] == true) {%>
+                                <div class="onoffswitchSent" style="display:inline-block;">
+                                    <input type="checkbox" class="onoffswitch-checkboxSent"
+                                        id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked disabled>
+                                    <label class="onoffswitch-labelSent"
+                                        for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
+                                        <span class="onoffswitch-innerSent"></span><span class="onoffswitch-switchSent"></span>
+                                    </label>
+                                </div>
+                                <% flagOn = 1; %>
+                                <% flagDisableRequestButton = 1; %>
+                            <% } else { %>
+                                    <div class="onoffswitch" style="display:inline-block;">
+                                        <input type="checkbox" class="onoffswitch-checkbox"
+                                            id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>" disabled>
+                                        <label class="onoffswitch-label"
+                                            for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
+                                            <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                    <% flagOff = 1; %>
+                            <% }%>
+                        <% }%>
+                    <% }); %>
+                <% } %>
 <!-- end of IF TRUE, check on RequestAssistance db ON OFF values-->
 
 <!-- IF TRUE, check on utilities db ON OFF values-->
 <% if (flagOn == 0 && flagOff == 0) {%> <!-- if flagOn = 0 && flagOff = 0, means radio button needs to be draw from utilities db values-->
     <div class="onoffswitch" style="display:inline-block;">
     <% if (utility.defaultContact == arrayDefaultContact[x]) {%>
-        <input type="checkbox" class="onoffswitch-checkbox" id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked>
+        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked>
     <% } else {%>
-        <input type="checkbox" class="onoffswitch-checkbox" id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>" >
+        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>" >
     <% } %> <!-- END OF check on db default contact method -->
     <label class="onoffswitch-label"
            for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
@@ -235,38 +240,14 @@
 <% }%>
 
 <br>
-<!-- button "Request Assistance"-->
-<% utilities.forEach(function(utility) { %>
-    <% if (info.multiSelectionNames[i] == utility.utilityName && flagDisableRequestButton == 1) {%>
-        <% request.forEach(function(request) { %>
-            <% if (request.idAlert == info._id && request.utilityID == info.multiSelectionIDs[i] &&
-                    (request.requestAssistanceSmecsApp == true ||
-                    request.requestAssistanceEmail == true ||
-                    request.requestAssistanceCall == true)) {%>
-                &emsp;&emsp;&emsp;<button id="<%= info.multiSelectionIDs[i]  %>" disabled>Request Assistance</button><br>
-                <% if ( success_messages ) { %>
-                    &emsp;&emsp;&emsp;<label class="messages" for="disable" style="color: green"><%= success_messages %></label>
-                <% } %>
-            <% } %>
-        <% }); %>
-    <% } else {%>
-        <% if (info.multiSelectionNames[i] == utility.utilityName) {%>
-            <% if (utility.email == "" && utility.phone == "" && utility.smecsApp == false ) {%>
-                &emsp;&emsp;&emsp;<button id="<%= info.multiSelectionIDs[i] %>" disabled>Request Assistance</button><br>
-                &emsp;&emsp;&emsp;<label for="disable" style="color: #575757">(no contact available)</label>
-            <% } else {%>
-                &emsp;&emsp;&emsp;<button id="<%= info.multiSelectionIDs[i] %>"
-                                          name="<%= info.multiSelectionNames[i] %>">Request Assistance</button><br>
-            <% } %>
-        <% } %>
-    <% } %>
-<% }); %> <!-- END OF button "Request Assistance"-->
-            <br><br>
+
 
         <% } else { %> <!-- END OF IF check if user has rights to request Assistance, else... -->
 
         <% } %> <!-- END OF ELSE check if user has rights to request Assistance -->
-        <% }); %> <!-- END OF typeAclAlert.forEach check if user has rights to request Assistance -->
+
+
+
         <% } %> <!-- END OF IF to check if alert is softDeleted (or if school owns license)-->
         <% }); %> <!-- END OF Alerts.forEach to check if alert is softDeleted (or if school owns license)-->
     <% } %> <!-- End of checkBox of utility failure -->
@@ -278,12 +259,8 @@
 <% } %>
 <!-- END OFF Alert UTILITY FAILURE -->
 
-<button class="backButton" id="back" onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
-
+<button type="submit" onclick="location.href='/alerts/sending/chooseAlert'">Exit Alert</button>
+<input type="button" id="request" value="Send Request Assistance" ><br><br>
+<button  id="proc" onclick="location.href='/alerts/receiving/procedureR/<%= info.id %>'">Procedure</button>
 </body>
 </html>

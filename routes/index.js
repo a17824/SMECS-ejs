@@ -32,7 +32,8 @@ var pa = require('./alerts/options/pa');
 
 var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
-var receiveAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
+var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
+var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 
 var procedureR = require('./alerts/sendingReceiving/procedureR');
 
@@ -624,12 +625,15 @@ router.post('/alerts/sending/multiSelection', auth.simpleAuth, auth.requireLogin
 router.get('/alerts/sending/requestAssistance/:id', auth.simpleAuth, auth.requireLogin, sendingAlert.showRequestAssistance, function(req, res, next) {});
 router.post('/alerts/sending/requestAssistance', auth.simpleAuth, auth.requireLogin, sendingAlert.postRequestAssistance, function(req, res) {});
 
+router.get('/alerts/sending/reviewAlert/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.reviewAlert, function(req, res, next) {});
+router.post('/alerts/sending/reviewAlert', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});
+
 
 /*RECEIVING ALERTS*/
 
 /* All Alerts -------------------------------*/
-router.get('/alerts/sending/reviewAlert/:id', auth.simpleAuth, auth.requireLogin, receiveAlert.reviewAlert, function(req, res, next) {});
-router.post('/alerts/sending/reviewAlert', auth.simpleAuth, auth.requireLogin, receiveAlert.postReviewAlert, function(req, res) {});
+router.get('/alerts/received/receiveAlert/:id', auth.simpleAuth, auth.requireLogin, receiveAlert.receivedAlert, function(req, res, next) {});
+router.post('/alerts/received/receivedAlert', auth.simpleAuth, auth.requireLogin, receiveAlert.postReceivedAlert, function(req, res) {});
 
 
 /* All Procedures -------------------------------*/

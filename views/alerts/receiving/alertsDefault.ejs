@@ -60,6 +60,10 @@
 
 
                         //-----forms validation------------------------------------
+                        if ((alertNameID == 14 || alertNameID == 26) && smecsApp == false && email == false && call == false) {
+                            alert("To Request Assistance, you need to choose at least one type of contact.");
+                            return false;
+                        }
 
 
                         //--------------------------------forms validation end-------
@@ -451,15 +455,10 @@
 <label for="err" style="color: red"><%= error_messages %></label><br>
 <% } %>
 <!-- END OFF Alert UTILITY FAILURE -->
-<button class="backButton" id="back" onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
-<input type="button" id="<%= info.id %>" value="Send Alert" ><br><br>
-<form>
-    <button class="receiveButton" id="exit" onclick="location.href='/dashboard'">Exit</button><br><br>
-</form>
+
+
+<button class="receiveButton" id="proc" onclick="location.href='/alerts/receiving/procedureR/<%= info.id %>'">Procedure</button>
+<button class="receiveButton" id="exit" onclick="location.href='/dashboard'">Exit</button><br><br>
+
 </body>
 </html>

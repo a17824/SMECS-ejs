@@ -46,15 +46,17 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
 
                 //save to AlertSentTemp all ROLES and USERS that will receive alert
                 models.AlertSentTemp.findById({'_id': alert._id}, function(error, alertUpdate) {
-                    alertUpdate.sentRoleIDScope = [];
-                    alertUpdate.sentRoleNameScope = [];
-                    console.log('arrayRoleID = ',arrayRoleID);
                     if(error || arrayRoleID == null || arrayRoleName == null){
                         console.log('erro da primeira vez que se escolhe um alerta');
                         req.flash('error_messages',
                             'Please try again and contact the administrator if this message continues to show');
                         res.send({redirect: '/alerts/sending/chooseAlert/'});
                     }else {
+                        /*
+                        alertUpdate.sentRoleIDScope = [];
+                        alertUpdate.sentRoleNameScope = [];
+                        console.log('arrayRoleID = ',arrayRoleID);
+                        */
                         alertUpdate.sentRoleIDScope = arrayRoleID;
                         alertUpdate.sentRoleNameScope = arrayRoleName;
 

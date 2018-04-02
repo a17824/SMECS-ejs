@@ -4,12 +4,11 @@ var async = require("async");
 var floor = require('./saveAlertFunc/3a.savefloorFile.js');
 var create = require('./saveAlertFunc/3c.createAlertSentInfo.js');
 var student = require('./saveAlertFunc/3b.student.js');
-//var saveAlert = require('./4.toDelete.js');
 
 
-module.exports.reviewAlert = function(req, res) {
+module.exports.receivedAlert = function(req, res) {
     async.parallel([
-        function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
+        function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
         function(callback){models.Floors.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
         function(callback){models.RequestAssistance.find().exec(callback);},
@@ -25,23 +24,59 @@ module.exports.reviewAlert = function(req, res) {
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
-            res.render('alerts/sending/reviewAlert', {
-                title: 'Review Alert',
-                userAuthID: req.user.userRoleID,
-                userAuthRoleName: req.user.userRoleName,
-                info: results[0],
-                floor: results[1],
-                utilities: results[2],
-                request: results[3],
-                alerts: results[4], // check if alert is softDeleted for Utilities Failure
-                aclReal: results[5], // to check if user has permission to send Request Assistance Alert
-                aclTest: results[6] // to check if user has permission to send Request Assistance Alert
-            });
+
+
+            if(results[0].alertNameID == 14){
+                //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
+                if(results[0].testModeON){
+                    var typeAclAlert = results[6];
+                }else{
+                    var typeAclAlert = results[5];
+                }
+                var canRequestAssistance = false;
+                for (var i=0; i < typeAclAlert.length; i++) {
+                    for (var t = 0; t < req.user.userRoleID.length; t++) {
+                        if (typeAclAlert[i].checkBoxID == 's' + req.user.userRoleID[t] + 26 && typeAclAlert[i].checkBoxValue == true) {
+                            canRequestAssistance = true;
+                            break;
+                        }
+                    }
+                    if (canRequestAssistance) {
+                        break;
+                    }
+                }
+                //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
+
+                res.render('alerts/receiving/alertsAssistance', {
+                    title: 'Received Alert Assistance',
+                    userAuthID: req.user.userRoleID,
+                    userAuthRoleName: req.user.userRoleName,
+                    info: results[0],
+                    floor: results[1],
+                    utilities: results[2],
+                    request: results[3],
+                    alerts: results[4], // check if alert is softDeleted for Utilities Failure
+                    canRequestAssistance: canRequestAssistance
+                });
+            }else{
+                res.render('alerts/receiving/alertsDefault', {
+                    title: 'Received Alert',
+                    userAuthID: req.user.userRoleID,
+                    userAuthRoleName: req.user.userRoleName,
+                    info: results[0],
+                    floor: results[1],
+                    utilities: results[2],
+                    request: results[3],
+                    alerts: results[4] // check if alert is softDeleted for Utilities Failure
+
+                });
+
+            }
         }
     })
 };
 
-module.exports.postReviewAlert = function(req, res, next) {
+module.exports.postReceivedAlert = function(req, res, next) {
     //console.log(' ALERT 14 REQUEST ASSISTANCE POST ---------------------------------------------------------');
     var alertToUpdate1 = req.body.alertToUpdate;
     async.waterfall([
@@ -82,8 +117,19 @@ module.exports.postReviewAlert = function(req, res, next) {
             });
         },
         function (tempAlert, callback) {
+            create.alertSentInfo(req, res, tempAlert); //create AlertSentInfo
+            callback(null, tempAlert);
+        },
+        function (tempAlert, callback) {
+
             // Alert Request Assistance
-            if (tempAlert.alertNameID == 26 ){
+            if (tempAlert.alertNameID == 14 || tempAlert.alertNameID == 26 ){
+                console.log('req.body.raEmail');
+                console.log(req.body.raEmail);
+                console.log('----------------');
+                console.log('req.body.raCall');
+                console.log(req.body.raCall);
+
                 var alertToUpdate1 = req.body.alertToUpdate;
                 var smecsContacts, emailContact, callContact;
                 if (req.body.raSmecsApp == 'true' || req.body.raEmail == 'true' || req.body.raCall == 'true') {
@@ -99,7 +145,7 @@ module.exports.postReviewAlert = function(req, res, next) {
                         }
                     });
                 }
-
+                models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
                     var stat = alert.status;
                     if (!alert || stat == 'closed') {
                         console.log(err);
@@ -151,13 +197,9 @@ module.exports.postReviewAlert = function(req, res, next) {
                             });
                         }
                     }
-
+                });
 
             }
-            callback(null, tempAlert);
-        },
-        function (tempAlert, callback) {
-            create.alertSentInfo(req, res, tempAlert); //create AlertSentInfo
             callback(null, tempAlert);
         }
 
@@ -170,7 +212,7 @@ module.exports.postReviewAlert = function(req, res, next) {
          *                              *
          * *****************************/
 
-        res.send({redirect: '/alerts/received/receiveAlert/' + tempAlert._id});
+        res.send({redirect: '/dashboard/'});
     });
 };
 
