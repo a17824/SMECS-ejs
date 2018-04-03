@@ -6,6 +6,14 @@
     <script>
 
         $(document).ready(function(){
+            $(".reqAssistance").hide();
+            $(".checkbox").click(function() {
+                if($(this).is(":checked")) {
+                    $(".reqAssistance").show();
+                } else {
+                    $(".reqAssistance").hide();
+                }
+            });
 
             var alert_ID, alertNameID, parties;
             $("#<%= alert.id %>").click(function(){
@@ -107,9 +115,11 @@
 
         <% } else { %> <!-- frist time entering/loading this page -->
                 <input class="checkbox" type="checkbox" name="checkbox" id=<%= utility.utilityID %> value="<%= utility.utilityID %>"><label for="utilityName"><%= utility.utilityName %></label><br>
-        <% } %>
-    <% }); %><br>
 
+    <% } %>
+
+    <% }); %><br>
+    <label class="reqAssistance" for="coupon_field">Your coupon:</label>
 
 
     <input type="button" id="<%= alert.id %>" value="Next" ><br>

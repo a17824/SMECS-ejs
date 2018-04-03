@@ -215,7 +215,8 @@ module.exports.postNotes = function(req, res) {
 
             if (alert.alertNameID == 26 ) {
                 alert.save();
-                res.send({redirect:'/alerts/sending/multiSelection/' + alertToUpdate1});
+                //res.send({redirect:'/alerts/sending/multiSelection/' + alertToUpdate1});
+                res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});
             }else {
                 if (alert.alertNameID == 2 ||
                     alert.alertNameID == 3 ||
@@ -375,7 +376,8 @@ module.exports.postMultiSelection = function(req, res) {
 
             //ALERT Utilities Failures,
 
-            if (alert.alertNameID == 14 ) {
+            if (alert.alertNameID == 14 ||
+                alert.alertNameID == 26 ) {
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
                     alert.requestAssistance = [];
                     utils.forEach(function (util) {
@@ -385,10 +387,8 @@ module.exports.postMultiSelection = function(req, res) {
                             contactName: util.contactName,
                             phone: util.phone,
                             email: util.email,
-                            smecsApp: util.smecsApp,
-                            sentReqSmecsApp: util.sentReqSmecsApp,
-                            sentReqEmail: util.sentReqEmail,
-                            sentReqCall: util.sentReqCall
+                            smecsApp: util.smecsApp
+
                         };
                         alert.requestAssistance.push(req);
 
@@ -405,11 +405,11 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.save();
                 res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
             }
-            //ALERT Request Assistance,
+/*            //ALERT Request Assistance,
             if (alert.alertNameID == 26 ) {
                 res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});
             }
-
+*/
         }
     });
 };

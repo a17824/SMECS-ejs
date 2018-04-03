@@ -203,9 +203,21 @@ var AlertSentInfoSchema = new mongoose.Schema({
         email: String,
         smecsApp: { type: Boolean, default: false },
 
-        sentReqSmecsApp: { type: Boolean, default: false },
-        sentReqEmail: { type: Boolean, default: false },
-        sentReqCall: { type: Boolean, default: false },
+        reqSmecsApp: {
+            sentReqSmecsApp: Boolean,
+            stat: String,
+            sentTime: String
+        },
+        reqEmail: {
+            sentReqEmail: Boolean,
+            stat: String,
+            sentTime: String
+        },
+        reqCall: {
+            sentReqCall: Boolean,
+            stat: String,
+            sentTime: String
+        }
     }]
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
@@ -262,11 +274,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         contactName: String,
         phone: String,
         email: String,
-        smecsApp: { type: Boolean, default: false },
-
-        sentReqSmecsApp: { type: Boolean, default: false },
-        sentReqEmail: { type: Boolean, default: false },
-        sentReqCall: { type: Boolean, default: false },
+        smecsApp: { type: Boolean, default: false }
     }]
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"

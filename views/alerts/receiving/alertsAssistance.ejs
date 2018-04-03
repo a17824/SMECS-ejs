@@ -25,7 +25,7 @@
 
 
         $(document).ready(function(){
-            var alert_ID, alertNameID, alertName, requestAssistance, utilityName, smecsApp, email, call;
+            var alert_ID, alertNameID, alertName, requestAssistance;
             $("#request").click(function() {
                 requestAssistance = $(this).attr('id');
 
@@ -34,20 +34,17 @@
                     alert_ID = $("#alert_ID").val();
                     alertNameID = $("#alertNameID").val();
                     alertName = $("#alertName").val();
-                    utilityName = $(this).attr('name');
-                    smecsApp = $('#' + requestAssistance + '_smecsApp').is(':checked');
-                    email = $('#' + requestAssistance + '_email').is(':checked');
-                    call = $('#' + requestAssistance + '_call').is(':checked');
 
+                    var searchIDsNotChecked = $('input[name="checkboxRequest"]:not(:checked)').map(function () {
+                        return $(this).val();
+                    }).get();
                     var searchIDsChecked = $('input[name="checkboxRequest"]:checked').map(function () {
                         return $(this).val();
                     }).get();
 
-                    console.log('searchIDsChecked');
-                    console.log(searchIDsChecked);
 
                     //-----forms validation------------------------------------
-                    if ((alertNameID == 14 || alertNameID == 26) && smecsApp == false && email == false && call == false) {
+                    if ((alertNameID == 14 || alertNameID == 26) && searchIDsChecked.length < 1) {
                         alert("To Request Assistance, you need to choose at least one type of contact.");
                         return false;
                     }
@@ -55,15 +52,12 @@
 
                     //--------------------------------forms validation end-------
 
-                    $.post('/alerts/sending/requestAssistance', {
+                    $.post('/alerts/received/receivedAlert', {
                         alertToUpdate: alert_ID,
                         alertNameID: alertNameID,
                         alertName: alertName,
-                        utilityID: requestAssistance,
-                        utilityName: utilityName,
-                        raSmecsApp: smecsApp,
-                        raEmail: email,
-                        raCall: call
+                        reqAssChecked: searchIDsChecked,
+                        reqAssNotChecked: searchIDsNotChecked
 
                     }, function (data) {
                         if (data === 'done') {
@@ -131,8 +125,8 @@
 <label for="note"><b>Note:</b></label><br>
 <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
 
-
-
+<% var flagEnableReqAssButton = 0; %>
+flagEnableReqAssButton
 
 <!-- Alert UTILITY FAILURE -->
 <% if (info.alertNameID == 14 ) {%>
@@ -151,11 +145,11 @@
 
 
 
-
+<!-- REQUEST ASSISTANCE -->
 <% if (canRequestAssistance == true) {%>
     <% var flagDisableRequestButton = 0; %> <!-- trigger to disable Request Assistance buttons -->
     <% var arrayLabels = ["smecs app", "send email", "call"]; %>
-    <% var arrayIDs = ["_smecsApp", "_email", "_call"]; %>
+    <% var arrayIDs = ["_|_smecsApp", "_|_email", "_|_call"]; %>
     <% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
 
     <% for (var x=0; x < arrayLabels.length; x++) { %>
@@ -219,11 +213,16 @@
 
 <!-- IF TRUE, check on utilities db ON OFF values-->
 <% if (flagOn == 0 && flagOff == 0) {%> <!-- if flagOn = 0 && flagOff = 0, means radio button needs to be draw from utilities db values-->
+    <% flagEnableReqAssButton = 1;%>
     <div class="onoffswitch" style="display:inline-block;">
     <% if (utility.defaultContact == arrayDefaultContact[x]) {%>
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked>
+        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
+               id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"
+               value="<%= info.multiSelectionIDs[i] + '_|_' + info.multiSelectionNames[i] + arrayIDs[x] %>"  checked>
     <% } else {%>
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>" >
+        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
+               id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"
+               value="<%= info.multiSelectionIDs[i] + '_|_' + info.multiSelectionNames[i] + arrayIDs[x] %>">
     <% } %> <!-- END OF check on db default contact method -->
     <label class="onoffswitch-label"
            for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
@@ -239,8 +238,20 @@
 <!-- End of ON/OFF switch button for "smecs App"-->
 <% }%>
 
-<br>
 
+<!--"no contacts available"-->
+<% utilities.forEach(function(utility) { %>
+<% if (info.multiSelectionNames[i] == utility.utilityName && flagDisableRequestButton == 1) {%>
+
+<% } else {%>
+<% if (info.multiSelectionNames[i] == utility.utilityName) {%>
+<% if (utility.email == "" && utility.phone == "" && utility.smecsApp == false ) {%>
+&emsp;&emsp;&emsp;<label for="disable" style="color: #575757">(no contacts available)</label>
+<% } %>
+<% } %>
+<% } %>
+<% }); %> <!-- end of "no contacts available"-->
+<br><br>
 
         <% } else { %> <!-- END OF IF check if user has rights to request Assistance, else... -->
 
@@ -260,7 +271,14 @@
 <!-- END OFF Alert UTILITY FAILURE -->
 
 <button type="submit" onclick="location.href='/alerts/sending/chooseAlert'">Exit Alert</button>
-<input type="button" id="request" value="Send Request Assistance" ><br><br>
+<% if (canRequestAssistance == true) {%>
+<% console.log('flagEnableReqAssButton = ', flagEnableReqAssButton);%>
+    <% if (flagEnableReqAssButton == 1) {%>
+        <input type="button" id="request" value="Send Request Assistance" ><br><br>
+    <%} else { %>
+        <input type="button" id="request" value="Send Request Assistance" disabled><br><br>
+    <% } %>
+<%}%>
 <button  id="proc" onclick="location.href='/alerts/receiving/procedureR/<%= info.id %>'">Procedure</button>
 </body>
 </html>

@@ -97,8 +97,7 @@ module.exports.showPost = function(req, res) {
             req.body.alertID == 10 ||
             req.body.alertID == 11 ||
             req.body.alertID == 15 ||
-            req.body.alertID == 23 ||
-            req.body.alertID == 26 ) {
+            req.body.alertID == 23 ) {
 
             return res.send({redirect: '/alerts/sending/floor/' + alertTemp1._id})
         }
@@ -120,7 +119,8 @@ module.exports.showPost = function(req, res) {
             return res.send({redirect: '/alerts/sending/student/' + alertTemp1._id})
         }
         if (req.body.alertID == 14 ||
-            req.body.alertID == 18 ) {
+            req.body.alertID == 18 ||
+            req.body.alertID == 26 ) {
 
             return res.send({redirect: '/alerts/sending/multiSelection/' + alertTemp1._id})
         }
