@@ -233,3 +233,13 @@ caption {
 .onoffswitch-checkboxSent:checked + .onoffswitch-labelSent .onoffswitch-switchSent {
     right: 0px;
 }
+
+
+
+
+.showThis {
+    display: none;
+}
+.showThisRefresh {
+    display: block;
+}

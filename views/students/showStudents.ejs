@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script>
+        //Detect if user is using the back/foreward button, then reload whole page
+        if (!!window.performance && window.performance.navigation.type === 2) {
+            // value 2 means "The page was accessed by navigating into the history"
+            console.log('Reloading');
+            window.location.reload(); // reload whole page
+        }
+        //end of Detect if user is using the back/foreward button, then reload whole page
+
+        // reload whole page if page is cached
+        window.onpageshow = function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+        // end of Reload whole page if page is cached
+    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">

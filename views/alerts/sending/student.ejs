@@ -122,13 +122,11 @@
     <input id="dataList" list="students" name="student" value="<%= alert.studentName %>" onkeydown = "return (event.keyCode!=13);" >
     <datalist id="students">
         <% student.forEach(function(student) { %>
-        <option data-value="<%= student.photo %>" value="<%= student.firstName %> <%= student.lastName %>" ></option>
+        <option data-value="<%= student.photo %>" value="<%= student.firstName %> <%= student.lastName %>"></option>
         <% }); %>
     </datalist><br><br>
-
-
     <% if (alert.studentPhoto) { %>
-    <img id="studentImage" src="/photosStudents/<%= alert.studentPhoto %>"><br><br>
+    <img id="studentImage" src="/photosStudents/<%= alert._id %><%= alert.studentPhoto %>"><br><br>
     <%  } else { %>
     <img id="studentImage" src="/photosNotAvailable/photoNotAvailable.BMP"><br><br>
     <% } %>

@@ -63,11 +63,6 @@ module.exports.showPost = function(req, res) {
                     if (req.body.alertID == 22){placeholderNote = 'ex: .';}
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
 
-
-                    console.log('req.body.testModeON = ',req.body.testModeON);
-                    console.log('alert');
-                    console.log(alert);
-
                     var alertTemp1 = new models.AlertSentTemp({
                         alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
                         alertGroupName: req.body.alertGroupName,

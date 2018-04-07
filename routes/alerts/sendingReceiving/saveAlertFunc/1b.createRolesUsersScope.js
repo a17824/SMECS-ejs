@@ -77,8 +77,6 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
                                 console.log('something went wrong');
                             } else {
                                 console.log('the tempAlert has been saved');
-                                console.log('alertUpdate.sentRoleIDScope = ',alertUpdate.sentRoleIDScope);
-                                console.log('alertUpdate.sentRoleNameScope = ',alertUpdate.sentRoleNameScope);
                                 //console.log('alertUpdate.sentUsersScope = ',alertUpdate.sentUsersScope);
                             }
                         });

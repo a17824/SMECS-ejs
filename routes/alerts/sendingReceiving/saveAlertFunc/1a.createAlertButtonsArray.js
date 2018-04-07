@@ -18,14 +18,9 @@ module.exports.getRealTestAlerts = function(req, callback) {
         }
     ], function (err, result) {
         //Sort array by alertID
-        var sortArray = result[0];
-        sortArray.sort(function(a,b) {
-            if (a.alertID < b.alertID)
-                return -1;
-            if (a.alertID > b.alertID)
-                return 1;
-            return 0;
-        });
+        sortArrays(result[0]);
+        sortArrays(result[1]);
+
         //end of Sort array by alertID
         callback(result); // this 'callback' is sending 'result' to 1.chooseAlert.js
     });
@@ -67,4 +62,15 @@ function getArrays(req, typeAclAlert, callback) {
             });
             callback(arrayAlert);
         });
+}
+
+function sortArrays(result) {
+    var sortArray = result;
+    sortArray.sort(function(a,b) {
+        if (a.alertID < b.alertID)
+            return -1;
+        if (a.alertID > b.alertID)
+            return 1;
+        return 0;
+    });
 }

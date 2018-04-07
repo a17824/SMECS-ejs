@@ -95,10 +95,15 @@
     <input type="hidden" id="x" size="40" value="<%= info.sniperCoordinateX %>">
     <input type="hidden" id="y" size="40" value="<%= info.sniperCoordinateY %>">
     <form>
-        <% if (info.floorPhoto !== '' && info.floorName !== '' && info.floorName !== 'Multiple floors' && info.floorName !== 'user skipped floor') {%>
-            <div id="div1" class="div1">
+        <% if (info.floorPhoto !== 'FloorPhotoNotExist' &&
+                info.floorPhoto !== '' &&
+                info.floorPhoto !== 'Multiple floors' &&
+                info.floorPhoto !== 'Multiple Locations' &&
+                info.floorPhoto !== 'user skipped floor' &&
+                info.floorPhoto !== 'Outside Building') {%>
+        <div id="div1" class="div1">
             <img src="/floorPlans/<%= info.floorPhoto %>">
-            </div>
+        </div>
         <% } %>
         <div id="div2" class="div2" >
             <img src="/floorPlans/red_sniper.png" >
@@ -106,13 +111,39 @@
 
 </form>
 <% } %>
+<br>
 
+<% if (info.request911Call == true ) {%>
+<% for (var i=0; i < info.whoCanCall911.length; i++) { %>
+<% if (info.whoCanCall911[i] == userAuthRoleName ) {%>
+<label style="color: red">This Alert request a 911 call</label>
+<button class="callButton">Call 911</button><br>
+<% } %>
+<% } %>
+<% } %>
 
+<% if (info.alertNameID !== 26 ) {%>
+<label for="senTo"><b>Alert sent to: </b></label>
+<input type="text" id="senTo" size="1" value="30" readonly ><br>
+
+<label for="read"><b>People view/read alert: </b></label>
+<input type="text" id="read" size="1" value="20" readonly ><br>
+<% } %>
+
+<% if (info.request911Call == true ) {%>
+<% for (var i=0; i < info.whoCanCall911.length; i++) { %>
+<% if (info.whoCanCall911[i] == userAuthRoleName ) {%>
+<label for="read"><b>People that called 911: </b></label>
+<input type="text" id="read" size="1" value="5" readonly ><br>
+<% } %>
+<% } %>
+<% } %>
 <br>
 
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 14 ) {%>
+<% if (info.alertNameID == 14 ||
+        info.alertNameID == 18 ) {%>
 
     <% if (info.floorName) {%>
         <label for="floor"><b>Floor:</b></label>
@@ -120,16 +151,20 @@
     <% } %>
 <% } %>
 
-
+<!-- Alert Medical Emergencies -->
+<% if (info.alertNameID == 18 ) {%>
+<label for="situation"><b>Number of injured parties:</b></label>
+<input type="text" id="parties"  size="1" value="<%= info.medicalInjuredParties %>" readonly ><br><br>
+<% } %>
 
 <label for="note"><b>Note:</b></label><br>
 <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
 
 <% var flagEnableReqAssButton = 0; %>
-flagEnableReqAssButton
 
-<!-- Alert UTILITY FAILURE -->
-<% if (info.alertNameID == 14 ) {%>
+<!-- Alert MultiSelection -->
+<% if (info.alertNameID == 14 ||
+        info.alertNameID == 18 ) {%>
     <label for="situation"><b>Situation:</b></label><br>
 
     <!-- checkBox of utility failure -->
@@ -139,26 +174,34 @@ flagEnableReqAssButton
         <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
 
         <!-- Alerts.forEach to check if alert is softDeleted (or if school owns license)-->
+<% var flagOnOffButtons = 0; %>
         <% alerts.forEach(function(alert) { %>
-        <% if (alert.alertID == 14 && alert.softDeleted == false) {%>
-        <!-- end -->
+<% if (flagOnOffButtons == 0) {%>
+            <% if ((alert.alertID == 14 || alert.alertID == 18) && alert.softDeleted == false) {%>
+
+            <% } %>       <!-- end -->
 
 
 
 <!-- REQUEST ASSISTANCE -->
+<% if (info.alertNameID == 14) {%>
 <% if (canRequestAssistance == true) {%>
+
     <% var flagDisableRequestButton = 0; %> <!-- trigger to disable Request Assistance buttons -->
     <% var arrayLabels = ["smecs app", "send email", "call"]; %>
     <% var arrayIDs = ["_|_smecsApp", "_|_email", "_|_call"]; %>
     <% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
 
     <% for (var x=0; x < arrayLabels.length; x++) { %>
+
     <!-- ON/OFF switch button for "smecs App"-->
         <% utilities.forEach(function(utility) { %>
 
             <% var arrayUtilitiesContact = [utility.smecsApp, utility.email, utility.phone]; %>
                 <% if (info.multiSelectionNames[i] == utility.utilityName &&
                     (arrayUtilitiesContact[x] !== false && arrayUtilitiesContact[x] !== "" )) {%>
+
+
 
                     <% if (arrayLabels[x] !== "call") {%>
                     &emsp;&emsp;&emsp;
@@ -168,7 +211,8 @@ flagEnableReqAssButton
                         &emsp;&emsp;&emsp;
                         <label for="utilityName"><%= arrayLabels[x] %></label> <!-- contact label call -->
                         &emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <% }%>
+                    <% } %>
+
 
                 <% var flagOn = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
                 <% var flagOff = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
@@ -184,7 +228,7 @@ flagEnableReqAssButton
                             request.requestAssistanceEmail == true ||
                             request.requestAssistanceCall == true)) {%>
 
-                            <% if (arrayRequestAssistanceType[x] == true) {%>
+                            <% if (arrayRequestAssistanceType[x] == true ) {%>
                                 <div class="onoffswitchSent" style="display:inline-block;">
                                     <input type="checkbox" class="onoffswitch-checkboxSent"
                                         id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked disabled>
@@ -232,6 +276,7 @@ flagEnableReqAssButton
 <% } %>
 <br>
 <% } %>
+
 <% }); %>
 <!-- end of IF TRUE, check on utilities db ON OFF values-->
 
@@ -260,6 +305,8 @@ flagEnableReqAssButton
 
 
         <% } %> <!-- END OF IF to check if alert is softDeleted (or if school owns license)-->
+<% flagOnOffButtons = 1; %>
+<% } %>
         <% }); %> <!-- END OF Alerts.forEach to check if alert is softDeleted (or if school owns license)-->
     <% } %> <!-- End of checkBox of utility failure -->
 
@@ -272,7 +319,6 @@ flagEnableReqAssButton
 
 <button type="submit" onclick="location.href='/alerts/sending/chooseAlert'">Exit Alert</button>
 <% if (canRequestAssistance == true) {%>
-<% console.log('flagEnableReqAssButton = ', flagEnableReqAssButton);%>
     <% if (flagEnableReqAssButton == 1) {%>
         <input type="button" id="request" value="Send Request Assistance" ><br><br>
     <%} else { %>

@@ -150,13 +150,9 @@
     <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
 
 
-    <% if (alert.alertNameID == 5 ||
-            alert.alertNameID == 19 ||
-            alert.alertNameID == 26 ) {%>
+
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
-    <% } else { %>
-    <input type="button" id="<%= alert.id %>" value="Send" ><br>
-    <% }%>
+
 </form>
 
 <% if (alert.alertNameID == 3 ||

@@ -1,7 +1,7 @@
 //Dependencies
 var models = require('./../../models');
 var async = require("async");
-
+var moment = require('moment');
 
 //          FLOOR           \\
 module.exports.showFloor = function(req, res) {
@@ -393,6 +393,15 @@ module.exports.postMultiSelection = function(req, res) {
                         alert.requestAssistance.push(req);
 
                     });
+                    if (alert.alertNameID == 26 ) {
+                        var boolTrue = true;
+                        var boolFalse = false;
+                        var reqAssOn = req.body.reqAssChecked;
+                        var reqAssOff = req.body.reqAssNotChecked;
+                        saveRequestAssistance(alert, reqAssOn, boolTrue);
+                        saveRequestAssistance(alert, reqAssOff, boolFalse);
+                    }
+
                     alert.save();
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
@@ -478,4 +487,59 @@ module.exports.postRequestAssistance = function(req, res, next) {
     });
 };
 
+//this is to put in a new js file
+function saveRequestAssistance(alert, reqAss, boolTrueFalse) {
+    var arr;
+    var arrOn = [];
+    var wrapped = moment(new Date());
 
+    if(typeof reqAss !== 'undefined' && reqAss){
+        reqAss.forEach(function (utility) {
+            arr = utility.split("_|_").map(function (val) {
+                return val
+            });
+            arrOn.push(arr);
+        });
+        arrOn.forEach(function (util) {
+            for (var x = 0; x < alert.requestAssistance.length; x++) {
+                if (util[1] == alert.requestAssistance[x].utilityName) {
+                    if (util[2] == 'smecsApp') {
+                        alert.requestAssistance[x].reqSmecsApp.sentReqSmecsApp = boolTrueFalse;
+                        if (boolTrueFalse) {
+                            alert.requestAssistance[x].reqSmecsApp.stat = 'open';
+                            alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
+                            /*************************
+                             * NOTIFICATION API HERE *
+                             *************************/
+                        }
+                    }
+                    if (util[2] == 'email') {
+                        alert.requestAssistance[x].reqEmail.sentReqEmail = boolTrueFalse;
+                        if (boolTrueFalse) {
+                            alert.requestAssistance[x].reqEmail.stat = 'open';
+                            alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
+                            /*******************
+                             * EMAIL  API HERE *
+                             *******************/
+                        }
+                    }
+                    if (util[2] == 'call') {
+                        alert.requestAssistance[x].reqCall.sentReqCall = boolTrueFalse;
+                        if (boolTrueFalse) {
+                            alert.requestAssistance[x].reqCall.stat = 'open';
+                            alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
+                            /******************
+                             * CALL  API HERE *
+                             ******************/
+                        }
+                    }
+                    alert.save();
+                    break
+                }
+
+            }
+
+
+        });
+    }
+}

@@ -442,17 +442,17 @@ module.exports.addUpdatePhotoPost = function (req, res){
                 models.Students.findById({'_id': field}, function(err, student){
                     var oldPhoto = student.photo;
                     var newStudent = "";
-                    if ((file_name != oldPhoto) && (oldPhoto != newStudent )) { //delete old photo if exists
+                    if ((student.id + '_' + file_name != oldPhoto) && (oldPhoto != newStudent )) { //delete old photo if exists
                         fs.unlinkSync(new_location + oldPhoto);
                         console.log('successfully deleted ' + oldPhoto);
                     }
                     //if old photo doesn't exits or has been deleted, save new file
-                    fs.copy(temp_path, new_location + file_name, function (err) { // save file
+                    fs.copy(temp_path, new_location + student.id + '_' + file_name, function (err) { // save file
                         if (err) {
                             console.error(err);
                         } else {
-                            student.photo = file_name; //save uploaded file name to user.photo
-                            student.save()
+                            student.photo = student.id + '_' + file_name; //save uploaded file name to user.photo
+                            student.save();
                             console.log("success! saved " + file_name);
                         }
                         fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
@@ -534,13 +534,44 @@ module.exports.addMultiplePhotosPost = function (req, res){
                 var file_name_no_ext = file_name.replace(/\.[^/.]+$/, ""); // removes extension
 
                 if (this.openedFiles[0].name) {// if a file is selected do this
-
-                    fs.copySync(temp_path, new_location + file_name); // save file
-                    fs.unlinkSync(temp_path, function (err) { //delete file from temp folder (unlink) -------
+                    var flag = 0;
+                    for(var x = 0; x < result.length; x++) {
                         if (err) {
-                            //return res.send(500, 'Something went wrong');
+                            console.log(err)
                         }
-                    });//------------------------------#end - unlink
+                        if (!result) {
+                            console.log("No Student found");
+                        }
+                        console.log("result[x].studentID = ",result[x].studentID);
+                        console.log("file_name_no_ext = ",file_name_no_ext);
+                        if ( result[x].studentID == file_name_no_ext ) {
+
+                            result[x].photo = result[x].id + '_' + file_name; //save uploaded file name to user.photo
+                            result[x].save();
+                            console.log("success! saved " + file_name);
+
+                            fs.copySync(temp_path, new_location + result[x].id + '_' + file_name); // save file
+                            console.log("00000 " + file_name);
+
+                            break;
+                        }
+                        else {
+
+
+                        }
+
+
+                    }
+                    if ( flag == 0 ) {
+                        console.log("11111111 " + file_name);
+                        fs.unlinkSync(temp_path, function (err) { //delete file from temp folder (unlink) -------
+                            if (err) {
+                                console.log('Something went wrong deleting file from temp folder ');
+                            }
+                        });//------------------------------#end - unlink
+                        flag = 1;
+                    }
+
                 }else { // if no file is selected delete temp file
                     console.log('no files added');
                     //delete file from temp folder-------
@@ -551,21 +582,7 @@ module.exports.addMultiplePhotosPost = function (req, res){
                     });
                     //------------------#end - unlink
                 }
-                for(var x = 0; x < result.length; x++) {
-                    if (err) {
-                        console.log(err)
-                    }
-                    if (!result) {
-                        console.log("No Student found");
-                    }
-                    if ( result[x].studentID == file_name_no_ext ) {
-                        console.log('file_name = ' + file_name);
-                        console.log('result[x].studentID = ' + result[x].studentID);
-                        result[x].photo = file_name; //save uploaded file name to user.photo
-                        result[x].save();
-                        console.log("success! saved " + file_name);
-                    }
-                }
+
             }
         });
         res.redirect('/students/showStudents');
