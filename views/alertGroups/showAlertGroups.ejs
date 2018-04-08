@@ -47,6 +47,7 @@
         <% if (userAuthID == 1) {%>
         <th>Alert Group ID</th>
         <% } %>
+        <th>Alert Group Color</th>
         <th>Update</th>
         <th>Delete</th>
 
@@ -58,6 +59,12 @@
         <td><%= alertGroup.alertTypeName %></td>
         <% if (userAuthID == 1) {%>
         <td><%= alertGroup.alertTypeID %></td>
+        <% } %>
+        <% if (alertGroup.alertTypeID == 1) {%>
+        <td>N/A</td>
+        <% } else { %>
+        <td><%= alertGroup.colorName %></td>
+
         <% } %>
         <td>
             <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>

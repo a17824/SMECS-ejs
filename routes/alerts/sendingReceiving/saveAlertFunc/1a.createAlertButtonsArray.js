@@ -56,7 +56,8 @@ function getArrays(req, typeAclAlert, callback) {
                         'groupID': alert[i].alertTypeID,
                         'alertID': alert[i].alertID,
                         'alertName': alert[i].alertName,
-                        'alertColor': alert[i].alertTypeName
+                        'alertColor': alert[i].alertTypeName,
+                        'alertColorValue': alert[i].alertTypeValue
                     });
                 }
             });

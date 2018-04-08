@@ -130,7 +130,9 @@ module.exports.Permissions = mongoose.model("Permissions", PermissionsSchema);
 var AlertsGroupSchema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     alertTypeID: { type: Number, unique: true },
-    alertTypeName: { type: String, unique: true } // Users, Alerts, Students
+    alertTypeName: { type: String, unique: true }, // Users, Alerts, Students
+    colorName: String,
+    colorValue: String
 }, {collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
 var AlertsGroup;
 module.exports.AlertsGroup = mongoose.model("AlertsGroup", AlertsGroupSchema);
@@ -140,6 +142,8 @@ var AlertsSchema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     alertTypeID: Number,
     alertTypeName: String,
+    alertTypeColorName: String,
+    alertTypeColorValue: String,
     alertID: { type: Number, unique: true },
     alertName: { type: String, unique: true }, // Lockdown, Evacuate...
     alertSlugName: String,
@@ -374,6 +378,7 @@ var AclAlertsRealSchema = new mongoose.Schema({
     roleGroupName: String, // Principal, Office Staff, Teacher
     alertTypeID: Number,
     alertTypeName: String, // Red, Green, Blue...
+    alertTypeValue: String,
     alertID: Number,
     alertName: String, // Permission to Send/Receive alerts
     alertSoftDeleted: { type: Boolean, default: false},
@@ -392,6 +397,7 @@ var AclAlertsTestSchema = new mongoose.Schema({
     roleGroupName: String, // Principal, Office Staff, Teacher
     alertTypeID: Number,
     alertTypeName: String, // Red, Green, Blue...
+    alertTypeValue: String,
     alertID: Number,
     alertName: String, // Permission to Send/Receive alerts
     alertSoftDeleted: { type: Boolean, default: false},

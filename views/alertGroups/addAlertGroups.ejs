@@ -2,9 +2,90 @@
 <head>
     <title>add Alert Group</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/alertGroup.css' />
+
+
     <script>
+        var color;
+        var colorName;
+        var colorValue;
+        function GetSelectedItem(el)
+        {
+            var e = document.getElementById(el);
+            color = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
+            colorName = e.options[e.selectedIndex].text;
+            colorValue = e.options[e.selectedIndex].value;
+        }
+
         $(document).ready(function(){
+            //dropdown rectangle color
+            $(function() {
+                $.widget("custom.selectmenu", $.ui.selectmenu, {
+                    _renderItem: function(ul, item) {
+
+                        console.log(item);
+                        var li = $("<li>"),
+                            wrapper = $("<div>");
+
+                        if (item.disabled) {
+                            li.addClass("ui-state-disabled");
+                        }
+
+                        $("<span>", {
+                            style: "background-color: #" + item.value,
+                            "class": "ui-color-chip"
+                        })
+                            .appendTo(wrapper);
+                        wrapper.append(item.label);
+
+                        return li.append(wrapper).appendTo(ul);
+                    }
+                });
+
+                $("#DropDownID")
+                    .selectmenu()
+                    .selectmenu("menuWidget")
+                    .addClass("ui-menu-icons customicons");
+
+                var Color = {
+                    Data: [
+                        {
+                            RgbValue: 'ff0000',
+                            ColorName: 'Red'
+                        }, {
+                            RgbValue: '008000',
+                            ColorName: 'Green'
+                        },
+                        {
+                            RgbValue: '0000FF',
+                            ColorName: 'Blue'
+                        },
+                        {
+                            RgbValue: 'FFFF00',
+                            ColorName: 'Yellow'
+                        },
+                        {
+                            RgbValue: '000000',
+                            ColorName: 'Black'
+                        },
+                        {
+                            RgbValue: 'FFFFFF',
+                            ColorName: 'White'
+                        },
+                        {
+                            RgbValue: 'FF00FF',
+                            ColorName: 'Magenta'
+                        }
+                    ]
+                };
+
+                for (var i = 0; i < Color.Data.length; i++) {
+                    $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName)		);
+                }
+            });
+            //end off dropdown rectangle color
+
+
             var oldSortID = $("#oldSortID").val();
             var select_sort = '';
             var sortArray = $("#inUseSortID").val().split(",").map(Number);
@@ -34,9 +115,13 @@
                 alertGroupName=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
 
+
+                console.log('colorName = ',colorName);
+                console.log('colorValue = ',colorValue);
+
                 //-----forms validation------------------------------------
                 if (alertGroupName == "" ) {
-                    alert("Alert Group NAME must be filled out");
+                    alert("Alert Group Name must be filled out");
                     return false;
                 }
                 var numbers = /[0-99]|\./;
@@ -44,12 +129,19 @@
                     alert("Alert Group ID must be between 0 and 99 ");
                     return false;
                 }
+                if (!colorValue) {
+                    alert("Please choose Alert Group Color");
+                    return false;
+                }
                 //--------------------------------forms validation end-------
 
                 $.post("http://localhost:3000/alertGroups/addAlertGroups",{
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
-                    sortID: sortID
+                    sortID: sortID,
+                    colorName: colorName,
+                    colorValue: colorValue
+
                 },function(data){
                     if(data==='done')
                     {
@@ -78,6 +170,14 @@
 
     <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
 
+
+    <label for="alertGroupName"><b>Alert Group Color:</b></label><br>
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <select name="DropDownID" id="DropDownID" >
+        <option value="" selected disabled hidden>choose color</option>
+    </select><br><br>
+
     <label for="sortID"><b>Sort ID:</b></label><br>
     <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
     <select id='sort_select'></select><br><br>
@@ -91,7 +191,7 @@
 
 
     <% if (aclAddAlertGroup == null || aclAddAlertGroup.checkBoxValue == true) {%>
-    <input type="button" id="btSubmit" value="Submit" ><br>
+    <input type="button" id="btSubmit" value="Submit" onClick="GetSelectedItem('DropDownID');"><br>
     <% } else { %>
     <input type="button" id="btSubmit" value="Submit" disabled><br>
     <% } %>

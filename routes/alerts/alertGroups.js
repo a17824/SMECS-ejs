@@ -84,7 +84,10 @@ module.exports.addPost = function(req, res) {
     var alertGroup1 = new models.AlertsGroup({
         alertTypeID: req.body.alertGroupID,
         alertTypeName: req.body.alertGroupName,
-        sortID: req.body.sortID
+        sortID: req.body.sortID,
+        colorName: req.body.colorName,
+        colorValue: req.body.colorValue
+
     });
     alertGroup1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
@@ -111,7 +114,7 @@ module.exports.update = function(req, res) {
         var arraySort = [];
         var array = [];
 
-        var streamSort = models.AlertsGroup.find().sort({"sortID":1}).stream();
+        var streamSort = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -121,7 +124,7 @@ module.exports.update = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.AlertsGroup.find().sort({"sortID":1}).stream();
+        var stream = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.alertTypeID);
         }).on('error', function (err) {
@@ -146,6 +149,9 @@ module.exports.updatePost = function(req, res) {
         alertGroup.alertTypeID = req.body.alertGroupID;
         alertGroup.alertTypeName = req.body.alertGroupName;
         alertGroup.sortID = req.body.sortID;
+        alertGroup.colorName = req.body.colorName;
+        alertGroup.colorValue = req.body.colorValue;
+
         alertGroup.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 console.log(err);
@@ -159,6 +165,8 @@ module.exports.updatePost = function(req, res) {
                         if (group.alertTypeID == alertToUpdate1){
                             group.alertTypeID = req.body.alertGroupID;
                             group.alertTypeName = req.body.alertGroupName;
+                            group.alertTypeColorName = req.body.colorName;
+                            group.alertTypeColorValue = req.body.colorValue;
                             group.save(function (err) {
                                 if (err && (err.code === 11000 || err.code === 11001)) {
                                     console.log(err);
@@ -179,11 +187,13 @@ module.exports.updatePost = function(req, res) {
                                             if (aclGroup.checkBoxID == 's'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID ){
                                                 aclGroup.alertTypeID = group.alertTypeID;
                                                 aclGroup.alertTypeName = req.body.alertGroupName;
+                                                aclGroup.alertTypeValue = req.body.colorValue;
                                                 aclGroup.save();
                                             }
                                             if (aclGroup.checkBoxID == 'r'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID){
                                                 aclGroup.alertTypeID = group.alertTypeID;
                                                 aclGroup.alertTypeName = req.body.alertGroupName;
+                                                aclGroup.alertTypeValue = req.body.colorValue;
                                                 aclGroup.save();
                                             }
                                         });

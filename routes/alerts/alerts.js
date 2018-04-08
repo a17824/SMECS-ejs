@@ -119,63 +119,78 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.createPost = function(req, res) {
-    var alert1 = new models.Alerts({
-        alertTypeID: req.body.alertGroupID,
-        alertRequest911Call: req.body.request911Call,
-        whoCanCall911: req.body.whoCanCall911,
-        alertTypeName: req.body.alertGroupName,
-        alertID: req.body.alertID,
-        alertName: req.body.alertName,
-        alertSlugName: slug(req.body.alertName),
-        alertProcedure: req.body.alertProcedure,
-        sortID: req.body.sortID
-    });
-    alert1.save(function (err) {
-        if (err && (err.code === 11000 || err.code === 11001)) {
-            return res.status(409).send('showAlert')
-        }else{
-            var typeAclAlert = 'AclAlertsReal';
-            addAclAlerts(req, res, typeAclAlert);
+console.log('req.body.alertGroupID = ',req.body.alertGroupID);
+    models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
+        console.log('alertGroup = ',alertGroup);
+        console.log('alertGroup.colorName = ',alertGroup[0].colorName);
 
-            typeAclAlert = 'AclAlertsTest';
-            addAclAlerts(req, res, typeAclAlert);
+        var alert1 = new models.Alerts({
+            alertTypeID: req.body.alertGroupID,
+            alertTypeName: req.body.alertGroupName,
+            alertTypeColorName: alertGroup[0].colorName,
+            alertTypeColorValue: alertGroup[0].colorValue,
+            alertRequest911Call: req.body.request911Call,
+            whoCanCall911: req.body.whoCanCall911,
+            alertID: req.body.alertID,
+            alertName: req.body.alertName,
+            alertSlugName: slug(req.body.alertName),
+            alertProcedure: req.body.alertProcedure,
+            sortID: req.body.sortID
+        });
+        alert1.save(function (err) {
+            if (err && (err.code === 11000 || err.code === 11001)) {
+                return res.status(409).send('showAlert')
+            }else{
+                var typeAclAlert = 'AclAlertsReal';
+                addAclAlerts(req, res, typeAclAlert);
 
-            return res.send({redirect:'/alerts/showAlerts'})
-        }
-        //-------- adding ACL ALERTS
-        function addAclAlerts(req, res, typeAclAlert){
-            models.Roles2.find({}, function(err, groups) {
-                for (var u=0; u < groups.length;u++){
-                    var aclAlertSend = new models[typeAclAlert]({
-                        roleGroupID: groups[u].roleID,
-                        roleGroupName: groups[u].roleName,
-                        alertTypeID: req.body.alertGroupID,
-                        alertTypeName: req.body.alertGroupName,
-                        alertID: req.body.alertID,
-                        alertName: req.body.alertName,
-                        checkBoxType: 'send',
-                        checkBoxID: 's'+groups[u].roleID+req.body.alertID,
-                        checkBoxName: 's'+groups[u].roleName+req.body.alertName
-                    });
-                    aclAlertSend.save();
-                    var aclAlertReceive = new models[typeAclAlert]({
-                        roleGroupID: groups[u].roleID,
-                        roleGroupName: groups[u].roleName,
-                        alertTypeID: req.body.alertGroupID,
-                        alertTypeName: req.body.alertGroupName,
-                        alertID: req.body.alertID,
-                        alertName: req.body.alertName,
-                        checkBoxType: 'receive',
-                        checkBoxID: 'r'+groups[u].roleID+req.body.alertID,
-                        checkBoxName: 'r'+groups[u].roleName+req.body.alertName
-                    });
-                    aclAlertReceive.save();
-                }
-                console.log('******************* END FUNCTION ADD ACL ALERTS = ' + typeAclAlert);
-            });
-        }
-        //--------end adding ACL ALERTS
+                typeAclAlert = 'AclAlertsTest';
+                addAclAlerts(req, res, typeAclAlert);
+
+                return res.send({redirect:'/alerts/showAlerts'})
+            }
+            //-------- adding ACL ALERTS
+            function addAclAlerts(req, res, typeAclAlert){
+                models.Roles2.find({}, function(err, groups) {
+                    for (var u=0; u < groups.length;u++){
+                        var aclAlertSend = new models[typeAclAlert]({
+                            roleGroupID: groups[u].roleID,
+                            roleGroupName: groups[u].roleName,
+                            alertTypeID: req.body.alertGroupID,
+                            alertTypeName: req.body.alertGroupName,
+                            alertTypeValue: alertGroup[0].colorValue,
+                            alertID: req.body.alertID,
+                            alertName: req.body.alertName,
+                            checkBoxType: 'send',
+                            checkBoxID: 's'+groups[u].roleID+req.body.alertID,
+                            checkBoxName: 's'+groups[u].roleName+req.body.alertName
+                        });
+                        aclAlertSend.save();
+                        var aclAlertReceive = new models[typeAclAlert]({
+                            roleGroupID: groups[u].roleID,
+                            roleGroupName: groups[u].roleName,
+                            alertTypeID: req.body.alertGroupID,
+                            alertTypeName: req.body.alertGroupName,
+                            alertTypeValue: alertGroup[0].colorValue,
+                            alertID: req.body.alertID,
+                            alertName: req.body.alertName,
+                            checkBoxType: 'receive',
+                            checkBoxID: 'r'+groups[u].roleID+req.body.alertID,
+                            checkBoxName: 'r'+groups[u].roleName+req.body.alertName
+                        });
+                        aclAlertReceive.save();
+                    }
+                    console.log('******************* END FUNCTION ADD ACL ALERTS = ' + typeAclAlert);
+                });
+            }
+            //--------end adding ACL ALERTS
+        });
+
+
     });
+
+
+
 };
 /*-------------------------end of adding Alerts*/
 
@@ -231,58 +246,66 @@ module.exports.update = function(req, res) {
 module.exports.updatePost = function(req, res) {
     var alertToUpdate1 = req.body.alertToUpdate;
     models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
-        alert.alertTypeID = req.body.alertGroupID;
-        alert.alertRequest911Call = req.body.request911Call;
-        alert.whoCanCall911 = req.body.whoCanCall911;
-        alert.alertTypeName = req.body.alertGroupName;
-        alert.alertName = req.body.alertName;
-        //alert.alertSlugName = slug(req.body.alertName);
-        alert.alertID = req.body.alertID;
-        alert.sortID = req.body.sortID;
-        alert.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }else {
+        models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
+            alert.alertTypeID = req.body.alertGroupID;
+            alert.alertTypeName = req.body.alertGroupName;
+            alert.alertTypeColorName = alertGroup[0].colorName;
+            alert.alertTypeColorValue = alertGroup[0].colorValue;
+            alert.alertRequest911Call = req.body.request911Call;
+            alert.whoCanCall911 = req.body.whoCanCall911;
+            alert.alertName = req.body.alertName;
+            alert.alertID = req.body.alertID;
+            alert.sortID = req.body.sortID;
+            alert.save(function (err) {
+                if (err && (err.code === 11000 || err.code === 11001)) {
+                    console.log(err);
+                    return res.status(409).send('showAlert')
+                }else {
 
-                var typeAclAlert = 'AclAlertsReal';
-                updateAclAlerts(typeAclAlert);
+                    var typeAclAlert = 'AclAlertsReal';
+                    updateAclAlerts(typeAclAlert);
 
-                typeAclAlert = 'AclAlertsTest';
-                updateAclAlerts(typeAclAlert);
+                    typeAclAlert = 'AclAlertsTest';
+                    updateAclAlerts(typeAclAlert);
 
-                res.send({redirect: '/alerts/showAlerts'});
-            }
-            //UPDATE ACL ALERTS--------
-            function updateAclAlerts(typeAclAlert){
-                models[typeAclAlert].find({}, function(err, groups) {
-                    if( err || !groups) console.log("No Alerts groups found");
-                    else groups.forEach( function(group) {
-                        if (group.checkBoxID == 's'+group.roleGroupID+req.body.oldAlertID){
-                            group.alertTypeID = req.body.alertGroupID;
-                            group.alertTypeName = req.body.alertGroupName;
-                            group.alertID = req.body.alertID;
-                            group.alertName = req.body.alertName;
-                            group.checkBoxType = 'send';
-                            group.checkBoxID = 's'+group.roleGroupID+req.body.alertID;
-                            group.checkBoxName = 's'+group.roleGroupName+req.body.alertName;
-                            group.save();
-                        }
-                        if (group.checkBoxID == 'r'+group.roleGroupID+req.body.oldAlertID){
-                            group.alertTypeID = req.body.alertGroupID;
-                            group.alertTypeName = req.body.alertGroupName;
-                            group.alertID = req.body.alertID;
-                            group.alertName = req.body.alertName;
-                            group.checkBoxType = 'receive';
-                            group.checkBoxID = 'r'+group.roleGroupID+req.body.alertID;
-                            group.checkBoxName = 'r'+group.roleGroupName+req.body.alertName;
-                            group.save();
-                        }
+                    res.send({redirect: '/alerts/showAlerts'});
+                }
+                //UPDATE ACL ALERTS--------
+                function updateAclAlerts(typeAclAlert){
+                    models[typeAclAlert].find({}, function(err, groups) {
+                        if( err || !groups) console.log("No Alerts groups found");
+                        else groups.forEach( function(group) {
+                            if (group.checkBoxID == 's'+group.roleGroupID+req.body.oldAlertID){
+                                group.alertTypeID = req.body.alertGroupID;
+                                group.alertTypeName = req.body.alertGroupName;
+                                group.alertTypeValue = alertGroup[0].colorValue;
+                                group.alertID = req.body.alertID;
+                                group.alertName = req.body.alertName;
+                                group.checkBoxType = 'send';
+                                group.checkBoxID = 's'+group.roleGroupID+req.body.alertID;
+                                group.checkBoxName = 's'+group.roleGroupName+req.body.alertName;
+                                group.save();
+                            }
+                            if (group.checkBoxID == 'r'+group.roleGroupID+req.body.oldAlertID){
+                                group.alertTypeID = req.body.alertGroupID;
+                                group.alertTypeName = req.body.alertGroupName;
+                                group.alertTypeValue = alertGroup[0].colorValue;
+                                group.alertID = req.body.alertID;
+                                group.alertName = req.body.alertName;
+                                group.checkBoxType = 'receive';
+                                group.checkBoxID = 'r'+group.roleGroupID+req.body.alertID;
+                                group.checkBoxName = 'r'+group.roleGroupName+req.body.alertName;
+                                group.save();
+                            }
+                        });
                     });
-                });
-            }
-            //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
+                }
+                //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
+            });
         });
+
+
+
     });
 
 
