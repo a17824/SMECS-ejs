@@ -166,9 +166,15 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sentTime: String,
     sentRoleIDScope: [Number],
     sentRoleNameScope: [String],      // Teachers, Staff, Parents...
-    sentUsersScope: [String],         // Mary Ann, David Frank,.... Total = 30 (count)
-    received: [String],       // Mary Ann, David Frank,... Total = 22 (count)
-    viewed: [String],         // Mary Ann,... Total = 17 (count)
+    sentTo: [{                      //30
+        firstName: String,
+        lastName: String,
+        received: { type: Boolean, default: false },          //22
+        viewed: { type: Boolean, default: false },            //17
+        date: String,
+        time: String
+    }],
+
     status: { type: String, default: 'open' },         // Open, Closed
     testModeON: Boolean,
     request911Call: { type: Boolean, default: false },

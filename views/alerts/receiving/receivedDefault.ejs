@@ -91,31 +91,6 @@
                 });
                 // END OF Alert UTILITY FAILURE OR REQUEST ASSISTANCE
 
-                var alertTemp_ID;
-                $("#<%= info.id %>").click(function(){
-                    alertTemp_ID=$(this).attr('id');
-
-                    //-----forms validation------------------------------------
-
-
-                    //--------------------------------forms validation end-------
-
-                    $.ajax({
-                        url: '/alerts/sending/reviewAlert',
-                        type: "POST",
-                        data: {
-                            alertToUpdate: alertTemp_ID
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            window.location = data.redirect;
-                        },
-                        error: function() {
-                            console.log('process error');
-                        }
-
-                    });
-                });
             });
 
         </script>

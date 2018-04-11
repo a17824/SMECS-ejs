@@ -4,7 +4,6 @@ var async = require("async");
 
 /* PROCEDURE Alerts. -------------------------------*/
 module.exports.procedure = function(req, res) {
-    console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPP');
     async.parallel([
         function(callback){
             models.AlertSentInfo.findById(req.params.id).exec(callback);

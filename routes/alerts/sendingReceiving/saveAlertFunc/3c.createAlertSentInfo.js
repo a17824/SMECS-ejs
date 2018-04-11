@@ -12,59 +12,53 @@ var moment = require('moment');
 
 module.exports.alertSentInfo = function(req, res, tempAlert) {
     var wrapped = moment(new Date());
-    if (tempAlert.alertNameID == 26 ) { //Request Repair Assistance
 
-        var alert1 = new models.AlertSentInfo({
-            _id: tempAlert._id,
-            sentBy: req.session.user.firstName + " " + req.session.user.lastName,
-            sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
-            alertGroupID: tempAlert.alertGroupID,
-            alertGroupName: tempAlert.alertGroupName,
-            alertNameID: tempAlert.alertNameID,
-            alertName: tempAlert.alertName,
-            request911Call: tempAlert.request911Call,
+    var sentTo = [];
+    tempAlert.sentUsersScope.forEach(function (user) {
+        var sentToArr = {
+            firstName: user.userFirstName,
+            lastName: user.userLastName
+        };
+        sentTo.push(sentToArr);
+    });
 
-            note: tempAlert.note,
-            testModeON: tempAlert.testModeON
+    var alert1 = new models.AlertSentInfo({
+        _id: tempAlert._id,
+        sentBy: req.session.user.firstName + " " + req.session.user.lastName,
+        sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
+        alertGroupID: tempAlert.alertGroupID,
+        alertGroupName: tempAlert.alertGroupName,
+        alertNameID: tempAlert.alertNameID,
+        alertName: tempAlert.alertName,
+        sentRoleIDScope: tempAlert.sentRoleIDScope,
+        sentRoleNameScope: tempAlert.sentRoleNameScope,
+        sentTo: sentTo,
+        request911Call: tempAlert.request911Call,
+        whoCanCall911: tempAlert.whoCanCall911,
+        note: tempAlert.note,
+        testModeON: tempAlert.testModeON,
+        floorName: tempAlert.floorName,
+        floorPhoto: tempAlert.floorPhoto,
+        sniperCoordinateX: tempAlert.sniperCoordinateX,
+        sniperCoordinateY: tempAlert.sniperCoordinateY,
+        medicalInjuredParties: tempAlert.medicalInjuredParties,
+        multiSelectionNames: tempAlert.multiSelectionNames,
+        multiSelectionIDs: tempAlert.multiSelectionIDs,
+        studentName: tempAlert.studentName,
+        studentPhoto: tempAlert._id + '_' + tempAlert.studentPhoto,
+        missingChildLastTimeSeen: tempAlert.missingChildLastTimeSeen,
+        missingChildLastPlaceSeen: tempAlert.missingChildLastPlaceSeen,
+        missingChildClothesWearing: tempAlert.missingChildClothesWearing,
+        studentWithGunSeated: tempAlert.studentWithGunSeated,
+        studentWithGunBehaviour: tempAlert.studentWithGunBehaviour,
+        evacuateWhereTo: tempAlert.evacuateWhereTo,
+        requestAssistance: tempAlert.requestAssistance
 
-
-        });
-    } else {
-        var alert1 = new models.AlertSentInfo({
-            _id: tempAlert._id,
-            sentBy: req.session.user.firstName + " " + req.session.user.lastName,
-            sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
-            alertGroupID: tempAlert.alertGroupID,
-            alertGroupName: tempAlert.alertGroupName,
-            alertNameID: tempAlert.alertNameID,
-            alertName: tempAlert.alertName,
-            sentRoleIDScope: tempAlert.sentRoleIDScope,
-            sentRoleNameScope: tempAlert.sentRoleNameScope,
-            sentUsersScope: tempAlert.sentUsersScope,
-            request911Call: tempAlert.request911Call,
-            whoCanCall911: tempAlert.whoCanCall911,
-            note: tempAlert.note,
-            testModeON: tempAlert.testModeON,
-            floorName: tempAlert.floorName,
-            floorPhoto: tempAlert.floorPhoto,
-            sniperCoordinateX: tempAlert.sniperCoordinateX,
-            sniperCoordinateY: tempAlert.sniperCoordinateY,
-            medicalInjuredParties: tempAlert.medicalInjuredParties,
-            multiSelectionNames: tempAlert.multiSelectionNames,
-            multiSelectionIDs: tempAlert.multiSelectionIDs,
-            studentName: tempAlert.studentName,
-            studentPhoto: tempAlert._id + '_' + tempAlert.studentPhoto,
-            missingChildLastTimeSeen: tempAlert.missingChildLastTimeSeen,
-            missingChildLastPlaceSeen: tempAlert.missingChildLastPlaceSeen,
-            missingChildClothesWearing: tempAlert.missingChildClothesWearing,
-            studentWithGunSeated: tempAlert.studentWithGunSeated,
-            studentWithGunBehaviour: tempAlert.studentWithGunBehaviour,
-            evacuateWhereTo: tempAlert.evacuateWhereTo,
-            requestAssistance: tempAlert.requestAssistance
-
-        });
-    }
+    });
     alert1.save();
+
+
+
 };
 
 

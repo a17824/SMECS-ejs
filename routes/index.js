@@ -622,8 +622,8 @@ router.get('/alerts/sending/multiSelection/:id', auth.simpleAuth, auth.requireLo
 router.post('/alerts/sending/multiSelection', auth.simpleAuth, auth.requireLogin, sendingAlert.postMultiSelection, function(req, res) {});
 
 /* Send Alert - Request Assistance (ALERT 26). -------------------------------*/
-router.get('/alerts/sending/requestAssistance/:id', auth.simpleAuth, auth.requireLogin, sendingAlert.showRequestAssistance, function(req, res, next) {});
-router.post('/alerts/sending/requestAssistance', auth.simpleAuth, auth.requireLogin, sendingAlert.postRequestAssistance, function(req, res) {});
+//router.get('/alerts/sending/requestAssistance/:id', auth.simpleAuth, auth.requireLogin, sendingAlert.showRequestAssistance, function(req, res, next) {});
+//router.post('/alerts/sending/requestAssistance', auth.simpleAuth, auth.requireLogin, sendingAlert.postRequestAssistance, function(req, res) {});
 
 router.get('/alerts/sending/reviewAlert/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.reviewAlert, function(req, res, next) {});
 router.post('/alerts/sending/reviewAlert', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});

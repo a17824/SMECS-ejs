@@ -4,7 +4,7 @@ var async = require("async");
 var floor = require('./saveAlertFunc/3a.savefloorFile.js');
 var create = require('./saveAlertFunc/3c.createAlertSentInfo.js');
 var student = require('./saveAlertFunc/3b.student.js');
-//var saveAlert = require('./4.toDelete.js');
+var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 
 
 module.exports.reviewAlert = function(req, res) {
@@ -82,82 +82,81 @@ module.exports.postReviewAlert = function(req, res, next) {
             });
         },
         function (tempAlert, callback) {
-            // Alert Request Assistance
-            if (tempAlert.alertNameID == 26 ){
-                var alertToUpdate1 = req.body.alertToUpdate;
-                var smecsContacts, emailContact, callContact;
-                if (req.body.raSmecsApp == 'true' || req.body.raEmail == 'true' || req.body.raCall == 'true') {
-                    models.Utilities.findOne({'utilityID': req.body.utilityID}, function (err, util) {
-                        if (req.body.raSmecsApp == 'true') {
-                            smecsContacts = util.smecsUsers;
-                        }
-                        if (req.body.raEmail == 'true') {
-                            emailContact = util.email;
-                        }
-                        if (req.body.raCall == 'true') {
-                            callContact = util.phone;
-                        }
-                    });
-                }
-
-                    var stat = alert.status;
-                    if (!alert || stat == 'closed') {
-                        console.log(err);
-                        req.flash('error_messages', 'No Request Assistance can be sent because the status of the alert is \'closed\'. This alert was already closed by the Principal or other user with rights to clear/close Alerts' );
-                        res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
-                    }
-                    else {
-                        //ALERT Utilities Failures Request Assistance,
-                        var utilityName = req.body.utilityName;
-                        alert.askedForAssistance = true;
-                        alert.save();
-                        var wrapped = moment(new Date());
-                        var requestAssistance1 = new models.RequestAssistance({
-                            idAlert: req.body.alertToUpdate,
-                            status: stat,
-                            sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
-                            alertNameID: req.body.alertNameID,
-                            alertName: req.body.alertName,
-                            utilityID: req.body.utilityID,
-                            utilityName: req.body.utilityName,
-                            requestAssistanceSmecsApp: req.body.raSmecsApp,
-                            requestAssistanceEmail: req.body.raEmail,
-                            requestAssistanceCall: req.body.raCall,
-                            smecsContacts: smecsContacts,
-                            emailContact: emailContact,
-                            callContact: callContact
-                        });
-                        requestAssistance1.save(function (err) {
-                            if (err && (err.code === 11000 || err.code === 11001)) {
-                                return res.status(409).send('showAlert')
-                            }else{
-                                console.log("saved Request Assistance");
-                                req.flash('success_messages', '(request successful)' );
-                                res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
-                            }
-                        });
-                        if (req.body.raSmecsApp == 'true'){
-                            whoReceiveAlert.sendAlertRequestAssistance(utilityName);
-                            //req.flash('error_messages', '(request successful)' );
-                        }
-                        if (req.body.raEmail == 'true'){
-                            email.sendAlertRequestAssistance(req, utilityName, next);
-                            //req.flash('error_messages', '(email request sent successfully)' );
-                        }
-                        if (req.body.raCall == 'true'){
-                            //send email function
-                            models.Utilities.findOne({'utilityName': utilityName}, function(err, utility){
-                                console.log('AQUI FAZ CHAMDA REQUEST ASSISTANCE ALERT PARA: ' + utility.phone)
-                            });
-                        }
-                    }
-
-
-            }
+            create.alertSentInfo(req, res, tempAlert); //create AlertSentInfo
             callback(null, tempAlert);
         },
         function (tempAlert, callback) {
-            create.alertSentInfo(req, res, tempAlert); //create AlertSentInfo
+            // Alert Request Assistance
+            if (tempAlert.alertNameID == 26 ){
+
+                for (var x = 0; x < tempAlert.requestAssistance.length; x++) {
+                    if (tempAlert.requestAssistance[x].reqSmecsApp.stat == 'open') {
+                        reqAsst.sendPushNotificationReqAssSmecsApp(tempAlert);
+                    }
+                    if (tempAlert.requestAssistance[x].reqEmail.stat == 'open') {
+                        reqAsst.sendPushNotificationReqAssEmail(tempAlert);
+                    }
+                    if (tempAlert.requestAssistance[x].reqCall.stat == 'open') {
+                        reqAsst.sendPushNotificationReqAssCall(tempAlert);
+                    }
+                }
+
+                /*
+                var stat = alert.status;
+                if (!alert || stat == 'closed') {
+                    console.log(err);
+                    req.flash('error_messages', 'No Request Assistance can be sent because the status of the alert is \'closed\'. This alert was already closed by the Principal or other user with rights to clear/close Alerts' );
+                    res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
+                }
+                else {
+                    //ALERT Utilities Failures Request Assistance,
+                    var utilityName = req.body.utilityName;
+                    alert.askedForAssistance = true;
+                    alert.save();
+                    var wrapped = moment(new Date());
+                    var requestAssistance1 = new models.RequestAssistance({
+                        idAlert: req.body.alertToUpdate,
+                        status: stat,
+                        sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
+                        alertNameID: req.body.alertNameID,
+                        alertName: req.body.alertName,
+                        utilityID: req.body.utilityID,
+                        utilityName: req.body.utilityName,
+                        requestAssistanceSmecsApp: req.body.raSmecsApp,
+                        requestAssistanceEmail: req.body.raEmail,
+                        requestAssistanceCall: req.body.raCall,
+                        smecsContacts: smecsContacts,
+                        emailContact: emailContact,
+                        callContact: callContact
+                    });
+                    requestAssistance1.save(function (err) {
+                        if (err && (err.code === 11000 || err.code === 11001)) {
+                            return res.status(409).send('showAlert')
+                        }else{
+                            console.log("saved Request Assistance");
+                            req.flash('success_messages', '(request successful)' );
+                            res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
+                        }
+                    });
+                    if (req.body.raSmecsApp == 'true'){
+                        whoReceiveAlert.sendAlertRequestAssistance(utilityName);
+                        //req.flash('error_messages', '(request successful)' );
+                    }
+                    if (req.body.raEmail == 'true'){
+                        email.sendAlertRequestAssistance(req, utilityName, next);
+                        //req.flash('error_messages', '(email request sent successfully)' );
+                    }
+                    if (req.body.raCall == 'true'){
+                        //send email function
+                        models.Utilities.findOne({'utilityName': utilityName}, function(err, utility){
+                            console.log('AQUI FAZ CHAMDA REQUEST ASSISTANCE ALERT PARA: ' + utility.phone)
+                        });
+                    }
+
+                }
+*/
+
+            }
             callback(null, tempAlert);
         }
 
@@ -173,4 +172,17 @@ module.exports.postReviewAlert = function(req, res, next) {
         res.send({redirect: '/alerts/received/receiveAlert/' + tempAlert._id});
     });
 };
+/*
+<!-- Alert UTILITY FAILURE  && MEDICAL EMERGENCIES && REQUEST ASSISTANCE-->
+<% if (info.alertNameID == 14 ||
+    info.alertNameID == 18 ) {%>
+<label for="situation"><b>Situation:</b></label><br>
 
+    <!-- checkBox of utility failure -->
+
+    <% for (var i=0; i < info.multiSelectionNames.length; i++) {%>
+    <input type="checkbox" name="checkbox"  value="<%= info.multiSelectionNames[i] %>" checked onclick="return false;">
+            <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
+            <% } %>
+<% } %>
+*/

@@ -1,7 +1,7 @@
 //Dependencies
 var models = require('./../../models');
 var async = require("async");
-var moment = require('moment');
+var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 
 //          FLOOR           \\
 module.exports.showFloor = function(req, res) {
@@ -236,7 +236,8 @@ module.exports.postNotes = function(req, res) {
                     alert.alertNameID == 20 ||
                     alert.alertNameID == 21 ||
                     alert.alertNameID == 22 ||
-                    alert.alertNameID == 23 ) {
+                    alert.alertNameID == 23 ||
+                    alert.alertNameID == 26 ) {
 
                     alert.save();
                 }
@@ -398,15 +399,13 @@ module.exports.postMultiSelection = function(req, res) {
                         var boolFalse = false;
                         var reqAssOn = req.body.reqAssChecked;
                         var reqAssOff = req.body.reqAssNotChecked;
-                        saveRequestAssistance(alert, reqAssOn, boolTrue);
-                        saveRequestAssistance(alert, reqAssOff, boolFalse);
+                        reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
+                        reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
                     }
 
                     alert.save();
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
-
-
             }
             //ALERT Medical Emergencies
             if (alert.alertNameID == 18 ) {
@@ -414,132 +413,6 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.save();
                 res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
             }
-/*            //ALERT Request Assistance,
-            if (alert.alertNameID == 26 ) {
-                res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});
-            }
-*/
         }
     });
 };
-
-//          REQUEST ASSISTANCE          \\
-module.exports.showRequestAssistance = function(req, res) {
-    async.parallel([
-        function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
-        function(callback){models.Floors.find().exec(callback);},
-        function(callback){models.Utilities.find().exec(callback);},
-        function(callback){models.RequestAssistance.find().exec(callback);},
-        function(callback){models.Alerts.find().exec(callback);},
-        function(callback){models.AclAlertsReal.find().exec(callback);},
-        function(callback){models.AclAlertsTest.find().exec(callback);}
-
-    ],function(err, results){
-        if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.redirect('/alerts/sending/chooseAlert');
-        }
-        else {
-            res.render('alerts/sending/requestAssistance', {
-                title: results[0].alertName,
-                userAuthID: req.user.userRoleID,
-                info: results[0],
-                floor: results[1],
-                utilities: results[2],
-                request: results[3],
-                alerts: results[4], // check if alert is softDeleted for Utilities Failure
-                aclReal: results[5], // to check if user has permission to send Request Assistance Alert
-                aclTest: results[6] // to check if user has permission to send Request Assistance Alert
-
-            });
-        }
-    })
-};
-
-module.exports.postRequestAssistance = function(req, res, next) {
-    console.log(' ALERT 26 REQUEST ASSISTANCE POST ---------------------------------------------------------');
-    var alertToUpdate1 = req.body.alertToUpdate;
-    models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
-        if (!tempAlert) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.send({redirect: '/alerts/sending/chooseAlert/'});
-        }
-        else {
-            console.log('tempAlert. = ' + tempAlert.multiSelectionNames );
-
-            /*******
-             *
-             *  I delete the file that contains code for this alert.
-             *  deleted file is:
-             *  C:\Users\Banshee\Desktop\to delete\4.toDelete.js
-             *
-             * *********/
-
-            //saveAlert.saveAlertInfo(req, res, tempAlert);
-
-
-
-        }
-    });
-};
-
-//this is to put in a new js file
-function saveRequestAssistance(alert, reqAss, boolTrueFalse) {
-    var arr;
-    var arrOn = [];
-    var wrapped = moment(new Date());
-
-    if(typeof reqAss !== 'undefined' && reqAss){
-        reqAss.forEach(function (utility) {
-            arr = utility.split("_|_").map(function (val) {
-                return val
-            });
-            arrOn.push(arr);
-        });
-        arrOn.forEach(function (util) {
-            for (var x = 0; x < alert.requestAssistance.length; x++) {
-                if (util[1] == alert.requestAssistance[x].utilityName) {
-                    if (util[2] == 'smecsApp') {
-                        alert.requestAssistance[x].reqSmecsApp.sentReqSmecsApp = boolTrueFalse;
-                        if (boolTrueFalse) {
-                            alert.requestAssistance[x].reqSmecsApp.stat = 'open';
-                            alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            /*************************
-                             * NOTIFICATION API HERE *
-                             *************************/
-                        }
-                    }
-                    if (util[2] == 'email') {
-                        alert.requestAssistance[x].reqEmail.sentReqEmail = boolTrueFalse;
-                        if (boolTrueFalse) {
-                            alert.requestAssistance[x].reqEmail.stat = 'open';
-                            alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            /*******************
-                             * EMAIL  API HERE *
-                             *******************/
-                        }
-                    }
-                    if (util[2] == 'call') {
-                        alert.requestAssistance[x].reqCall.sentReqCall = boolTrueFalse;
-                        if (boolTrueFalse) {
-                            alert.requestAssistance[x].reqCall.stat = 'open';
-                            alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            /******************
-                             * CALL  API HERE *
-                             ******************/
-                        }
-                    }
-                    alert.save();
-                    break
-                }
-
-            }
-
-
-        });
-    }
-}
