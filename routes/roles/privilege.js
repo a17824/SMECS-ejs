@@ -45,7 +45,7 @@ module.exports.add = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Privilege.find().sort({"privilegeID":1}).stream();
+        var stream = models.Privilege.find().sort({"privilegeID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.privilegeID);
         }).on('error', function (err) {
@@ -111,7 +111,7 @@ module.exports.update = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Privilege.find().sort({"privilegeID":1}).stream();
+        var stream = models.Privilege.find().sort({"privilegeID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.privilegeID);
         }).on('error', function (err) {

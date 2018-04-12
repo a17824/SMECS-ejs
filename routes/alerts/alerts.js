@@ -103,7 +103,7 @@ module.exports.create = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            //console.log(array);
+            console.log('arraySort = ',arraySort);
             res.render('alerts/createAlert',{
                 title:'Create Alert',
                 arraySort: arraySort,

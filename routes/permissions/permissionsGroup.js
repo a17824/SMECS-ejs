@@ -46,7 +46,7 @@ module.exports.add = function(req, res) {
         var arraySort = [];
         var array = [];
 
-        var streamSort = models.PermissionsGroup.find().sort({"sortID":1}).stream();
+        var streamSort = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -56,7 +56,7 @@ module.exports.add = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.PermissionsGroup.find().sort({"sortID":1}).stream();
+        var stream = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.permissionsGroupID);
         }).on('error', function (err) {
@@ -96,7 +96,7 @@ module.exports.update = function(req, res) {
     var arraySort = [];
     var array = [];
     models.PermissionsGroup.findById(req.params.id,function(error, permissionsGroup) {
-        var streamSort = models.PermissionsGroup.find().sort({"sortID":1}).stream();
+        var streamSort = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -106,7 +106,7 @@ module.exports.update = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.PermissionsGroup.find().sort({"sortID":1}).stream();
+        var stream = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.permissionsGroupID);
         }).on('error', function (err) {

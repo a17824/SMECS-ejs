@@ -51,7 +51,7 @@ module.exports.create = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Room.find().sort({"roomID":1}).stream();
+        var stream = models.Room.find().sort({"roomID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.roomID);
         }).on('error', function (err) {
@@ -104,7 +104,7 @@ module.exports.update = function(req, res) {
         },
     ],function(err, results){
 
-        var stream = models.Room.find().sort({"roomID":1}).stream();
+        var stream = models.Room.find().sort({"roomID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.roomID);
 

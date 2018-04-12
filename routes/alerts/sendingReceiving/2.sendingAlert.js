@@ -402,7 +402,7 @@ module.exports.postMultiSelection = function(req, res) {
                         reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
                         reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
                     }
-
+                    console.log('2');
                     alert.save();
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });

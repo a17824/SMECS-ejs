@@ -23,7 +23,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                             alert.requestAssistance[x].reqSmecsApp.stat = 'open';
                             alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
                             if(alert.alertNameID !== 26)
-                                reqAsst.sendPushNotificationReqAssSmecsApp(alert);
+                                reqAsst.sendPushNotificationReqAssSmecsApp(alert, alert.requestAssistance[x]);
                         }
                     }
                     if (util[2] == 'email') {
@@ -32,7 +32,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                             alert.requestAssistance[x].reqEmail.stat = 'open';
                             alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
                             if(alert.alertNameID !== 26)
-                                reqAsst.sendPushNotificationReqAssEmail(alert);
+                                reqAsst.sendPushNotificationReqAssEmail(alert, alert.requestAssistance[x]);
                         }
                     }
                     if (util[2] == 'call') {
@@ -41,31 +41,30 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                             alert.requestAssistance[x].reqCall.stat = 'open';
                             alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
                             if(alert.alertNameID !== 26)
-                                reqAsst.sendPushNotificationReqAssCall(alert);
+                                reqAsst.sendPushNotificationReqAssCall(alert, alert.requestAssistance[x]);
                         }
                     }
-                    alert.save();
-                    break
+                    break;
                 }
             }
         });
     }
 };
 
-module.exports.sendPushNotificationReqAssSmecsApp = function(alert) {
-    console.log('Request SMECS APP sent = ', alert.alertName);
+module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility) {
+    console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request SMECS APP sent' );
     /*************************
      * NOTIFICATION API HERE *
      *************************/
 };
-module.exports.sendPushNotificationReqAssEmail = function(alert) {
-    console.log('Request EMAIL sent = ', alert.alertName);
+module.exports.sendPushNotificationReqAssEmail = function(alert, utility) {
+    console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request EMAIL sent');
     /*************************
      * NOTIFICATION API HERE *
      *************************/
 };
-module.exports.sendPushNotificationReqAssCall = function(alert) {
-    console.log('Request CALL sent = ', alert.alertName);
+module.exports.sendPushNotificationReqAssCall = function(alert, utility) {
+    console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request CALL sent');
     /*************************
      * NOTIFICATION API HERE *
      *************************/

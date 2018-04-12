@@ -12,7 +12,6 @@ module.exports.reviewAlert = function(req, res) {
         function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
         function(callback){models.Floors.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
-        function(callback){models.RequestAssistance.find().exec(callback);},
         function(callback){models.Alerts.find().exec(callback);},
         function(callback){models.AclAlertsReal.find().exec(callback);},
         function(callback){models.AclAlertsTest.find().exec(callback);}
@@ -32,10 +31,9 @@ module.exports.reviewAlert = function(req, res) {
                 info: results[0],
                 floor: results[1],
                 utilities: results[2],
-                request: results[3],
-                alerts: results[4], // check if alert is softDeleted for Utilities Failure
-                aclReal: results[5], // to check if user has permission to send Request Assistance Alert
-                aclTest: results[6] // to check if user has permission to send Request Assistance Alert
+                alerts: results[3], // check if alert is softDeleted for Utilities Failure
+                aclReal: results[4], // to check if user has permission to send Request Assistance Alert
+                aclTest: results[5] // to check if user has permission to send Request Assistance Alert
             });
         }
     })
@@ -91,13 +89,13 @@ module.exports.postReviewAlert = function(req, res, next) {
 
                 for (var x = 0; x < tempAlert.requestAssistance.length; x++) {
                     if (tempAlert.requestAssistance[x].reqSmecsApp.stat == 'open') {
-                        reqAsst.sendPushNotificationReqAssSmecsApp(tempAlert);
+                        reqAsst.sendPushNotificationReqAssSmecsApp(tempAlert, tempAlert.requestAssistance[x]);
                     }
                     if (tempAlert.requestAssistance[x].reqEmail.stat == 'open') {
-                        reqAsst.sendPushNotificationReqAssEmail(tempAlert);
+                        reqAsst.sendPushNotificationReqAssEmail(tempAlert, tempAlert.requestAssistance[x]);
                     }
                     if (tempAlert.requestAssistance[x].reqCall.stat == 'open') {
-                        reqAsst.sendPushNotificationReqAssCall(tempAlert);
+                        reqAsst.sendPushNotificationReqAssCall(tempAlert, tempAlert.requestAssistance[x]);
                     }
                 }
 
@@ -107,53 +105,7 @@ module.exports.postReviewAlert = function(req, res, next) {
                     console.log(err);
                     req.flash('error_messages', 'No Request Assistance can be sent because the status of the alert is \'closed\'. This alert was already closed by the Principal or other user with rights to clear/close Alerts' );
                     res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
-                }
-                else {
-                    //ALERT Utilities Failures Request Assistance,
-                    var utilityName = req.body.utilityName;
-                    alert.askedForAssistance = true;
-                    alert.save();
-                    var wrapped = moment(new Date());
-                    var requestAssistance1 = new models.RequestAssistance({
-                        idAlert: req.body.alertToUpdate,
-                        status: stat,
-                        sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
-                        alertNameID: req.body.alertNameID,
-                        alertName: req.body.alertName,
-                        utilityID: req.body.utilityID,
-                        utilityName: req.body.utilityName,
-                        requestAssistanceSmecsApp: req.body.raSmecsApp,
-                        requestAssistanceEmail: req.body.raEmail,
-                        requestAssistanceCall: req.body.raCall,
-                        smecsContacts: smecsContacts,
-                        emailContact: emailContact,
-                        callContact: callContact
-                    });
-                    requestAssistance1.save(function (err) {
-                        if (err && (err.code === 11000 || err.code === 11001)) {
-                            return res.status(409).send('showAlert')
-                        }else{
-                            console.log("saved Request Assistance");
-                            req.flash('success_messages', '(request successful)' );
-                            res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
-                        }
-                    });
-                    if (req.body.raSmecsApp == 'true'){
-                        whoReceiveAlert.sendAlertRequestAssistance(utilityName);
-                        //req.flash('error_messages', '(request successful)' );
-                    }
-                    if (req.body.raEmail == 'true'){
-                        email.sendAlertRequestAssistance(req, utilityName, next);
-                        //req.flash('error_messages', '(email request sent successfully)' );
-                    }
-                    if (req.body.raCall == 'true'){
-                        //send email function
-                        models.Utilities.findOne({'utilityName': utilityName}, function(err, utility){
-                            console.log('AQUI FAZ CHAMDA REQUEST ASSISTANCE ALERT PARA: ' + utility.phone)
-                        });
-                    }
 
-                }
 */
 
             }

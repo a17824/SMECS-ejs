@@ -311,26 +311,6 @@ mongoose.model('AlertSentTemp').ensureIndexes(function(err) {
 });
 
 
-// DEFINE RequestAssistance COLLECTION IN MONGOdb
-var RequestAssistanceSchema = new mongoose.Schema({
-    idAlert: String,
-    status: String,
-    sentTime: String,
-    alertNameID: String,
-    alertName: String,
-    utilityID: Number,
-    utilityName: String,
-    requestAssistanceSmecsApp: Boolean,
-    requestAssistanceEmail: Boolean,
-    requestAssistanceCall: Boolean,
-    smecsContacts: [String],
-    emailContact: String,
-    callContact: String
-
-}, {collection:"RequestAssistance"}); //stops Mongoose of giving plurals to our collections names
-var RequestAssistance;
-module.exports.RequestAssistance = mongoose.model("RequestAssistance", RequestAssistanceSchema);
-
 
 // DEFINE AlertReportsSent COLLECTION IN MONGOdb
 var ReportsSentSchema = new mongoose.Schema({

@@ -50,7 +50,7 @@ module.exports.add = function(req, res) {
         var arraySort = [];
         var array = [];
 
-        var streamSort = models.AlertsGroup.find().sort({"sortID":1}).stream();
+        var streamSort = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -60,14 +60,14 @@ module.exports.add = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.AlertsGroup.find().sort({"sortID":1}).stream();
+        var stream = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.alertTypeID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            //console.log(array);
+            console.log('arraySort = ',arraySort);
             res.render('alertGroups/addAlertGroups',{
                 title:'Add Alert Group',
                 arraySort: arraySort,
@@ -131,7 +131,6 @@ module.exports.update = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            //console.log(array);
             res.render('alertGroups/updateAlertGroups',{
                 title:'Update Alert Group',
                 userAuthID: req.user.userPrivilegeID,

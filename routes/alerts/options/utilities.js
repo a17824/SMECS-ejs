@@ -59,7 +59,7 @@ module.exports.add = function(req, res) {
         var arraySort = [];
         var array = [];
 
-        var streamSort = models.Utilities.find().sort({"sortID":1}).stream();
+        var streamSort = models.Utilities.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -69,7 +69,7 @@ module.exports.add = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.Utilities.find().sort({"utilityID":1}).stream();
+        var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.utilityID);
         }).on('error', function (err) {
@@ -133,7 +133,7 @@ module.exports.update = function(req, res) {
         var arraySort = [];
         var array = [];
 
-        var streamSort = models.Utilities.find().sort({"sortID":1}).stream();
+        var streamSort = models.Utilities.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -143,7 +143,7 @@ module.exports.update = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.Utilities.find().sort({"utilityID":1}).stream();
+        var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.utilityID);
         }).on('error', function (err) {

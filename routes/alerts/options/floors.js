@@ -46,7 +46,7 @@ module.exports.add = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Floors.find().sort({"floorID":1}).stream();
+        var stream = models.Floors.find().sort({"floorID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.floorID);
         }).on('error', function (err) {
@@ -97,7 +97,7 @@ module.exports.update = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Floors.find().sort({"floorID":1}).stream();
+        var stream = models.Floors.find().sort({"floorID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.floorID);
         }).on('error', function (err) {

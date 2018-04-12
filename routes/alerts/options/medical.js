@@ -48,7 +48,7 @@ module.exports.add = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Medical.find().sort({"utilityID":1}).stream();
+        var stream = models.Medical.find().sort({"utilityID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.utilityID);
         }).on('error', function (err) {
@@ -99,7 +99,7 @@ module.exports.update = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Medical.find().sort({"utilityID":1}).stream();
+        var stream = models.Medical.find().sort({"utilityID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.utilityID);
         }).on('error', function (err) {

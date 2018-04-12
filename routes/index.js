@@ -622,8 +622,6 @@ router.get('/alerts/sending/multiSelection/:id', auth.simpleAuth, auth.requireLo
 router.post('/alerts/sending/multiSelection', auth.simpleAuth, auth.requireLogin, sendingAlert.postMultiSelection, function(req, res) {});
 
 /* Send Alert - Request Assistance (ALERT 26). -------------------------------*/
-//router.get('/alerts/sending/requestAssistance/:id', auth.simpleAuth, auth.requireLogin, sendingAlert.showRequestAssistance, function(req, res, next) {});
-//router.post('/alerts/sending/requestAssistance', auth.simpleAuth, auth.requireLogin, sendingAlert.postRequestAssistance, function(req, res) {});
 
 router.get('/alerts/sending/reviewAlert/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.reviewAlert, function(req, res, next) {});
 router.post('/alerts/sending/reviewAlert', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});
@@ -638,84 +636,6 @@ router.post('/alerts/received/receivedAlert', auth.simpleAuth, auth.requireLogin
 
 /* All Procedures -------------------------------*/
 router.get('/alerts/receiving/procedureR/:id', auth.simpleAuth, auth.requireLogin, procedureR.procedure, function(req, res) {});
-
-
-
-
-
-/* JSON USERS ARRAY. */
-router.get('/users/json', auth.simpleAuth, auth.requireLogin, function(req, res, next) {
-    models.Users.find(function(err, users) {
-        res.json(users);
-        res.render('users/showUsers', { title: 'USERS', usersX: users });
-    });
-});
-/* GET users JSON ARRAY by ID */
-router.get('/users/:id', auth.simpleAuth, auth.requireLogin, function(req, res, next) {
-    models.Users.findById(req.params.id, function(err, data){
-        res.json(data);
-    });
-});
-/* JSON USERS ARRAY. */
-router.get('/students/json', auth.simpleAuth, auth.requireLogin, function(req, res, next) {
-    models.Students.find(function(err, students) {
-        res.json(students);
-        //res.render('students/json', { title: 'students', studentsX: students });
-    });
-});
-
-
-
-
-
-/*
- var user1 = new AlertReportsSent({
- alertReportsSentID: 4,
- time: "7 Fev 2016 @ 10:55 AM",
- alertTypeID: "5",
- alertTypeName: "Yellow",  //Red
- alertID:"18",
- alertName:"Medical Emergencies",    //Lockdown
- sentBy: "Toni Silva",
- successful: "10/10", // 22/30
- readBy: "10/10",     // 17/22
- details: "4.JPG",
- status: "Open"      // Open, Closed
- });
- user1.save();
- */
-
-/*
- var user1 = new AlertReportsReceived({
- alertReportsReceivedID: 3,
- alertTypeID: "3",
- alertTypeName: "Green",
- alertID: "7",
- alertName: "Evacuate",
- scope: "Teacher",
- to: "Alan Mentias",
- received:"ok",
- viewed: "1h 04min. after"
- });
- user1.save();
- */
-/*
- //update
- AlertReportsSent.findById({'_id': userToUpdate1}, function(err, user){
- user.userRoleID = req.body.userRoleID;
- user.userRoleName = req.body.userRoleName;
- user.userPrivilegeID = req.body.userprivilegeID;
- user.userPrivilegeName = req.body.userprivilegeName;
- user.firstName = req.body.firstName;
- user.lastName = req.body.lastName;
- user.email = req.body.email;
- user.pin = req.body.pin;
- user.photo = req.body.photo;
- user.save()
- */
-
-
-
 
 
 

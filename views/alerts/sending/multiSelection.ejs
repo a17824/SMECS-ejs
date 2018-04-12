@@ -7,7 +7,6 @@
         //Detect if user is using the back/foreward button, then reload whole page
         if (!!window.performance && window.performance.navigation.type === 2) {
             // value 2 means "The page was accessed by navigating into the history"
-            console.log('Reloading');
             window.location.reload(); // reload whole page
         }
         //end of Detect if user is using the back/foreward button, then reload whole page
@@ -66,7 +65,6 @@
                     return false;
                 }
                 if (alertNameID == 26) {
-                    console.log('0');
                     var flagReqSelected = 0;
                     var flagUtil = 0;
                     var utilitiesNotOn = [];
@@ -95,7 +93,11 @@
                             }
                         }
                     });
-                    if (checkedName.length !== flagReqSelected){
+                    console.log('checkedName = ',checkedName.length );
+                    console.log(checkedName);
+                    console.log('flagReqSelected = ',flagReqSelected );
+                    console.log('utilitiesNotOn = ',utilitiesNotOn.length );
+                    if (utilitiesNotOn.length >= 1){
                         alert("There are utilities checked with no contact selected to send  the request.\n " +
                             "Please uncheck the following utilities or turn ON at least one type of contact to send request:\n\n" +
                             "-" + utilitiesNotOn.join("\n-"));

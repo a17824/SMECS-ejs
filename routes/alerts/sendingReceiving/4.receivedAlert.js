@@ -8,8 +8,6 @@ module.exports.receivedAlert = function(req, res) {
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
         function(callback){models.Floors.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
-        function(callback){models.RequestAssistance.find().exec(callback);},
-        function(callback){models.Alerts.find().exec(callback);},
         function(callback){models.AclAlertsReal.find().exec(callback);},
         function(callback){models.AclAlertsTest.find().exec(callback);}
 
@@ -21,54 +19,54 @@ module.exports.receivedAlert = function(req, res) {
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
+            async.waterfall([
+                function (callback) {
+                    var canRequestAssistance = false;
+                    models.Alerts.findOne({'alertID': results[0].alertNameID}, function(err, alert){//check if Request Assistance is softDeleted
+                        if( err ) console.log("No Utility found");
+                        else{
+                            if(results[0].alertNameID == 14 ){
+                                if(alert.softDeleted == false){
+                                    if(results[0].testModeON){
+                                        var typeAclAlert = results[4];
+                                    }else{
+                                        var typeAclAlert = results[3];
+                                    }
+                                    //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
+                                    for (var i=0; i < typeAclAlert.length; i++) {
+                                        for (var t = 0; t < req.user.userRoleID.length; t++) {
+                                            if (typeAclAlert[i].checkBoxID == 's' + req.user.userRoleID[t] + 26 && typeAclAlert[i].checkBoxValue == true) {
+                                                canRequestAssistance = true;
+                                                break;
+                                            }
+                                        }
+                                        if (canRequestAssistance) {
+                                            break;
+                                        }
+                                    }
+                                    //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
+                                }
+                            }
+                            var enableProcedureButton = false;
+                            if(alert.alertProcedure)
+                                enableProcedureButton = true;
 
-
-            if(results[0].alertNameID == 14){
-                //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
-                if(results[0].testModeON){
-                    var typeAclAlert = results[6];
-                }else{
-                    var typeAclAlert = results[5];
-                }
-                var canRequestAssistance = false;
-                for (var i=0; i < typeAclAlert.length; i++) {
-                    for (var t = 0; t < req.user.userRoleID.length; t++) {
-                        if (typeAclAlert[i].checkBoxID == 's' + req.user.userRoleID[t] + 26 && typeAclAlert[i].checkBoxValue == true) {
-                            canRequestAssistance = true;
-                            break;
+                            callback(null, canRequestAssistance, enableProcedureButton);
                         }
-                    }
-                    if (canRequestAssistance) {
-                        break;
-                    }
+                    });
                 }
-                //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
-
-                res.render('alerts/receiving/receivedMultiSelection', {
-                    title: 'Received Alert Assistance',
-                    userAuthID: req.user.userRoleID,
-                    userAuthRoleName: req.user.userRoleName,
-                    info: results[0],
-                    floor: results[1],
-                    utilities: results[2],
-                    request: results[3],
-                    alerts: results[4], // check if alert is softDeleted for Utilities Failure
-                    canRequestAssistance: canRequestAssistance
-                });
-            }else{
-                res.render('alerts/receiving/receivedDefault', {
+            ], function (err, canRequestAssistance, enableProcedureButton) {
+                res.render('alerts/receiving/received', {
                     title: 'Received Alert',
                     userAuthID: req.user.userRoleID,
                     userAuthRoleName: req.user.userRoleName,
                     info: results[0],
                     floor: results[1],
                     utilities: results[2],
-                    request: results[3],
-                    alerts: results[4] // check if alert is softDeleted for Utilities Failure
-
+                    canRequestAssistance: canRequestAssistance,
+                    enableProcedureButton: enableProcedureButton
                 });
-
-            }
+            });
         }
     })
 };
@@ -88,6 +86,9 @@ module.exports.postReceivedAlert = function(req, res, next) {
 
             reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
             reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
+
+            alert.save();
+
             res.send({redirect: '/dashboard/'});
         }
     });
