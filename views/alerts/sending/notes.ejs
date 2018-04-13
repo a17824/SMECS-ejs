@@ -6,9 +6,50 @@
     <script>
 
         $(document).ready(function(){
-            var lastSeen = document.getElementById('missingChildLastTimeSeen');
+            var alertID = document.getElementById('alertNameID');
+
+            /********** Bus Transportation changed *******************/
+            if(alertID.value == 27){
+                var bus = document.getElementById('busTimeChanged');
+                function busPopulate(selector) {
+                    var select = $(selector);
+                    var hours, minutes, ampm;
+                    for(var i = 15; i <= 305; i += 15){
+                        hours = Math.floor(i / 60);
+                        minutes = i % 60;
+                        if (minutes < 10){
+                            minutes = '0' + minutes; // adding leading zero
+                        }
+
+                        hours = hours % 12;
+
+                        if (hours === 0 && minutes === 15 ) {
+                            select.append($('<option></option>')
+                                .text(' n/a '));
+                        }
+
+                        if (hours + ':' + minutes + ' ' + ampm === bus.value) { //if back button is used, put selected time on select box
+                            select.append($('<option></option>')
+                                .attr('value', i)
+                                .text(hours + ':' + minutes)
+                                .attr('selected','selected'));
+                        }
+                        else {
+                            select.append($('<option></option>')
+                                .attr('value', i)
+                                .text(hours + ':' + minutes));
+                        }
+                    }
+                }
+                busPopulate('#busTimeSelect');
+            }
+            /********** end of Bus Transportation changed ************/
+
+
             /********** Last Time seen missing student *******************/
-            function populate(selector) {
+            if(alertID.value == 4){
+            var lastSeen = document.getElementById('missingChildLastTimeSeen');
+            function missingPopulate(selector) {
                 var select = $(selector);
                 var hours, minutes, ampm;
                 for(var i = 405; i <= 1090; i += 15){
@@ -40,11 +81,11 @@
                     }
                 }
             }
-            populate('#timeSelect');
-
+            missingPopulate('#timeSelect');
+            }
             /********** end of Last Time seen missing student ************/
 
-            var alert_ID, alertNameID, note, lastTimeSeen, lastPlaceSeen, clothesWearing, seat, studentBehaviour, whereToEvacuate;
+            var alert_ID, alertNameID, note, lastTimeSeen, lastPlaceSeen, clothesWearing, seat, studentBehaviour, whereToEvacuate, busTime;
             $("#<%= alert.id %>").click(function(){
                 alert_ID=$(this).attr('id');
                 alertNameID=$("#alertNameID").val();
@@ -55,25 +96,52 @@
                 seat=$("#seat").val();
                 studentBehaviour=$("#studentBehaviour").val();
                 whereToEvacuate=$("#whereToEvacuate").val();
+                busTime=$("#busTimeSelect").val();
 
-                var time;
-                if (lastTimeSeen == 'n/a'){
-                    time =  lastTimeSeen;
+
+                if(alertNameID == 4){
+                    var time;
+                    if (lastTimeSeen == 'n/a'){
+                        time =  lastTimeSeen;
+                    }
+                    else {
+                        var hours, minutes, ampm;
+                        hours = Math.floor(lastTimeSeen / 60);
+                        minutes = lastTimeSeen % 60;
+                        if (minutes < 10){
+                            minutes = '0' + minutes; // adding leading zero
+                        }
+                        ampm = hours % 24 < 12 ? 'AM' : 'PM';
+                        hours = hours % 12;
+                        if (hours === 0){
+                            hours = 12;
+                        }
+                        time = hours + ':' + minutes + ' ' + ampm;
+                    }
                 }
-                else {
-                var hours, minutes, ampm;
-                hours = Math.floor(lastTimeSeen / 60);
-                minutes = lastTimeSeen % 60;
-                if (minutes < 10){
-                    minutes = '0' + minutes; // adding leading zero
+                if(alertNameID == 27){
+                    console.log('busTime = ',busTime)
+                    var busTime2;
+                    if (busTime == 'n/a'){
+                        time =  lastTimeSeen;
+                    }
+                    else {
+                        var hours, minutes, ampm;
+                        hours = Math.floor(busTime / 60);
+                        minutes = busTime % 60;
+                        if (minutes < 10){
+                            minutes = '0' + minutes; // adding leading zero
+                        }
+                        ampm = hours % 24 < 12 ? 'AM' : 'PM';
+                        hours = hours % 12;
+                        if (hours === 0){
+                            hours = 12;
+                        }
+                        busTime2 = hours + ':' + minutes + ' ' + ampm;
+                    }
+                    console.log('busTime = ',busTime2)
                 }
-                ampm = hours % 24 < 12 ? 'AM' : 'PM';
-                hours = hours % 12;
-                if (hours === 0){
-                    hours = 12;
-                }
-                time = hours + ':' + minutes + ' ' + ampm;
-                }
+
                 //-----forms validation------------------------------------
 
 
@@ -86,6 +154,7 @@
                         alertNameID: alertNameID,
                         note: note,
                         lastTimeSeen: time,
+                        busTime: busTime2,
                         lastPlaceSeen: lastPlaceSeen,
                         clothesWearing: clothesWearing,
                         seat: seat,
@@ -115,6 +184,7 @@
 
 <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
 <input type="hidden" id="missingChildLastTimeSeen"  value="<%= alert.missingChildLastTimeSeen %>"> <!-- for back button/refresh -->
+<input type="hidden" id="busTimeChanged"  value="<%= alert.busTimeChanged %>"> <!-- for back button/refresh -->
 
 <form>
 
@@ -141,6 +211,24 @@
     <label for="whereToEvacuate"><b>Where to Evacuate:</b>(optional)</label><br>
     <textarea id="whereToEvacuate" cols="33" placeholder="ex: church" ><%= alert.evacuateWhereTo %></textarea><br><br>
     <% } %>
+
+
+
+    <% if (alert.alertNameID == 27) {%>
+
+    <label for="busRadio"><b>Bus is:</b></label><br>
+
+    <input type="radio" name="smecsApp" value="false" checked> Delayed &emsp;
+    <input type="radio" name="smecsApp" value="true"> Ahead<br><br>
+
+    <label for="busTime"><b>Time:</b>(optional)</label>
+    <select id="busTimeSelect"> </select><br><br>
+
+    <label for="email"><b>Send also an email:</b></label>
+    <input class="checkbox" type="checkbox" name="checkbox" id=<%= alert.busTimeChangedEmail %> value="<%= alert.busTimeChangedEmail %>"><br><br>
+    <% } %>
+
+
 
     <% if (alert.alertNameID == 6) {%>
     <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>

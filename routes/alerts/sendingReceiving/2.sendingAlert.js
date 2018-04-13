@@ -237,7 +237,8 @@ module.exports.postNotes = function(req, res) {
                     alert.alertNameID == 21 ||
                     alert.alertNameID == 22 ||
                     alert.alertNameID == 23 ||
-                    alert.alertNameID == 26 ) {
+                    alert.alertNameID == 26 ||
+                    alert.alertNameID == 27 ) {
 
                     alert.save();
                 }
@@ -255,6 +256,11 @@ module.exports.postNotes = function(req, res) {
                     alert.save();
                 }
                 if (alert.alertNameID == 7 ) {
+
+                    alert.evacuateWhereTo = req.body.whereToEvacuate;
+                    alert.save();
+                }
+                if (alert.alertNameID == 27 ) {
 
                     alert.evacuateWhereTo = req.body.whereToEvacuate;
                     alert.save();

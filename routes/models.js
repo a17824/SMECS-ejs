@@ -141,6 +141,7 @@ module.exports.AlertsGroup = mongoose.model("AlertsGroup", AlertsGroupSchema);
 var AlertsSchema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     alertTypeID: Number,
+    alertTypeSortID: Number,
     alertTypeName: String,
     alertTypeColorName: String,
     alertTypeColorValue: String,
@@ -201,6 +202,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     busAccidentLocation1: String,           //Accident Location
     busAccidentLocation2: String,           //Location of Principal CellPhone
+    busTimeChanged: String,
     multiSelectionNames: [String],
     multiSelectionIDs: [String],
     askedForAssistance: Boolean,
@@ -257,6 +259,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         userPhoto: String
     }],
     ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
+    placeholderNote: String,
     note: String,
     floorName: String,                 //read from FloorLevels database (radio buttons)
     floorID: String,                    //for Hazardous Alert "all floors exit to evacuate" option
@@ -274,6 +277,8 @@ var AlertSentTempSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     busAccidentLocation1: String,           //Accident Location
     busAccidentLocation2: String,           //Location of Principal CellPhone
+    busTimeChanged: String,
+    busTimeChangedEmail: Boolean,
     multiSelectionNames: [String],          // Utilities in Failure or Medical Emergencies
     multiSelectionIDs: [String],
     medicalInjuredParties: Number,          //comboBox, listBox
@@ -363,9 +368,11 @@ var AclAlertsRealSchema = new mongoose.Schema({
     roleGroupID: Number,
     roleGroupName: String, // Principal, Office Staff, Teacher
     alertTypeID: Number,
+    alertTypeSortID: Number,
     alertTypeName: String, // Red, Green, Blue...
     alertTypeValue: String,
     alertID: Number,
+    alertSortID: Number,
     alertName: String, // Permission to Send/Receive alerts
     alertSoftDeleted: { type: Boolean, default: false},
     checkBoxType: String,
@@ -382,9 +389,11 @@ var AclAlertsTestSchema = new mongoose.Schema({
     roleGroupID: Number,
     roleGroupName: String, // Principal, Office Staff, Teacher
     alertTypeID: Number,
+    alertTypeSortID: Number,
     alertTypeName: String, // Red, Green, Blue...
     alertTypeValue: String,
     alertID: Number,
+    alertSortID: Number,
     alertName: String, // Permission to Send/Receive alerts
     alertSoftDeleted: { type: Boolean, default: false},
     checkBoxType: String,

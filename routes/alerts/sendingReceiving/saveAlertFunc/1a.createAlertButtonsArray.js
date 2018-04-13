@@ -21,6 +21,7 @@ module.exports.getRealTestAlerts = function(req, callback) {
         sortArrays(result[0]);
         sortArrays(result[1]);
 
+
         //end of Sort array by alertID
         callback(result); // this 'callback' is sending 'result' to 1.chooseAlert.js
     });
@@ -34,7 +35,7 @@ function getArrays(req, typeAclAlert, callback) {
                 'alertSoftDeleted': false,
                 'checkBoxID': {"$regex": "s" + roleX, "$options": "i"},
                 'checkBoxValue': true
-            }, callback2).sort({"alertTypeID": 1}).sort({"alertID": 1}).cursor();
+            }, callback2).sort({"alertTypeSortID": 1}).sort({"alertSortID": 1}).cursor();
         },
         function (err, data) {
             // comes here after all individual async calls have completed
@@ -51,10 +52,11 @@ function getArrays(req, typeAclAlert, callback) {
                         }
                     }
                     //end of___ checks is alertID already exits. If Exits, remove duplicate
-
                     arrayAlert.push({
                         'groupID': alert[i].alertTypeID,
+                        'alertTypeSortID': alert[i].alertTypeSortID,
                         'alertID': alert[i].alertID,
+                        'alertSortID': alert[i].alertSortID,
                         'alertName': alert[i].alertName,
                         'alertColor': alert[i].alertTypeName,
                         'alertColorValue': alert[i].alertTypeValue
@@ -66,12 +68,7 @@ function getArrays(req, typeAclAlert, callback) {
 }
 
 function sortArrays(result) {
-    var sortArray = result;
-    sortArray.sort(function(a,b) {
-        if (a.alertID < b.alertID)
-            return -1;
-        if (a.alertID > b.alertID)
-            return 1;
-        return 0;
+    result.sort(function (a, b) {
+        return a.alertTypeSortID - b.alertTypeSortID || a.alertSortID - b.alertSortID;
     });
 }

@@ -11,7 +11,7 @@ var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray
 module.exports.show = function(req, res) {
     async.parallel([
         function(callback){
-            models.Alerts.find().sort({"alertTypeID":1}).sort({"alertID":1}).exec(callback);
+            models.Alerts.find().sort({"sortID":1}).sort({"sortID":1}).exec(callback);
         },
         function(callback){
             buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
@@ -62,6 +62,7 @@ module.exports.showPost = function(req, res) {
                     if (req.body.alertID == 21){placeholderNote = 'ex: remember to not touch anything and put yellow tape around area.';}
                     if (req.body.alertID == 22){placeholderNote = 'ex: .';}
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
+                    if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
 
                     var alertTemp1 = new models.AlertSentTemp({
                         alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
@@ -102,7 +103,8 @@ module.exports.showPost = function(req, res) {
             req.body.alertID == 13 ||
             req.body.alertID == 20 ||
             req.body.alertID == 21 ||
-            req.body.alertID == 22 ) {
+            req.body.alertID == 22 ||
+            req.body.alertID == 27 ) {
             return res.send({redirect: '/alerts/sending/notes/' + alertTemp1._id})
         }
         if (req.body.alertID == 4 ||

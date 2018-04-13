@@ -163,6 +163,7 @@ module.exports.updatePost = function(req, res) {
                     else groups.forEach( function(group) {
                         if (group.alertTypeID == alertToUpdate1){
                             group.alertTypeID = req.body.alertGroupID;
+                            group.alertTypeSortID = req.body.sortID;
                             group.alertTypeName = req.body.alertGroupName;
                             group.alertTypeColorName = req.body.colorName;
                             group.alertTypeColorValue = req.body.colorValue;
@@ -185,12 +186,14 @@ module.exports.updatePost = function(req, res) {
                                         else aclGroups.forEach( function(aclGroup) {
                                             if (aclGroup.checkBoxID == 's'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID ){
                                                 aclGroup.alertTypeID = group.alertTypeID;
+                                                aclGroup.alertTypeSortID = group.alertTypeSortID;
                                                 aclGroup.alertTypeName = req.body.alertGroupName;
                                                 aclGroup.alertTypeValue = req.body.colorValue;
                                                 aclGroup.save();
                                             }
                                             if (aclGroup.checkBoxID == 'r'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID){
                                                 aclGroup.alertTypeID = group.alertTypeID;
+                                                aclGroup.alertTypeSortID = group.alertTypeSortID;
                                                 aclGroup.alertTypeName = req.body.alertGroupName;
                                                 aclGroup.alertTypeValue = req.body.colorValue;
                                                 aclGroup.save();

@@ -91,14 +91,14 @@
         <% for (var i=0; i < aclReal.length; i++ ){ %>
 
         <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].groupID %>" >
-        <%= aclReal[i].alertID %> <label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <%= aclReal[i].alertID %> <%= aclReal[i].sortID %><label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
         <% } %>
     </div>
 
     <div id='testModeON' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
         <input type="radio" name="alert" id=<%= aclTest[i].alertID %> value="<%= aclTest[i].groupID %>" >
-        <%= aclTest[i].alertID %> <label for="alert" style="color: <%= aclReal[i].alertColorValue %>"><%= aclTest[i].alertName %></label><br>
+        <%= aclTest[i].alertSortID %> <label for="alert" style="color: <%= aclReal[i].alertColorValue %>"><%= aclTest[i].alertName %></label><br>
         <% } %>
     </div>
 

@@ -26,10 +26,10 @@ function showTable(req, res, typeAclAlert, title){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
         function(callback){
-            models.AlertsGroup.find().sort({"alertTypeID":1}).exec(callback);
+            models.AlertsGroup.find().sort({"sortID":1}).exec(callback);
         },
         function(callback){
-            models.Alerts.find().sort({"alertID":1}).exec(callback);
+            models.Alerts.find().sort({"sortID":1}).exec(callback);
         },
         function(callback){                                                             //pass all checkbox database to ejs
             models[typeAclAlert].find().exec(callback);

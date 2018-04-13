@@ -14,7 +14,7 @@ module.exports.show = function(req, res, next) {
 */
     async.parallel([
         function(callback){
-            models.Alerts.find().sort({"alertTypeID":1}).sort({"alertID":1}).exec(callback);
+            models.Alerts.find().sort({"sortID":1}).sort({"sortID":1}).exec(callback);
         },
         function(callback){
             models.AlertsGroup.find().sort({"sortID":1}).exec(callback);
@@ -121,11 +121,9 @@ module.exports.create = function(req, res) {
 module.exports.createPost = function(req, res) {
 console.log('req.body.alertGroupID = ',req.body.alertGroupID);
     models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
-        console.log('alertGroup = ',alertGroup);
-        console.log('alertGroup.colorName = ',alertGroup[0].colorName);
-
         var alert1 = new models.Alerts({
             alertTypeID: req.body.alertGroupID,
+            alertTypeSortID: alertGroup[0].sortID,
             alertTypeName: req.body.alertGroupName,
             alertTypeColorName: alertGroup[0].colorName,
             alertTypeColorValue: alertGroup[0].colorValue,
@@ -157,9 +155,11 @@ console.log('req.body.alertGroupID = ',req.body.alertGroupID);
                             roleGroupID: groups[u].roleID,
                             roleGroupName: groups[u].roleName,
                             alertTypeID: req.body.alertGroupID,
+                            alertTypeSortID: groups[u].sortID,
                             alertTypeName: req.body.alertGroupName,
                             alertTypeValue: alertGroup[0].colorValue,
                             alertID: req.body.alertID,
+                            alertSortID: req.body.sortID,
                             alertName: req.body.alertName,
                             checkBoxType: 'send',
                             checkBoxID: 's'+groups[u].roleID+req.body.alertID,
@@ -170,9 +170,11 @@ console.log('req.body.alertGroupID = ',req.body.alertGroupID);
                             roleGroupID: groups[u].roleID,
                             roleGroupName: groups[u].roleName,
                             alertTypeID: req.body.alertGroupID,
+                            alertTypeSortID: groups[u].sortID,
                             alertTypeName: req.body.alertGroupName,
                             alertTypeValue: alertGroup[0].colorValue,
                             alertID: req.body.alertID,
+                            alertSortID: req.body.sortID,
                             alertName: req.body.alertName,
                             checkBoxType: 'receive',
                             checkBoxID: 'r'+groups[u].roleID+req.body.alertID,
@@ -280,6 +282,7 @@ module.exports.updatePost = function(req, res) {
                                 group.alertTypeName = req.body.alertGroupName;
                                 group.alertTypeValue = alertGroup[0].colorValue;
                                 group.alertID = req.body.alertID;
+                                group.alertSortID = req.body.sortID;
                                 group.alertName = req.body.alertName;
                                 group.checkBoxType = 'send';
                                 group.checkBoxID = 's'+group.roleGroupID+req.body.alertID;
@@ -291,6 +294,7 @@ module.exports.updatePost = function(req, res) {
                                 group.alertTypeName = req.body.alertGroupName;
                                 group.alertTypeValue = alertGroup[0].colorValue;
                                 group.alertID = req.body.alertID;
+                                group.alertSortID = req.body.sortID;
                                 group.alertName = req.body.alertName;
                                 group.checkBoxType = 'receive';
                                 group.checkBoxID = 'r'+group.roleGroupID+req.body.alertID;
