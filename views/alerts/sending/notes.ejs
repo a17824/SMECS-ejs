@@ -8,6 +8,7 @@
         $(document).ready(function(){
             var alertID = document.getElementById('alertNameID');
 
+            var finalBustime;
             /********** Bus Transportation changed *******************/
             if(alertID.value == 27){
                 var bus = document.getElementById('busTimeChanged');
@@ -22,7 +23,14 @@
                         }
 
                         hours = hours % 12;
-
+                        ampm = 'hours';
+                        hours = hours % 12;
+                        if (hours === 0){
+                            ampm = 'mintues';
+                        }
+                        if (hours === 1){
+                            ampm = 'hour';
+                        }
                         if (hours === 0 && minutes === 15 ) {
                             select.append($('<option></option>')
                                 .text(' n/a '));
@@ -31,14 +39,15 @@
                         if (hours + ':' + minutes + ' ' + ampm === bus.value) { //if back button is used, put selected time on select box
                             select.append($('<option></option>')
                                 .attr('value', i)
-                                .text(hours + ':' + minutes)
+                                .text(hours + ':' + minutes + ' hours')
                                 .attr('selected','selected'));
                         }
                         else {
                             select.append($('<option></option>')
                                 .attr('value', i)
-                                .text(hours + ':' + minutes));
+                                .text(hours + ':' + minutes + ' ' + ampm));
                         }
+                        finalBustime = hours + ':' + minutes;
                     }
                 }
                 busPopulate('#busTimeSelect');
@@ -85,19 +94,21 @@
             }
             /********** end of Last Time seen missing student ************/
 
-            var alert_ID, alertNameID, note, lastTimeSeen, lastPlaceSeen, clothesWearing, seat, studentBehaviour, whereToEvacuate, busTime;
-            $("#<%= alert.id %>").click(function(){
-                alert_ID=$(this).attr('id');
-                alertNameID=$("#alertNameID").val();
-                note=$("#note").val();
-                lastTimeSeen=$("#timeSelect").val();
-                lastPlaceSeen=$("#lastPlaceSeen").val();
-                clothesWearing=$("#clothesWearing").val();
-                seat=$("#seat").val();
-                studentBehaviour=$("#studentBehaviour").val();
-                whereToEvacuate=$("#whereToEvacuate").val();
-                busTime=$("#busTimeSelect").val();
 
+            $("#<%= alert.id %>").click(function(){
+                var alert_ID=$(this).attr('id');
+                var alertNameID=$("#alertNameID").val();
+                var note=$("#note").val();
+                var lastTimeSeen=$("#timeSelect").val();
+                var lastPlaceSeen=$("#lastPlaceSeen").val();
+                var clothesWearing=$("#clothesWearing").val();
+                var seat=$("#seat").val();
+                var studentBehaviour=$("#studentBehaviour").val();
+                var whereToEvacuate=$("#whereToEvacuate").val();
+                var busTime=$("#busTimeSelect").val();
+                var radioBusDay =$("input[name='radioBusDay']:checked").val();
+                var delayedAhead =$("input[name='radioBusAheadDelayed']:checked").val();
+                var busSendEmail = document.getElementById("checkbox").checked;
 
                 if(alertNameID == 4){
                     var time;
@@ -120,10 +131,10 @@
                     }
                 }
                 if(alertNameID == 27){
-                    console.log('busTime = ',busTime)
+
                     var busTime2;
                     if (busTime == 'n/a'){
-                        time =  lastTimeSeen;
+                        busTime2 = 'n/a';
                     }
                     else {
                         var hours, minutes, ampm;
@@ -132,17 +143,20 @@
                         if (minutes < 10){
                             minutes = '0' + minutes; // adding leading zero
                         }
-                        ampm = hours % 24 < 12 ? 'AM' : 'PM';
+                        ampm = 'hours';
                         hours = hours % 12;
                         if (hours === 0){
-                            hours = 12;
+                            ampm = 'mintues';
+                        }
+                        if (hours === 1){
+                            ampm = 'hour';
                         }
                         busTime2 = hours + ':' + minutes + ' ' + ampm;
                     }
-                    console.log('busTime = ',busTime2)
                 }
 
                 //-----forms validation------------------------------------
+
 
 
                 //--------------------------------forms validation end-------
@@ -154,7 +168,10 @@
                         alertNameID: alertNameID,
                         note: note,
                         lastTimeSeen: time,
+                        busMorningAfternoon: radioBusDay,
+                        busDelayedAhead: delayedAhead,
                         busTime: busTime2,
+                        busSendEmail: busSendEmail,
                         lastPlaceSeen: lastPlaceSeen,
                         clothesWearing: clothesWearing,
                         seat: seat,
@@ -216,18 +233,32 @@
 
     <% if (alert.alertNameID == 27) {%>
 
+    <label for="busRadio"><b>Time of day:</b></label><br>
+    <% if (alert.busMorningAfternoon == 'afternoon') {%>
+    <input type="radio" name="radioBusDay" value="morning" > Morning (Bus picking up)<br>
+    <input type="radio" name="radioBusDay" value="afternoon" checked> Afternoon (Bus dropping off)<br><br>
+    <% }else{%>
+    <input type="radio" name="radioBusDay" value="morning" checked> Morning (Bus picking up)<br>
+    <input type="radio" name="radioBusDay" value="afternoon" > Afternoon (Bus dropping off)<br><br>
+    <% } %>
     <label for="busRadio"><b>Bus is:</b></label><br>
-
-    <input type="radio" name="smecsApp" value="false" checked> Delayed &emsp;
-    <input type="radio" name="smecsApp" value="true"> Ahead<br><br>
-
+    <% if (alert.busDelayedAhead == 'ahead') {%>
+    <input type="radio" name="radioBusAheadDelayed" value="delayed" > Delayed &emsp;<br>
+    <input type="radio" name="radioBusAheadDelayed" value="ahead" checked> Ahead<br><br>
+    <% }else{%>
+    <input type="radio" name="radioBusAheadDelayed" value="delayed" checked> Delayed &emsp;<br>
+    <input type="radio" name="radioBusAheadDelayed" value="ahead" > Ahead<br><br>
+    <% } %>
     <label for="busTime"><b>Time:</b>(optional)</label>
     <select id="busTimeSelect"> </select><br><br>
 
-    <label for="email"><b>Send also an email:</b></label>
-    <input class="checkbox" type="checkbox" name="checkbox" id=<%= alert.busTimeChangedEmail %> value="<%= alert.busTimeChangedEmail %>"><br><br>
+    <label for="email"><b>Send email notification:</b></label>
+    <% if (alert.busTimeChangedEmail == true) {%>
+    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>" checked><br><br>
+    <% }else{%>
+    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>"><br><br>
     <% } %>
-
+    <% } %>
 
 
     <% if (alert.alertNameID == 6) {%>

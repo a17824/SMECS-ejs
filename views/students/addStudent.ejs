@@ -1,15 +1,83 @@
 <html>
 <head>
     <title>add student</title>
+    <link rel='stylesheet' href='/stylesheets/updateUser.css' />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
+
+        var choices, value2send;
+        function selectUser(select)
+        {
+            var option = $("#dataList").val();
+            //get datalist data-value to value2send
+            value2send= document.querySelector('#students option[value="'+option+'"]').dataset.value;
+
+            var ul = select.parentNode.getElementsByTagName('ul')[0];
+            choices = ul.getElementsByTagName('input');
+
+            for (var i = 0; i < choices.length; i++) {
+
+                if (choices[i].value == value2send) {
+                    return;
+                }
+            }
+            var li = document.createElement('li');
+            var input = document.createElement('input');
+            var text = document.createTextNode(option);
+
+            input.type = 'hidden';
+            input.name = 'users[]';
+            input.value = value2send;
+
+            li.appendChild(input);
+            li.appendChild(text);
+            li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
+
+            ul.appendChild(li);
+
+
+        }
+        var usersToRemove = [];
+        function removeUser(user){
+            var choice = user.getElementsByTagName('input');
+            usersToRemove.push(choice[0].value);
+        }
+
+
         $(document).ready(function(){
-            var studentID,firstName,lastName,photo;
+            var studentID,firstName,lastName,photo,busRide;
             $("#btSubmit").click(function(){
                 studentID=$("#studentID").val();
                 firstName=$("#firstName").val();
                 lastName=$("#lastName").val();
                 photo=$("#photo").val();
+                busRide = document.getElementById("checkbox").checked;
+
+
+                var arrayUsers = [];
+                if (choices === undefined){
+                    arrayUsers = oldParentOf.split(",");
+                    for (var a = 0; a < usersToRemove.length; a++) {
+                        for (var i = 0; i < arrayUsers.length; i++) {
+                            if (usersToRemove[a] == arrayUsers[i]){
+                                arrayUsers.splice(i, 1);
+                            }
+                        }
+                    }
+
+                } else {
+                    if(choices.length > 0) {
+                        for (var a = 0; a < choices.length; a++) {
+                            arrayUsers.push(choices[a].value);
+                        }
+                    }
+                }
+                if(arrayUsers.length == 1 && arrayUsers[0] == "") {
+                    var index = arrayUsers.indexOf(5);
+                    arrayUsers.splice(index, 1);
+                }
+
+
 
                 //-----forms validation------------------------------------
                 if (firstName == "" ) {
@@ -62,6 +130,8 @@
                     studentID: studentID,
                     firstName: firstName,
                     lastName: lastName,
+                    parentOf: arrayUsers,
+                    busRide: busRide,
                     photo: photo
                 },function(data){
                     if(data==='done')
@@ -93,6 +163,50 @@
 
     <label for="studentID"><b>Student ID:</b></label><br>
     <input type="number" id="studentID" size="40" placeholder="ex: 1234"><br><br>
+
+    <label for="busRide"><b>Student uses school bus:</b></label>
+    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox ><br><br>
+
+
+
+
+
+    <label for="students"><b>Parents:</b></label><br>
+    <div id="labelsDiv2" class="labelsDiv2">
+        <div id="smecsUserDiv" class="enable">
+            <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parents associate to this Student:</label><br>
+            <ul id="smecsUserUl" class="enable">
+                <% for (var a = 0; a < student.parentOf.length; a++) { %>
+                <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                    <input type="hidden" name="users[]" value="<%= student.parentOf[a]._id %>" />
+                    <%= student.parentOf[a].parentFirstName %> <%= student.parentOf[a].parentLastName %>
+                </li>
+                <% } %>
+            </ul>
+            <input
+                    class="enable"
+                    id="dataList" list="students"
+                    name="student"
+                    placeholder="type parent name"
+                    value="<%= users._id %>"
+                    onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
+            <dataList id="students">
+                <% users.forEach(function(user) { %>
+                <option data-value="<%= user._id %>" value="<%= user.firstName %> <%= user.lastName %>"></option>
+                <% }); %>
+            </dataList>
+
+            <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+            <br><br>
+            If you want to add a new parent to dropdown list <a id="clickHere" class="enable"href="/users/addUserStep1">click here</a>.
+        </div>
+    </div>
+
+
+
+
+
+
 
     <input type="hidden" id="photo" >
 </form>

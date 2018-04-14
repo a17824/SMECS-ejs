@@ -158,13 +158,9 @@
     <% } %>
 <% } %>
 
-<% if (info.alertNameID !== 26 ) {%>
-    <label for="senTo"><b>Alert sent to: </b></label>
-    <input type="text" id="senTo" size="1" value="30" readonly ><br>
 
-    <label for="read"><b>People view/read alert: </b></label>
-    <input type="text" id="read" size="1" value="20" readonly ><br>
-<% } %>
+
+
 
 <% if (info.request911Call == true ) {%>
     <% for (var i=0; i < info.whoCanCall911.length; i++) { %>
@@ -242,6 +238,25 @@
     <label for="whereToEvacuate"><b>Where to Evacuate::</b></label><br>
     <textarea id="whereToEvacuate" rows="2"  cols="33" placeholder="n/a" readonly><%= info.evacuateWhereTo %></textarea><br><br>
 <% } %>
+
+
+<% if (info.alertNameID == 27 ) {%>
+<label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
+
+<label for="busRadio"><b>Bus is:</b> <%= info.busDelayedAhead %></label><br><br>
+
+<label for="busTime"><b>Time <%= info.busDelayedAhead %>:</b></label>
+<input type="text" id="lastPlaceSeen" size="8" placeholder="n/a" value="<%= info.busTimeChanged %>" readonly><br><br>
+
+<label for="email"><b>Send email notification:</b></label>
+<% if (info.busTimeChangedEmail == true ) {%>
+<input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" checked onclick="return false;"><br><br>
+<% } else {%>
+<input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" onclick="return false;"><br><br>
+<% } %>
+<% } %>
+
+
 
 <!-- Alert HAZARDOUS MATERIALS SPILL -->
 <% if (info.alertNameID == 6) {%>

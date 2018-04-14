@@ -34,13 +34,14 @@
         }
 
         $(document).ready(function(){
-            var student_ID,firstName,lastName,studentID,photo;
+            var student_ID,firstName,lastName,studentID,photo,busRide;
             $("#<%= students.id %>").click(function(){
                 student_ID=$(this).attr('id');
                 firstName=$("#firstName").val();
                 lastName=$("#lastName").val();
                 studentID=$("#studentID").val();
                 photo=$("#photo").val();
+                busRide = document.getElementById("checkbox").checked;
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -81,6 +82,7 @@
                     lastName: lastName,
                     studentID: studentID,
                     parentOf: arrayUsers,
+                    busRide: busRide,
                     photo: photo
                 },function(data){
                     if(data==='done')
@@ -111,7 +113,12 @@
     <input type="text" id="lastName" size="40" value="<%= students.lastName %>"><br><br>
     <label for="studentID"><b>ID:</b></label><br>
     <input type="number" id="studentID" size="40" value="<%= students.studentID %>"><br><br>
-
+    <label for="busRide"><b>Student uses school bus:</b></label>
+    <% if (students.busRide == true) {%>
+    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= students.busRide %>" checked><br><br>
+    <% }else{%>
+    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= students.busRide %>"><br><br>
+    <% } %>
     <input type="hidden" id="savedValueSmecsUsers" value="<%= parentsIdArray %>">
     <input type="hidden" id="photo" value="<%= students.photo %>">
 

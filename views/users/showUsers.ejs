@@ -21,10 +21,10 @@
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
       <link href="/public/gentelella/build/css/showUsers.css" rel="stylesheet">
 
-    
+
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    
+
     <script type="text/javascript">
       $(document).ready(function () {
         $("#btSubmit").click(function () {
@@ -104,11 +104,11 @@
                   </form>
                   <div class="" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                      <li role="presentation" class="active"><a href="#tab_content1" id="schoolStaff-tab" role="tab" data-toggle="tab" aria-expanded="true">School Staff</a>
-                      </li>
-                      <li role="presentation" class=""><a href="#tab_content2" role="tab" id="parents-tab" data-toggle="tab" aria-expanded="false">Parents</a>
-                      </li>
-                      <li role="presentation" class=""><a href="#tab_content3" role="tab" id="utilityWorkers-tab2" data-toggle="tab" aria-expanded="false">External or Companies</a>
+                        <li role="presentation" class="active"><a href="#tab_content1" id="schoolStaff-tab" role="tab" data-toggle="tab" aria-expanded="true">School Staff</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content2" role="tab" id="parents-tab" data-toggle="tab" aria-expanded="false">Parents</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content3" role="tab" id="utilityWorkers-tab2" data-toggle="tab" aria-expanded="false">External or Companies</a>
                       </li>
                     </ul>
                   </div>
@@ -116,17 +116,18 @@
                     <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
                       <table id="datatable-buttons" class="table table-hover display">
                         <thead>
-                          <tr>
+                        <tr>
                             <th></th>
                             <th>Photo</th>
                             <th>First Name</th>
                             <th>Last Name</th>
+                            <th>SMECS<br>Installed</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Privilege</th>
                             <th align="center">Update</th>
                             <th align="center">Move to Trash</th>
-                          </tr>
+                        </tr>
                         </thead>
                         <tbody>
                           <% users.forEach(function(user) { %>
@@ -148,6 +149,11 @@
                             <% } %>
                             <td><%= user.firstName %></td>
                             <td><%= user.lastName %></td>
+                              <% if (user.pushToken) { %>
+                              <td><img  src="/miscPictures/greenCheckmarkWeb20.png"></td>
+                              <% } else { %>
+                              <td><img  src="/miscPictures/redCross20.png"></td>
+                              <% } %>
                             <td><%= user.email %></td>
                             <td >
                               <% if (user.userRoleName.length > 0) { %>

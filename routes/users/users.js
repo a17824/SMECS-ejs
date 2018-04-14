@@ -175,6 +175,7 @@ module.exports.addStep2 = function(req, res) {
                     ifUserHasAnyOtherRole = 1;
                 }
             }
+
             res.render('users/addUserStep2', {
                 title: 'ADD USER: Step 2',
                 userAuthID: req.user.userPrivilegeID,
@@ -196,6 +197,7 @@ module.exports.addStep2Post = function(req, res) {
         function (callback) {
             var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
             var parentOf = req.body.parentOf;
+
             models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
                 if (!user) {
                     console.log(err);

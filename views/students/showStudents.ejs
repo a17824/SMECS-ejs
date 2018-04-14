@@ -103,6 +103,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>ID</th>
+                        <th>Uses Bus</th>
                         <th>Parent</th>
                         <th>Update</th>
                         <th>Delete</th>
@@ -141,6 +142,11 @@
                           <td><%= student.firstName %></td>
                           <td><%= student.lastName %></td>
                           <td><%= student.studentID %></td>
+                          <% if (student.busRide) { %>
+                            <td><img  src="/miscPictures/greenCheckmarkWeb20.png"></td>
+                          <% } else { %>
+                          <td><img  src="/miscPictures/redCross20.png"></td>
+                          <% } %>
                           <td >
                             <% if (student.parentOf.length > 0) { %>
                             <% for (var x = 0; x < student.parentOf.length; x++) {%>

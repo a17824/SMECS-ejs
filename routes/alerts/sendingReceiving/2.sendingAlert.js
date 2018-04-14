@@ -262,7 +262,10 @@ module.exports.postNotes = function(req, res) {
                 }
                 if (alert.alertNameID == 27 ) {
 
-                    alert.evacuateWhereTo = req.body.whereToEvacuate;
+                    alert.busMorningAfternoon = req.body.busMorningAfternoon;
+                    alert.busDelayedAhead = req.body.busDelayedAhead;
+                    alert.busTimeChanged = req.body.busTime;
+                    alert.busTimeChangedEmail = req.body.busSendEmail;
                     alert.save();
                 }
                 res.send({redirect:'/alerts/sending/reviewAlert/' + alertToUpdate1});

@@ -84,6 +84,7 @@ var StudentsSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     photo: String,
+    busRide: Boolean,
     parentOf: [{
         parentFirstName: String,
         parentLastName: String,
@@ -202,7 +203,10 @@ var AlertSentInfoSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     busAccidentLocation1: String,           //Accident Location
     busAccidentLocation2: String,           //Location of Principal CellPhone
-    busTimeChanged: String,
+    busMorningAfternoon: String,            //bus time: morning or afternoon
+    busDelayedAhead: String,                //bus is delayed or ahead
+    busTimeChanged: String,                 //0:45, 1:30...
+    busTimeChangedEmail: Boolean,            //on or off (to send email to parents)
     multiSelectionNames: [String],
     multiSelectionIDs: [String],
     askedForAssistance: Boolean,
@@ -277,8 +281,10 @@ var AlertSentTempSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     busAccidentLocation1: String,           //Accident Location
     busAccidentLocation2: String,           //Location of Principal CellPhone
-    busTimeChanged: String,
-    busTimeChangedEmail: Boolean,
+    busMorningAfternoon: String,            //bus time: morning or afternoon
+    busDelayedAhead: String,                //bus is delayed or ahead
+    busTimeChanged: String,                 //0:45, 1:30...
+    busTimeChangedEmail: Boolean,            //on or off (to send email to parents)
     multiSelectionNames: [String],          // Utilities in Failure or Medical Emergencies
     multiSelectionIDs: [String],
     medicalInjuredParties: Number,          //comboBox, listBox

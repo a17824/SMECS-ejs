@@ -52,7 +52,11 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         studentWithGunSeated: tempAlert.studentWithGunSeated,
         studentWithGunBehaviour: tempAlert.studentWithGunBehaviour,
         evacuateWhereTo: tempAlert.evacuateWhereTo,
-        requestAssistance: tempAlert.requestAssistance
+        requestAssistance: tempAlert.requestAssistance,
+        busMorningAfternoon: tempAlert.busMorningAfternoon,
+        busDelayedAhead: tempAlert.busDelayedAhead,
+        busTimeChanged: tempAlert.busTimeChanged,
+        busTimeChangedEmail: tempAlert.busTimeChangedEmail
 
     });
     alert1.save();
