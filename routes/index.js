@@ -6,7 +6,7 @@ var path = require('path');
 var models = require('./models');
 
 var users = require('./users/users');
-var students = require('./users/students');
+var students = require('./students/students');
 var utilityUsers = require('./users/utilityUsers');
 var roles2 = require('./roles/roles2');
 var privilege = require('./roles/privilege');

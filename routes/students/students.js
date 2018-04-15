@@ -3,16 +3,15 @@ var formidable = require('formidable');
 var util = require('util');
 var fs   = require('fs-extra');
 var path = require('path');
-var csv = require('./csv');
-var models = require('./../models');
+var csv = require('../users/csv');
+var models = require('../models');
 var async = require("async");
-var aclPermissions = require('./../acl/aclPermissions');
+var aclPermissions = require('../acl/aclPermissions');
 var moment = require('moment');
-var functions = require('./../functions');
+var functions = require('../functions');
 
 /* SHOW ALL STUDENTS. */
 module.exports.show = function(req, res, next) {
-    //this should be after -> console.log("OuterLoopFinished");
     console.log('Process Finished');
     models.Students.find({'parentOf': {$size: 0}}, function (err, students) {
         students.forEach(function (student) {
@@ -27,7 +26,7 @@ module.exports.show = function(req, res, next) {
 
         });
     });
-    //end of---- this should be after -> console.log("OuterLoopFinished");
+
 
     async.parallel([
         function(callback){
@@ -165,70 +164,53 @@ module.exports.addMultiplePost = function (req, res){
 
         if (this.openedFiles[0].name){ // if a file is selected do this
             //delete all Photos and other files in Student Photo folder before copy new photos
-            if (this.openedFiles[0].name) {// if a file is selected do this
-                var photos_location = 'public/photosStudents/';
-                try { var filesToDelete = fs.readdirSync(photos_location); }
-                catch(e) { return; }
-                if (filesToDelete.length > 0)
-                    for (var x = 0; x < filesToDelete.length; x++) {
-                        var fileP = photos_location + filesToDelete[x];
-                        if (fs.statSync(fileP).isFile())
-                            fs.unlinkSync(fileP);
-                        else
-                            console.log("No files to Delete");
-                    }
-            } //-----------END of delete all Photos and other files in Student Photo folder before copy new photos
+            var photos_location = 'public/photosStudents/';
+            try { var filesToDelete = fs.readdirSync(photos_location); }
+            catch(e) { return; }
+            if (filesToDelete.length > 0)
+                for (var x = 0; x < filesToDelete.length; x++) {
+                    var fileP = photos_location + filesToDelete[x];
+                    if (fs.statSync(fileP).isFile())
+                        fs.unlinkSync(fileP);
+                    else
+                        console.log("No files to Delete");
+                }
+            //-----------END of delete all Photos and other files in Student Photo folder before copy new photos
 
-            function removeStudentsAndCopyNewStudents (callback) {
-                //delete all old Students database
-                models.Students.remove({}, function (err, numberRemoved) {
-                    if (err) {
-                        console.log('err = ', err);
-                    } else {
-                        //if old Students database don't exits or has been deleted, then save new file
-                        fs.copy(temp_path, new_location + file_name, function (err) { // save file
-                            if (err) {
-                                console.error(err);
-                            } else {
-                                var csvHeaders = {
-                                    Students: {
-                                        headers: ['firstName', 'lastName', 'studentID', 'photo']
-                                    }
-                                };
-                                csv.importFile(new_location + file_name, csvHeaders.Students.headers, 'Students');
-                            }
-                            fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
-                                if (err) {
-                                    return res.send(500, 'Something went wrong');
-                                }
-                                callback('now is the time to run something else...');
-                            });//------------------------------#end - unlink
-                        });
-                    }
-                });
-                //--------end of ADD MULTI STUDENT
-            }
+            saveBusTransportation (function (result, err) { //STEP 1/3
+                var busTransportation = result;
+                if(err){
+                    console.log('err = ', err);
+                }else {
+                    //console.log('result = ', result); //callback('now is the time to run something else...')
+                    removeStudentsAndCopyNewStudents (function (result, err) { //STEP 2/3
+                        if(err){
+                            console.log('err = ', err);
+                        }else{
+                            //console.log('result = ', result); //callback('now is the time to run something else...')
+                            addDeleteStudentsParents(res,busTransportation); //STEP 3/3
+
+                            setTimeout(function(){
+                                res.redirect('/students/showStudents');
+                            }, 5000);
+                        }
+                    }, temp_path, file_name, new_location);
+                }
+            });
+
+
+
         } else { // if no file is selected delete temp file
             console.log('no files added');
             //delete file from temp folder-------
             fs.unlink(temp_path, function (err) {
                 if (err) {
-                    return res.send(500, 'Something went wrong');
+                    console.log('Something went wrong');
                 }
             });
             //------------------#end - unlink
+            res.redirect('/students/showStudents');
         }
-        removeStudentsAndCopyNewStudents (function (result, err) {
-            if(err){
-                console.log('err = ', err);
-            }else{
-                //console.log('result = ', result); //callback('now is the time to run something else...')
-                addDeleteStudentsParents(res);
-                setTimeout(function(){
-                    res.redirect('/students/showStudents');
-                }, 5000);
-            }
-        });
     });
     //-----------end ADD MULTIPLE STUDENTS
 };
@@ -639,7 +621,7 @@ function updateParentInUserDocument(req, student, newParentArray, oldParentArray
     async.waterfall([
         function (callback) {
 
-        //ADDING student to parent.of of User collection ---------
+            //ADDING student to parent.of of User collection ---------
             models.Users.find({'_id': newParentArray}, function (err, users) {
                 if (err) {
                     console.log('error finding users to add');
@@ -753,8 +735,43 @@ function updateUserRole(user) {
 }
 
 
+
+function removeStudentsAndCopyNewStudents (callback, temp_path, file_name, new_location) {
+
+    //delete all old Students database
+    models.Students.remove({}, function (err, numberRemoved) {
+        if (err) {
+            console.log('err = ', err);
+        } else {
+            //if old Students database don't exits or has been deleted, then save new file
+            fs.copy(temp_path, new_location + file_name, function (err) { // save file
+                if (err) {
+                    console.error(err);
+                } else {
+                    var csvHeaders = {
+                        Students: {
+                            headers: ['firstName', 'lastName', 'studentID', 'photo']
+                        }
+                    };
+                    csv.importFile(new_location + file_name, csvHeaders.Students.headers, 'Students');
+                }
+                fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
+                    if (err) {
+                        return res.send(500, 'Something went wrong');
+                    }
+                    callback('now is the time to run something else...');
+                });//------------------------------#end - unlink
+            });
+        }
+    });
+    //--------end of ADD MULTI STUDENT
+}
+
+
+
+
 //Function for  MULTI STUDENTS -> add parents to Student Collection or delete parents from Users collection --
-function addDeleteStudentsParents(res) {
+function addDeleteStudentsParents(res,busTransportation) {
     models.Users.find({'parentOf.0': { "$exists": true } }, function (err, users) {
         if (err) {
             console.log('err - finding parents');
@@ -773,8 +790,6 @@ function addDeleteStudentsParents(res) {
                             {"$push": {"parentOf": parent}},
                             {"new": true},
                             function (err, foundStudent) {
-                                console.log('0- foundStudent = ',foundStudent);
-                                console.log('0- child.studentID) ' + child.studentID + ' ' + child.studentFirstName + ' ' + child.studentLastName);
                                 if (err) {
                                     console.log('student not updated successfully');
                                     throw err;
@@ -787,16 +802,16 @@ function addDeleteStudentsParents(res) {
                                         else {
                                             //if user has more than one role and has only one child -> removes parent role and child
                                             if (user.userRoleID.length > 1 && user.parentOf.length < 2) {
-                                                console.log('2) BBBBBBBBBBBBBBBBBBBBBBB');
                                                 child.remove();
-                                                //removes userRoleID and userRoleName
+                                                //removes userRoleID and userRoleName and put user.parentOf = undefined;
                                                 for (var z = 0; z < user.userRoleID.length; z++) {
-                                                    console.log('2) cccccc');
                                                     var index = z;
                                                     if (user.userRoleID[z] == 98 ){
                                                         console.log('user.userRoleID before = ',user.userRoleID);
                                                         user.userRoleID.splice(index,1);
                                                         user.userRoleName.splice(index,1);
+                                                        user.parent = false;
+                                                        user.parentOf = undefined;
                                                         console.log('user.userRoleID after = ',user.userRoleID);
                                                         user.save(function (err) {
                                                             if (err) {
@@ -806,9 +821,7 @@ function addDeleteStudentsParents(res) {
                                                             }
                                                         });
                                                     }
-                                                    console.log('2) cccccc');
                                                 }
-                                                console.log('2) BBBBBBBBBBBBBBBBBBBBBBB');
                                             }else{ //if user is parent of more than 1 student deletes only the student that doesn't exists
                                                 console.log('3) child ' + child.studentFirstName + ' ' + child.studentLastName +
                                                     ' removed from ' + user.firstName + ' ' + user.lastName + ' document');
@@ -834,46 +847,39 @@ function addDeleteStudentsParents(res) {
                     }
                     callback1();
                 },function (err) {
-                    //console.log("InnerLoopFinished");
+                    console.log("InnerLoopFinished");
                     callback();
                 });
             }, function (err) {
                 console.log("OuterLoopFinished");
-                //res.redirect('/students/showStudents');
+                restoreBusTransportation(busTransportation);
             });
         }
     });
 }
-//Function to update user child in user document --------------------
-/*
-function updateParentInUserDocument(student) {
 
-    var parent = {
-        studentID: student.studentID,
-        studentFirstName: student.firstName,
-        studentLastName: student.lastName
-    };
-    models.Users.find({'parentOf.studentID': student.studentID}, function (err, users) {
-        if(err){
-            console.log('user not updated successfully');
-            throw err;
-        }else {
-            users.forEach(function (user) {
-                for (var i = 0; i < user.parentOf.length; i++) {
-                    if (user.parentOf[i].studentID == student.studentID) {
-                        user.parentOf[i] = parent;
-                        user.save(function (err) {
-                            if (err) {
-                                console.log('error updating user.parentOf document');
-                            } else {
-                                console.log('"parentOf" UPDATED successfully on USER database');
-                            }
-                        });
-                    }
-                }
+
+function saveBusTransportation(callback) {
+
+    models.Students.find({'busRide': {$eq: true} }, function (err, students) {
+        if (err) {
+            console.log('no students with "busTransportation found');
+            callback('now is the time to run something else...');
+        }else{
+            var busTransportation =[];
+            students.forEach(function (student){
+                busTransportation.push(student.studentID);
             });
+            callback(busTransportation);
         }
     });
 }
-*/
-//-------------- end of Function to update user child in user document
+function restoreBusTransportation(busTransportation) {
+    models.Students.update({studentID: {$in: busTransportation}}, {busRide: true}, {multi: true}, function (err,students) {
+        if (err) {
+            console.log('no students were updated with "busTransportation"');
+        }else{
+            console.log('success updating Students with BusTransportation');
+        }
+    });
+}

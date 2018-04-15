@@ -226,7 +226,7 @@
                           <td><%= user.lastName %></td>
                           <td><%= user.email %></td>
                           <td >
-                            <% if (user.parentOf.length > 0) { %>
+                            <% if (user.parent == true) { %>
                             <% for (var x = 0; x < user.parentOf.length; x++) {%>
                             <%= user.parentOf[x].studentFirstName%> <%= user.parentOf[x].studentLastName%><br>
                             <% } %>

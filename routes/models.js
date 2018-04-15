@@ -84,7 +84,7 @@ var StudentsSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     photo: String,
-    busRide: Boolean,
+    busRide: { type: Boolean, default: false},
     parentOf: [{
         parentFirstName: String,
         parentLastName: String,
