@@ -7,6 +7,7 @@ var models = require('./models');
 
 var users = require('./users/users');
 var students = require('./students/students');
+var parentsSelfRegistration = require('./users/parentsSelfRegistration');
 var utilityUsers = require('./users/utilityUsers');
 var roles2 = require('./roles/roles2');
 var privilege = require('./roles/privilege');
@@ -17,7 +18,7 @@ var alertGroups = require('./alerts/alertGroups');
 var alerts = require('./alerts/alerts');
 var dashboard = require('./dashboard');
 var reports = require('./alerts/reports/reports');
-var reportsReqAss = require('./alerts/reports/requestAssistance');
+
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 
 var auth = require('./authentication/auth');
@@ -439,41 +440,22 @@ router.post('/permissions/showPermissionsTable', auth.simpleAuth, auth.requireLo
 
 
 /* SHOW REPORTS. */
-router.get('/reports/showReports', auth.simpleAuth, auth.requireLogin, reports.show, function(req, res, next) {
+router.get('/reports/showReports', auth.simpleAuth, auth.requireLogin, reports.reportsAlerts, function(req, res, next) {
 });
-
+/* SHOW ALERT REPORTS Received. */
+router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogin, reports.reportsUsers,function(req, res) {
+});
 // show Reports DETAILS-------------------------------
-router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin, function(req, res) {
-
-    models.ReportsSent.findById(req.params.id,function(error, details) {
-        console.log(details);
-        res.render('reports/showReportsDetails', { title: 'Alert Details', details: details });
-
-    });
+router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin, reports.reportsDetails, function(req, res) {
 });
 
 /* REPORTS REQUEST ASSISTANCE. */
-router.get('/reports/requestAssistance', auth.simpleAuth, auth.requireLogin, reportsReqAss.show, function(req, res, next) {
+router.get('/parentsSelfRegistration/:id', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.update, function(req, res, next) {
+});
+router.post('/parentsSelfRegistration', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.updatePost, function(req, res) {
 });
 
 
-/* SHOW ALERT REPORTS Received. */
-router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogin, function(req, res) {
-    async.parallel([
-        function(callback){
-            models.ReportsSent.findById(req.params.id).exec(callback);
-        },
-        function(callback){
-            models.ReportsReceived.find().sort({"scope":1}).sort({"to":1}).exec(callback);
-        }
-    ],function(err, results){
-        res.render('reports/showReportsReceived',{
-            title:'REPORTS RECEIVED',
-            reportSent: results[0],
-            reportReceived: results[1]
-        });
-    })
-});
 
 
 

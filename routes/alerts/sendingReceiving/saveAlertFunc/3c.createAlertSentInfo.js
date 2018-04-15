@@ -21,6 +21,15 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         };
         sentTo.push(sentToArr);
     });
+    var studentPhoto = undefined;
+    if (tempAlert.alertNameID == 4 ||
+        tempAlert.alertNameID == 5 ||
+        tempAlert.alertNameID == 16 ||
+        tempAlert.alertNameID == 17 ||
+        tempAlert.alertNameID == 19) {
+
+        studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
+    }
 
     var alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,
@@ -45,7 +54,7 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         multiSelectionNames: tempAlert.multiSelectionNames,
         multiSelectionIDs: tempAlert.multiSelectionIDs,
         studentName: tempAlert.studentName,
-        studentPhoto: tempAlert._id + '_' + tempAlert.studentPhoto,
+        studentPhoto: studentPhoto,
         missingChildLastTimeSeen: tempAlert.missingChildLastTimeSeen,
         missingChildLastPlaceSeen: tempAlert.missingChildLastPlaceSeen,
         missingChildClothesWearing: tempAlert.missingChildClothesWearing,

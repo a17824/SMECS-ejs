@@ -98,7 +98,7 @@
         <% if (user.email == utility.smecsUsers[a]) {%>
         <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
             <input type="hidden" name="users[]" value="<%= utility.smecsUsers[a] %>" />
-            <%= utility.smecsUsers[a] %> &emsp; (<%= user.note %>)
+            <%= utility.smecsUsers[a] %> &emsp; (<%= user.companyName %> <%= user.contactName %>)
         </li>
         <% } %>
         <% }); %>
@@ -112,7 +112,7 @@
         <option disabled selected value> -- select a user from dropdown list -- </option>
         <% allUtilUsers.forEach(function(user) { %>
         <% if (user.softDeleted == null) { %>
-        <option value="<%= user.email %>" ><%= user.email %>&emsp; (<%= user.note %>)</option>
+        <option value="<%= user.email %>" ><%= user.email %>&emsp; (<%= user.companyName %> <%= user.contactName %>)</option>
         <% } %>
         <% }); %>
     </select>

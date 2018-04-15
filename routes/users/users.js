@@ -438,32 +438,42 @@ module.exports.update = function(req, res) {
                 var ifUserHasPrincipalRole = 0;
                 var ifUserHasUtilityUserRole = 0;
                 var ifUserHasAnyOtherRole = 0;
-                for (var i = 0; i < user.userRoleID.length; i++) {
-                    //if user has Principal Role
-                    if (user.userRoleID[i] == 1) {
-                        ifUserHasPrincipalRole = 1;
+
+                if (!user) {
+
+                    console.log('TTL EXPIRED');
+                    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
+                    res.redirect('/users/showUsers/');
+                }else{
+                    for (var i = 0; i < user.userRoleID.length; i++) {
+                        //if user has Principal Role
+                        if (user.userRoleID[i] == 1) {
+                            ifUserHasPrincipalRole = 1;
+                        }
+                        //if user has UtilityUser Role
+                        if (user.userRoleID[i] == 99) {
+                            ifUserHasUtilityUserRole = 1;
+                        }
+                        //if user as a role different from Parent or UtilityUser Role
+                        if (user.userRoleID[i] != 98 && user.userRoleID[i] != 99) {
+                            ifUserHasAnyOtherRole = 1;
+                        }
                     }
-                    //if user has UtilityUser Role
-                    if (user.userRoleID[i] == 99) {
-                        ifUserHasUtilityUserRole = 1;
-                    }
-                    //if user as a role different from Parent or UtilityUser Role
-                    if (user.userRoleID[i] != 98 && user.userRoleID[i] != 99) {
-                        ifUserHasAnyOtherRole = 1;
-                    }
+                    callback(
+                        null,
+                        user,
+                        students,
+                        roles,
+                        privileges,
+                        aclShowPermissionsTable,
+                        aclModifyUsers,
+                        sideMenu,
+                        ifUserHasPrincipalRole,
+                        ifUserHasUtilityUserRole,
+                        ifUserHasAnyOtherRole);
                 }
-                callback(
-                    null,
-                    user,
-                    students,
-                    roles,
-                    privileges,
-                    aclShowPermissionsTable,
-                    aclModifyUsers,
-                    sideMenu,
-                    ifUserHasPrincipalRole,
-                    ifUserHasUtilityUserRole,
-                    ifUserHasAnyOtherRole);
+
+
             }
         },
         function(
@@ -755,7 +765,7 @@ module.exports.updateAppSettingsPost = function(req, res) {
     var groupAlertsButtons = req.body.groupAlertsButtons;
     var oldGroupLogo = req.body.oldGroupLogo;
     var newGroupLogo = req.body.newGroupLogo;
-    console.log('groupAlertsButtons = ',groupAlertsButtons);
+
     models.Users.findById({'_id': userToUpdate}, function(err, user){
         if (err) {
             console.log('POST - something wrong updating App Settings');

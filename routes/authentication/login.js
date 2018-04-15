@@ -114,13 +114,13 @@ router.post('/login', function(req, res) {
             if (!user || user.softDeleted !== null) {
 
                 //checks for users in UtilityUsers database
-                models.UtilityUsers.findOne({ email: req.body.email }, function(err, utilityUser) {
-                    if (!utilityUser || utilityUser.softDeleted !== null) {
+                models.ParentSelfRegistration.findOne({ email: req.body.email }, function(err, parentSelfRegistration) {
+                    if (!parentSelfRegistration) {
                         res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                     } else {
                         if (bcrypt.compareSync(req.body.pin, utilityUser.pin)) {
-                            req.session.user = utilityUser;
-                            res.redirect('/reports/requestAssistance');
+                            req.session.user = parentSelfRegistration;
+                            res.redirect('TO PARENT SELF REGISTRATION PAGE');
                         } else {
                             res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                         }

@@ -20,7 +20,6 @@ module.exports.saveStudentFile = function(req, res, tempAlert) {
             console.log("No Student Photo found");
         }
         else {
-
             if (result.studentPhoto == '' || result.studentPhoto == 'photoNotAvailable.bmp'){
                 var src_location = 'public/photosNotAvailable/';
                 var dst_location = 'public/alertSentInfo/studentsPhotos/';
@@ -31,7 +30,6 @@ module.exports.saveStudentFile = function(req, res, tempAlert) {
                     if (err) {
                         console.error(err);
                     } else {
-
                         console.log("success! saved " + src_File_name);
                     }
                 });
@@ -46,7 +44,7 @@ module.exports.saveStudentFile = function(req, res, tempAlert) {
                     if (err) {
                         console.error(err);
                     } else {
-                        //console.log("success! saved " + result.studentPhoto);
+                        console.log("success! saved " + src_File_name);
                     }
                 });
             }

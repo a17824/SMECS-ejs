@@ -10,6 +10,18 @@
         $(document).ready(function()
                 {
                     $("#myTable").tablesorter();
+                    $("#btSubmit").click(function () {
+
+                        $.post("/users/showUser", {
+
+
+                        }, function (data) {
+                            if (data === 'done') {
+                                alert("login success");
+                            }
+                            window.location = data.redirect
+                        });
+                    });
                 }
         );
     </script>
@@ -20,14 +32,14 @@
 <br>
 
 <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-<button class="utilityUsers" id="utiUsr" onclick="location.href='/utilities/addUtilitiesUsers'">Add Utility User</button>
+<input class="btn btn-primary" type="submit" id="btSubmit" value="Add User">&nbsp;&nbsp;
 <% } else { %>
-<button class="utilityUsers" id="utiUsr" onclick="location.href='/utilities/addUtilitiesUsers'" disabled>Add Utility User</button>
+<input class="btn btn-primary" type="submit" id="btSubmit" value="Add User" disabled>&nbsp;&nbsp;
 <% } %>
 <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-<button class="DelUtilityUsers" id="DelUtiUsr" onclick="location.href='/utilities/deletedUtilityUsers'">Deleted Utility Users</button>
+<button class="DelUtilityUsers" id="DelUtiUsr" onclick="location.href='/users/deletedUsers'">Trash</button>
 <% } else { %>
-<button class="DelUtilityUsers" id="DelUtiUsr" onclick="location.href='/utilities/deletedUtilityUsers'" disabled>Deleted Utility Users</button>
+<button class="DelUtilityUsers" id="DelUtiUsr" onclick="location.href='/users/deletedUsers'" disabled>Trash</button>
 <% } %>
 <br>
 
@@ -38,7 +50,8 @@
     <thead>
     <tr>
         <th>Email</th>
-        <th>Note</th>
+        <th>Company Name</th>
+        <th>Contact Name</th>
         <th align="center">Update</th>
         <th align="center">Delete</th>
     </tr>
@@ -47,19 +60,20 @@
     <% if (user.softDeleted == null) { %>
     <tr>
         <td><%= user.email %></td>
-        <td><%= user.note %></td>
+        <td><%= user.companyName %></td>
+        <td><%= user.contactName %></td>
         <td align="center">
             <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                <a href="/utilities/updateUtilityUser/<%= user.id %>"><button class="inTable">update</button></a>
+                <a href="/users/updateUser/<%= user.id %>"><button class="inTable">update</button></a>
             <% } else { %>
-                <a href="/utilities/updateUtilityUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
+                <a href="/users/updateUser/<%= user.id %>"><button class="inTable" disabled>update</button></a>
             <% } %>
         </td>
         <td align="center">
             <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                <a href="/utilities/softDelete/<%= user.id %>"><button class="inTable">delete</button></a>
+                <a href="/users/delete/<%= user.id %>"><button class="inTable">trash</button></a>
             <% } else { %>
-                <a href="/utilities/softDelete/<%= user.id %>"><button class="inTable" disabled>delete</button></a>
+                <a href="/users/delete/<%= user.id %>"><button class="inTable" disabled>trash</button></a>
             <% } %>
         </td>
     </tr>

@@ -56,20 +56,32 @@ module.exports.postFloor = function(req, res) {
                 if (floorName == '' || !floorName){    //if user skip floor question
                     floorPhoto = 'user skipped floor';
                     floorName = 'user skipped floor';
+                    //if user goes back in browser and removes floor floor--------------
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
+                    //-------end of If user goes back in browser and removes floor floor
                 }
 
                 if (floorPhoto == ''){ //if floor photo don't exist on database
                     floorPhoto = 'FloorPhotoNotExist';
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
                 }
 
                 if (floorID == 'allFloors'){ //if ANY FLOOR/ALL EXIT FLOORS are selected (for 'evacuation exit' of EVACUATE Alert)
                     floorPhoto = 'Multiple floors';
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
                 }
                 if (floorID == 'multipleLocations'){ //if Multiple Locations are selected (Violence Alert)
                     floorPhoto = 'Multiple Locations';
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
                 }
                 if (floorID == 'outside'){ //if Multiple Locations are selected (Violence Alert)
                     floorPhoto = 'Outside Building';
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
                 }
                 //---------------end of checkFloorPhotoExists
                 alert.floorName = floorName;
@@ -92,6 +104,8 @@ module.exports.postFloor = function(req, res) {
                     alert.alertNameID == 19 ||
                     alert.alertNameID == 23 ||
                     alert.alertNameID == 26 ) {
+
+                    //if user goes back in browser and removes floor floor
 
                     res.send({redirect:'/alerts/sending/notes/' + alertToUpdate1});
                 }
@@ -149,9 +163,11 @@ module.exports.postFloorLocation = function(req, res) {
             res.send({redirect: '/alerts/sending/chooseAlert/'});
         }
         else {
+            if(alert.floorName !== 'user skipped floor'){
             alert.sniperCoordinateX = req.body.coordinateX;
             alert.sniperCoordinateY = req.body.coordinateY;
             alert.save();
+            }
             console.log('saved temp Alert ' + alert.alertName + ' info from FLOOR LOCATION POST');
 
             if (alert.alertNameID == 2 ||

@@ -13,7 +13,7 @@ var aclPermissions = require('./../acl/aclPermissions');
 module.exports.show = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.UtilityUsers.find().exec(callback);
+            models.Users.find({userRoleID: 99}).exec(callback);
         },
         function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
         function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers
@@ -23,7 +23,7 @@ module.exports.show = function(req, res, next) {
 
 
     ],function(err, results){
-        //console.log(results[2]);
+
         res.render('utilities/users/showUtilitiesUsers',{
             title:'Utilities Users',
             utilityUsers: results[0],
@@ -227,7 +227,7 @@ module.exports.showUtilityUsers = function(req, res, next) {
             models.Utilities.findById(req.params.id).exec(callback);
         },
         function(callback){
-            models.UtilityUsers.find().exec(callback);
+            models.Users.find({userRoleID: 99}).exec(callback);
         },
         function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
         function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers

@@ -105,10 +105,13 @@
                 var seat=$("#seat").val();
                 var studentBehaviour=$("#studentBehaviour").val();
                 var whereToEvacuate=$("#whereToEvacuate").val();
-                var busTime=$("#busTimeSelect").val();
-                var radioBusDay =$("input[name='radioBusDay']:checked").val();
-                var delayedAhead =$("input[name='radioBusAheadDelayed']:checked").val();
-                var busSendEmail = document.getElementById("checkbox").checked;
+
+                if(alertNameID == 27) {
+                    var busTime = $("#busTimeSelect").val();
+                    var radioBusDay = $("input[name='radioBusDay']:checked").val();
+                    var delayedAhead = $("input[name='radioBusAheadDelayed']:checked").val();
+                    var busSendEmail = document.getElementById("checkbox").checked;
+                }
 
                 if(alertNameID == 4){
                     var time;

@@ -67,6 +67,17 @@ var UsersAddTempSchema = new mongoose.Schema({
 var UsersAddTemp;
 module.exports.UsersAddTemp = mongoose.model("UsersAddTemp", UsersAddTempSchema);
 
+
+// DEFINE UsersAddTemp COLLECTION IN MONGOdb
+var ParentSelfRegistrationSchema = new mongoose.Schema({
+    email: String,
+    pin: String
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"ParentSelfRegistration"}); //stops Mongoose of giving plurals to our collections names
+var ParentSelfRegistration;
+module.exports.ParentSelfRegistration = mongoose.model("ParentSelfRegistration", ParentSelfRegistrationSchema);
+
+
 // DEFINE PRIVILEGE COLLECTION IN MONGOdb
 var PrivilegeSchema = new mongoose.Schema({
     privilegeID: { type: Number, unique: true },
@@ -177,10 +188,16 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sentTo: [{                      //30
         firstName: String,
         lastName: String,
-        received: { type: Boolean, default: false },          //22
-        viewed: { type: Boolean, default: false },            //17
-        date: String,
-        time: String
+        received: {
+            receivedBoolean: {type: Boolean, default: false},         //22
+            receivedDate: String,
+            receivedTime: String
+        },
+        viewed: {
+            viewedBoolean: {type: Boolean, default: false},         //22
+            viewedDate: String,
+            viewedTime: String
+        },
     }],
 
     status: { type: String, default: 'open' },         // Open, Closed
