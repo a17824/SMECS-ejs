@@ -122,6 +122,9 @@
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>SMECS<br>Installed</th>
+                            <% if (userAuthID == 1) {%>
+                            <th>SMECS<br>Settings</th>
+                            <% } %>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Privilege</th>
@@ -129,60 +132,67 @@
                             <th align="center">Move to Trash</th>
                         </tr>
                         </thead>
-                        <tbody>
+                          <tbody>
                           <% users.forEach(function(user) { %>
                           <% if (user.softDeleted == null && user.internal == true) { %>
                           <tr>
-                            <td></td>
-                            <% if (user.photo == "" || user.photo == undefined) { %>
-                            <td align="center">
-                              <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                              <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                              <td></td>
+                              <% if (user.photo == "" || user.photo == undefined) { %>
+                              <td align="center">
+                                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                                  <% } else { %>
+                                  <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                                  <% } %>
+                              </td>
                               <% } else { %>
-                              <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                              <td>
+                                  <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>"  class="center-cropped"></a>
+                              </td>
                               <% } %>
-                            </td>
-                            <% } else { %>
-                            <td>
-                              <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>"  class="center-cropped"></a>
-                            </td>
-                            <% } %>
-                            <td><%= user.firstName %></td>
-                            <td><%= user.lastName %></td>
-                              <% if (user.pushToken) { %>
-                              <td><img  src="/miscPictures/greenCheckmarkWeb20.png"></td>
-                              <% } else { %>
-                              <td><img  src="/miscPictures/redCross20.png"></td>
+                              <td><%= user.firstName %></td>
+                              <td><%= user.lastName %></td>
+                              <td>
+                                  <% if (user.pushToken) { %>
+                                  <img  src="/miscPictures/greenCheckmarkWeb20.png">
+                                  <% } else { %>
+                                  <img  src="/miscPictures/redCross20.png">
+                                  <% } %>
+                              </td>
+                              <% if (userAuthID == 1) {%>
+                              <td>
+                                  <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
+                              </td>
                               <% } %>
-                            <td><%= user.email %></td>
-                            <td >
-                              <% if (user.userRoleName.length > 0) { %>
-                                <% for (var x = 0; x < user.userRoleName.length; x++) {%>
-                                <%= user.userRoleName[x] %><br>
-                                <% } %>
-                              <% } %>
-                            </td>
-                            <td><%= user.userPrivilegeName %></td>
+                              <td><%= user.email %></td>
+                              <td >
+                                  <% if (user.userRoleName.length > 0) { %>
+                                  <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                                  <%= user.userRoleName[x] %><br>
+                                  <% } %>
+                                  <% } %>
+                              </td>
+                              <td><%= user.userPrivilegeName %></td>
 
-                            <td align="center">
-                              <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                              <td align="center">
+                                  <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
                                   <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
-                              <% } else { %>
+                                  <% } else { %>
                                   <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning" disabled>update</button></a>
-                              <% } %>
-                            </td>
-                            <td align="center">
-                              <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                  <% } %>
+                              </td>
+                              <td align="center">
+                                  <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
                                   <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
-                              <% } else { %>
+                                  <% } else { %>
                                   <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
-                              <% } %>
-                            </td>
+                                  <% } %>
+                              </td>
                           </tr>
                           <% } %>
 
                           <% }); %>
-                        </tbody>
+                          </tbody>
                       </table>
                     </div>
 
@@ -190,125 +200,157 @@
 
 
 
-                    <div role="tabpanel" class="tab-pane fade" id="tab_content2">
-                      <table id="datatable" class="display table table-hover">
-                        <thead>
-                          <tr>
-                              <th></th>
-                              <th align="center">Photo</th>
-                              <th>First Name</th>
-                              <th>Last Name</th>
-                              <th>Email</th>
-                              <th>Parent of</th>
-                              <th align="center">Update</th>
-                              <th align="center">Move to Trash</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        <% users.forEach(function(user) { %>
-                        <% if (user.softDeleted == null && user.parent == true) { %>
-                        <tr>
-                          <td></td>
-                            <% if (user.photo == "" || user.photo == undefined) { %>
-                          <td align="center">
-                              <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                            <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
-                              <% } else { %>
-                            <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                      <div role="tabpanel" class="tab-pane fade" id="tab_content2">
+                          <table id="datatable" class="display table table-hover">
+                              <thead>
+                              <tr>
+                                  <th></th>
+                                  <th align="center">Photo</th>
+                                  <th>First Name</th>
+                                  <th>Last Name</th>
+                                  <th>SMECS<br>Installed</th>
+                                  <% if (userAuthID == 1) {%>
+                                  <th>SMECS<br>Settings</th>
+                                  <% } %>
+                                  <th>Email</th>
+                                  <th>Parent of</th>
+                                  <th align="center">Update</th>
+                                  <th align="center">Move to Trash</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <% users.forEach(function(user) { %>
+                              <% if (user.softDeleted == null && user.parent == true) { %>
+                              <tr>
+                                  <td></td>
+                                  <% if (user.photo == "" || user.photo == undefined) { %>
+                                  <td align="center">
+                                      <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                      <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                                      <% } else { %>
+                                      <a href="/users/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                                      <% } %>
+                                  </td>
+                                  <% } else { %>
+                                  <td>
+                                      <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="xAvatar"></a>
+                                  </td>
+                                  <% } %>
+                                  <td><%= user.firstName %></td>
+                                  <td><%= user.lastName %></td>
+                                  <td>
+                                      <% if (user.pushToken) { %>
+                                      <img  src="/miscPictures/greenCheckmarkWeb20.png">
+                                      <% } else { %>
+                                      <img  src="/miscPictures/redCross20.png">
+                                      <% } %>
+                                  </td>
+                                  <% if (userAuthID == 1) {%>
+                                  <td>
+                                      <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
+                                  </td>
+                                  <% } %>
+                                  <td><%= user.email %></td>
+                                  <td >
+                                      <% if (user.parent == true) { %>
+                                      <% for (var x = 0; x < user.parentOf.length; x++) {%>
+                                      <%= user.parentOf[x].studentFirstName%> <%= user.parentOf[x].studentLastName%><br>
+                                      <% } %>
+                                      <% } %>
+                                  </td>
+                                  <td align="center">
+                                      <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                      <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
+                                      <% } else { %>
+                                      <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                      <% } %>
+                                  </td>
+                                  <td align="center">
+                                      <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                      <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                                      <% } else { %>
+                                      <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
+                                      <% } %>
+                                  </td>
+                              </tr>
                               <% } %>
-                          </td>
-                            <% } else { %>
-                          <td>
-                            <a href="/users/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="xAvatar"></a>
-                          </td>
-                          <% } %>
-                          <td><%= user.firstName %></td>
-                          <td><%= user.lastName %></td>
-                          <td><%= user.email %></td>
-                          <td >
-                            <% if (user.parent == true) { %>
-                            <% for (var x = 0; x < user.parentOf.length; x++) {%>
-                            <%= user.parentOf[x].studentFirstName%> <%= user.parentOf[x].studentLastName%><br>
-                            <% } %>
-                            <% } %>
-                          </td>
-                          <td align="center">
-                            <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                            <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
-                            <% } else { %>
-                            <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning" disabled>update</button></a>
-                            <% } %>
-                          </td>
-                          <td align="center">
-                            <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                            <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
-                            <% } else { %>
-                            <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
-                            <% } %>
-                          </td>
-                        </tr>
-                        <% } %>
-                        <% }); %>
-                        </tbody>
-                      </table>
-                    </div>
+                              <% }); %>
+                              </tbody>
+                          </table>
+                      </div>
 
 
 
 
 
-                    <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="utilityWorkers-tab">
-                      <table id="datatable-fixed-header" class="table table-hover">
-                        <thead>
-                        <tr>
-                          <th></th>
-                          <th>Company Name</th>
-                          <th>Contact Name</th>
-                          <th>Email</th>
-                          <th align="center">Update</th>
-                          <th align="center">Move to Trash</th>
-                        </tr>
-                        </thead>
+                      <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="utilityWorkers-tab">
+                          <table id="datatable-fixed-header" class="table table-hover">
+                              <thead>
+                              <tr>
+                                  <th></th>
+                                  <th>Company Name</th>
+                                  <th>Contact Name</th>
+                                  <th>SMECS<br>Installed</th>
+                                  <% if (userAuthID == 1) {%>
+                                  <th>SMECS<br>Settings</th>
+                                  <% } %>
+                                  <th>Email</th>
+                                  <th align="center">Update</th>
+                                  <th align="center">Move to Trash</th>
+                              </tr>
+                              </thead>
 
-                        <tbody>
-                        <% users.forEach(function(user) { %>
-                        <% if (user.softDeleted == null && user.external == true) { %>
-                        <tr>
-                            <td></td>
-                            <td>
-                              <% if (user.companyName) { %>
-                                <%= user.companyName %>
+                              <tbody>
+                              <% users.forEach(function(user) { %>
+                              <% if (user.softDeleted == null && user.external == true) { %>
+                              <tr>
+                                  <td></td>
+                                  <td>
+                                      <% if (user.companyName) { %>
+                                      <%= user.companyName %>
+                                      <% } %>
+                                  </td>
+                                  <td>
+                                      <% if (user.contactName) { %>
+                                      <%= user.contactName %>
+                                      <% } else { %>
+                                      <%= user.firstName %> <%= user.lastName %>
+                                      <% } %>
+                                  </td>
+                                  <td>
+                                      <% if (user.pushToken) { %>
+                                      <img  src="/miscPictures/greenCheckmarkWeb20.png">
+                                      <% } else { %>
+                                      <img  src="/miscPictures/redCross20.png">
+                                      <% } %>
+                                  </td>
+                                  <% if (userAuthID == 1) {%>
+                                  <td>
+                                      <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
+                                  </td>
+                                  <% } %>
+                                  <td><%= user.email %></td>
+                                  <td align="center">
+                                      <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                      <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
+                                      <% } else { %>
+                                      <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                      <% } %>
+                                  </td>
+                                  <td align="center">
+                                      <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                      <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                                      <% } else { %>
+                                      <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
+                                      <% } %>
+                                  </td>
+                              </tr>
                               <% } %>
-                            </td>
-                            <td>
-                              <% if (user.contactName) { %>
-                                <%= user.contactName %>
-                              <% } else { %>
-                                <%= user.firstName %> <%= user.lastName %>
-                              <% } %>
-                            </td>
-                            <td><%= user.email %></td>
-                            <td align="center">
-                              <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                              <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
-                              <% } else { %>
-                              <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning" disabled>update</button></a>
-                              <% } %>
-                            </td>
-                            <td align="center">
-                              <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                              <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
-                              <% } else { %>
-                              <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
-                              <% } %>
-                            </td>
-                        </tr>
-                        <% } %>
 
-                        <% }); %>
-                        </tbody>
-                      </table>
-                    </div>
+                              <% }); %>
+                              </tbody>
+                          </table>
+                      </div>
                   </div>
                 </div>
               </div>

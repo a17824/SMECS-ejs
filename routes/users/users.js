@@ -595,7 +595,6 @@ module.exports.updatePost = function(req, res) {
                     }
                 };
 
-
                 user.userRoleID = req.body.userRoleID;
                 user.userRoleName = req.body.userRoleName;
                 user.userPrivilegeID = req.body.userPrivilegeID;
@@ -718,6 +717,56 @@ module.exports.updatePost = function(req, res) {
     });
 };
 /*-------------------------------------------end of update user*/
+
+
+
+/* update users APP SETTINGS. */
+module.exports.updateAppSettings = function(req, res) {
+    async.parallel([
+        function(callback){models.Users.findById(req.params.id, function (err, user) {callback(null, user);});
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        if (!results[0]) {
+            console.log(err);
+            console.log('something wrong updating App Settings');
+            req.flash('error_messages', 'App Settings not updated. please contact SMECS team for help');
+            res.redirect('/users/showUsers/');
+            //res.send({redirect: '/users/showUsers/'});
+        }
+        else {
+            res.render('users/updateAppSettings', {
+                title: 'App Settings',
+                userAuthID: req.user.userPrivilegeID,
+                user: results[0],
+                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+        }
+    })
+};
+        /*-------------------------------------------end of update users APP SETTINGS */
+
+module.exports.updateAppSettingsPost = function(req, res) {
+
+    var userToUpdate = req.body.studentToUpdate;
+    var groupAlertsButtons = req.body.groupAlertsButtons;
+    var oldGroupLogo = req.body.oldGroupLogo;
+    var newGroupLogo = req.body.newGroupLogo;
+    console.log('groupAlertsButtons = ',groupAlertsButtons);
+    models.Users.findById({'_id': userToUpdate}, function(err, user){
+        if (err) {
+            console.log('POST - something wrong updating App Settings');
+        }else{
+            user.appSettings.groupAlertsButtons = groupAlertsButtons;
+            user.save();
+        }
+        return res.send({redirect: '/users/showUsers'})
+    });
+};
+
 
 /* SoftDeleted USERS. */
 module.exports.softDelete = function(req, res) {

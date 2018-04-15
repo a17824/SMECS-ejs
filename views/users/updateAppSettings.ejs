@@ -1,0 +1,73 @@
+<html>
+<head>
+    <title>update student</title>
+    <link rel='stylesheet' href='/stylesheets/updateUser.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+
+        $(document).ready(function(){
+            var student_ID,groupAlertsButtons,oldGroupLogo,newGroupLogo;
+            $("#<%= user.id %>").click(function(){
+                student_ID=$(this).attr('id');
+                groupAlertsButtons = document.getElementById("groupAlertsButtons").checked;
+                oldGroupLogo=$("#oldGroupLogo").val();
+                newGroupLogo=$("#newGroupLogo").val();
+
+                //-----forms validation------------------------------------
+
+                //--------------------------------forms validation end-------
+
+                $.post("/updateAppSettings",{
+                    studentToUpdate: student_ID,
+                    groupAlertsButtons: groupAlertsButtons,
+                    oldGroupLogo: oldGroupLogo,
+                    newGroupLogo: newGroupLogo
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Changing app settings failed.")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+    <input type="hidden" id="oldGroupLogo" value="<%= user.appSettings.groupAlertsLogo %>">
+
+    <label for="busRide"><b>Show "Groups Buttons":</b></label>
+    <% if (user.appSettings.groupAlertsButtons == true) {%>
+    <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>" checked><br><br>
+    <% }else{%>
+    <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>"><br><br>
+    <% } %>
+    <label for="groupLogo"><b>Groups Buttons logo:</b></label>
+    <% if (user.appSettings.groupAlertsLogo === '' || user.appSettings.groupAlertsLogo == undefined) {%>
+    N/A
+    <% } else { %>
+    <img id="newGroupLogo" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/groupAlertLogos/<%= user.appSettings.groupAlertsLogo %>" /><br><br>
+    <% } %>
+
+    <br><br>
+    <% if (userAuthID == 1) {%>
+    <input type="button" id="<%= user.id %>" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="<%= user.id %>" value="Submit" disabled><br>
+    <% } %>
+
+</form>
+<form action="/users/showUsers">
+    <input type="submit" value="Back">
+</form>
+
+</body>
+</html>
