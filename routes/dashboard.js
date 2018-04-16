@@ -19,7 +19,7 @@ module.exports.show = function(req, res, next) {
                 utilityUsers: results[0],
                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo,
+                userAuthPhoto: req.user.photo
             });
         })
 };

@@ -65,8 +65,17 @@ module.exports.savePost = function(req, res) {
     if (searchIDsChecked != null ){
         for (var i=0; i<searchIDsChecked.length; i++) {
             models[typeAclAlert].findOne({"checkBoxID": {"$in": searchIDsChecked[i]}}).exec(function (err, check) {
-                check.checkBoxValue = true;
-                check.save();
+                if(err){
+                    console.log('111');
+                }else{
+                    if(check){
+                        check.checkBoxValue = true;
+                        check.save();
+                    }else{
+                        console.log('333');
+                    }
+
+                }
             });
         }
     }

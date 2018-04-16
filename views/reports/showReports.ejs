@@ -40,41 +40,21 @@
         </tr>
         <tbody>
         <% reportSent.forEach(function(reportS) { %>
-        <% if ( reportS.status == "re-open"){ %>
-        <tr bgcolor="#FFF">
-            <td><%= reportS.time %></td>
-            <td><%= reportS.alertTypeName %></td>
-            <td><%= reportS.alertName %></td>
-            <td><%= reportS.sentBy %></td>
-            <td><a href="/reports/showReportsReceived/<%= reportS.id %>"><%= reportS.successful %></a></td>
-            <td><a href="/reports/showReportsReceived/<%= reportS.id %>"><%= reportS.readBy %></a></td>
-            <td><a href="/reports/showReportsDetails/<%= reportS.id %>">show</a></td>
-            <td><a href="/reports/showReports"><%= reportS.status %></a></td>
-            <td align="center">
-                <% if (aclDeleteReports == null || aclDeleteReports.checkBoxValue == true) {%>
-                <a href="/reports/showReports"><button class="inTable">delete</button></a>
-                <% } else { %>
-                <a href="/reports/showReports"><button class="inTable" disabled>delete</button></a>
-                <% } %>
-            </td>
-        </tr>
+
+        <% if ( reportS.status.statusString == 'open'){ %>
+        <% var color = "#adff2f"  %>
         <% } else { %>
-
-        <tr bgcolor="#adff2f">
-            <td><%= reportS.time %></td>
-            <td><%= reportS.alertTypeName %></td>
+        <% var color = "#FFF" %>
+        <% } %>
+        <tr bgcolor= "<%= color %>">
+            <td><%= reportS.sentTime %></td>
+            <td><%= reportS.alertGroupName %></td>
             <td><%= reportS.alertName %></td>
             <td><%= reportS.sentBy %></td>
             <td><a href="/reports/showReportsReceived/<%= reportS.id %>"><%= reportS.successful %></a></td>
             <td><a href="/reports/showReportsReceived/<%= reportS.id %>"><%= reportS.readBy %></a></td>
             <td><a href="/reports/showReportsDetails/<%= reportS.id %>">show</a></td>
-            <td>
-                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                <a href="/reports/showReports"><button class="inTable"><%= reportS.status %></button></a>
-                <% } else { %>
-                <a href="/reports/showReports"><button class="inTable" disabled><%= reportS.status %></button></a>
-                <% } %>
-            </td>
+            <td><a href="/reportStatus/<%= reportS.id %>"><%= reportS.status.statusString %></a></td>
             <td align="center">
                 <% if (aclDeleteReports == null || aclDeleteReports.checkBoxValue == true) {%>
                 <a href="/reports/showReports"><button class="inTable">delete</button></a>
@@ -84,7 +64,10 @@
             </td>
         </tr>
 
-        <% }}); %>
+
+
+
+        <% }); %>
         </tbody>
     </table>
 

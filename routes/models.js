@@ -200,7 +200,12 @@ var AlertSentInfoSchema = new mongoose.Schema({
         },
     }],
 
-    status: { type: String, default: 'open' },         // Open, Closed
+    status: {
+        statusString: { type: String, default: 'open' },         // Open, Closed
+        statusClosedDate: String,
+        statusClosedTime: String
+    },
+
     testModeON: Boolean,
     request911Call: { type: Boolean, default: false },
     whoCanCall911: [String],

@@ -31,6 +31,7 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
     }
 
+
     var alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,
         sentBy: req.session.user.firstName + " " + req.session.user.lastName,

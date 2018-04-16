@@ -442,6 +442,12 @@ router.post('/permissions/showPermissionsTable', auth.simpleAuth, auth.requireLo
 /* SHOW REPORTS. */
 router.get('/reports/showReports', auth.simpleAuth, auth.requireLogin, reports.reportsAlerts, function(req, res, next) {
 });
+
+/* UPDATE Report STATUS  ---------------------------------------------------*/
+router.get('/reportStatus/:id', auth.simpleAuth, auth.requireLogin, reports.updateStatus, function(req, res) {
+});
+/*
+
 /* SHOW ALERT REPORTS Received. */
 router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogin, reports.reportsUsers,function(req, res) {
 });
