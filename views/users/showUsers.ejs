@@ -88,9 +88,16 @@
                     <input class="btn btn-primary" type="submit" id="btSubmit" value="Add User" disabled>&nbsp;&nbsp;
                     <% } %>
                   </form>
+                    <form action="/parentsSelfRegistration/defaultForm">
+                        <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
+                        <input class="btn btn-primary" type="submit" value="Parent Self Registration">&nbsp;&nbsp;
+                        <% } else { %>
+                        <input class="btn btn-primary" type="submit" value="Parent Self Registration" disabled>&nbsp;&nbsp;
+                        <% } %>
+                    </form>
                   <form action="/users/deletedUsers">
                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                    <input class="btn btn-primary" type="submit" value="Delete All Parents">&nbsp;&nbsp;
+                    <input class="btn btn-primary" type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
                     <% } else { %>
                     <input class="btn btn-primary" type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
                     <% } %>

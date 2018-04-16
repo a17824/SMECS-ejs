@@ -7,7 +7,7 @@ var models = require('./models');
 
 var users = require('./users/users');
 var students = require('./students/students');
-var parentsSelfRegistration = require('./users/parentsSelfRegistration');
+var parentsSelfRegistration = require('./parentsSelfRegistration/parentsSelfRegistration');
 var utilityUsers = require('./users/utilityUsers');
 var roles2 = require('./roles/roles2');
 var privilege = require('./roles/privilege');
@@ -455,13 +455,16 @@ router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogi
 router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin, reports.reportsDetails, function(req, res) {
 });
 
-/* REPORTS REQUEST ASSISTANCE. */
-router.get('/parentsSelfRegistration/:id', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.update, function(req, res, next) {
+/* PARENTS SELF REGISTRATION. */
+router.get('/parentsSelfRegistration/defaultForm', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.defaultForm, function(req, res, next) {
 });
-router.post('/parentsSelfRegistration', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.updatePost, function(req, res) {
+router.post('/parentsSelfRegistration/defaultForm', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.defaultFormPost, function(req, res) {
 });
 
-
+router.get('/parentsSelfRegistration/registerParent', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.registerParent, function(req, res, next) {
+});
+router.post('/parentsSelfRegistration/registerParent', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.registerParentPost, function(req, res) {
+});
 
 
 

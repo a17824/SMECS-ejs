@@ -85,7 +85,6 @@ router.post('/login', function(req, res) {
                     user.pushToken = req.body.pushToken;
                     user.save(function (err) {
                         if (err) {
-                            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
                             res.json({ success: false, message: 'contact your system administrator. pushToken not saved' });
                         }else{
                             // return the information including token as JSON
@@ -112,15 +111,14 @@ router.post('/login', function(req, res) {
     else{ //run SMECS EJS
         models.Users.findOne({ email: req.body.email.toLowerCase()}, function(err, user) {
             if (!user || user.softDeleted !== null) {
-
-                //checks for users in UtilityUsers database
-                models.ParentSelfRegistration.findOne({ email: req.body.email }, function(err, parentSelfRegistration) {
+                //Parent Self Registration Login
+                models.ParentSelfRegistration.findOne({ email: req.body.email.toLowerCase()}, function(err, parentSelfRegistration) {
                     if (!parentSelfRegistration) {
                         res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                     } else {
-                        if (bcrypt.compareSync(req.body.pin, utilityUser.pin)) {
+                        if (req.body.pin == parentSelfRegistration.pin) {
                             req.session.user = parentSelfRegistration;
-                            res.redirect('TO PARENT SELF REGISTRATION PAGE');
+                            res.redirect('/parentsSelfRegistration/registerParent');
                         } else {
                             res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                         }
@@ -131,7 +129,6 @@ router.post('/login', function(req, res) {
                 //res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                 //res.render('login', { error: "ERROR: Incorrect email or pin."});
             } else {
-                //console.log(user);
                 if (bcrypt.compareSync(req.body.pin, user.pin)) { // if user is found and password is right
                     req.session.user = user;
                     /*

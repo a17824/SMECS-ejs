@@ -11,10 +11,10 @@ var models = require('./../models');
 
 module.exports.simpleAuth = function(req, res, next) {
     if (req.session && req.session.user) {
-        if (req.session.user.privilegeID) {         // if it is a user from "UtilityUser" database
-            var typeUserAuth = 'UtilityUsers';
-        } else {                                    // if it is a user from "User" database
+        if (req.session.user.userPrivilegeID) {         // if it is a user from "User" database
             var typeUserAuth = 'Users';
+        } else {                                        // if it is a user from "ParentSelfRegistration" database
+            var typeUserAuth = 'ParentSelfRegistration';
         }
         authentication(req, res, typeUserAuth, next);
     } else {
