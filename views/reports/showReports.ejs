@@ -54,7 +54,11 @@
             <td><a href="/reports/showReportsReceived/<%= reportS.id %>"><%= reportS.successful %></a></td>
             <td><a href="/reports/showReportsReceived/<%= reportS.id %>"><%= reportS.readBy %></a></td>
             <td><a href="/reports/showReportsDetails/<%= reportS.id %>">show</a></td>
-            <td><a href="/reportStatus/<%= reportS.id %>"><%= reportS.status.statusString %></a></td>
+            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                <td><a href="/reportStatus/<%= reportS.id %>"><%= reportS.status.statusString %></a></td>
+            <% } else { %>
+                <td><%= reportS.status.statusString %></td>
+            <% } %>
             <td align="center">
                 <% if (aclDeleteReports == null || aclDeleteReports.checkBoxValue == true) {%>
                 <a href="/reports/showReports"><button class="inTable">delete</button></a>

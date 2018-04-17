@@ -3,6 +3,7 @@ var models = require('./../../models');
 var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
 var moment = require('moment');
+var pushNotification = require('./../sendingReceiving/pushNotification.js');
 
 
 //* SHOW REPORTS. */
@@ -45,6 +46,10 @@ module.exports.updateStatus = function(req, res) {
             console.log('success - Alert status changed to ' + alert.status.statusString);
         }
         alert.save();
+
+        /*****  CALL HERE NOTIFICATION API  *****/
+        pushNotification.closeAlert(alert);
+
         res.redirect('/reports/showReports');
     })
 };

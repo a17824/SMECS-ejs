@@ -17,7 +17,8 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
     tempAlert.sentUsersScope.forEach(function (user) {
         var sentToArr = {
             firstName: user.userFirstName,
-            lastName: user.userLastName
+            lastName: user.userLastName,
+            pushToken: user.userPushToken
         };
         sentTo.push(sentToArr);
     });

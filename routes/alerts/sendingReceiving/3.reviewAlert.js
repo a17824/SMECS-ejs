@@ -5,6 +5,7 @@ var floor = require('./saveAlertFunc/3a.savefloorFile.js');
 var create = require('./saveAlertFunc/3c.createAlertSentInfo.js');
 var student = require('./saveAlertFunc/3b.student.js');
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
+var pushNotification = require('./pushNotification.js');
 
 
 module.exports.reviewAlert = function(req, res) {
@@ -114,27 +115,9 @@ module.exports.postReviewAlert = function(req, res, next) {
 
     ], function (err, tempAlert) {
 
-
-        /********************************
-         *                              *
-         *  CALL HERE NOTIFICATION API  *
-         *                              *
-         * *****************************/
+        /*****  CALL HERE NOTIFICATION API  *****/
+        pushNotification.default(tempAlert);
 
         res.send({redirect: '/alerts/received/receiveAlert/' + tempAlert._id});
     });
 };
-/*
-<!-- Alert UTILITY FAILURE  && MEDICAL EMERGENCIES && REQUEST ASSISTANCE-->
-<% if (info.alertNameID == 14 ||
-    info.alertNameID == 18 ) {%>
-<label for="situation"><b>Situation:</b></label><br>
-
-    <!-- checkBox of utility failure -->
-
-    <% for (var i=0; i < info.multiSelectionNames.length; i++) {%>
-    <input type="checkbox" name="checkbox"  value="<%= info.multiSelectionNames[i] %>" checked onclick="return false;">
-            <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
-            <% } %>
-<% } %>
-*/

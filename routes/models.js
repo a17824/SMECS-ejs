@@ -33,7 +33,9 @@ var UsersSchema = new mongoose.Schema({
         groupAlertsButtons: { type: Boolean, default: false},
         groupAlertsLogo: String,
         theme: String,
-        sound: String
+        soundPanic: String,
+        soundSend: String,
+        soundReceive: String
     }
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Users"}); //stops Mongoose of giving plurals to our collections names
@@ -188,6 +190,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sentTo: [{                      //30
         firstName: String,
         lastName: String,
+        pushToken: String,
         received: {
             receivedBoolean: {type: Boolean, default: false},         //22
             receivedDate: String,
