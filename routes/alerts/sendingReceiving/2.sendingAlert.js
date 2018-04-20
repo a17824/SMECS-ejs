@@ -164,9 +164,9 @@ module.exports.postFloorLocation = function(req, res) {
         }
         else {
             if(alert.floorName !== 'user skipped floor'){
-            alert.sniperCoordinateX = req.body.coordinateX;
-            alert.sniperCoordinateY = req.body.coordinateY;
-            alert.save();
+                alert.sniperCoordinateX = req.body.coordinateX;
+                alert.sniperCoordinateY = req.body.coordinateY;
+                alert.save();
             }
             console.log('saved temp Alert ' + alert.alertName + ' info from FLOOR LOCATION POST');
 
@@ -401,9 +401,7 @@ module.exports.postMultiSelection = function(req, res) {
 
 
             //ALERT Utilities Failures,
-
-            if (alert.alertNameID == 14 ||
-                alert.alertNameID == 26 ) {
+            if (alert.alertNameID == 14 ) {
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
                     alert.requestAssistance = [];
                     utils.forEach(function (util) {
@@ -414,29 +412,41 @@ module.exports.postMultiSelection = function(req, res) {
                             phone: util.phone,
                             email: util.email,
                             smecsApp: util.smecsApp
-
                         };
                         alert.requestAssistance.push(req);
-
                     });
-                    if (alert.alertNameID == 26 ) {
-                        var boolTrue = true;
-                        var boolFalse = false;
-                        var reqAssOn = req.body.reqAssChecked;
-                        var reqAssOff = req.body.reqAssNotChecked;
-                        reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
-                        reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
-                    }
-                    console.log('2');
                     alert.save();
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
+
             }
             //ALERT Medical Emergencies
             if (alert.alertNameID == 18 ) {
                 alert.medicalInjuredParties = req.body.medicalInjuredParties;
                 alert.save();
                 res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
+            }
+            if (alert.alertNameID == 26 ) {
+                models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
+                    alert.requestAssistance = [];
+                    var arraySmecsAppToSent =[];
+                    utils.forEach(function (util) {
+                        var req = {
+                            utilityID: util.utilityID,
+                            utilityName:  util.utilityName,
+                            contactName: util.contactName,
+                            phone: util.phone,
+                            email: util.email,
+                            smecsApp: util.smecsApp
+                        };
+                        alert.requestAssistance.push(req);
+                    });
+                    var reqAssOn = req.body.reqAssChecked;
+                    var reqAssOff = req.body.reqAssNotChecked;
+                    reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
+                    console.log('0000');
+                    res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
+                });
             }
         }
     });

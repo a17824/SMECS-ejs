@@ -685,7 +685,12 @@ module.exports.updatePost = function(req, res) {
             //Utility user: delete or save "Company Name" field
             if (ifUserHasUtilityUserRole == 1) {
                 user.companyName = req.body.companyName;
-                user.contactName = req.body.contactName;
+                console.log('user = ',user);
+                if(user.userRoleID.length == 1)
+                    user.contactName = req.body.contactName;
+                else
+                    user.contactName = req.body.firstName + ' ' + req.body.lastName
+
             }else{
                 user.companyName = undefined;
                 user.contactName = undefined;

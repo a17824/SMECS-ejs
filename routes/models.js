@@ -251,17 +251,17 @@ var AlertSentInfoSchema = new mongoose.Schema({
         smecsApp: { type: Boolean, default: false },
         reqSmecsApp: {
             sentReqSmecsApp: Boolean,
-            stat: String,
+            stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         },
         reqEmail: {
             sentReqEmail: Boolean,
-            stat: String,
+            stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         },
         reqCall: {
             sentReqCall: Boolean,
-            stat: String,
+            stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         }
     }]
@@ -287,6 +287,15 @@ var AlertSentTempSchema = new mongoose.Schema({
     sentRoleIDScope: [Number],
     sentRoleNameScope: [String],      // Teachers, Staff, Parents...
     sentUsersScope: [{
+        userFirstName: String,
+        userLastName: String,
+        userEmail: String,
+        userPushToken: String,
+        userPhoto: String
+    }],
+    sentSmecsAppUsersScope: [{
+        utilityID: Number,
+        utilityName: String,
         userFirstName: String,
         userLastName: String,
         userEmail: String,
@@ -328,17 +337,17 @@ var AlertSentTempSchema = new mongoose.Schema({
         smecsApp: { type: Boolean, default: false },
         reqSmecsApp: {
             sentReqSmecsApp: Boolean,
-            stat: String,
+            stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         },
         reqEmail: {
             sentReqEmail: Boolean,
-            stat: String,
+            stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         },
         reqCall: {
             sentReqCall: Boolean,
-            stat: String,
+            stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         }
     }]

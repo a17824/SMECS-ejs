@@ -1,6 +1,61 @@
 //Dependencies
 var moment = require('moment');
 var reqAsst = require('./2_3_4.reqAssistance.js');
+var models = require('./../../../models');
+
+
+module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent) {
+    console.log('11111');
+
+    function usersScopeToSendAlert(callback) {
+        console.log('222222');
+        var boolTrue = true;
+        var boolFalse = false;
+        reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
+        reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
+        console.log('333333');
+        utils.forEach(function (utility) {
+            var array = [];
+            models.Users.find({email: utility.smecsUsers, pushToken: { "$exists": true }}, function (err, users) {
+                if(err)
+                    console.log('err - ',err);
+                else {
+                    users.forEach(function (user) {
+                        var userWithPushToken = {
+                            utilityID: utility.utilityID,
+                            utilityName: utility.utilityName,
+                            userFirstName: user.firstName,
+                            userLastName: user.lastName,
+                            userEmail: user.email,
+                            userPushToken: user.pushToken,
+                            userPhoto: user.photo
+                        };
+                        array.push(userWithPushToken);
+                        //console.log('arraySmecsAppToSentWithPushToken = ',arraySmecsAppToSentWithPushToken);
+                    });
+                    console.log('array = ',array.length);
+                    callback(array);
+                }
+            });
+        });
+    }
+    usersScopeToSendAlert (function (result, err) {
+                if(err){
+                    console.log('err = ', err);
+                }else {
+                    arraySmecsAppToSent = arraySmecsAppToSent.concat(result);
+
+                    console.log('arraySmecsAppToSentWithPushToken = ',result.length );
+                    alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
+                    console.log('44444');
+                    alert.save();
+                    console.log(arraySmecsAppToSent);
+                    console.log('----------------------------------------');
+                    console.log(alert.sentSmecsAppUsersScope);
+                }
+            });
+};
+
 
 module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
     var arr;
@@ -51,17 +106,28 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
     }
 };
 
+
+
+
+
 module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility) {
-    console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request SMECS APP sent' );
-    /*************************
-     * NOTIFICATION API HERE *
-     *************************/
+    alert.sentSmecsAppUsersScope.forEach(function (user) {
+        console.log(alert.alertName + ' -> ' + user.utilityName + ' - > Request SMECS APP sent' );
+    });
+
+    /********************************
+     * NOTIFICATION API HERE        *
+     * scope to sent is:            *
+     * sentSmecsAppUsersScope *
+     ********************************/
 };
 module.exports.sendPushNotificationReqAssEmail = function(alert, utility) {
     console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request EMAIL sent');
-    /*************************
-     * NOTIFICATION API HERE *
-     *************************/
+    /********************************
+     * NOTIFICATION API HERE        *
+     * scope to sent is:            *
+     * requestAssistance *
+     ********************************/
 };
 module.exports.sendPushNotificationReqAssCall = function(alert, utility) {
     console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request CALL sent');

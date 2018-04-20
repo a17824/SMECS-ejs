@@ -36,8 +36,7 @@ module.exports.showPost = function(req, res) {
         function (callback) {
             models.Alerts.find({'alertID': req.body.alertID}, function (err, alert) {
                 if(err){
-                    console.log('err');
-                    console.log(alert);
+                    console.log('err = ', alert );
                 }else{
                     var placeholderNote;
                     if (req.body.alertID == 2){placeholderNote = 'ex: Stranger is on my classroom and refuses to leave';}

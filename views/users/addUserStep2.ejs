@@ -136,9 +136,13 @@
                     }
                 }
                 if (utilityUserRole == 1 && companyName == '' ||
-                    parentRole == 1 && companyName == ''
-                ) {
+                    parentRole == 1 && companyName == '') {
                     alert("Company Name must be filled out");
+                    return false;
+                }
+                if (utilityUserRole == 1 && contactName == '' ||
+                    parentRole == 1 && contactName == '') {
+                    alert("Contact Name must be filled out");
                     return false;
                 }
 
@@ -338,7 +342,7 @@
         <input type="password" id="confirmPin" size="40" value="<%= user.pin %>"><br><br>
         <label for="companyName"><b>Company Name:</b></label><br>
         <input type="text" id="companyName" size="40" placeholder="ex: Gas company" value="<%= user.companyName %>"><br><br>
-        <label for="contactName" ><b>Contact Name:</b>(optional)</label><br>
+        <label for="contactName" ><b>Contact Name:</b></label><br>
         <input type="text" id="contactName" size="40" placeholder="ex: Pedro Reis" value="<%= user.contactName %>"><br><br>
 
     <label for="students"><b>Parent of:</b></label><br>
@@ -382,11 +386,11 @@
         <label for="companyName"><b>Company Name:</b></label><br>
         <input type="text" id="companyName" size="40" placeholder="ex: Gas company" value="<%= user.companyName %>"><br><br>
         <label for="contactName" ><b>Contact Name:</b>(optional)</label><br>
-        <input type="text" id="contactName" size="40" placeholder="ex: Pedro Reis" value="<%= user.contactName %>"><br><br>
+        <input type="text" id="contactName" size="40" placeholder="ex: Person 1" value="<%= user.contactName %>"><br><br>
     <% } %>
 </form>
 
-<form>
+
     <button class="backButton" onclick="goBack()">Back</button>
     <script>
         function goBack() {
@@ -398,7 +402,7 @@
     <% } else { %>
         <input type="button" id="next" value="Next" disabled><br>
     <% } %>
-</form>
+
 <form action="/users/showUsers">
     <input type="submit" value="Cancel">
 </form>

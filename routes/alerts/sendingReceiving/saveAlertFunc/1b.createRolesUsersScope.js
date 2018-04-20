@@ -52,11 +52,6 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
                             'Please try again and contact the administrator if this message continues to show');
                         res.send({redirect: '/alerts/sending/chooseAlert/'});
                     }else {
-                        /*
-                        alertUpdate.sentRoleIDScope = [];
-                        alertUpdate.sentRoleNameScope = [];
-                        console.log('arrayRoleID = ',arrayRoleID);
-                        */
                         alertUpdate.sentRoleIDScope = arrayRoleID;
                         alertUpdate.sentRoleNameScope = arrayRoleName;
 
@@ -73,8 +68,7 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
                         }
                         alertUpdate.save(function(err, resp) {
                             if (err) {
-                                console.log(err);
-                                console.log('something went wrong');
+                                console.log('err = ',err);
                             } else {
                                 console.log('the tempAlert has been saved');
                                 //console.log('alertUpdate.sentUsersScope = ',alertUpdate.sentUsersScope);

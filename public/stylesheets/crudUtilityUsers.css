@@ -55,12 +55,13 @@ ul.disable li {
 }
 
 select.enable {
-    width: 39em;
+    width: 24em;
     color: #46A;
     font-weight: bold;
 }
+
 select.disable {
-    width: 39em;
+    width: 24em;
     pointer-events: none;
     cursor: default;
     font-weight: bold;

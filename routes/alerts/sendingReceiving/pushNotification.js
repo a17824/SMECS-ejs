@@ -27,7 +27,6 @@ module.exports.requestAssistance = function(req, res, next) {
 //Send "CLOSE" Alert //
 module.exports.closeAlert= function(alert) {
     alert.sentTo.forEach(function (user) {
-        console.log('user.pushToken = ',user.pushToken);
         if (user.pushToken) {
             var message = {
                 to: user.pushToken, // required fill with device token
@@ -40,10 +39,6 @@ module.exports.closeAlert= function(alert) {
             sendPush(message, userName);
         }
     });
-
-
-
-
 };
 //end of Send "CLOSE" Alert //
 

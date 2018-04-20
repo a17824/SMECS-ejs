@@ -87,10 +87,11 @@ module.exports.postReviewAlert = function(req, res, next) {
         function (tempAlert, callback) {
             // Alert Request Assistance
             if (tempAlert.alertNameID == 26 ){
-
+                var flagSmecsApp = 0;
                 for (var x = 0; x < tempAlert.requestAssistance.length; x++) {
-                    if (tempAlert.requestAssistance[x].reqSmecsApp.stat == 'open') {
-                        reqAsst.sendPushNotificationReqAssSmecsApp(tempAlert, tempAlert.requestAssistance[x]);
+                    if (tempAlert.requestAssistance[x].reqSmecsApp.stat == 'open' && flagSmecsApp == 0) {
+                        reqAsst.sendPushNotificationReqAssSmecsApp(tempAlert, tempAlert.sentSmecsAppUsersScope);
+                        flagSmecsApp = 1; // array "sentSmecsAppUsersScope" already has all users to send alert
                     }
                     if (tempAlert.requestAssistance[x].reqEmail.stat == 'open') {
                         reqAsst.sendPushNotificationReqAssEmail(tempAlert, tempAlert.requestAssistance[x]);
