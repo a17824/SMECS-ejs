@@ -91,7 +91,7 @@ module.exports.postReviewAlert = function(req, res, next) {
                 for (var x = 0; x < tempAlert.requestAssistance.length; x++) {
                     if (tempAlert.requestAssistance[x].reqSmecsApp.stat == 'open' && flagSmecsApp == 0) {
                         reqAsst.sendPushNotificationReqAssSmecsApp(tempAlert, tempAlert.sentSmecsAppUsersScope);
-                        flagSmecsApp = 1; // array "sentSmecsAppUsersScope" already has all users to send alert
+                        flagSmecsApp = 1; // array "sentSmecsAppUsersScope" already has all users to send alert.
                     }
                     if (tempAlert.requestAssistance[x].reqEmail.stat == 'open') {
                         reqAsst.sendPushNotificationReqAssEmail(tempAlert, tempAlert.requestAssistance[x]);
