@@ -52,7 +52,7 @@
             }
             //-------------------------- end of refresh page
             var userToAddUpdate_ID;
-            var userID,firstName,lastName,email,newPin,oldPin,confirmPin,oldParentOf,role,privilege;
+            var userID,firstName,lastName,email,newPin,oldPin,confirmPin,oldParentOf;
             $("#next").click(function(){
                 userToAddUpdate_ID=$("#userTempID").val();
                 firstName=$("#firstName").val();
@@ -60,10 +60,13 @@
                 email=$("#email").val();
                 newPin=$("#newPin").val();
                 oldPin=$("#oldPin").val();
-                role=$("#role").val();
-                privilege=$("#privilege").val();
                 confirmPin=$("#confirmPin").val();
                 oldParentOf=$("#oldParentOf").val();
+                var roleID=$("#roleID").val();
+                var roleName=$("#roleName").val();
+                var privilegeID=$("#privilegeID").val();
+                var privilegeName=$("#privilegeName").val();
+
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -144,7 +147,6 @@
                     pin = "oldPin";
                 }
 
-
                 $.post("/parentsSelfRegistration/registerParentStep1", {
                     userToUpdate: userToAddUpdate_ID,
                     firstName: firstName,
@@ -152,8 +154,10 @@
                     email: email,
                     pin: pin,
                     parentOf: arrayUsers,
-                    privilege: privilege,
-                    role: role
+                    privilegeID: privilegeID,
+                    privilegeName: privilegeName,
+                    roleID: roleID,
+                    roleName: roleName
 
                 },function(data){
                     if(data==='done')
@@ -181,8 +185,10 @@
 <input type="hidden" id="userTempID"  value="<%= user._id %>">
 <input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
 <input type="hidden" id="oldParentOf"  value="<%= user.parentOfOld %>">
-<input type="hidden" id="role"  value="<%= role %>">
-<input type="hidden" id="privilege"  value="<%= privilege %>">
+<input type="hidden" id="roleID"  value="<%= roleID %>">
+<input type="hidden" id="roleName"  value="<%= roleName %>">
+<input type="hidden" id="privilegeID"  value="<%= privilege.privilegeID %>">
+<input type="hidden" id="privilegeName"  value="<%= privilege.privilegeName %>">
 
 <form>
     <hr>

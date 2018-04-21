@@ -92,20 +92,22 @@ module.exports.registerParentStep1 = function(req, res, next) {
                 models.Students.find().sort({"firstName":1}).exec(callback);
             },
             function(callback){
-                models.Roles2.find({roleID: 98}).sort({"firstName":1}).exec(callback);
+                models.Roles2.findOne({roleID: 98}).exec(callback);
             },function(callback){
-                models.Privilege.find({privilegeID: 5}).sort({"firstName":1}).exec(callback);
+                models.Privilege.findOne({privilegeID: 5}).exec(callback);
             }
 
 
         ],function(err, results){
+            console.log('role = ',results[1]);
+            console.log('roleName = ',results[1].roleName);
             models.UsersAddTemp.findById(userID, function (err, user) {
-
                 res.render('parentsSelfRegistration/registerParentStep1',{
                     title:'Parent registration Step1',
                     users: user,
                     students: results[0],
-                    role: results[1],
+                    roleID: results[1].roleID,
+                    roleName: results[1].roleName,
                     privilege: results[2]
                 });
             });
@@ -118,26 +120,25 @@ module.exports.registerParentStep1 = function(req, res, next) {
 
 module.exports.registerParentStep1Post = function(req, res) {
     var emailLowerCase = req.body.email.toLowerCase();
-    var roleID = req.body.role.roleID;
-    var roleName = req.body.role.roleName;
-    var privilegeID = req.body.privilege.privilegeID;
-    var privilegeName = req.body.privilege.privilegeName;
+    var roleID = [];
+    var roleName = [];
+    var privilegeID = req.body.privilegeID;
+    var privilegeName = req.body.privilegeName;
     var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
     var parentOf = req.body.parentOf;
     var parentOfFinal = [];
     var studentsWithParents = [];
 
+    roleID.push(req.body.roleID);
+    roleName.push(req.body.roleName);
+
     models.Users.find({'email': emailLowerCase}, function (err, user) {
         if(err)
             console.log('err = ',err);
         else{
-            console.log(user.length);
-            console.log(user);
             if(user.length == 1){
-                console.log('dddd');
                 console.log('Email already in use. Please choose a different email');
                 return res.status(409).send('showAlert')
-
             }else{
                 models.Students.find({'studentID': parentOf}, function (err, students) {
                     for (var i=0; i < students.length; i++) {
@@ -150,8 +151,6 @@ module.exports.registerParentStep1Post = function(req, res) {
                         parentOfFinal.push(student);
                         studentsWithParents.push(students[i].studentID);
                     }
-                    console.log('"parentOf" added successfully');
-
                     var user1 = new models.Users({
                         userRoleID: roleID,
                         userRoleName: roleName,
@@ -170,24 +169,14 @@ module.exports.registerParentStep1Post = function(req, res) {
                             console.log(err);
                             return res.status(409).send('showAlert')
                         }else{
+                            console.log('"parentOf" added successfully');
                             functions.addParentInStudentDocument(user1, studentsWithParents);
                             return res.send({redirect:'/dashboard'}) //needs to go to step2 to add photo
                         }
                     });
-
-
                 });
-
-
-
-
             }
         }
-
-
     });
-
-
-
 };
 
