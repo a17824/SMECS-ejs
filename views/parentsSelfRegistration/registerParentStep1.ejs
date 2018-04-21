@@ -5,35 +5,35 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
 
-        var choices;
+        var choices, value2send;
         function selectUser(select)
         {
             var option = $("#dataList").val();
             //get datalist data-value to value2send
-            var value2send= document.querySelector('#students option[value="'+option+'"]').dataset.value;
+            value2send= document.querySelector('#students option[value="'+option+'"]').dataset.value;
 
-                var ul = select.parentNode.getElementsByTagName('ul')[0];
-                choices = ul.getElementsByTagName('input');
+            var ul = select.parentNode.getElementsByTagName('ul')[0];
+            choices = ul.getElementsByTagName('input');
 
-                for (var i = 0; i < choices.length; i++) {
+            for (var i = 0; i < choices.length; i++) {
 
-                    if (choices[i].value == value2send) {
-                        return;
-                    }
+                if (choices[i].value == value2send) {
+                    return;
                 }
-                var li = document.createElement('li');
-                var input = document.createElement('input');
-                var text = document.createTextNode(option);
+            }
+            var li = document.createElement('li');
+            var input = document.createElement('input');
+            var text = document.createTextNode(option);
 
-                input.type = 'hidden';
-                input.name = 'users[]';
-                input.value = value2send;
+            input.type = 'hidden';
+            input.name = 'users[]';
+            input.value = value2send;
 
-                li.appendChild(input);
-                li.appendChild(text);
-                li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
+            li.appendChild(input);
+            li.appendChild(text);
+            li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
 
-                ul.appendChild(li);
+            ul.appendChild(li);
 
 
         }
@@ -45,24 +45,29 @@
 
 
         $(document).ready(function(){
-            var newPhoto;
-            var pathPhoto;
-
-
-            var userID,firstName,lastName,email,newPin,confirmPin;
-            $("#<%= user.id %>").click(function(){
-                userID=$(this).attr('id');
+            //refresh page (does not work on older browsers)
+            performance.navigation.type
+            if(performance.navigation.type == 2){
+                location.reload(true);
+            }
+            //-------------------------- end of refresh page
+            var userToAddUpdate_ID;
+            var userID,firstName,lastName,email,newPin,oldPin,confirmPin,oldParentOf,role,privilege;
+            $("#next").click(function(){
+                userToAddUpdate_ID=$("#userTempID").val();
                 firstName=$("#firstName").val();
                 lastName=$("#lastName").val();
                 email=$("#email").val();
                 newPin=$("#newPin").val();
+                oldPin=$("#oldPin").val();
+                role=$("#role").val();
+                privilege=$("#privilege").val();
                 confirmPin=$("#confirmPin").val();
-
-
+                oldParentOf=$("#oldParentOf").val();
 
                 var arrayUsers = [];
                 if (choices === undefined){
-                    arrayUsers = $("#savedValueSmecsUsers").val().split(",");
+                    arrayUsers = oldParentOf.split(",");
                     for (var a = 0; a < usersToRemove.length; a++) {
                         for (var i = 0; i < arrayUsers.length; i++) {
                             if (usersToRemove[a] == arrayUsers[i]){
@@ -70,6 +75,7 @@
                             }
                         }
                     }
+
                 } else {
                     if(choices.length > 0) {
                         for (var a = 0; a < choices.length; a++) {
@@ -77,12 +83,10 @@
                         }
                     }
                 }
-
                 if(arrayUsers.length == 1 && arrayUsers[0] == "") {
                     var index = arrayUsers.indexOf(5);
                     arrayUsers.splice(index, 1);
                 }
-
 
 
                     //-----forms validation------------------------------------
@@ -99,11 +103,13 @@
                     alert("Please input a valid EMAIL address!");
                     return false;
                 }
+                console.log('newPin =',newPin);
+                console.log('oldPin =',oldPin);
                 if (newPin != confirmPin) {
                     alert("Pin and Confirm Pin don't match!");
                     return false;
                 }
-                var pinFormat = /^\d{4}$/;
+                var pinFormat=/^\d{4}$/;
                 if (!pinFormat.test(newPin)) {
                     alert("Pin code should be 4 digits ");
                     return false;
@@ -116,6 +122,7 @@
                     alert("Pin and Confirm Pin don't match!");
                     return false;
                 }
+
                 if (firstName == "" ) {
                     alert("FIRST NAME must be filled out");
                     return false;
@@ -125,20 +132,28 @@
                     return false;
                 }
                 if (arrayUsers.length < 1) {
-                    alert("Parent Role is checked. Please choose a student that belong to this parent or uncheck Parent Role from this user.");
+                    alert("Please choose a student.");
                     return false;
                 }
                 //--------------------------------forms validation end-------
+                var pin;
+                if (newPin !== oldPin) {
+                    pin = newPin;
 
-                $.post("/parentsSelfRegistration/registerParent", {
-                    userToUpdate: userID,
+                } else{
+                    pin = "oldPin";
+                }
+
+
+                $.post("/parentsSelfRegistration/registerParentStep1", {
+                    userToUpdate: userToAddUpdate_ID,
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
-                    pin: newPin,
+                    pin: pin,
                     parentOf: arrayUsers,
-                    pathPhoto: pathPhoto,
-                    newPhoto: newPhoto
+                    privilege: privilege,
+                    role: role
 
                 },function(data){
                     if(data==='done')
@@ -158,18 +173,16 @@
 <body>
 <h1><%= title %></h1>
 
+<% if ( error_messages ) { %>
+<p style="color: red"><%= error_messages %></p>
+<% } %>
 
-    <hr>
-    <label for="userPhoto"><b>User Photo:</b></label><br>
-    <% if (users.photo === '' || users.photo == undefined) {%>
-        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
-    <% } else { %>
-        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" /><br><br>
-    <% } %>
-
-        <a href="/users/addPhoto/<%= users.id %>"><button>Change</button></a>
-<br>
-<br>
+<input type="hidden" id="userTempID"  value="<%= user._id %>">
+<input type="hidden" id="userTempID"  value="<%= user._id %>">
+<input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
+<input type="hidden" id="oldParentOf"  value="<%= user.parentOfOld %>">
+<input type="hidden" id="role"  value="<%= role %>">
+<input type="hidden" id="privilege"  value="<%= privilege %>">
 
 <form>
     <hr>
@@ -230,9 +243,7 @@
 
 
 
-
-
-    <input type="button" id=<%= users.id %> value="Submit" ><br>
+    <input type="button" id="next" value="Next" ><br>
 
 
 </form>

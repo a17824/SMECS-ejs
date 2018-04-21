@@ -118,24 +118,16 @@ router.post('/login', function(req, res) {
                     } else {
                         if (req.body.pin == parentSelfRegistration.pin) {
                             req.session.user = parentSelfRegistration;
-                            res.redirect('/parentsSelfRegistration/registerParent');
+                            res.redirect('/parentsSelfRegistration/registerParentStep1');
                         } else {
                             res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                         }
                     }
                 });
                 //END OF checks for users in UtilityUsers database
-
-                //res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
-                //res.render('login', { error: "ERROR: Incorrect email or pin."});
             } else {
                 if (bcrypt.compareSync(req.body.pin, user.pin)) { // if user is found and password is right
                     req.session.user = user;
-                    /*
-                    if (user.userPrivilegeID == 4){ // If user Privilege is "Regular User" then redirects to "choosing alert" page
-                        res.redirect('/alerts/sending/chooseAlert');
-                    } else {
-                    */
                     res.redirect('/dashboard');
                     //}
                 } else {

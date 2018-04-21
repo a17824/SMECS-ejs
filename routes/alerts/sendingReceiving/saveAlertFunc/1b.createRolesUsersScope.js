@@ -57,14 +57,16 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert) {
 
                         var userArray =[];
                         for (var i = 0; i < allUsersToSendAlert.length; i++) {
-                            var user = {
-                                userFirstName: allUsersToSendAlert[i].firstName,
-                                userLastName: allUsersToSendAlert[i].lastName,
-                                userEmail: allUsersToSendAlert[i].email,
-                                userPushToken: allUsersToSendAlert[i].pushToken,
-                                userPhoto: allUsersToSendAlert[i].photo};
-                            userArray.push(user);
-                            alertUpdate.sentUsersScope = userArray;
+                            if(allUsersToSendAlert[i].pushToken){
+                                var user = {
+                                    userFirstName: allUsersToSendAlert[i].firstName,
+                                    userLastName: allUsersToSendAlert[i].lastName,
+                                    userEmail: allUsersToSendAlert[i].email,
+                                    userPushToken: allUsersToSendAlert[i].pushToken,
+                                    userPhoto: allUsersToSendAlert[i].photo};
+                                userArray.push(user);
+                                alertUpdate.sentUsersScope = userArray;
+                            }
                         }
                         alertUpdate.save(function(err, resp) {
                             if (err) {

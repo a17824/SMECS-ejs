@@ -18,6 +18,7 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         var sentToArr = {
             firstName: user.userFirstName,
             lastName: user.userLastName,
+            email: user.userEmail,
             pushToken: user.userPushToken
         };
         sentTo.push(sentToArr);

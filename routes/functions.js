@@ -4,14 +4,31 @@ var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
 
 //REDIRECT TO PREVIOUS PAGE
-module.exports.redirect = function(req, res, page) {
-    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirect:page}}, {new: true}, function(err, doc){
+module.exports.redirectPage = function(req, res, page) {
+    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirect:page}}, {new: true}, function(err, user){
         if(err){
             console.log("Something wrong when updating user.redirect!");
         }
-        console.log('successfully updated user.redirect');
+        else {
+            if(user == null){
+                models.ParentSelfRegistration.findOneAndUpdate({_id: req.user.id}, {$set:{redirect:page}}, {new: true}, function(err, parent){
+                    if(err){
+                        console.log("Something wrong when updating user.redirect!");
+                    }
+                    else {
+                        console.log('successfully updated Parent user.redirect');
+                    }
+                });
+            }
+            else{
+                console.log('successfully updated user.redirect');
+            }
+
+        }
     });
 };
+
+
 
 //SIDE MENU PERMISSIONS
 module.exports.aclSideMenu = function(req, res, callback) {
@@ -56,3 +73,26 @@ module.exports.aclSideMenu = function(req, res, callback) {
         callback(show);
     })
 };
+
+
+module.exports.addParentInStudentDocument = function(user, newParentsArray) {
+    //save parent in Student database --------------------
+    var parent = {
+        _id: user._id,
+        parentFirstName: user.firstName,
+        parentLastName: user.lastName
+    };
+    //find student with id = to 'parents[i]' -> {'_id': parents[i]
+    //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
+    models.Students.update({studentID: {$in: newParentsArray}, 'parentOf._id': {$ne: parent._id}},
+        { "$push": { "parentOf": parent } },
+        { "new": true},
+        function (err) {
+            if(err){
+                console.log('student not updated successfully');
+                throw err;
+            }else {
+                console.log('"parentOf" added successfully on STUDENT database');
+            }
+        });
+}

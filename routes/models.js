@@ -73,7 +73,9 @@ module.exports.UsersAddTemp = mongoose.model("UsersAddTemp", UsersAddTempSchema)
 // DEFINE UsersAddTemp COLLECTION IN MONGOdb
 var ParentSelfRegistrationSchema = new mongoose.Schema({
     email: String,
-    pin: String
+    pin: String,
+    redirect: { type: String, default: 'registerParent'},
+    text: String
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"ParentSelfRegistration"}); //stops Mongoose of giving plurals to our collections names
 var ParentSelfRegistration;
@@ -191,6 +193,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
         firstName: String,
         lastName: String,
         pushToken: String,
+        email: String,
         received: {
             receivedBoolean: {type: Boolean, default: false},         //22
             receivedDate: String,

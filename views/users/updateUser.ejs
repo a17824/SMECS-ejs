@@ -43,7 +43,7 @@
             usersToRemove.push(choice[0].value);
         }
 
-        
+
         
         $(document).ready(function(){
             var newPhoto;
@@ -343,9 +343,9 @@
     <% } %>
 
     <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (users.userPrivilegeID != 1 || userAuthID == 1)) {%>
-        <a href="/users/addPhoto/<%= users.id %>"><button>Change</button></a>
+        <a href="/photos/addPhoto/<%= users.id %>"><button>Change</button></a>
     <% } else { %>
-        <a href="/users/addPhoto/<%= users.id %>"><button disabled>Change</button></a>
+        <a href="/photos/addPhoto/<%= users.id %>"><button disabled>Change</button></a>
     <% } %>
     <br>
 <% } %>

@@ -18,6 +18,7 @@ var alertGroups = require('./alerts/alertGroups');
 var alerts = require('./alerts/alerts');
 var dashboard = require('./dashboard');
 var reports = require('./alerts/reports/reports');
+var photos = require('./photos/addUpdatePhoto');
 
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 
@@ -131,9 +132,9 @@ router.get('/users/showPhoto/:id', auth.simpleAuth, auth.requireLogin, users.sho
 
 //--ADD or UPDATE user photo -------------------------------------
 
-router.get('/users/addPhoto/:id', auth.simpleAuth, auth.requireLogin, users.addUpdatePhoto, function (req, res){
+router.get('/photos/addPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhoto, function (req, res){
 });
-router.post('/users/addPhoto/:id', auth.simpleAuth, auth.requireLogin, users.addUpdatePhotoPost, function (req, res){
+router.post('/photos/addPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhotoPost, function (req, res){
 });
 
 // delete user photo------------------
@@ -461,11 +462,13 @@ router.get('/parentsSelfRegistration/defaultForm', auth.simpleAuth, auth.require
 router.post('/parentsSelfRegistration/defaultForm', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.defaultFormPost, function(req, res) {
 });
 
-router.get('/parentsSelfRegistration/registerParent', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.registerParent, function(req, res, next) {
+router.get('/parentsSelfRegistration/registerParentStep1', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.registerParentStep1, function(req, res, next) {
 });
-router.post('/parentsSelfRegistration/registerParent', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.registerParentPost, function(req, res) {
+router.post('/parentsSelfRegistration/registerParentStep1', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.registerParentStep1Post, function(req, res) {
 });
 
+//router.get('/parentsSelfRegistration/addPhoto/:id', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.addUpdatePhoto, function (req, res){
+//});
 
 
 /* SHOW FLOORS. */

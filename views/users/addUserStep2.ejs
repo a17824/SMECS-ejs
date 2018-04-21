@@ -114,21 +114,21 @@
                     alert("Pin and Confirm Pin don't match!");
                     return false;
                 }
-                if (newPin !== oldPin) {
-                    var pinFormat=/^\d{4}$/;
-                    if (!pinFormat.test(newPin)) {
-                        alert("Pin code should be 4 digits ");
-                        return false;
-                    }
-                    if (!pinFormat.test(confirmPin)) {
-                        alert("Confirm Pin code should be 4 digits ");
-                        return false;
-                    }
-                    if (newPin != confirmPin) {
-                        alert("Pin and Confirm Pin don't match!");
-                        return false;
-                    }
+
+                var pinFormat=/^\d{4}$/;
+                if (!pinFormat.test(newPin)) {
+                    alert("Pin code should be 4 digits ");
+                    return false;
                 }
+                if (!pinFormat.test(confirmPin)) {
+                    alert("Confirm Pin code should be 4 digits ");
+                    return false;
+                }
+                if (newPin != confirmPin) {
+                    alert("Pin and Confirm Pin don't match!");
+                    return false;
+                }
+
                 if (parentRole == 1 ) {
                     if (arrayUsers.length < 1) {
                         alert("Please choose a student that belong to this parent.");

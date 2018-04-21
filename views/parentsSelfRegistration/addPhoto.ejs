@@ -16,7 +16,7 @@
     <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= user.photo %>" /><br><br>
     <% } %>
 
-    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
     <input type="file"
            onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
            name="upload"
@@ -32,7 +32,7 @@
            accept="image/*" required disabled/><br><br>
     <% } %>
 
-    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
     <input type="submit" value="Save / Update" >
     <% } else { %>
     <input type="submit" value="Save / Update" disabled>
@@ -40,7 +40,7 @@
 </form>
 
 <form action="/users/deletePhoto/<%= user.id %>">
-    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
     <input type="submit" id="btSubmit" value="Delete photo" >
     <% } else { %>
     <input type="submit" id="btSubmit" value="Delete photo" disabled>

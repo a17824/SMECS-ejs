@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>add photo</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+
+<form action="/photos/addPhoto/:id" enctype="multipart/form-data" method="post">
+
+    <input name="<%= user.id %>" type="hidden"/>
+
+    <% if (user.photo === '' || user.photo == undefined) {%>
+    <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
+    <% } else { %>
+    <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= user.photo %>" /><br><br>
+    <% } %>
+
+    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input type="file"
+           onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+           name="upload"
+           id="newPhoto"
+           single="single"
+           accept="image/*" required/><br><br>
+    <% } else { %>
+    <input type="file"
+           onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+           name="upload"
+           id="newPhoto"
+           single="single"
+           accept="image/*" required disabled/><br><br>
+    <% } %>
+
+    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input type="submit" value="Save / Update" >
+    <% } else { %>
+    <input type="submit" value="Save / Update" disabled>
+    <% } %>
+</form>
+
+<form action="/users/deletePhoto/<%= user.id %>">
+    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+    <input type="submit" id="btSubmit" value="Delete photo" >
+    <% } else { %>
+    <input type="submit" id="btSubmit" value="Delete photo" disabled>
+    <% } %>
+</form>
+<button onclick="GoBackWithRefresh()">Back</button>
+<script>
+ function GoBackWithRefresh() {
+    if ('referrer' in document) {
+        window.location = document.referrer;
+        /* OR */
+        //location.replace(document.referrer);
+    } else {
+        window.history.back();
+    }
+}
+</script>
+
+</body>
+</html>
