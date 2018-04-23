@@ -52,7 +52,7 @@
             }
             //-------------------------- end of refresh page
             var userToAddUpdate_ID;
-            var userID,firstName,lastName,email,newPin,oldPin,confirmPin,oldParentOf;
+            var firstName,lastName,email,newPin,oldPin,confirmPin,oldParentOf;
             $("#next").click(function(){
                 userToAddUpdate_ID=$("#userTempID").val();
                 firstName=$("#firstName").val();
@@ -106,8 +106,6 @@
                     alert("Please input a valid EMAIL address!");
                     return false;
                 }
-                console.log('newPin =',newPin);
-                console.log('oldPin =',oldPin);
                 if (newPin != confirmPin) {
                     alert("Pin and Confirm Pin don't match!");
                     return false;
@@ -181,10 +179,8 @@
 <p style="color: red"><%= error_messages %></p>
 <% } %>
 
-<input type="hidden" id="userTempID"  value="<%= user._id %>">
-<input type="hidden" id="userTempID"  value="<%= user._id %>">
+<input type="hidden" id="userTempID"  value="<%= userTempID %>">
 <input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
-<input type="hidden" id="oldParentOf"  value="<%= user.parentOfOld %>">
 <input type="hidden" id="roleID"  value="<%= roleID %>">
 <input type="hidden" id="roleName"  value="<%= roleName %>">
 <input type="hidden" id="privilegeID"  value="<%= privilege.privilegeID %>">

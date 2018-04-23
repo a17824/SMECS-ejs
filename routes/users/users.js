@@ -790,6 +790,7 @@ module.exports.softDelete = function(req, res) {
         var whoDeleted = req.session.user.firstName + " " + req.session.user.lastName;
         var wrapped = moment(new Date());
         user.softDeleted = wrapped.format('YYYY-MM-DD, h:mm:ss a') + "  by " + whoDeleted;
+        user.expirationDate = new Date(Date.now() + (1*24*60*60*1000)); // first number is how many days to delete. now is set to delete after 1 day
 
         //If user is parent, deletes user(parentOf) from Student document ------------------------------
         if(user.parentOf && user.parentOf.length > 0) {
@@ -820,6 +821,7 @@ module.exports.restoreUser = function(req, res) {
 
     models.Users.findById({'_id': userToRestore}, function(err, user){
         user.softDeleted = null;
+        user.expirationDate = null;
 
         //restore parent to Student document --------------
         if(user.parentOf.length > 0){

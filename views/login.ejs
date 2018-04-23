@@ -40,6 +40,9 @@
             Incorrect email or pin
           </div>
         <% }; %>
+          <% if ( error_messages ) { %>
+        <p style="color: red"><%= error_messages %></p>
+          <% } %>
         <form action="/login" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <h1>Login</h1>

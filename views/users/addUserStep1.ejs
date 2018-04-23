@@ -55,7 +55,7 @@
     <input class="checkbox" type="checkbox" name="checkbox" id=<%= role2.roleID %> value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
     <% }); %><br>
 </form>
-<form>
+
     <button class="backButton" onclick="goBack()">Back</button>
     <script>
         function goBack() {
@@ -67,7 +67,7 @@
     <% } else { %>
     <input type="button" id="next" value="Next" disabled><br>
     <% } %>
-</form>
+
 <form action="/users/showUsers">
     <input type="submit" value="Cancel">
 </form>

@@ -6,6 +6,11 @@
 <body>
 <h1><%= title %></h1>
 
+<% if (title === 'Parent registration Step2' ) {%>
+<h2>registration completed successfully!</h2>
+<label for="photoParent"><b>Add photo:</b>(optional)</label><br>
+<% } %>
+
 <form action="/photos/addPhoto/:id" enctype="multipart/form-data" method="post">
 
     <input name="<%= user.id %>" type="hidden"/>
@@ -32,13 +37,19 @@
            accept="image/*" required disabled/><br><br>
     <% } %>
 
-    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-    <input type="submit" value="Save / Update" >
+    <% if (title === 'Add Photo' ) {%>
+        <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+            <input type="submit" value="Save / Update" >
+        <% } else { %>
+            <input type="submit" value="Save / Update" disabled>
+        <% } %>
     <% } else { %>
-    <input type="submit" value="Save / Update" disabled>
+        <input type="submit" value="Finish" >
     <% } %>
 </form>
 
+
+<% if (title === 'Add Photo' ) {%>
 <form action="/users/deletePhoto/<%= user.id %>">
     <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
     <input type="submit" id="btSubmit" value="Delete photo" >
@@ -58,6 +69,6 @@
     }
 }
 </script>
-
+<% } %>
 </body>
 </html>

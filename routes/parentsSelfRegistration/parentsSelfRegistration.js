@@ -99,26 +99,32 @@ module.exports.registerParentStep1 = function(req, res, next) {
 
 
         ],function(err, results){
-            console.log('role = ',results[1]);
-            console.log('roleName = ',results[1].roleName);
             models.UsersAddTemp.findById(userID, function (err, user) {
-                res.render('parentsSelfRegistration/registerParentStep1',{
-                    title:'Parent registration Step1',
-                    users: user,
-                    students: results[0],
-                    roleID: results[1].roleID,
-                    roleName: results[1].roleName,
-                    privilege: results[2]
-                });
+                if (!user) {
+                    console.log(err);
+                    console.log('TTL EXPIRED');
+                    req.flash('error_messages', 'Time expired. After clicking "Login" button, you have 10min to finish registration');
+                    res.redirect('/login');
+                }
+                else {
+                    res.render('parentsSelfRegistration/registerParentStep1', {
+                        title: 'Parent registration Step1',
+                        users: user,
+                        userTempID: userID,
+                        students: results[0],
+                        roleID: results[1].roleID,
+                        roleName: results[1].roleName,
+                        privilege: results[2]
+                    });
+                }
             });
-
-
         })
 
     });
 };
 
 module.exports.registerParentStep1Post = function(req, res) {
+    var userToUpdate = req.body.userToUpdate;
     var emailLowerCase = req.body.email.toLowerCase();
     var roleID = [];
     var roleName = [];
@@ -128,54 +134,64 @@ module.exports.registerParentStep1Post = function(req, res) {
     var parentOf = req.body.parentOf;
     var parentOfFinal = [];
     var studentsWithParents = [];
-
     roleID.push(req.body.roleID);
     roleName.push(req.body.roleName);
 
-    models.Users.find({'email': emailLowerCase}, function (err, user) {
-        if(err)
-            console.log('err = ',err);
-        else{
-            if(user.length == 1){
-                console.log('Email already in use. Please choose a different email');
-                return res.status(409).send('showAlert')
-            }else{
-                models.Students.find({'studentID': parentOf}, function (err, students) {
-                    for (var i=0; i < students.length; i++) {
-                        var student = {
-                            _id: students[i]._id,
-                            studentID: students[i].studentID,
-                            studentFirstName: students[i].firstName,
-                            studentLastName: students[i].lastName
-                        };
-                        parentOfFinal.push(student);
-                        studentsWithParents.push(students[i].studentID);
-                    }
-                    var user1 = new models.Users({
-                        userRoleID: roleID,
-                        userRoleName: roleName,
-                        userPrivilegeID: privilegeID,
-                        userPrivilegeName: privilegeName,
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        email: emailLowerCase,
-                        pin: hash,
-                        parentOf: parentOfFinal,
-                        parent: true
+    models.UsersAddTemp.findById({'_id': userToUpdate}, function (err0, tempUser) {
+        console.log('tempUser = ',tempUser);
+        if (!tempUser) {
+            console.log(err0);
+            console.log('TTL EXPIRED');
+            req.flash('error_messages', 'Time expired. After clicking "Login" button, you have 10min to finish registration');
+            res.send({redirect: '/login'});
+        }
+        else {
+            models.Users.find({'email': emailLowerCase}, function (err, user) {
+                if (err)
+                    console.log('err = ', err);
+                else {
+                    if (user.length == 1) {
+                        console.log('Email already in use. Please choose a different email');
+                        return res.status(409).send('showAlert')
+                    } else {
+                        models.Students.find({'studentID': parentOf}, function (err, students) {
+                            for (var i = 0; i < students.length; i++) {
+                                var student = {
+                                    _id: students[i]._id,
+                                    studentID: students[i].studentID,
+                                    studentFirstName: students[i].firstName,
+                                    studentLastName: students[i].lastName
+                                };
+                                parentOfFinal.push(student);
+                                studentsWithParents.push(students[i].studentID);
+                            }
+                            var user1 = new models.Users({
+                                userRoleID: roleID,
+                                userRoleName: roleName,
+                                userPrivilegeID: privilegeID,
+                                userPrivilegeName: privilegeName,
+                                firstName: req.body.firstName,
+                                lastName: req.body.lastName,
+                                email: emailLowerCase,
+                                pin: hash,
+                                parentOf: parentOfFinal,
+                                parent: true
 
-                    });
-                    user1.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                            return res.status(409).send('showAlert')
-                        }else{
-                            console.log('"parentOf" added successfully');
-                            functions.addParentInStudentDocument(user1, studentsWithParents);
-                            return res.send({redirect:'/dashboard'}) //needs to go to step2 to add photo
-                        }
-                    });
-                });
-            }
+                            });
+                            user1.save(function (err) {
+                                if (err) {
+                                    console.log(err);
+                                    return res.status(409).send('showAlert')
+                                } else {
+                                    console.log('"parentOf" added successfully');
+                                    functions.addParentInStudentDocument(user1, studentsWithParents);
+                                    return res.send({redirect: '/photos/addPhoto/' + user1._id}) //needs to go to step2 to add photo
+                                }
+                            });
+                        });
+                    }
+                }
+            });
         }
     });
 };

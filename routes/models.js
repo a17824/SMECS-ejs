@@ -24,6 +24,12 @@ var UsersSchema = new mongoose.Schema({
     companyName: String,
     contactName: String,
     softDeleted: { type: String, default: null},
+    //ttl: Date,
+    //ttl: { type: Date, index: { expireAfterSeconds: undefined }, default: undefined }, //TTL delete document after 600 seconds (10min)
+    expirationDate: {
+        type: Date,
+        expires: 0
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     receptionPA: { type: Boolean, default: false},
@@ -205,22 +211,14 @@ var AlertSentInfoSchema = new mongoose.Schema({
             viewedTime: String
         },
     }],
-
     status: {
         statusString: { type: String, default: 'open' },         // Open, Closed
         statusClosedDate: String,
         statusClosedTime: String
     },
-
     testModeON: Boolean,
     request911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
-
-    //successful: String,   // 22/30
-    //readBy: String,       // 17/22
-    //details: String,      // (phone screen snapshot from received alert) Note, Floor, Last Time seen, etc, etc...
-
-    whoCalled911: String,
     sniperCoordinateX: String,
     sniperCoordinateY: String,
     note: String,

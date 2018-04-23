@@ -8,21 +8,30 @@ var functions = require('./../functions');
 
 //--ADD or UPDATE user photo -------------------------------------
 module.exports.addUpdatePhoto = function (req, res){
+    console.log('req.params.id = ',req.params.id);
+
     async.parallel([
-        function(callback){
-            models.Users.findById(req.params.id).exec(callback);
-        },
+        //function(callback){models.Users.findById(req.params.id).exec(callback);},
         function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('photos/addPhoto',{
-            title:'Add Photo',
-            user: results[0],
-            aclModifyUsers: results[1], //aclPermissions modifyUsers
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
+
+        if (req.session.user.userPrivilegeID) {         // if it is a user from "User" database
+            var title = 'Add Photo';
+        } else {                                        // if it is a user from "ParentSelfRegistration" database
+            var title = 'Parent registration Step2';
+        }
+        models.Users.findById(req.params.id, function (err, user) {
+            console.log('user = ',user);
+            res.render('photos/addPhoto',{
+                title: title,
+                user: user,
+                aclModifyUsers: results[0], //aclPermissions modifyUsers
+                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
         });
     })
 };
@@ -104,6 +113,8 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                     res.redirect('/users/showUsers');
                                 if(req.user.redirect == 'updateUser')
                                     res.redirect('/users/updateUser/' + user.id);
+                                if(req.user.redirect == 'registerParent')
+                                    res.redirect('/login');
                             });
 
                         } else {
