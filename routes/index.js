@@ -1,9 +1,7 @@
 //Dependencies
 var express = require('express');
 var router = express.Router();
-var async = require("async");
-var path = require('path');
-var models = require('./models');
+var schedule = require('node-schedule');
 
 var users = require('./users/users');
 var students = require('./students/students');
@@ -36,8 +34,14 @@ var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
-
 var procedureR = require('./alerts/sendingReceiving/procedureR');
+
+
+//Run this function once a month
+schedule.scheduleJob("*/1 * * * *", function(req, res) {
+    console.log('This runs every 2 minutes');
+    photos.cleanOldPhotos(req, res);
+});
 
 
 
@@ -46,12 +50,10 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'SMECS'  });
 });
 
-
-
 /* Test CKEditor. */
-router.get('/ckeditor/samples/index', function(req, res, next) {
-    res.render('ckeditor/samples/index');
-});
+//router.get('/ckeditor/samples/index', function(req, res, next) {
+//    res.render('ckeditor/samples/index');
+//});
 
 
 /* SHOW FORGOT PASSWORD. */

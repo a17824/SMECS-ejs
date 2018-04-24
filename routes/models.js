@@ -24,12 +24,7 @@ var UsersSchema = new mongoose.Schema({
     companyName: String,
     contactName: String,
     softDeleted: { type: String, default: null},
-    //ttl: Date,
-    //ttl: { type: Date, index: { expireAfterSeconds: undefined }, default: undefined }, //TTL delete document after 600 seconds (10min)
-    expirationDate: {
-        type: Date,
-        expires: 0
-    },
+    expireAt: { type: Date, default: undefined },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     receptionPA: { type: Boolean, default: false},
@@ -46,6 +41,7 @@ var UsersSchema = new mongoose.Schema({
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Users"}); //stops Mongoose of giving plurals to our collections names
 var Users;
+UsersSchema.index({ "expireAt": 1 }, { expireAfterSeconds: 0 });
 module.exports.Users = mongoose.model("Users", UsersSchema);
 
 // DEFINE UsersAddTemp COLLECTION IN MONGOdb
