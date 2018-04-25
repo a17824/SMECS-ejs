@@ -7,8 +7,8 @@
 <h1><%= title %></h1>
 
 <% if (title === 'Parent registration Step2' ) {%>
-<h2>registration completed successfully!</h2>
-<label for="photoParent"><b>Add photo:</b>(optional)</label><br>
+<h2>Thank you for registering!</h2>
+<label for="photoParent"><b>Would you like to add your photo?</b>(optional)</label><br>
 <% } %>
 
 <form action="/photos/addPhoto/:id" enctype="multipart/form-data" method="post">
@@ -44,10 +44,15 @@
             <input type="submit" value="Save / Update" disabled>
         <% } %>
     <% } else { %>
-        <input type="submit" value="Finish" >
+        <input type="submit" value="Submit Photo" >
     <% } %>
 </form>
 
+<% if (title !== 'Add Photo' ) {%>
+<form action="/login">
+    <input type="submit" value="Skip and Finish" />
+</form>
+<% } %>
 
 <% if (title === 'Add Photo' ) {%>
 <form action="/users/deletePhoto/<%= user.id %>">

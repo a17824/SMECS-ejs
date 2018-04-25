@@ -118,14 +118,15 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
-<% if (alert.alertNameID == 2 ||
+
+<% if (!userAuthGroupAlerts && (alert.alertNameID == 2 ||
         alert.alertNameID == 6 ||
         alert.alertNameID == 7 ||
         alert.alertNameID == 9 ||
         alert.alertNameID == 10 ||
         alert.alertNameID == 11 ||
         alert.alertNameID == 15 ||
-        alert.alertNameID == 23 ) {%>
+        alert.alertNameID == 23 )) { %>
 
 <form action="/alerts/sending/chooseAlert">
     <input type="submit" value="Exit Alert" >
@@ -137,6 +138,6 @@
         window.history.back();
     }
 </script>
-<% }%>
+<% } %>
 </body>
 </html>

@@ -288,9 +288,9 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
-<% if (alert.alertNameID == 14 ||
+<% if (!userAuthGroupAlerts && (alert.alertNameID == 14 ||
         alert.alertNameID == 18 ||
-        alert.alertNameID == 26 ) {%>
+        alert.alertNameID == 26 )) {%>
 
 <form action="/alerts/sending/chooseAlert">
     <input type="submit" value="Exit Alert" >

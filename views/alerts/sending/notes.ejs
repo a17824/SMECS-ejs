@@ -277,13 +277,13 @@
 
 </form>
 
-<% if (alert.alertNameID == 3 ||
+<% if (!userAuthGroupAlerts && (alert.alertNameID == 3 ||
         alert.alertNameID == 8 ||
         alert.alertNameID == 12 ||
         alert.alertNameID == 13 ||
         alert.alertNameID == 20 ||
         alert.alertNameID == 21 ||
-        alert.alertNameID == 22 ) {%>
+        alert.alertNameID == 22 )) {%>
 
 <form action="/alerts/sending/chooseAlert">
     <input type="submit" value="Exit Alert" >

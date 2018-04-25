@@ -55,6 +55,7 @@ function getArrays(req, typeAclAlert, callback) {
                     arrayAlert.push({
                         'groupID': alert[i].alertTypeID,
                         'alertTypeSortID': alert[i].alertTypeSortID,
+                        'alertTypeName': alert[i].alertTypeName,
                         'alertID': alert[i].alertID,
                         'alertSortID': alert[i].alertSortID,
                         'alertName': alert[i].alertName,

@@ -8,8 +8,6 @@ var functions = require('./../functions');
 
 //--ADD or UPDATE user photo -------------------------------------
 module.exports.addUpdatePhoto = function (req, res){
-    console.log('req.params.id = ',req.params.id);
-
     async.parallel([
         //function(callback){models.Users.findById(req.params.id).exec(callback);},
         function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
@@ -139,7 +137,7 @@ module.exports.addUpdatePhotoPost = function (req, res){
 };
 //-----------------------------------------end ADD or CHANGE user photo
 
-module.exports.cleanOldPhotos = function (req, res){
+module.exports.cleanOldPhotos = function (){
     async.parallel([
         function(callback){
             var arrayUsers = [];

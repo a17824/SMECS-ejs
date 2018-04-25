@@ -38,9 +38,10 @@ var procedureR = require('./alerts/sendingReceiving/procedureR');
 
 
 //Run this function once a month
-schedule.scheduleJob("*/1 * * * *", function(req, res) {
-    console.log('This runs every 2 minutes');
-    photos.cleanOldPhotos(req, res);
+//schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
+schedule.scheduleJob({hour: 02, minute: 59, dayOfWeek: 1, dayOfMonth: [1,2,3,4,5,6,7]}, function(){
+    console.log('This runs every first Monday of the month at 02:59AM');
+    photos.cleanOldPhotos();
 });
 
 
@@ -602,8 +603,14 @@ router.post('/pa/newAnnouncement', auth.simpleAuth, auth.requireLogin, pa.addPos
 /*SENDING ALERTS*/
 
 /* CHOOSE ALERT. -------------------------------*/
-router.get('/alerts/sending/chooseAlert', auth.simpleAuth, auth.requireLogin, chooseAlert.show, function(req, res) {});
-router.post('/alerts/sending/chooseAlert', auth.simpleAuth, auth.requireLogin, chooseAlert.showPost, function(req, res) {});
+router.get('/alerts/sending/chooseGroup', auth.simpleAuth, auth.requireLogin, chooseAlert.showGroups, function(req, res) {});
+router.post('/alerts/sending/chooseGroup', auth.simpleAuth, auth.requireLogin, chooseAlert.showGroupsPost, function(req, res) {});
+
+router.get('/alerts/sending/chooseGroupAlert/:id', auth.simpleAuth, auth.requireLogin, chooseAlert.showAlerts, function(req, res) {});
+router.get('/alerts/sending/chooseAlert', auth.simpleAuth, auth.requireLogin, chooseAlert.showAlerts, function(req, res) {});
+
+router.post('/alerts/sending/chooseAlert', auth.simpleAuth, auth.requireLogin, chooseAlert.showAlertsPost, function(req, res) {});
+/*-------------------------------*/
 
 /* Send Alert - Floor. -------------------------------*/
 router.get('/alerts/sending/floor/:id', auth.simpleAuth, auth.requireLogin, sendingAlert.showFloor, function(req, res) {});

@@ -3,35 +3,140 @@ var models = require('./../../models');
 var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray.js');
-//var aclPermissions = require('./aclPermissions');
 
+
+/* Choose Group. -------------------------------*/
+module.exports.showGroups = function(req, res) {
+    if(req.user.appSettings.groupAlertsButtons == false)
+        res.redirect('/alerts/sending/chooseAlert');
+    else {
+        async.parallel([
+            function(callback){
+                buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
+                    callback(null, arrayAlerts);
+                });
+            }
+        ],function(err, results){
+            var real = results[0][0];
+            var test = results[0][1];
+
+            var arrayGroupsReal = [];
+            var groupReal = 99999;
+            for (var i=0; i < real.length; i++ ){
+                if(real[i].groupID !== groupReal) {
+                    groupReal = real[i].groupID;
+                    var arrGroupObjReal = {
+                        groupID: real[i].groupID,
+                        alertTypeSortID: real[i].alertTypeSortID,
+                        alertTypeName: real[i].alertTypeName,
+                        alertColor: real[i].alertColor,
+                        alertColorValue: real[i].alertColorValue
+                    };
+                    arrayGroupsReal.push(arrGroupObjReal);
+                }
+            }
+            var arrayGroupsTest = [];
+            var groupTest = 99999;
+            for (var x=0; x < test.length; x++ ){
+                if(test[x].groupID !== groupTest) {
+                    groupTest = test[x].groupID;
+                    var arrGroupObjTest = {
+                        alertTypeSortID: test[x].alertTypeSortID,
+                        groupID: test[x].groupID,
+                        alertTypeName: test[x].alertTypeName,
+                        alertColor: test[x].alertColor,
+                        alertColorValue: test[x].alertColorValue
+                    };
+                    arrayGroupsTest.push(arrGroupObjTest);
+                }
+            }
+            res.render('alerts/sending/chooseGroup',{
+                title:'Choose Alert',
+                userAuthPrivilegeID: req.user.userPrivilegeID,
+                userAuthRoleID: req.user.userRoleID[0],
+                aclReal: arrayGroupsReal,
+                aclTest: arrayGroupsTest
+            });
+
+        })
+    }
+};
+
+module.exports.showGroupsPost = function(req, res) {
+    var alertTemp1 = new models.AlertSentTemp({
+        alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
+        alertGroupName: req.body.alertGroupName,
+        testModeON: req.body.testModeON
+    });
+    alertTemp1.save();
+    return res.send({redirect: '/alerts/sending/chooseGroupAlert/' + alertTemp1._id})
+};
 
 
 /* Choose Alert. -------------------------------*/
-module.exports.show = function(req, res) {
+module.exports.showAlerts = function(req, res) {
     async.parallel([
-        function(callback){
-            models.Alerts.find().sort({"sortID":1}).sort({"sortID":1}).exec(callback);
-        },
         function(callback){
             buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
                 callback(null, arrayAlerts);
             });
         }
     ],function(err, results){
-        res.render('alerts/sending/chooseAlert',{
-            title:'Choose Alert',
-            userAuthPrivilegeID: req.user.userPrivilegeID,
-            userAuthRoleID: req.user.userRoleID[0],
-            alerts: results[0],
-            aclReal: results[1][0],
-            aclTest: results[1][1]
-        });
+        if(req.params.id){ //Groups Buttons ON
+            models.AlertSentTemp.findById(req.params.id, function (err, alert) {
+                if(err)
+                    console.log('err - ',err);
+                else{
+                    if (!alert) {
+                        console.log(err);
+                        console.log('TTL EXPIRED');
+                        req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
+                        res.redirect('/alerts/sending/chooseAlert');
+                    }
+                    else {
+                        var real = results[0][0];
+                        var test = results[0][1];
+
+                        var arrayAlertsReal = [];
+                        for (var x=0; x < real.length; x++ ){
+                            if(real[x].groupID == alert.alertGroupID) {
+                                arrayAlertsReal.push(real[x]);
+                            }
+                        }
+                        var arrayAlertsTest = [];
+                        for (var x=0; x < test.length; x++ ){
+                            if(test[x].groupID == alert.alertGroupID) {
+                                arrayAlertsTest.push(test[x]);
+                            }
+                        }
+
+                        res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
+                            title:'Choose Alert',
+                            alert: alert,
+                            aclReal: arrayAlertsReal,
+                            aclTest: arrayAlertsTest
+                        });
+
+
+                    }
+                }
+            })
+        }else { //Groups Buttons OFF
+            var alert = 0;
+            res.render('alerts/sending/chooseAlert',{
+                title:'Choose Alert',
+                alert: alert,
+                aclReal: results[0][0],
+                aclTest: results[0][1]
+            });
+        }
+
+
+
     })
 };
 
-module.exports.showPost = function(req, res) {
-
+module.exports.showAlertsPost = function(req, res) {
     async.waterfall([
         function (callback) {
             models.Alerts.find({'alertID': req.body.alertID}, function (err, alert) {
@@ -63,18 +168,46 @@ module.exports.showPost = function(req, res) {
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
 
-                    var alertTemp1 = new models.AlertSentTemp({
-                        alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
-                        alertGroupName: req.body.alertGroupName,
-                        alertNameID: req.body.alertID,
-                        alertName: req.body.alertName,
-                        testModeON: req.body.testModeON,
-                        request911Call: alert[0].alertRequest911Call,
-                        whoCanCall911: alert[0].whoCanCall911,
-                        placeholderNote: placeholderNote
-                    });
-                    alertTemp1.save();
-                    callback(null, alertTemp1);
+                    if(req.body.alertToUpdate == 0){    //Groups Buttons ON
+                        var alertTemp1 = new models.AlertSentTemp({
+                            alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
+                            alertGroupName: req.body.alertGroupName,
+                            alertNameID: req.body.alertID,
+                            alertName: req.body.alertName,
+                            testModeON: req.body.testModeON,
+                            request911Call: alert[0].alertRequest911Call,
+                            whoCanCall911: alert[0].whoCanCall911,
+                            placeholderNote: placeholderNote
+                        });
+                        alertTemp1.save();
+                        callback(null, alertTemp1);
+                    }
+                    else{   //Groups Buttons OFF
+                        var alertToUpdate1 = req.body.alertToUpdate;
+                        models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alertTemp) {
+                            if(err)
+                                console.log('err - ',err);
+                            else {
+                                if (!alertTemp) {
+                                    console.log(err);
+                                    console.log('TTL EXPIRED');
+                                    req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
+                                    res.send({redirect: '/alerts/sending/chooseAlert/'});
+                                }
+                                else {
+                                    alertTemp.alertNameID = req.body.alertID;
+                                    alertTemp.alertName = req.body.alertName;
+                                    alertTemp.testModeON = req.body.testModeON;
+                                    alertTemp.request911Call = alert[0].alertRequest911Call;
+                                    alertTemp.whoCanCall911 = alert[0].whoCanCall911;
+                                    alertTemp.placeholderNote = placeholderNote;
+                                    alertTemp.save();
+                                    callback(null, alertTemp);
+                                }
+                            }
+                        })
+                    }
+
                 }
             });
         },

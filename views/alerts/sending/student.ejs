@@ -134,11 +134,11 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
-<% if (alert.alertNameID == 4 ||
+<% if (!userAuthGroupAlerts && (alert.alertNameID == 4 ||
         alert.alertNameID == 5 ||
         alert.alertNameID == 16 ||
         alert.alertNameID == 17 ||
-        alert.alertNameID == 19 ) {%>
+        alert.alertNameID == 19 )) {%>
 
 <form action="/alerts/sending/chooseAlert">
     <input type="submit" value="Exit Alert" >

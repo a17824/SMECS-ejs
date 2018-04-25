@@ -16,20 +16,17 @@
                     $('#testModeOFF').css('display', "unset");
                 }
             });
-
-            var alert_ID, alertID, alertGroupID, alertGroupName, alertName;
             var testModeON = false;
+
+            var alertGroupID, alertGroupName;
             $("#btSubmit").click(function(){
-                alert_ID=$("#alertNameID").val();
                 alertGroupID = $('input[name=alert]:checked').val();
-                alertID=$('input[name=alert]:checked').attr('id');
-                alertName = $("input:radio[name='alert']:checked + label").text();
                 alertGroupName = $("input:radio[name='alert']:checked + label").attr('id');
 
-                console.log('alertGroupID = ',alertGroupID);
 
                 if ($('input[name=onoffswitch]:checked').length > 0) {
                     testModeON = true;
+                    document.getElementsByName('alert').checked = false;
                 }
 
                 //-----forms validation------------------------------------
@@ -39,12 +36,10 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
-                $.post("/alerts/sending/chooseAlert",{
-                    alertToUpdate: alert_ID,
+
+                $.post("/alerts/sending/chooseGroup",{
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
-                    alertID: alertID,
-                    alertName: alertName,
                     testModeON: testModeON
 
                 },function(data){
@@ -69,9 +64,6 @@
 <% } %>
 
 
-<input type="hidden" id="alertNameID"  value="<%= alert.id %>">
-
-<!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
 <% if ( aclTest.length >=1 ) { %>
 <div class="onoffswitch">
     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
@@ -88,15 +80,15 @@
     <div id='testModeOFF' name="testModeOFF">
         <% for (var i=0; i < aclReal.length; i++ ){ %>
 
-        <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].groupID %>" >
-        <%= aclReal[i].alertID %> <%= aclReal[i].sortID %><label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
+        <input type="radio" name="alert" id=<%= aclReal[i].groupID %> value="<%= aclReal[i].groupID %>" >
+        <label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertTypeName %></label><br>
         <% } %>
     </div>
 
     <div id='testModeON' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
-        <input type="radio" name="alert" id=<%= aclTest[i].alertID %> value="<%= aclTest[i].groupID %>" >
-        <label for="alert" style="color: <%= aclTest[i].alertColorValue %>"><%= aclTest[i].alertName %></label><br>
+        <input type="radio" name="alert" id=<%= aclTest[i].groupID %> value="<%= aclTest[i].groupID %>" >
+        <label for="alert" style="color: <%= aclTest[i].alertColorValue %>"><%= aclTest[i].alertTypeName %></label><br>
         <% } %>
     </div>
 
@@ -105,13 +97,9 @@
     <input type="button" style="width: 10em; height: 1.8em" id="btSubmit" value="Next" ><br>
 </form>
 
-
-<% if ( alert.id !== 0 ) { %>
-<form action="/alerts/sending/chooseGroup">
+<form action="/dashboard">
     <input type="submit" value="Back">
 </form>
-<% } %>
-
 
 </body>
 </html>

@@ -17,13 +17,14 @@ module.exports.showFloor = function(req, res) {
         if (!results[0]) {
             console.log(err);
             console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
+            req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
             res.render('alerts/sending/floor', {
                 title: results[0].alertName,
                 userAuthID: req.user.userPrivilegeID,
+                userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0],
                 floor: results[1]
             });
@@ -211,6 +212,7 @@ module.exports.showNotes = function(req, res) {
             res.render('alerts/sending/notes', {
                 title: results[0].alertName,
                 userAuthID: req.user.userPrivilegeID,
+                userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0]
             });
         }
@@ -311,6 +313,7 @@ module.exports.showStudent = function(req, res) {
             res.render('alerts/sending/student', {
                 title: results[0].alertName,
                 userAuthID: req.user.userPrivilegeID,
+                userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0],
                 student: results[1]
             });
@@ -378,6 +381,7 @@ module.exports.showMultiSelection = function(req, res) {
             res.render('alerts/sending/multiSelection', {
                 title: results[0].alertName,
                 userAuthID: req.user.userPrivilegeID,
+                userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0],
                 utilities: results[1],
                 medical: results[2]

@@ -683,7 +683,6 @@ module.exports.updatePost = function(req, res) {
             //Utility user: delete or save "Company Name" field
             if (ifUserHasUtilityUserRole == 1) {
                 user.companyName = req.body.companyName;
-                console.log('user = ',user);
                 if(user.userRoleID.length == 1)
                     user.contactName = req.body.contactName;
                 else
@@ -788,7 +787,7 @@ module.exports.softDelete = function(req, res) {
         var whoDeleted = req.session.user.firstName + " " + req.session.user.lastName;
         var wrapped = moment(new Date());
         user.softDeleted = wrapped.format('YYYY-MM-DD, h:mm:ss a') + "  by " + whoDeleted;
-        user.expireAt = 120;      // expires after 120 sec
+        user.expirationDate = new Date(Date.now() + ( 'days' * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
 
         //If user is parent, deletes user(parentOf) from Student document ------------------------------
         if(user.parentOf && user.parentOf.length > 0) {
@@ -819,7 +818,8 @@ module.exports.restoreUser = function(req, res) {
 
     models.Users.findById({'_id': userToRestore}, function(err, user){
         user.softDeleted = null;
-        user.expireAt = null;
+        user.expirationDate = undefined;
+
 
         //restore parent to Student document --------------
         if(user.parentOf.length > 0){
