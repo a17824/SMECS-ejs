@@ -10,6 +10,7 @@
                 if($('#myonoffswitch').is(':checked')) {
                     $('#testModeOFF').css('display', "none");
                     $('#testModeON').css('display', "unset");
+                    $('input[name=alert]:checked').attr('checked',false) //uncheck checkbox from OFF radios
                 }
                 else{
                     $('#testModeON').css('display', "none");
@@ -26,7 +27,6 @@
 
                 if ($('input[name=onoffswitch]:checked').length > 0) {
                     testModeON = true;
-                    document.getElementsByName('alert').checked = false;
                 }
 
                 //-----forms validation------------------------------------
@@ -60,7 +60,7 @@
 <h1><%= title %></h1>
 
 <% if ( error_messages ) { %>
-<p style="color: red"><%= error_messages %></p>
+<p style="color: red"><%- error_messages %></p><br>
 <% } %>
 
 

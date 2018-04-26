@@ -2,7 +2,6 @@
 var formidable = require('formidable');
 var util = require('util');
 var fs   = require('fs-extra');
-var path = require('path');
 var csv = require('../users/csv');
 var models = require('../models');
 var async = require("async");

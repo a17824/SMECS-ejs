@@ -706,7 +706,6 @@ module.exports.updatePost = function(req, res) {
                     user.save();
                     deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
                     functions.addParentInStudentDocument(user, studentsWithParents);
-                    //updateParentInStudentDocument(user);
                     return res.send({redirect: '/users/showUsers'})
                 }else{
                     result.forEach(function (userEmail) {
@@ -992,26 +991,3 @@ function deleteParentInStudentDocument(user, newParentsArray, oldParentArray) {
     });
 }
 //-------------- end of Function to delete parent in Student database
-/*
-function addParentInStudentDocument(user, newParentsArray) {
-    //save parent in Student database --------------------
-    var parent = {
-        _id: user._id,
-        parentFirstName: user.firstName,
-        parentLastName: user.lastName
-    };
-    //find student with id = to 'parents[i]' -> {'_id': parents[i]
-    //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
-    models.Students.update({studentID: {$in: newParentsArray}, 'parentOf._id': {$ne: parent._id}},
-        { "$push": { "parentOf": parent } },
-        { "new": true},
-        function (err) {
-            if(err){
-                console.log('student not updated successfully');
-                throw err;
-            }else {
-                console.log('"parentOf" added successfully on STUDENT database');
-            }
-        });
-}
-*/

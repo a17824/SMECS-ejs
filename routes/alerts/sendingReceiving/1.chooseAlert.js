@@ -82,7 +82,7 @@ module.exports.showAlerts = function(req, res) {
             });
         }
     ],function(err, results){
-        if(req.params.id){ //Groups Buttons ON
+        if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
             models.AlertSentTemp.findById(req.params.id, function (err, alert) {
                 if(err)
                     console.log('err - ',err);
@@ -121,7 +121,7 @@ module.exports.showAlerts = function(req, res) {
                     }
                 }
             })
-        }else { //Groups Buttons OFF
+        }else { //---------------- Groups Buttons OFF --------------------
             var alert = 0;
             res.render('alerts/sending/chooseAlert',{
                 title:'Choose Alert',
@@ -168,7 +168,7 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
 
-                    if(req.body.alertToUpdate == 0){    //Groups Buttons ON
+                    if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
                         var alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
                             alertGroupName: req.body.alertGroupName,
@@ -181,15 +181,15 @@ module.exports.showAlertsPost = function(req, res) {
                         });
                         alertTemp1.save();
                         callback(null, alertTemp1);
+
                     }
-                    else{   //Groups Buttons OFF
+                    else{   //Groups Buttons ON
                         var alertToUpdate1 = req.body.alertToUpdate;
                         models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alertTemp) {
                             if(err)
                                 console.log('err - ',err);
                             else {
                                 if (!alertTemp) {
-                                    console.log(err);
                                     console.log('TTL EXPIRED');
                                     req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
                                     res.send({redirect: '/alerts/sending/chooseAlert/'});
@@ -210,49 +210,54 @@ module.exports.showAlertsPost = function(req, res) {
 
                 }
             });
-        },
-        function (alertTemp1, callback) {
-            whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1); //save SCOPES to database
-            callback(null, alertTemp1);
         }
-
     ], function (err, alertTemp1) {
+        whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) {
+            if(err){
+                console.log('err = ', err);
+            }else {
+                var alertTemp1 = result;
+                if(alertTemp1.sentRoleIDScope < 1){
+                    console.log('No scopes or users to send this alert');
+                }else {
+                    if (req.body.alertID == 2 ||
+                        req.body.alertID == 6 ||
+                        req.body.alertID == 7 ||
+                        req.body.alertID == 9 ||
+                        req.body.alertID == 10 ||
+                        req.body.alertID == 11 ||
+                        req.body.alertID == 15 ||
+                        req.body.alertID == 23 ) {
 
-        if (req.body.alertID == 2 ||
-            req.body.alertID == 6 ||
-            req.body.alertID == 7 ||
-            req.body.alertID == 9 ||
-            req.body.alertID == 10 ||
-            req.body.alertID == 11 ||
-            req.body.alertID == 15 ||
-            req.body.alertID == 23 ) {
+                        return res.send({redirect: '/alerts/sending/floor/' + alertTemp1._id})
+                    }
+                    if (req.body.alertID == 3 ||
+                        req.body.alertID == 8 ||
+                        req.body.alertID == 12 ||
+                        req.body.alertID == 13 ||
+                        req.body.alertID == 20 ||
+                        req.body.alertID == 21 ||
+                        req.body.alertID == 22 ||
+                        req.body.alertID == 27 ) {
+                        return res.send({redirect: '/alerts/sending/notes/' + alertTemp1._id})
+                    }
+                    if (req.body.alertID == 4 ||
+                        req.body.alertID == 5 ||
+                        req.body.alertID == 16 ||
+                        req.body.alertID == 17 ||
+                        req.body.alertID == 19 ) {
 
-            return res.send({redirect: '/alerts/sending/floor/' + alertTemp1._id})
-        }
-        if (req.body.alertID == 3 ||
-            req.body.alertID == 8 ||
-            req.body.alertID == 12 ||
-            req.body.alertID == 13 ||
-            req.body.alertID == 20 ||
-            req.body.alertID == 21 ||
-            req.body.alertID == 22 ||
-            req.body.alertID == 27 ) {
-            return res.send({redirect: '/alerts/sending/notes/' + alertTemp1._id})
-        }
-        if (req.body.alertID == 4 ||
-            req.body.alertID == 5 ||
-            req.body.alertID == 16 ||
-            req.body.alertID == 17 ||
-            req.body.alertID == 19 ) {
+                        return res.send({redirect: '/alerts/sending/student/' + alertTemp1._id})
+                    }
+                    if (req.body.alertID == 14 ||
+                        req.body.alertID == 18 ||
+                        req.body.alertID == 26 ) {
 
-            return res.send({redirect: '/alerts/sending/student/' + alertTemp1._id})
-        }
-        if (req.body.alertID == 14 ||
-            req.body.alertID == 18 ||
-            req.body.alertID == 26 ) {
-
-            return res.send({redirect: '/alerts/sending/multiSelection/' + alertTemp1._id})
-        }
+                        return res.send({redirect: '/alerts/sending/multiSelection/' + alertTemp1._id})
+                    }
+                }
+            }
+        });
     });
 };
 /*-------------------------end of choosing Alerts*/

@@ -4,6 +4,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/chooseAlert.css' />
     <script>
+
+        // end of Reload whole page if page is cached
         $(document).ready(function(){
 
             $('input[name=onoffswitch]').change(function(){
@@ -16,6 +18,13 @@
                     $('#testModeOFF').css('display', "unset");
                 }
             });
+            var testModeONGroups = $("#testMode").val();
+            if(testModeONGroups == 'true'){
+                $('#myonoffswitch').attr('checked', true)
+                $('#testModeOFF').css('display', "none");
+                $('#testModeON').css('display', "unset");
+            }
+
 
             var alert_ID, alertID, alertGroupID, alertGroupName, alertName;
             var testModeON = false;
@@ -26,12 +35,9 @@
                 alertName = $("input:radio[name='alert']:checked + label").text();
                 alertGroupName = $("input:radio[name='alert']:checked + label").attr('id');
 
-                console.log('alertGroupID = ',alertGroupID);
-
                 if ($('input[name=onoffswitch]:checked').length > 0) {
                     testModeON = true;
                 }
-
                 //-----forms validation------------------------------------
 
                 if (alertGroupID == null ) {
@@ -65,11 +71,11 @@
 <h1><%= title %></h1>
 
 <% if ( error_messages ) { %>
-<p style="color: red"><%= error_messages %></p>
+<p style="color: red"><%- error_messages %></p>
 <% } %>
 
-
 <input type="hidden" id="alertNameID"  value="<%= alert.id %>">
+<input type="hidden" id="testMode"  value="<%= alert.testModeON %>">
 
 <!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
 <% if ( aclTest.length >=1 ) { %>
@@ -87,7 +93,6 @@
 
     <div id='testModeOFF' name="testModeOFF">
         <% for (var i=0; i < aclReal.length; i++ ){ %>
-
         <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].groupID %>" >
         <%= aclReal[i].alertID %> <%= aclReal[i].sortID %><label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertName %></label><br>
         <% } %>
