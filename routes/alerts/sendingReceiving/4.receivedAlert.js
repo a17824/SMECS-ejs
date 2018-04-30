@@ -2,6 +2,7 @@
 var models = require('./../../models');
 var async = require("async");
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
+var functions = require('./../../functions');
 
 module.exports.receivedAlert = function(req, res) {
     async.parallel([
@@ -9,7 +10,8 @@ module.exports.receivedAlert = function(req, res) {
         function(callback){models.Floors.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
         function(callback){models.AclAlertsReal.find().exec(callback);},
-        function(callback){models.AclAlertsTest.find().exec(callback);}
+        function(callback){models.AclAlertsTest.find().exec(callback);},
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -64,7 +66,10 @@ module.exports.receivedAlert = function(req, res) {
                     floor: results[1],
                     utilities: results[2],
                     canRequestAssistance: canRequestAssistance,
-                    enableProcedureButton: enableProcedureButton
+                    enableProcedureButton: enableProcedureButton,
+                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
                 });
             });
         }

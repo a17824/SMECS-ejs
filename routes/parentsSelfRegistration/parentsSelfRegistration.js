@@ -2,7 +2,6 @@
 var async = require("async");
 var models = require('../models');
 var aclPermissions = require('../acl/aclPermissions');
-var savePhoto = require('../photos/addUpdatePhoto');
 var functions = require('./../functions');
 var bcrypt = require('bcryptjs');
 
@@ -16,8 +15,8 @@ module.exports.defaultForm = function(req, res, next) {
         function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
-        function(callback){aclPermissions.deleteUsers(req, res, callback);}         //aclPermissions deleteUsers
-
+        function(callback){aclPermissions.deleteUsers(req, res, callback);},         //aclPermissions deleteUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -29,7 +28,10 @@ module.exports.defaultForm = function(req, res, next) {
             aclShowUsers: results[2], //aclPermissions showUsers
             aclAddUsers: results[3], //aclPermissions addUsers
             aclModifyUsers: results[4],  //aclPermissions modifyUsers
-            aclDeleteUsers: results[5]  //aclPermissions deleteUsers
+            aclDeleteUsers: results[5],  //aclPermissions deleteUsers
+            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -78,16 +80,9 @@ module.exports.registerParentStep1 = function(req, res, next) {
                     callback(null, userID);
                 }
             });
-
-
         }
     ], function (err, userID) {
         async.parallel([
-            /*
-            function(callback){
-                models.UsersAddTemp.findById(userID).exec(callback);
-            },
-            */
             function(callback){
                 models.Students.find().sort({"firstName":1}).exec(callback);
             },
@@ -95,8 +90,8 @@ module.exports.registerParentStep1 = function(req, res, next) {
                 models.Roles2.findOne({roleID: 98}).exec(callback);
             },function(callback){
                 models.Privilege.findOne({privilegeID: 5}).exec(callback);
-            }
-
+            },
+            function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
         ],function(err, results){
             models.UsersAddTemp.findById(userID, function (err, user) {
@@ -114,7 +109,10 @@ module.exports.registerParentStep1 = function(req, res, next) {
                         students: results[0],
                         roleID: results[1].roleID,
                         roleName: results[1].roleName,
-                        privilege: results[2]
+                        privilege: results[2],
+                        aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                        userAuthPhoto: req.user.photo
                     });
                 }
             });

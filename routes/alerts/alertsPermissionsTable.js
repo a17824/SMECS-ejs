@@ -2,8 +2,7 @@
 var async = require("async");
 var models = require('./../models');
 var aclPermissions = require('./../acl/aclPermissions');
-
-
+var functions = require('./../functions');
 
 /* SHOW ALERT PERMISSIONS TABLE. ---------------------------------------------------*/
 module.exports.showReal = function(req, res) {
@@ -35,9 +34,11 @@ function showTable(req, res, typeAclAlert, title){
             models[typeAclAlert].find().exec(callback);
         },
         function(callback){aclPermissions.showAlertsTable(req, res, callback);},   //aclPermissions showAlertsTable
-        function(callback){aclPermissions.modifyAlertsTable(req, res, callback);}  //aclPermissions modifyAlertsTable
+        function(callback){aclPermissions.modifyAlertsTable(req, res, callback);},  //aclPermissions modifyAlertsTable
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('alerts/showAlertPermissionsTable',{
             title: title,
             roles2Count: results[0],
@@ -47,7 +48,10 @@ function showTable(req, res, typeAclAlert, title){
             aclAlerts: results[4],                  //pass all checkbox database to ejs
             typeAclAlert: typeAclAlert,
             aclShowAlertsTable: results[5],    //aclPermissions showPermissionsTable
-            aclModifyAlertsTable: results[6]   //aclPermissions modifyAlertsTable
+            aclModifyAlertsTable: results[6],   //aclPermissions modifyAlertsTable
+            aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };

@@ -45,7 +45,6 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
                 if (error1) {
                     console.log('error1 = ',error1);
                 } else {
-                    console.log('allUsersToSendAlert = ',allUsersToSendAlert);
                     if(allUsersToSendAlert < 1 || allUsersToSendAlert == null){
                         console.log('This alert has no Users to send this alert');
                         req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated.<br />Please, inform your school principal so he/she can associate users to roles in this alert');

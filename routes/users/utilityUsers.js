@@ -1,13 +1,10 @@
 //Dependencies
 var async = require("async");
-var formidable = require('formidable');
-var util = require('util');
-var fs   = require('fs-extra');
-var path = require('path');
 var bcrypt = require('bcryptjs');
 var models = require('./../models');
 var moment = require('moment');
 var aclPermissions = require('./../acl/aclPermissions');
+var functions = require('./../functions');
 
 /* SHOW UTILITIES USERS. */
 module.exports.show = function(req, res, next) {
@@ -19,7 +16,8 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
-        function(callback){aclPermissions.deleteUsers(req, res, callback);}         //aclPermissions deleteUsers
+        function(callback){aclPermissions.deleteUsers(req, res, callback);}  ,       //aclPermissions deleteUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
 
     ],function(err, results){
@@ -32,7 +30,10 @@ module.exports.show = function(req, res, next) {
             aclShowUsers: results[2], //aclPermissions showUsers
             aclAddUsers: results[3], //aclPermissions addUsers
             aclModifyUsers: results[4],  //aclPermissions modifyUsers
-            aclDeleteUsers: results[5]  //aclPermissions deleteUsers
+            aclDeleteUsers: results[5],  //aclPermissions deleteUsers
+            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -49,7 +50,8 @@ module.exports.showSoftDeleted = function(req, res, next) {
             models.UtilityUsers.find().exec(callback);
         },
         function(callback){aclPermissions.addUsers(req, res, callback);},   //aclPermissions addUsers
-        function(callback){aclPermissions.eraseUsers(req, res, callback);} //aclPermissions eraseUsers
+        function(callback){aclPermissions.eraseUsers(req, res, callback);}, //aclPermissions eraseUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         //console.log(results[2]);
@@ -58,7 +60,10 @@ module.exports.showSoftDeleted = function(req, res, next) {
             userAuthID: req.user.userPrivilegeID,
             utilityUsers: results[0],
             aclAddUsers: results[1], //aclPermissions addUsers
-            aclEraseUsers: results[2]  //aclPermissions eraseUsers
+            aclEraseUsers: results[2],  //aclPermissions eraseUsers
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 
@@ -68,12 +73,17 @@ module.exports.showSoftDeleted = function(req, res, next) {
 /* ADD UTILITY USERS. ---------------------------------------------------*/
 module.exports.add = function(req, res) {
     async.parallel([
-        function(callback){aclPermissions.addUsers(req, res, callback);} //aclPermissions addUsers
+        function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         res.render('utilities/users/addUtilityUser',{
             title:'Add Utility User',
             userAuthID: req.user.userPrivilegeID,
-            aclAddUsers: results[0] //aclPermissions addUsers
+            aclAddUsers: results[0], //aclPermissions addUsers
+            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -104,14 +114,18 @@ module.exports.update = function(req, res) {
         function(callback){
             models.UtilityUsers.findById(req.params.id).exec(callback);
         },
-        function(callback){aclPermissions.modifyUsers(req, res, callback);} //aclPermissions modifyUsers
+        function(callback){aclPermissions.modifyUsers(req, res, callback);}, //aclPermissions modifyUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('utilities/users/updateUtilityUser',{
             title:'Update Utility User',
             userAuthID: req.user.userPrivilegeID,
             utilityUsers: results[0],
-            aclModifyUsers: results[1]  //aclPermissions modifyUsers
+            aclModifyUsers: results[1],  //aclPermissions modifyUsers
+            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -233,8 +247,8 @@ module.exports.showUtilityUsers = function(req, res, next) {
         function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
-        function(callback){aclPermissions.deleteUsers(req, res, callback);}         //aclPermissions deleteUsers
-
+        function(callback){aclPermissions.deleteUsers(req, res, callback);},         //aclPermissions deleteUsers
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         //console.log(results[2]);
@@ -247,7 +261,10 @@ module.exports.showUtilityUsers = function(req, res, next) {
             aclShowUsers: results[3], //aclPermissions showUsers
             aclAddUsers: results[4], //aclPermissions addUsers
             aclModifyUsers: results[5],  //aclPermissions modifyUsers
-            aclDeleteUsers: results[6]  //aclPermissions deleteUsers
+            aclDeleteUsers: results[6],  //aclPermissions deleteUsers
+            aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };

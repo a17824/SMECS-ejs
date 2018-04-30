@@ -39,7 +39,7 @@ module.exports.show = function(req, res, next) {
 
 
     ],function(err, results){
-        //console.log(results[2]);
+        functions.redirectTab(req, res, 'showUsers');
         res.render('students/showStudents',{
             title:'STUDENTS',
             students: results[0],

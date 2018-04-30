@@ -2,15 +2,10 @@
 var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
-
+var functions = require('./../functions');
 
 /* SHOW Permissions. */
 module.exports.show = function(req, res, next) {
-    /*
-    models.Permissions.find(function(err, permission) {
-        res.render('permissions/showPermissions', { title: 'Permissions', permissions: permission });
-    }).sort({"permissionsGroupID":1}).sort({"permissionsID":1});
-*/
     async.parallel([
         function(callback){
             models.Permissions.find().sort({"sortID":1}).exec(callback);
@@ -20,18 +15,21 @@ module.exports.show = function(req, res, next) {
         },
         function(callback){aclPermissions.addPermissions(req, res, callback);},   //aclPermissions addPermissions
         function(callback){aclPermissions.modifyPermissions(req, res, callback);}, //aclPermissions modifyPermissions
-        function(callback){aclPermissions.deletePermissions(req, res, callback);} //aclPermissions deletePermissions
-
+        function(callback){aclPermissions.deletePermissions(req, res, callback);}, //aclPermissions deletePermissions
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('permissions/showPermissions',{
             title:'Permissions',
             permissions: results[0],
             permissionsGroup: results[1],
             aclAddPermissions: results[2], //aclPermissions addPermissions
             aclModifyPermissions: results[3],  //aclPermissions modifyPermissions
-            aclDeletePermissions: results[4]  //aclPermissions deletePermissions
-
+            aclDeletePermissions: results[4],  //aclPermissions deletePermissions
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -47,9 +45,9 @@ module.exports.add = function(req, res) {
         function(callback){
             models.Permissions.find(function(error, permissions) {
 
-            }).exec(callback);
-        },
-        function(callback){aclPermissions.addPermissions(req, res, callback);}  //aclPermissions addPermissions
+            }).exec(callback);},
+        function(callback){aclPermissions.addPermissions(req, res, callback);},  //aclPermissions addPermissions
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -79,7 +77,10 @@ module.exports.add = function(req, res) {
                 array: array,
                 permissionsGroup: results[0],
                 permissions: results[1],
-                aclAddPermissions: results[2]      //aclPermissions addPermissions
+                aclAddPermissions: results[2],      //aclPermissions addPermissions
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -95,10 +96,9 @@ module.exports.addPost = function(req, res) {
     });
     permissions1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+            console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            console.log("11111111111111111111");
             return res.send({redirect:'/permissions/showPermissions'})
         }
     });
@@ -132,7 +132,9 @@ module.exports.update = function(req, res) {
         },
         function(callback){
             models.PermissionsGroup.find().sort({"sortID":1}).exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         models.Permissions.find(function(error) {
             var streamSort = models.Permissions.find().sort({"sortID":1}).cursor();
@@ -159,7 +161,10 @@ module.exports.update = function(req, res) {
                     arraySort: arraySort,
                     arrayPermissions: arrayPermissions,
                     permission: results[0],
-                    permissionGroup: results[1]
+                    permissionGroup: results[1],
+                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
                 });
             });
         });

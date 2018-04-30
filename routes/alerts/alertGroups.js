@@ -2,34 +2,31 @@
 var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
-
-
-
+var functions = require('./../functions');
 
 /* SHOW ALL AlertGroups. */
 module.exports.show = function(req, res, next) {
-    /*
-     models.AlertsGroup.find(function(err, alertGroup) {
-     res.render('alertGroups/showAlertGroups', { title: 'Alert Groups', alertGroup: alertGroup });
-     }).sort({"alertTypeID":1});
-     */
     async.parallel([
         function(callback){
             models.AlertsGroup.find().sort({"sortID":1}).exec(callback);
         },
         function(callback){aclPermissions.addAlertGroup(req, res, callback);},   //aclPermissions addAlertGroup
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},   //aclPermissions modifyAlertGroup
-        function(callback){aclPermissions.deleteAlertGroup(req, res, callback);}   //aclPermissions deleteAlertGroup
+        function(callback){aclPermissions.deleteAlertGroup(req, res, callback);},   //aclPermissions deleteAlertGroup
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        //console.log(results[2]);
+        functions.redirectTab(req, res, 'showUsers');
         res.render('alertGroups/showAlertGroups',{
             title:'Alert Groups',
             userAuthID: req.user.userPrivilegeID,
             alertGroup: results[0],
             aclAddAlertGroup: results[1], //aclPermissions addAlertGroup
             aclModifyAlertGroup: results[2], //aclPermissions modifyAlertGroup
-            aclDeleteAlertGroup: results[3] //aclPermissions deleteAlertGroup
+            aclDeleteAlertGroup: results[3], //aclPermissions deleteAlertGroup
+            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
 
         });
     })
@@ -44,7 +41,8 @@ module.exports.add = function(req, res) {
             }).exec(callback);
         },
         function(callback){aclPermissions.showAlertGroups(req, res, callback);}, //aclPermissions showAlertGroups
-        function(callback){aclPermissions.addAlertGroup(req, res, callback);}  //aclPermissions addAlertGroup
+        function(callback){aclPermissions.addAlertGroup(req, res, callback);},  //aclPermissions addAlertGroup
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -75,7 +73,10 @@ module.exports.add = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 alertGroup: results[0],
                 aclShowAlertGroups: results[1],     //aclPermissions showAddAlertGroup
-                aclAddAlertGroup: results[2]      //aclPermissions addAddAlertGroup
+                aclAddAlertGroup: results[2],      //aclPermissions addAddAlertGroup
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -107,8 +108,8 @@ module.exports.update = function(req, res) {
 
             }).exec(callback);
         },
-
-        function(callback){aclPermissions.modifyAlertGroup(req, res, callback);}  //aclPermissions modifyAlertGroup
+        function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -137,7 +138,10 @@ module.exports.update = function(req, res) {
                 arraySort: arraySort,
                 array: array,
                 alertGroup: results[0],
-                aclModifyAlertGroup: results[1]      //aclPermissions modifyAlertGroup
+                aclModifyAlertGroup: results[1],      //aclPermissions modifyAlertGroup
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })

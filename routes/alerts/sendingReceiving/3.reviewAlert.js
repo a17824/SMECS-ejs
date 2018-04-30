@@ -6,7 +6,7 @@ var create = require('./saveAlertFunc/3c.createAlertSentInfo.js');
 var student = require('./saveAlertFunc/3b.student.js');
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var pushNotification = require('./pushNotification.js');
-
+var functions = require('./../../functions');
 
 module.exports.reviewAlert = function(req, res) {
     async.parallel([
@@ -15,7 +15,8 @@ module.exports.reviewAlert = function(req, res) {
         function(callback){models.Utilities.find().exec(callback);},
         function(callback){models.Alerts.find().exec(callback);},
         function(callback){models.AclAlertsReal.find().exec(callback);},
-        function(callback){models.AclAlertsTest.find().exec(callback);}
+        function(callback){models.AclAlertsTest.find().exec(callback);},
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -34,7 +35,10 @@ module.exports.reviewAlert = function(req, res) {
                 utilities: results[2],
                 alerts: results[3], // check if alert is softDeleted for Utilities Failure
                 aclReal: results[4], // to check if user has permission to send Request Assistance Alert
-                aclTest: results[5] // to check if user has permission to send Request Assistance Alert
+                aclTest: results[5], // to check if user has permission to send Request Assistance Alert
+                aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     })

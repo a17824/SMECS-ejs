@@ -33,6 +33,7 @@ var UsersSchema = new mongoose.Schema({
     receptionPA: { type: Boolean, default: false},
     pushToken: String,
     redirect: { type: String, default: 'home'},
+    redirectTab: { type: String, default: 'showUsers'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
         groupAlertsLogo: String,
@@ -41,7 +42,8 @@ var UsersSchema = new mongoose.Schema({
         soundSend: String,
         soundReceive: String
     },
-    safe: Boolean
+    procedureCompleted: Boolean,
+    weAreSafe: Boolean
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Users"}); //stops Mongoose of giving plurals to our collections names

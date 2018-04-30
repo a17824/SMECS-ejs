@@ -4,6 +4,7 @@ var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
 var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
+var functions = require('../../functions');
 
 
 //* SHOW REPORTS. */
@@ -13,14 +14,19 @@ module.exports.reportsAlerts = function(req, res, next) {
             models.AlertSentInfo.find().exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
-        function(callback){aclPermissions.deleteReports(req, res, callback);}       //aclPermissions deleteReports
+        function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('reports/showReports',{
             title: 'REPORTS SENT',
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
-            aclDeleteReports: results[2]        //aclPermissions deleteReports
+            aclDeleteReports: results[2],        //aclPermissions deleteReports
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -65,12 +71,17 @@ module.exports.reportsUsers = function(req, res, next) {
         },
         function(callback){
             models.ReportsReceived.find().sort({"scope":1}).sort({"to":1}).exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         res.render('reports/showReportsReceived',{
             title:'REPORTS RECEIVED',
             reportSent: results[0],
-            reportReceived: results[1]
+            reportReceived: results[1],
+            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };

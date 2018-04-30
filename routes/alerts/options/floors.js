@@ -6,6 +6,7 @@ var path = require('path');
 var models = require('./../../models');
 var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
+var functions = require('./../../functions');
 
 
 /* SHOW FLOORS. */
@@ -17,10 +18,11 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.showFloors(req, res, callback);},         //aclPermissions showFloors
         function(callback){aclPermissions.addFloor(req, res, callback);},           //aclPermissions addFloor
         function(callback){aclPermissions.modifyFloor(req, res, callback);},        //aclPermissions modifyFloor
-        function(callback){aclPermissions.deleteFloor(req, res, callback);}         //aclPermissions deleteFloor
-
+        function(callback){aclPermissions.deleteFloor(req, res, callback);},         //aclPermissions deleteFloor
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('floors/showFloors',{
             title:'FLOORS',
             userAuthID: req.user.userPrivilegeID,
@@ -28,8 +30,10 @@ module.exports.show = function(req, res, next) {
             aclShowFloors: results[1],      //aclPermissions showFloors
             aclAddFloor: results[2],      //aclPermissions addFloor
             aclModifyFloor: results[3],   //aclPermissions modifyFloor
-            aclDeleteFloor: results[4]    //aclPermissions deleteFloor
-
+            aclDeleteFloor: results[4],    //aclPermissions deleteFloor
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -42,7 +46,8 @@ module.exports.add = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback){aclPermissions.addFloor(req, res, callback);}  //aclPermissions addFloor
+        function(callback){aclPermissions.addFloor(req, res, callback);},  //aclPermissions addFloor
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var array = [];
@@ -59,7 +64,10 @@ module.exports.add = function(req, res) {
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 floor: results[0],
-                aclAddFloor: results[1]      //aclPermissions addFloor
+                aclAddFloor: results[1],      //aclPermissions addFloor
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -73,11 +81,10 @@ module.exports.addPost = function(req, res) {
     });
     floor1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+            console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            //console.log("11111111111111111111");
-            return res.send({redirect:'/floors/showfloors'})
+            return res.send({redirect:'/floors/showFloors'})
         }
     });
 };
@@ -93,7 +100,8 @@ module.exports.update = function(req, res) {
             }).exec(callback);
         },
         function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
-        function(callback){aclPermissions.modifyFloor(req, res, callback);}  //aclPermissions modifyFloor
+        function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var array = [];
@@ -111,7 +119,10 @@ module.exports.update = function(req, res) {
                 array: array,
                 floor: results[0],
                 aclShowFloors: results[1],      //aclPermissions showFloors
-                aclModifyFloor: results[2]      //aclPermissions modifyFloor
+                aclModifyFloor: results[2],      //aclPermissions modifyFloor
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -125,7 +136,7 @@ module.exports.updatePost = function(req, res) {
         floor.floorPlan = req.body.floorPlan;
         floor.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+                console.log("err - ",err);
                 return res.status(409).send('showAlert')
             }else{
                 //UPDATE Room floorName & floorID DATABASE--------
@@ -166,40 +177,71 @@ module.exports.delete = function(req, res) {
             //end of check if there are Rooms using this Floor
 
             else {
-        // delete photo before delete floor----------------
-        var newFloor = "";
-        var floorPlan = floor.floorPlan;
-        console.log(floor);
-        if (floorPlan != newFloor) { //delete old floorPlan if exists
-            console.log('mmmmmmmm');
-            fs.unlinkSync('./public/floorPlans/' + floorPlan);
-            console.log('successfully deleted ' + floorPlan);
-        }
-        // ------------end delete floorPlan before delete floor
+                // delete photo before delete floor----------------
+                var newFloor = "";
+                var floorPlan = floor.floorPlan;
+                console.log(floor);
+                if (floorPlan != newFloor) { //delete old floorPlan if exists
+                    fs.unlinkSync('./public/floorPlans/' + floorPlan);
+                    console.log('successfully deleted ' + floorPlan);
+                }
+                // ------------end delete floorPlan before delete floor
 
-        models.Floors.remove({'_id': floorToDelete}, function(err) {
-            //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
-            res.redirect('/floors/showFloors');
+                models.Floors.remove({'_id': floorToDelete}, function(err) {
+                    //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
+                    res.redirect('/floors/showFloors');
+                });
+
+            }
         });
-
-    }
-});
     })
 };
 /* ------------ end of DELETE FLOOR. */
 
 // show FLOOR PLAN-------------------------------
 module.exports.showFloorPlan = function(req, res) {
-    models.Floors.findById(req.params.id,function(error, floor) {
-        res.render('floors/showFloorPlan', { title: 'Floor Plan', floor: floor });
+    async.parallel([
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results) {
+        if (!results[0]) {
+            console.log('err = ',err);
+        }
+        else {
+            models.Floors.findById(req.params.id, function (error, floor) {
+                res.render('floors/showFloorPlan', {
+                    title: 'Floor Plan',
+                    floor: floor,
+                    aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            });
+        }
     });
 };
 // -----------------------------end show FloorPlan
 
 //--ADD or CHANGE FloorPlan -------------------------------------
 module.exports.addUpdateFloorPlan = function (req, res){
-    models.Floors.findById(req.params.id,function(error, floor) {
-        res.render('floors/addFloorPlan', { title: 'ADD FLOOR PLAN', floor: floor });
+    async.parallel([
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results) {
+        if (!results[0]) {
+            console.log('err = ',err);
+        }
+        else {
+            models.Floors.findById(req.params.id,function(error, floor) {
+                res.render('floors/addFloorPlan', {
+                    title: 'ADD FLOOR PLAN',
+                    floor: floor,
+                    aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            });
+        }
     });
 };
 module.exports.addUpdateFloorPlanPost = function (req, res){

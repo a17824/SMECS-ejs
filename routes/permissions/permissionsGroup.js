@@ -2,31 +2,30 @@
 var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
-
+var functions = require('./../functions');
 
 /* SHOW ALL PermissionsGroup. */
 module.exports.show = function(req, res, next) {
-/*
-    models.PermissionsGroup.find(function(err, permissionGroup) {
-        res.render('permissionGroups/showPermissionsGroup', { title: 'Permissions Groups', permissionsGroup: permissionGroup });
-    }).sort({"permissionsGroupID":1});
-*/
     async.parallel([
         function(callback){
             models.PermissionsGroup.find().sort({"sortID":1}).exec(callback);
         },
         function(callback){aclPermissions.addPermissions(req, res, callback);},   //aclPermissions addPermissions
         function(callback){aclPermissions.modifyPermissions(req, res, callback);}, //aclPermissions modifyPermissions
-        function(callback){aclPermissions.deletePermissions(req, res, callback);} //aclPermissions deletePermissions
-
+        function(callback){aclPermissions.deletePermissions(req, res, callback);}, //aclPermissions deletePermissions
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('permissionGroups/showPermissionsGroup',{
             title:'Permissions Groups',
             permissionsGroup: results[0],
             aclAddPermissions: results[1], //aclPermissions addPermissions
             aclModifyPermissions: results[2],  //aclPermissions modifyPermissions
-            aclDeletePermissions: results[3]  //aclPermissions deletePermissions
+            aclDeletePermissions: results[3],  //aclPermissions deletePermissions
+            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
 
         });
     })
@@ -37,10 +36,10 @@ module.exports.add = function(req, res) {
     async.parallel([
         function(callback){
             models.PermissionsGroup.find(function(error, permissionsGroup) {
-
             }).exec(callback);
         },
-        function(callback){aclPermissions.addPermissions(req, res, callback);}  //aclPermissions addPermissions
+        function(callback){aclPermissions.addPermissions(req, res, callback);},  //aclPermissions addPermissions
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -69,7 +68,10 @@ module.exports.add = function(req, res) {
                 arraySort: arraySort,
                 array: array,
                 permissionsGroup: results[0],
-                aclAddPermissions: results[1]      //aclPermissions addPermissions
+                aclAddPermissions: results[1],      //aclPermissions addPermissions
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -93,32 +95,41 @@ module.exports.addPost = function(req, res) {
 
 /* UPDATE PermissionsGroup. -------------------------------*/
 module.exports.update = function(req, res) {
-    var arraySort = [];
-    var array = [];
-    models.PermissionsGroup.findById(req.params.id,function(error, permissionsGroup) {
-        var streamSort = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
-        streamSort.on('data', function (doc) {
-            arraySort.push(doc.sortID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(arraySort);
-        });
+    async.parallel([
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
-        var stream = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.permissionsGroupID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('permissionGroups/updatePermissionsGroup', {
-                title: 'UPDATE PERMISSION GROUPS',
-                arraySort: arraySort,
-                array: array,
-                permissionsGroup: permissionsGroup });
+    ],function(err, results){
+        var arraySort = [];
+        var array = [];
+        models.PermissionsGroup.findById(req.params.id,function(error, permissionsGroup) {
+            var streamSort = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
+            streamSort.on('data', function (doc) {
+                arraySort.push(doc.sortID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log(arraySort);
+            });
+
+            var stream = models.PermissionsGroup.find().sort({"sortID":1}).cursor();
+            stream.on('data', function (doc) {
+                array.push(doc.permissionsGroupID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log(array);
+                res.render('permissionGroups/updatePermissionsGroup', {
+                    title: 'UPDATE PERMISSION GROUPS',
+                    arraySort: arraySort,
+                    array: array,
+                    permissionsGroup: permissionsGroup,
+                    aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            });
         });
     });
 };

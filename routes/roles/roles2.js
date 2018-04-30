@@ -2,7 +2,7 @@
 var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
-
+var functions = require('../functions');
 
 /* SHOW ALL ROLES2. */
 module.exports.show = function(req, res, next) {
@@ -17,17 +17,21 @@ module.exports.show = function(req, res, next) {
         },
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
-        function(callback){aclPermissions.deleteRoles2(req, res, callback);} //aclPermissions deleteRoles2
-
+        function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('roles2/showRoles2',{
             title:'Roles',
             userAuthID: req.user.userPrivilegeID,
             roles2: results[0],
             aclAddRoles2: results[1], //aclPermissions addRoles2
             aclModifyRoles2: results[2],  //aclPermissions modifyRoles2
-            aclDeleteRoles2: results[3]  //aclPermissions deleteRoles2
+            aclDeleteRoles2: results[3],  //aclPermissions deleteRoles2
+            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
 
         });
     })
@@ -41,7 +45,8 @@ module.exports.add = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback){aclPermissions.addRoles2(req, res, callback);}  //aclPermissions addRoles2
+        function(callback){aclPermissions.addRoles2(req, res, callback);},  //aclPermissions addRoles2
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -71,7 +76,10 @@ module.exports.add = function(req, res) {
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 roles2: results[0],
-                aclAddRoles2: results[1]      //aclPermissions addRoles2
+                aclAddRoles2: results[1],      //aclPermissions addRoles2
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -85,11 +93,9 @@ module.exports.addPost = function(req, res) {
     });
     role1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+            console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            console.log("11111111111111111111");
-
             var typeAclAlert = 'AclAlertsReal';
             addAclAlerts(req, res, typeAclAlert);
 
@@ -138,12 +144,10 @@ module.exports.update = function(req, res) {
     var array = [];
     async.parallel([
         function(callback){
-            models.Roles2.findById(req.params.id,function(error, role) {
-
-            }).exec(callback);
+            models.Roles2.findById(req.params.id,function(error, role) {}).exec(callback);
         },
-
-        function(callback){aclPermissions.modifyRoles2(req, res, callback);}  //aclPermissions modifyRoles2
+        function(callback){aclPermissions.modifyRoles2(req, res, callback);},  //aclPermissions modifyRoles2
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -171,7 +175,10 @@ module.exports.update = function(req, res) {
                 arraySort: arraySort,
                 array: array,
                 roles2: results[0],
-                aclModifyRoles2: results[1]      //aclPermissions modifyRoles2
+                aclModifyRoles2: results[1],      //aclPermissions modifyRoles2
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })

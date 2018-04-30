@@ -26,18 +26,27 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
     <script type="text/javascript">
+
+
       $(document).ready(function () {
+              $('a[role="tab"]').on('shown.bs.tab', function (e) {
+                  var target = $(e.target).attr("id") // activated tab
+                  //alert(target);
+
+                  $.post("/tabRedirectTo", {
+                      tab: target
+
+                  }, function (data) {
+                      if (data === 'done') {
+                          alert("login success");
+                      }
+                      window.location = data.redirect
+                  });
+              });
+
         $("#btSubmit").click(function () {
 
-          $.post("/users/showUser", {
 
-
-          }, function (data) {
-            if (data === 'done') {
-              alert("login success");
-            }
-            window.location = data.redirect
-          });
         });
       }
       );
@@ -81,46 +90,60 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_content">
-                  <form>
+                    <div align="center">
                     <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                    <input class="btn btn-primary" type="submit" id="btSubmit" value="Add User">&nbsp;&nbsp;
+                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/addUser/step1'">Add User</button>
                     <% } else { %>
-                    <input class="btn btn-primary" type="submit" id="btSubmit" value="Add User" disabled>&nbsp;&nbsp;
+                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/addUser/step1'" disabled>Add User</button>
                     <% } %>
-                  </form>
-                    <form action="/parentsSelfRegistration/defaultForm">
-                        <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                        <input class="btn btn-primary" type="submit" value="Parent Self Registration">&nbsp;&nbsp;
-                        <% } else { %>
-                        <input class="btn btn-primary" type="submit" value="Parent Self Registration" disabled>&nbsp;&nbsp;
-                        <% } %>
-                    </form>
-                  <form action="/users/deletedUsers">
                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                    <input class="btn btn-primary" type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
+                    <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'">Parent Self Registration</button>
                     <% } else { %>
-                    <input class="btn btn-primary" type="submit" value="Delete All Parents" disabled>&nbsp;&nbsp;
+                    <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'" disabled>Parent Self Registration</button>
                     <% } %>
-                  </form>
-                  <form action="/users/deletedUsers">
                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                    <input class="btn btn-primary" type="submit" value="Trash">&nbsp;&nbsp;
+                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/deletedUsers'">Trash</button>
                     <% } else { %>
-                    <input class="btn btn-primary" type="submit" value="Trash" disabled>&nbsp;&nbsp;
+                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/deletedUsers'" disabled>Trash</button>
                     <% } %>
-                  </form>
+                    </div>
+                    <br>
                   <div class="" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#tab_content1" id="schoolStaff-tab" role="tab" data-toggle="tab" aria-expanded="true">School Staff</a>
+
+                        <% if (redirectTab == 'showUsers') {%>
+                            <% var activeUsers = 'active' %>
+                        <% }else {%>
+                            <% var activeUsers = '' %>
+                        <% } %>
+                        <% if (redirectTab == 'showParents') {%>
+                            <% var activeParents = 'active' %>
+                        <% }else {%>
+                            <% var activeParents = '' %>
+                        <% } %>
+                        <% if (redirectTab == 'showExternal') {%>
+                            <% var activeExternal = 'active' %>
+                        <% }else {%>
+                            <% var activeExternal = '' %>
+                        <% } %>
+
+                        <li role="presentation" class="<%= activeUsers %>"><a href="#tab_content1" id="showUsers" role="tab" data-toggle="tab" aria-expanded="true">School Staff</a>
                         </li>
-                        <li role="presentation" class=""><a href="#tab_content2" role="tab" id="parents-tab" data-toggle="tab" aria-expanded="false">Parents</a>
+                        <li role="presentation" class="<%= activeParents %>"><a href="#tab_content2" role="tab" id="showParents" data-toggle="tab" aria-expanded="false">Parents</a>
                         </li>
-                        <li role="presentation" class=""><a href="#tab_content3" role="tab" id="utilityWorkers-tab2" data-toggle="tab" aria-expanded="false">External or Companies</a>
+                        <li role="presentation" class="<%= activeExternal %>"><a href="#tab_content3" role="tab" id="showExternal" data-toggle="tab" aria-expanded="false">External or Companies</a>
                       </li>
                     </ul>
                   </div>
                   <div id="myTabContent" class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
+
+                      <% if (redirectTab == 'showUsers') {%>
+                        <% var showUsers = 'tab-pane fade active in' %>
+                      <% } else {%>
+                        <% var showUsers = 'tab-pane fade' %>
+                      <% } %>
+
+                    <div role="tabpanel" class="<%= showUsers %>" id="tab_content1">
                       <table id="datatable-buttons" class="table table-hover display">
                         <thead>
                         <tr>
@@ -205,9 +228,13 @@
 
 
 
+                      <% if (redirectTab == 'showParents') {%>
+                      <% var showParents = 'tab-pane fade active in' %>
+                      <% } else {%>
+                      <% var showParents = 'tab-pane fade' %>
+                      <% } %>
 
-
-                      <div role="tabpanel" class="tab-pane fade" id="tab_content2">
+                      <div role="tabpanel" class="<%= showParents %>" id="tab_content2">
                           <table id="datatable" class="display table table-hover">
                               <thead>
                               <tr>
@@ -240,7 +267,7 @@
                                   </td>
                                   <% } else { %>
                                   <td>
-                                      <a href="/photos/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="xAvatar"></a>
+                                      <a href="/photos/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="center-cropped"></a>
                                   </td>
                                   <% } %>
                                   <td><%= user.firstName %></td>
@@ -288,9 +315,13 @@
 
 
 
+                      <% if (redirectTab == 'showExternal') {%>
+                      <% var showExternal = 'tab-pane fade active in' %>
+                      <% } else {%>
+                      <% var showExternal = 'tab-pane fade' %>
+                      <% } %>
 
-
-                      <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="utilityWorkers-tab">
+                      <div role="tabpanel" class="<%= showExternal %>" id="tab_content3" aria-labelledby="utilityWorkers-tab">
                           <table id="datatable-fixed-header" class="table table-hover">
                               <thead>
                               <tr>

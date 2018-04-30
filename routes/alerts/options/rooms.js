@@ -2,7 +2,7 @@
 var models = require('./../../models');
 var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
-
+var functions = require('../../functions');
 
 /* SHOW Rooms. */
 module.exports.show = function(req, res, next) {
@@ -15,11 +15,11 @@ module.exports.show = function(req, res, next) {
         },
         function(callback){aclPermissions.addRooms(req, res, callback);},   //aclPermissions addRooms
         function(callback){aclPermissions.modifyRoom(req, res, callback);},   //aclPermissions modifyRoom
-        function(callback){aclPermissions.deleteRoom(req, res, callback);}   //aclPermissions deleteRoom
-
+        function(callback){aclPermissions.deleteRoom(req, res, callback);},   //aclPermissions deleteRoom
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        //console.log(results[2]);
+        functions.redirectTab(req, res, 'showUsers');
         res.render('rooms/showRooms',{
             title:'Rooms',
             userAuthID: req.user.userPrivilegeID,
@@ -27,7 +27,10 @@ module.exports.show = function(req, res, next) {
             floor: results[1],
             aclAddRoom: results[2], //aclPermissions addRoom
             aclModifyRoom: results[3], //aclPermissions modifyRoom
-            aclDeleteRoom: results[4] //aclPermissions deleteRoom
+            aclDeleteRoom: results[4], //aclPermissions deleteRoom
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -47,7 +50,8 @@ module.exports.create = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback){aclPermissions.addRooms(req, res, callback);}  //aclPermissions addRooms
+        function(callback){aclPermissions.addRooms(req, res, callback);},  //aclPermissions addRooms
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var array = [];
@@ -65,7 +69,10 @@ module.exports.create = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 floor: results[0],
                 room: results[1],
-                aclAddRooms: results[2]      //aclPermissions addRooms
+                aclAddRooms: results[2],      //aclPermissions addRooms
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         })
     })
@@ -80,7 +87,7 @@ module.exports.createPost = function(req, res) {
     });
     room1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+            console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
             console.log(req.body.roomName + " successfully saved");
@@ -102,6 +109,8 @@ module.exports.update = function(req, res) {
         function(callback) {
             models.Floors.find().sort({"floorID": 1}).exec(callback);
         },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
 
         var stream = models.Room.find().sort({"roomID":1}).cursor();
@@ -118,7 +127,10 @@ module.exports.update = function(req, res) {
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 room: results[0],
-                floor: results[1]
+                floor: results[1],
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         });
     })

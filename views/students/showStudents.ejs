@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
-      <link href="/public/gentelella/build/css/showUsers.css" rel="stylesheet">
+      <link href="/public/gentelella/build/css/showStudents.css" rel="stylesheet">
   </head>
 
   <body class="nav-md">
@@ -74,32 +74,32 @@
               <div class="x_panel">
                 <div class="x_content">
                   <ul>
-                    <form class="floated" action="/students/addStudent">
+                      <div align="center">
                       <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
-                      <input class="btn btn-primary" type="submit" value="Add Student">&nbsp;&nbsp;
-                      <% } else { %>
-                      <input class="btn btn-primary" type="submit" value="Add Student" disabled>&nbsp;&nbsp;
+                        <button class="btn btn-primary" id="exit" onclick="location.href='/students/addStudent'">Add Student</button>
+                        <% } else { %>
+                        <button class="btn btn-primary" id="exit" onclick="location.href='/students/addStudent'" disabled>Add Student</button>
                       <% } %>
-                    </form>
-                    <form class="floated" action="/students/addMultiStudents">
+
                       <% if (aclAddMultiStudent == null || aclAddMultiStudent.checkBoxValue == true) {%>
-                      <input class="btn btn-primary" type="submit" value="Add Multiple Students">&nbsp;&nbsp;
+                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiStudents'">Add Multiple Students</button>
                       <% } else { %>
-                      <input class="btn btn-primary" type="submit" value="Add Multiple Students" disabled>&nbsp;&nbsp;
+                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiStudents'" disabled>Add Multiple Students</button>
                       <% } %>
-                    </form>
-                    <form class="floated" action="/students/addMultiImage">
+
                       <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                      <input class="btn btn-primary" type="submit" value="Add Multiple Students Photos">&nbsp;&nbsp;
+                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiImage'">Add Multiple Students Photos</button>
                       <% } else { %>
-                      <input class="btn btn-primary" type="submit" value="Add Multiple Students Photos" disabled>&nbsp;&nbsp;
-                      <% } %><br><br>
-                    </form>
+                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiImage'" disabled>Add Multiple Students Photos</button>
+                      <% } %>
+                      </div>
+
+
                   </ul>
                   <table id="datatable" class="table table-hover">
                     <thead>
                       <tr>
-                        <th>Photo</th>
+                        <th >Photo</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>ID</th>
@@ -112,31 +112,17 @@
                     <tbody>
                       <% students.forEach(function(student) { %>
                       <tr>
-                          <% if (student.photo == "") { %>
+                          <% if (student.photo == "" || student.photo == undefined) { %>
                           <td align="center">
-                            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                            <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable">add</button></a>
-                            <% } else { %>
-                            <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable" disabled>add</button></a>
-                            <% } %>
+                              <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable">add</button></a>
+                              <% } else { %>
+                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable" disabled>add</button></a>
+                              <% } %>
                           </td>
                           <% } else { %>
-                          <td>
-                            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                            <a href="/students/showPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable">show</button></a>
-                            <% } else { %>
-                            <a href="/students/showPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable" disabled>show</button></a>
-                            <% } %>
-                            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                            <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-warning" class="inTable">change</button></a>
-                            <% } else { %>
-                            <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-warning" class="inTable" disabled>change</button></a>
-                            <% } %>
-                            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                            <a href="/students/deletePhoto/<%= student.id %>"><button class="btn btn-danger">delete</button></a>
-                            <% } else { %>
-                            <a href="/students/deletePhoto/<%= student.id %>"><button class="btn btn-danger" disabled>delete</button></a>
-                            <% } %>
+                          <td align="center">
+                              <a href="/photos/addPhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="center-cropped"></a>
                           </td>
                           <% } %>
                           <td><%= student.firstName %></td>

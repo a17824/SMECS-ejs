@@ -35,7 +35,7 @@ var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var procedureR = require('./alerts/sendingReceiving/procedureR');
-
+var functions = require('./functions');
 
 //Run this function once a month
 //schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
@@ -77,11 +77,10 @@ router.get('/dashboard', auth.simpleAuth, auth.requireLogin, dashboard.show, fun
 /* SHOW active USERS. */
 router.get('/users/showUsers', auth.simpleAuth, auth.requireLogin, users.show, function(req, res, next) {
 });
-router.post('/users/showUser', auth.simpleAuth, auth.requireLogin, users.showPost, function(req, res) {
-});
+
 
 /* ADD USERS STEP1. ---------------------------------------------------*/
-router.get('/users/addUser/step1/:id', auth.simpleAuth, auth.requireLogin, users.addStep1, function(req, res) {
+router.get('/users/addUser/step1', auth.simpleAuth, auth.requireLogin, users.addStep1, function(req, res) {
 });
 router.post('/users/addUser/step1', auth.simpleAuth, auth.requireLogin, users.addStep1Post, function(req, res) {
 });
@@ -648,6 +647,9 @@ router.post('/alerts/received/receivedAlert', auth.simpleAuth, auth.requireLogin
 /* All Procedures -------------------------------*/
 router.get('/alerts/receiving/procedureR/:id', auth.simpleAuth, auth.requireLogin, procedureR.procedure, function(req, res) {});
 
+
+/* Tab Redirect ------------------*/
+router.post('/tabRedirectTo', auth.simpleAuth, auth.requireLogin, functions.redirectTab, function(req, res) {});
 
 
 module.exports = router;

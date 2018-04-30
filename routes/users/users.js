@@ -25,7 +25,7 @@ module.exports.show = function(req, res, next) {
             console.log('err = ',err);
         }
         else {
-            functions.redirectPage(req,res,'showUsers');
+            functions.redirectPage(req, res, 'showUsers');
             res.render('users/showUsers',{
                 title:'USERS',
                 users: results[0],
@@ -36,26 +36,12 @@ module.exports.show = function(req, res, next) {
                 aclDeleteUsers: results[4],  //aclPermissions deleteUsers
                 aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-
+                userAuthPhoto: req.user.photo,
+                redirectTab: req.user.redirectTab
             });
         }
-
     })
 };
-module.exports.showPost = function(req, res) {
-    var usersAddUpdateTemp = new models.UsersAddTemp({});
-    usersAddUpdateTemp.save(function (err) {
-        if (err) {
-            console.log('Err - NOT SAVED ON DATABASE' + err);
-            return res.status(409).send('showAlert')
-        }else{
-            return res.send({redirect:'/users/addUser/step1/' + usersAddUpdateTemp._id})
-        }
-    });
-};
-/*-------------------------end of USERS POST*/
-
 
 
 /* SHOW SoftDeleted USERS. */
@@ -89,9 +75,6 @@ module.exports.showSoftDeleted = function(req, res, next) {
 module.exports.addStep1 = function(req, res) {
     async.parallel([
         function(callback){
-            models.UsersAddTemp.findById(req.params.id).exec(callback);
-        },
-        function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
         function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
@@ -106,15 +89,23 @@ module.exports.addStep1 = function(req, res) {
             //res.send({redirect: '/users/showUsers/'});
         }
         else {
-            res.render('users/addUserStep1', {
-                title: 'ADD USER: Step 1',
-                userAuthID: req.user.userPrivilegeID,
-                user: results[0],
-                roles2: results[1],
-                aclAddUsers: results[2], //aclPermissions addUsers
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
+            var usersAddUpdateTemp = new models.UsersAddTemp({});
+            usersAddUpdateTemp.save(function (err) {
+                if (err) {
+                    console.log('Err - NOT SAVED ON DATABASE' + err);
+                    return res.status(409).send('showAlert')
+                }else{
+                    res.render('users/addUserStep1', {
+                        title: 'ADD USER: Step 1',
+                        userAuthID: req.user.userPrivilegeID,
+                        user: usersAddUpdateTemp,
+                        roles2: results[0],
+                        aclAddUsers: results[1], //aclPermissions addUsers
+                        aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                        userAuthPhoto: req.user.photo
+                    });
+                }
             });
         }
     })
@@ -422,8 +413,8 @@ module.exports.update = function(req, res) {
             });
         },
         function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers,callback) {
-        functions.aclSideMenu(req, res, function (sideMenu) {
-            callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu);});}, //aclPermissions sideMenu
+            functions.aclSideMenu(req, res, function (sideMenu) {
+                callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu);});}, //aclPermissions sideMenu
 
         function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu, callback){
             if (aclShowPermissionsTable.checkBoxValue == false) {
@@ -758,7 +749,7 @@ module.exports.updateAppSettings = function(req, res) {
         }
     })
 };
-        /*-------------------------------------------end of update users APP SETTINGS */
+/*-------------------------------------------end of update users APP SETTINGS */
 
 module.exports.updateAppSettingsPost = function(req, res) {
 
@@ -786,7 +777,7 @@ module.exports.softDelete = function(req, res) {
         var whoDeleted = req.session.user.firstName + " " + req.session.user.lastName;
         var wrapped = moment(new Date());
         user.softDeleted = wrapped.format('YYYY-MM-DD, h:mm:ss a') + "  by " + whoDeleted;
-        user.expirationDate = new Date(Date.now() + ( 'days' * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
+        user.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
 
         //If user is parent, deletes user(parentOf) from Student document ------------------------------
         if(user.parentOf && user.parentOf.length > 0) {

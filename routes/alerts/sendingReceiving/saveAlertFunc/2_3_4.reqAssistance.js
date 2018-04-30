@@ -5,15 +5,11 @@ var models = require('./../../../models');
 
 
 module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent) {
-    console.log('11111');
-
     function usersScopeToSendAlert(callback) {
-        console.log('222222');
         var boolTrue = true;
         var boolFalse = false;
         reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
         reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
-        console.log('333333');
         utils.forEach(function (utility) {
             var array = [];
             models.Users.find({email: utility.smecsUsers, pushToken: { "$exists": true }}, function (err, users) {
@@ -47,7 +43,6 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
 
                     console.log('arraySmecsAppToSentWithPushToken = ',result.length );
                     alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
-                    console.log('44444');
                     alert.save();
                     console.log(arraySmecsAppToSent);
                     console.log('----------------------------------------');

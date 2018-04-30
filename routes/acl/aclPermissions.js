@@ -31,12 +31,6 @@ var models = require('./../models');
 module.exports.showUsers = function(req, res, callback) {
     var id = 1;
     models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
-
-    /*
-    models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}, function(err, callback) {
-        res.render('dashboard', {aclShowUsers: callback});
-    })
-    */
 };
 
 //showDeletedUsers ID = 2

@@ -2,7 +2,7 @@
 var async = require("async");
 var models = require('./../models');
 var aclPermissions = require('./../acl/aclPermissions');
-
+var functions = require('./../functions');
 
 
 /* SHOW PERMISSIONS TABLE. ---------------------------------------------------*/
@@ -24,7 +24,8 @@ module.exports.show = function(req, res) {
             models.AclPermissions.find().exec(callback);
         },
         function(callback){aclPermissions.showPermissionsTable(req, res, callback);},   //aclPermissions showPermissionsTable
-        function(callback){aclPermissions.modifyPermissionsTable(req, res, callback);}  //aclPermissions modifyPermissionsTable
+        function(callback){aclPermissions.modifyPermissionsTable(req, res, callback);},  //aclPermissions modifyPermissionsTable
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (results[5].checkBoxValue == false) {
@@ -34,6 +35,7 @@ module.exports.show = function(req, res) {
             res.redirect('/dashboard');
         }
         else {
+            functions.redirectTab(req, res, 'showUsers');
             res.render('permissions/showPermissionsTable', {
                 title: 'Permissions Table',
                 userAuthID: req.user.userPrivilegeID,
@@ -43,7 +45,10 @@ module.exports.show = function(req, res) {
                 permissions: results[3],
                 aclPermissions: results[4],             //pass all checkbox database to ejs
                 aclShowPermissionsTable: results[5],    //aclPermissions showPermissionsTable
-                aclModifyPermissionsTable: results[6]        //aclPermissions modifyPermissionsTable
+                aclModifyPermissionsTable: results[6],        //aclPermissions modifyPermissionsTable
+                aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     })

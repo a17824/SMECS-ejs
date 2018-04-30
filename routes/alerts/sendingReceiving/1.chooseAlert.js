@@ -3,6 +3,7 @@ var models = require('./../../models');
 var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray.js');
+var functions = require('./../../functions');
 
 
 /* Choose Group. -------------------------------*/
@@ -15,7 +16,9 @@ module.exports.showGroups = function(req, res) {
                 buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
                     callback(null, arrayAlerts);
                 });
-            }
+            },
+            function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
         ],function(err, results){
             var real = results[0][0];
             var test = results[0][1];
@@ -50,12 +53,16 @@ module.exports.showGroups = function(req, res) {
                     arrayGroupsTest.push(arrGroupObjTest);
                 }
             }
+            functions.redirectTab(req, res, 'showUsers');
             res.render('alerts/sending/chooseGroup',{
                 title:'Choose Alert',
                 userAuthPrivilegeID: req.user.userPrivilegeID,
                 userAuthRoleID: req.user.userRoleID[0],
                 aclReal: arrayGroupsReal,
-                aclTest: arrayGroupsTest
+                aclTest: arrayGroupsTest,
+                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
 
         })
@@ -80,7 +87,9 @@ module.exports.showAlerts = function(req, res) {
             buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
                 callback(null, arrayAlerts);
             });
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
             models.AlertSentTemp.findById(req.params.id, function (err, alert) {
@@ -114,7 +123,10 @@ module.exports.showAlerts = function(req, res) {
                             title:'Choose Alert',
                             alert: alert,
                             aclReal: arrayAlertsReal,
-                            aclTest: arrayAlertsTest
+                            aclTest: arrayAlertsTest,
+                            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                            userAuthPhoto: req.user.photo
                         });
 
 
@@ -122,12 +134,18 @@ module.exports.showAlerts = function(req, res) {
                 }
             })
         }else { //---------------- Groups Buttons OFF --------------------
-            var alert = 0;
+            var alert = {
+                'id': 0
+            };
+            functions.redirectTab(req, res, 'showUsers');
             res.render('alerts/sending/chooseAlert',{
                 title:'Choose Alert',
                 alert: alert,
                 aclReal: results[0][0],
-                aclTest: results[0][1]
+                aclTest: results[0][1],
+                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
 
@@ -197,7 +215,6 @@ module.exports.showAlertsPost = function(req, res) {
                                 else {
                                     alertTemp.alertNameID = req.body.alertID;
                                     alertTemp.alertName = req.body.alertName;
-                                    alertTemp.testModeON = req.body.testModeON;
                                     alertTemp.request911Call = alert[0].alertRequest911Call;
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.placeholderNote = placeholderNote;

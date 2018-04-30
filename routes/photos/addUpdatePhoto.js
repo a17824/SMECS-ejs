@@ -87,7 +87,9 @@ module.exports.addUpdatePhotoPost = function (req, res){
                     fs.stat(new_location + user.id + '_' + file_name, function(err, stat) {
                         if(err == null) {
                             console.log('File exists');
-                            if(req.user.redirect == 'showUsers')
+                            if(req.user.redirect == 'showUsers' ||
+                                req.user.redirect == 'showParents' ||
+                                req.user.redirect == 'showExternal')
                                 res.redirect('/users/showUsers');
                             if(req.user.redirect == 'updateUser')
                                 res.redirect('/users/updateUser/' + user.id);

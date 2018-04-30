@@ -2,6 +2,8 @@
 var models = require('./../../models');
 var async = require("async");
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
+var functions = require('./../../functions');
+
 
 //          FLOOR           \\
 module.exports.showFloor = function(req, res) {
@@ -12,7 +14,9 @@ module.exports.showFloor = function(req, res) {
         },
         function(callback){
             models.Floors.find().sort({"floorID":1}).exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if (!results[0]) {
             console.log(err);
@@ -26,7 +30,10 @@ module.exports.showFloor = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0],
-                floor: results[1]
+                floor: results[1],
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     });
@@ -133,7 +140,9 @@ module.exports.showFloorLocation = function(req, res) {
         },
         function(callback){
             models.Floors.find().exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if (!results[0]) {
             console.log(err);
@@ -143,10 +152,12 @@ module.exports.showFloorLocation = function(req, res) {
         }
         else {
             res.render('alerts/sending/floorLocation', {
-
                 alert: results[0],
                 floor: results[1],
-                userAuthID: req.user.userPrivilegeID
+                userAuthID: req.user.userPrivilegeID,
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
 
             });
         }
@@ -200,7 +211,9 @@ module.exports.showNotes = function(req, res) {
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if (!results[0]) {
             console.log(err);
@@ -213,7 +226,10 @@ module.exports.showNotes = function(req, res) {
                 title: results[0].alertName,
                 userAuthID: req.user.userPrivilegeID,
                 userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
-                alert: results[0]
+                alert: results[0],
+                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     });
@@ -301,7 +317,9 @@ module.exports.showStudent = function(req, res) {
         },
         function(callback){
             models.Students.find().exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if (!results[0]) {
             console.log(err);
@@ -315,7 +333,10 @@ module.exports.showStudent = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0],
-                student: results[1]
+                student: results[1],
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     });
@@ -369,7 +390,9 @@ module.exports.showMultiSelection = function(req, res) {
         },
         function(callback){
             models.Medical.find().sort({"medicalName":1}).exec(callback);
-        }
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         if (!results[0]) {
             console.log(err);
@@ -384,7 +407,10 @@ module.exports.showMultiSelection = function(req, res) {
                 userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,
                 alert: results[0],
                 utilities: results[1],
-                medical: results[2]
+                medical: results[2],
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     });
@@ -448,7 +474,6 @@ module.exports.postMultiSelection = function(req, res) {
                     var reqAssOn = req.body.reqAssChecked;
                     var reqAssOff = req.body.reqAssNotChecked;
                     reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
-                    console.log('0000');
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
             }

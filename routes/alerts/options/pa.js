@@ -4,6 +4,7 @@ var fs   = require('fs-extra');
 var path = require('path');
 var models = require('./../../models');
 var aclPermissions = require('./../../acl/aclPermissions');
+var functions = require('../../functions');
 
 /* SHOW Active RECEPTION USERS. */
 module.exports.showReceptionUsers = function(req, res) {
@@ -13,13 +14,18 @@ module.exports.showReceptionUsers = function(req, res) {
         },
         function(callback){aclPermissions.modifyPAUser(req, res, callback);},        //aclPermissions modifyPAUser
         function(callback){aclPermissions.showPAPreRecorded(req, res, callback);},        //aclPermissions showPAPreRecorded
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('pa/showPaReceptionUsers',{
             title:'PA SYSTEM',
             users: results[0],
             aclModifyPAUser: results[1],  //aclPermissions modifyPAUser
-            aclShowPAPreRecorded: results[2]  //aclPermissions showPAPreRecorded
+            aclShowPAPreRecorded: results[2],  //aclPermissions showPAPreRecorded
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -58,8 +64,10 @@ module.exports.showRecorded = function(req, res) {
         function(callback){aclPermissions.addPAPreRecorded(req, res, callback);},        //aclPermissions addPAPreRecorded
         function(callback){aclPermissions.modifyPAPreRecorded(req, res, callback);},     //aclPermissions modifyPAPreRecorded
         function(callback){aclPermissions.deletePAPreRecorded(req, res, callback);},     //aclPermissions deletePAPreRecorded
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTab(req, res, 'showUsers');
         res.render('pa/showPaRecorded',{
             title:'PA SYSTEM',
             userAuthID: req.user.userPrivilegeID,
@@ -67,7 +75,10 @@ module.exports.showRecorded = function(req, res) {
             showPAUsers: results[1],                //aclPermissions showPAUsers
             aclAddPAPreRecorded: results[2],        //aclPermissions addPAPreRecorded
             aclModifyPAPreRecorded: results[3],     //aclPermissions modifyPAPreRecorded
-            aclDeletePAPreRecorded: results[4]      //aclPermissions deletePAPreRecorded
+            aclDeletePAPreRecorded: results[4],      //aclPermissions deletePAPreRecorded
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -109,6 +120,8 @@ module.exports.add = function(req, res) {
             models.Room.find().sort({"privilegeID":1}).exec(callback);
         },
         function(callback){aclPermissions.addPAPreRecorded(req, res, callback);},        //aclPermissions addPAPreRecorded
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
     ],function(err, results){
         //console.log(results[2]);
         res.render('pa/addAnnouncement',{
@@ -117,7 +130,10 @@ module.exports.add = function(req, res) {
             roles: results[0],
             floors: results[1],
             rooms: results[2],
-            aclAddPAPreRecorded: results[3]        //aclPermissions addPAPreRecorded
+            aclAddPAPreRecorded: results[3],        //aclPermissions addPAPreRecorded
+            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
         });
     })
 };
@@ -136,10 +152,9 @@ module.exports.addPost = function(req, res) {
     });
     user1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+            console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            console.log("11111111111111111111");
             return res.send({redirect:'/pa/showPaRecorded'})
         }
     });
