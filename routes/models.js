@@ -41,9 +41,7 @@ var UsersSchema = new mongoose.Schema({
         soundPanic: String,
         soundSend: String,
         soundReceive: String
-    },
-    procedureCompleted: Boolean,
-    weAreSafe: Boolean
+    }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Users"}); //stops Mongoose of giving plurals to our collections names
@@ -181,6 +179,8 @@ var AlertsSchema = new mongoose.Schema({
     alertProcedure: String,
     alertRequest911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
+    alertRequestProcedureCompleted: { type: Boolean, default: true },
+    alertRequestWeAreSafe: { type: Boolean, default: true },
     softDeleted: { type: Boolean, default: false }
 }, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;
@@ -202,6 +202,11 @@ var AlertSentInfoSchema = new mongoose.Schema({
         lastName: String,
         pushToken: String,
         email: String,
+        called911: {
+            called911Boolean: {type: Boolean, default: false},
+            called911Date: String,
+            called911Time: String
+        },
         received: {
             receivedBoolean: {type: Boolean, default: false},         //22
             receivedDate: String,
@@ -212,6 +217,16 @@ var AlertSentInfoSchema = new mongoose.Schema({
             viewedDate: String,
             viewedTime: String
         },
+        procedureCompleted: {
+            boolean: {type: Boolean, default: false},
+            date: String,
+            time: String
+        },
+        weAreSafe: {
+            boolean: {type: Boolean, default: false},
+            date: String,
+            time: String
+        }
     }],
     status: {
         statusString: { type: String, default: 'open' },         // Open, Closed
@@ -219,6 +234,8 @@ var AlertSentInfoSchema = new mongoose.Schema({
         statusClosedTime: String
     },
     testModeON: Boolean,
+    requestProcedureCompleted: { type: Boolean, default: false },
+    requestWeAreSafe: { type: Boolean, default: false },
     request911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
     sniperCoordinateX: String,
@@ -285,6 +302,8 @@ var AlertSentTempSchema = new mongoose.Schema({
     sentTime: String,
     notePlaceholder: String,
     testModeON: Boolean,
+    requestProcedureCompleted: { type: Boolean, default: false },
+    requestWeAreSafe: { type: Boolean, default: false },
     request911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
     sentRoleIDScope: [Number],

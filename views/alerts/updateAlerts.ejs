@@ -115,6 +115,8 @@
                 alertID=$("#some_select").val();
                 alertProcedure=$("#alertProcedure").val();
                 sortID=$("#sort_select").val();
+                var alertRequestProcedureCompleted = document.getElementById("checkboxProc").checked;
+                var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -172,7 +174,9 @@
                     alertID: alertID,
                     alertProcedure: alertProcedure,
                     oldAlertID: oldAlertID, //to update  aclPermission
-                    sortID: sortID
+                    sortID: sortID,
+                    alertRequestProcedureCompleted: alertRequestProcedureCompleted,
+                    alertRequestWeAreSafe: alertRequestWeAreSafe
 
                 },function(data){
                     if(data==='done')
@@ -196,7 +200,10 @@
 </form>
 <form>
 
-
+    <label for="sortID"><b>Sort ID:</b></label><br>
+    <input type="hidden" id="oldSortID" value="<%= alert.sortID %>">
+    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+    <select id='sort_select'></select><br><br>
 
     <label for="alertName"><b>Alert Name:</b></label><br>
     <input type="text" id="alertName" size="40" value="<%= alert.alertName %>"><br><br>
@@ -215,6 +222,25 @@
     <% }%>
     <% }); %><br>
 
+
+
+    <label for="alertRequestProcedureCompleted"><b>Request Procedure completed:</b></label>
+    <% if (alert.alertRequestProcedureCompleted == true) {%>
+    <input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" value="<%= alert.alertRequestProcedureCompleted %>" checked>
+    <% }else{%>
+    <input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" value="<%= alert.alertRequestProcedureCompleted %>">
+    <% } %>
+    <br>
+    <label for="alertRequestWeAreSafe"><b>Request We are safe!:</b></label>
+    <% if (alert.alertRequestWeAreSafe == true) {%>
+    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" value="<%= alert.alertRequestWeAreSafe %>" checked>
+    <% }else{%>
+    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" value="<%= alert.alertRequestWeAreSafe %>">
+    <% } %>
+    <br><br>
+
+
+
     <label for="requestCall"><b>Request calling 911:</b></label><br>
     <%if (alert.alertRequest911Call == false) { %>
     <input type="radio" name="request911" value="false" checked> No &emsp;
@@ -227,7 +253,6 @@
     <div id="smecsUserDiv" class="enable">
         <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Who can call 911:</label><br>
 
-
         <ul id="smecsUserUl" class="enable">
             <% for (var a = 0; a < alert.whoCanCall911.length; a++) { %>
             <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
@@ -237,7 +262,6 @@
             <% } %>
 
         </ul>
-
 
         <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
             <!–– <option selected disabled hidden> -- select a role -- </option> ––>
@@ -250,12 +274,7 @@
         <br><br>
     </div>
 
-    <br><br>
 
-    <label for="sortID"><b>Sort ID:</b></label><br>
-    <input type="hidden" id="oldSortID" value="<%= alert.sortID %>">
-    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
-    <select id='sort_select'></select><br><br>
 
     <% if (userAuthID == 1) {%>
     <label for="alertID"><b>Alert ID:</b></label><br>

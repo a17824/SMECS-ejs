@@ -61,7 +61,9 @@
         <th>Alert SlugName</th>
         <th>Alert ID</th>
         <% } %>
-        <th>Call 911</th>
+        <th>Request<br>Procedure<br>Completed</th>
+        <th>Request<br>We Are Safe</th>
+        <th>Request<br>911 Call</th>
         <th>Procedure</th>
         <th>Update</th>
         <th>Remove</th>
@@ -76,20 +78,34 @@
         <td><%= alert.alertTypeName %></td>
         <td><%= alert.sortID %></td>
         <td><%= alert.alertName %></td>
+
         <% if (userAuthID == 1) {%>
         <td><%= alert.alertSlugName %></td>
         <td><%= alert.alertID %></td>
         <% } %>
-        <% if (alert.alertRequest911Call) {%>
 
-            <% if (alert.whoCanCall911.length < 2 ) {%>
-                <td><a href="/roles911/<%= alert.id %>"><%= alert.whoCanCall911.length %> role</a></td>
-            <% } else { %>
-                <td><a href="/roles911/<%= alert.id %>"><%= alert.whoCanCall911.length %> roles</a></td>
-            <% } %>
+        <% if (alert.alertRequestProcedureCompleted == true) { %>
+        <td><img  src="/miscPictures/greenCheckmarkWeb20.png"></td>
         <% } else { %>
-            <td>No</td>
+        <td><img  src="/miscPictures/redCross20.png"></td>
         <% } %>
+
+        <% if (alert.alertRequestWeAreSafe == true) { %>
+        <td><img  src="/miscPictures/greenCheckmarkWeb20.png"></td>
+        <% } else { %>
+        <td><img  src="/miscPictures/redCross20.png"></td>
+        <% } %>
+
+        <td >
+            <% if (alert.whoCanCall911.length > 0) { %>
+            <% for (var x = 0; x < alert.whoCanCall911.length; x++) {%>
+            <%= alert.whoCanCall911[x] %><br>
+            <% } %>
+            <% } else { %>
+            <img  src="/miscPictures/redCross20.png">
+            <% } %>
+        </td>
+
         <td>
             <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
             <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable">show</button></a>

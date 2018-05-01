@@ -113,6 +113,8 @@
                 alertName=$("#alertName").val();
                 alertProcedure=$("#alertProcedure").val();
                 sortID=$("#sort_select").val();
+                var alertRequestProcedureCompleted = document.getElementById("checkboxProc").checked;
+                var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
 
                 //-----forms validation------------------------------------
                 if (alertName == "" ) {
@@ -133,7 +135,6 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
-
                 $.post("/alerts/createAlert",{
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
@@ -142,7 +143,10 @@
                     alertID: alertID,
                     alertName: alertName,
                     alertProcedure: alertProcedure,
-                    sortID: sortID
+                    sortID: sortID,
+                    alertRequestProcedureCompleted: alertRequestProcedureCompleted,
+                    alertRequestWeAreSafe: alertRequestWeAreSafe
+
                 },function(data){
                     if(data==='done')
                     {
@@ -177,6 +181,13 @@
     <% alertGroup.forEach(function(alertGroup) { %>
     <input type="radio" name="alertGroupID" id=<%= alertGroup.alertTypeName %> value="<%= alertGroup.alertTypeID %>"><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
     <% }); %><br>
+
+    <label for="busRide"><b>Request Procedure completed:</b></label>
+    <input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" checked><br>
+
+    <label for="busRide"><b>Request We are safe!:</b></label>
+    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" checked><br><br>
+
 
     <label for="requestCall"><b>Request calling 911:</b></label><br>
     <input type="radio" name="request911" value="false" checked> No &emsp;

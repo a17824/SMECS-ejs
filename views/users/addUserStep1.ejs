@@ -1,6 +1,25 @@
 <html>
 <head>
-<title>add user</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+
+    <title>add user</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
         $(document).ready(function(){
@@ -44,32 +63,137 @@
         });
     </script>
 </head>
-<body>
-<h1><%= title %></h1>
 
-<form>
-    <input type="hidden" id="userTempID"  value="<%= user._id %>">
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="/dashboard" class="site_title"><i class="fa fa-graduation-cap"></i> <span>Dashboard</span></a>
+                </div>
 
-    <label for="userRole"><b>User Role:</b></label><br><br>
-    <% roles2.forEach(function(role2) { %>
-    <input class="checkbox" type="checkbox" name="checkbox" id=<%= role2.roleID %> value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
-    <% }); %><br>
-</form>
-<form>
-    <button class="backButton" onclick="goBack()">Back</button>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
-    <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-    <input type="button" id="next" value="Next" ><br>
-    <% } else { %>
-    <input type="button" id="next" value="Next" disabled><br>
-    <% } %>
-</form>
-<form action="/users/showUsers">
-    <input type="submit" value="Cancel">
-</form>
+                <div class="clearfix"></div>
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+
+                            <div id="wizard" class="form_wizard wizard_horizontal">
+                                <ul class="wizard_steps">
+                                    <li>
+                                        <a href="#step-1">
+                                            <span class="step_no">1</span>
+                                            <span class="step_descr">
+                                              Step 1<br />
+                                              <small>Step 1 description</small>
+                                          </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-2">
+                                            <span class="step_no">2</span>
+                                            <span class="step_descr">
+                                              Step 2<br />
+                                              <small>Step 2 description</small>
+                                          </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-3">
+                                            <span class="step_no">3</span>
+                                            <span class="step_descr">
+                                              Step 3<br />
+                                              <small>Step 3 description</small>
+                                          </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-4">
+                                            <span class="step_no">4</span>
+                                            <span class="step_descr">
+                                              Step 4<br />
+                                              <small>Step 4 description</small>
+                                          </span>
+                                        </a>
+                                    </li>
+                                </ul>
+
+
+                                <input type="hidden" id="userTempID"  value="<%= user._id %>">
+
+                                <b>User Role:</b>
+                                <% roles2.forEach(function(role2) { %>
+                                <div class="checkbox">
+                                    <label for="roleName"><input class="checkbox" type="checkbox" name="checkbox" id="<%= role2.roleID %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
+                                </div>
+                                <% }); %><br>
+
+                            <form>
+                                <button class="btn btn-default" onclick="goBack()">Back</button>
+                                <script>
+                                    function goBack() {
+                                        window.history.back();
+                                    }
+                                </script>
+                                <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+                                <input type="button" id="next" value="Next" ><br>
+                                <% } else { %>
+                                <input type="button" id="next" value="Next" disabled><br>
+                                <% } %>
+                            </form>
+                            <form action="/users/showUsers">
+                                <input type="submit" value="Cancel">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer content -->
+        <% include ../layout/footer.ejs %>
+        <!-- /footer content -->
+
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
+<!-- Datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Google Analytics -->
+
 </body>
 </html>

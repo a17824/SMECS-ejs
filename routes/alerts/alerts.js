@@ -97,7 +97,6 @@ module.exports.create = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            //console.log(arraySort);
         });
 
         var stream = models.Alerts.find().sort({"sortID":1}).cursor();
@@ -107,7 +106,6 @@ module.exports.create = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            console.log('arraySort = ',arraySort);
             res.render('alerts/createAlert',{
                 title:'Create Alert',
                 arraySort: arraySort,
@@ -126,7 +124,6 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.createPost = function(req, res) {
-console.log('req.body.alertGroupID = ',req.body.alertGroupID);
     models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
         var alert1 = new models.Alerts({
             alertTypeID: req.body.alertGroupID,
@@ -135,6 +132,8 @@ console.log('req.body.alertGroupID = ',req.body.alertGroupID);
             alertTypeColorName: alertGroup[0].colorName,
             alertTypeColorValue: alertGroup[0].colorValue,
             alertRequest911Call: req.body.request911Call,
+            alertRequestProcedureCompleted: req.body.alertRequestProcedureCompleted,
+            alertRequestWeAreSafe: req.body.alertRequestWeAreSafe,
             whoCanCall911: req.body.whoCanCall911,
             alertID: req.body.alertID,
             alertName: req.body.alertName,
@@ -265,6 +264,8 @@ module.exports.updatePost = function(req, res) {
             alert.alertName = req.body.alertName;
             alert.alertID = req.body.alertID;
             alert.sortID = req.body.sortID;
+            alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
+            alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {
                     console.log(err);

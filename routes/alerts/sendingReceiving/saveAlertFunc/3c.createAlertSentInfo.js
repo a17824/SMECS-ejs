@@ -45,6 +45,8 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         sentRoleIDScope: tempAlert.sentRoleIDScope,
         sentRoleNameScope: tempAlert.sentRoleNameScope,
         sentTo: sentTo,
+        requestProcedureCompleted: tempAlert.requestProcedureCompleted,
+        requestWeAreSafe: tempAlert.requestWeAreSafe,
         request911Call: tempAlert.request911Call,
         whoCanCall911: tempAlert.whoCanCall911,
         note: tempAlert.note,

@@ -115,9 +115,9 @@
     <input type="number" id="studentID" size="40" value="<%= students.studentID %>"><br><br>
     <label for="busRide"><b>Student uses school bus:</b></label>
     <% if (students.busRide == true) {%>
-    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= students.busRide %>" checked><br><br>
+    <input class="checkbox" type="checkbox" name="checkbox" id="checkbox" value="<%= students.busRide %>" checked><br><br>
     <% }else{%>
-    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= students.busRide %>"><br><br>
+    <input class="checkbox" type="checkbox" name="checkbox" id="checkbox" value="<%= students.busRide %>"><br><br>
     <% } %>
     <input type="hidden" id="savedValueSmecsUsers" value="<%= parentsIdArray %>">
     <input type="hidden" id="photo" value="<%= students.photo %>">

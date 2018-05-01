@@ -41,10 +41,53 @@
     <!-- end of Alert that requires FLOOR -->
 
     <script>
+
+        // All Alerts (less alert UTILITY FAILURE)
         $(document).ready(function(){
-            var alert_ID, alertNameID, alertName, requestAssistance;
+            var alert_ID, alertNameID, alertName;
+            $("#reqProcedureWeSafe").click(function() {
+                alert_ID = $("#alert_ID").val();
+                alertNameID = $("#alertNameID").val();
+                alertName = $("#alertName").val();
+
+                //---------request procedureCompleted or weAreSafe!
+                if(document.getElementById("checkboxProc") === null){
+                    var reqProcedureCompleted = false;
+                }else{
+                    var reqProcedureCompleted = document.getElementById("checkboxProc").checked;
+                }
+                if(document.getElementById("checkboxSafe") === null) {
+                    var reqWeAreSafe = false;
+                }else{
+                    var reqWeAreSafe = document.getElementById("checkboxSafe").checked;
+                }
+                //---------end of request procedureCompleted or weAreSafe!
+
+                //--------------------------------forms validation end-------
+
+                $.post('/alerts/received/receivedAlert', {
+                    alertToUpdate: alert_ID,
+                    alertNameID: alertNameID,
+                    alertName: alertName,
+                    alert14AndReq: false,
+                    procedureCompleted: reqProcedureCompleted,
+                    weAreSafe: reqWeAreSafe
+
+                }, function (data) {
+                    if (data === 'done') {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("App stop responding, call SMECS APP team for help .")
+                });
+            });
+            // END OF All Alerts less UTILITY FAILURE
+
+            // Alert UTILITY FAILURE
             $("#request").click(function() {
-                requestAssistance = $(this).attr('id');
+                var requestAssistance = $(this).attr('id');
 
                 if (requestAssistance != 'back') {
 
@@ -59,6 +102,18 @@
                         return $(this).val();
                     }).get();
 
+                    //---------request procedureCompleted or weAreSafe!
+                    if(document.getElementById("checkboxProc") === null){
+                        var reqProcedureCompleted = false;
+                    }else{
+                        var reqProcedureCompleted = document.getElementById("checkboxProc").checked;
+                    }
+                    if(document.getElementById("checkboxSafe") === null) {
+                        var reqWeAreSafe = false;
+                    }else{
+                        var reqWeAreSafe = document.getElementById("checkboxSafe").checked;
+                    }
+                    //---------end of request procedureCompleted or weAreSafe!
 
                     //-----forms validation------------------------------------
                     if ((alertNameID == 14 || alertNameID == 26) && searchIDsChecked.length < 1) {
@@ -73,8 +128,11 @@
                         alertToUpdate: alert_ID,
                         alertNameID: alertNameID,
                         alertName: alertName,
+                        alert14AndReq: true,
                         reqAssChecked: searchIDsChecked,
-                        reqAssNotChecked: searchIDsNotChecked
+                        reqAssNotChecked: searchIDsNotChecked,
+                        procedureCompleted: reqProcedureCompleted,
+                        weAreSafe: reqWeAreSafe
 
                     }, function (data) {
                         if (data === 'done') {
@@ -149,6 +207,38 @@
 
 </form>
 <% } %>
+
+
+<% if (info.requestProcedureCompleted == true ) {%>
+<label for="alertRequestProcedureCompleted"><b>I completed the procedure:</b></label>
+<% for (var i=0; i < info.sentTo.length; i++) { %>
+<% if (info.sentTo[i].email == userAuthEmail) { %>
+<% if (info.sentTo[i].procedureCompleted.boolean) { %>
+<input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" value="<%= info.sentTo[i].procedureCompleted.boolean %>" checked>
+<% }else { %>
+<input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" value="<%= info.sentTo[i].procedureCompleted.boolean %>">
+<% } %>
+<% } %>
+<% break %>
+<% } %>
+<br>
+<% } %>
+
+<% if (info.requestWeAreSafe == true ) {%>
+<label for="alertRequestProcedureCompleted"><b>We are safe:</b></label>
+<% for (var i=0; i < info.sentTo.length; i++) { %>
+<% if (info.sentTo[i].email == userAuthEmail) { %>
+<% if (info.sentTo[i].weAreSafe.boolean) { %>
+<input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" value="<%= info.sentTo[i].weAreSafe.boolean %>" checked>
+<% }else { %>
+<input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" value="<%= info.sentTo[i].weAreSafe.boolean %>">
+<% } %>
+<% } %>
+<% break %>
+<% } %>
+<br>
+<% } %>
+<br>
 
 <% if (info.request911Call == true ) {%>
 <% for (var i=0; i < info.whoCanCall911.length; i++) { %>
@@ -433,8 +523,12 @@
 <% } %>
 
 
-
+<% if (info.requestProcedureCompleted || info.requestWeAreSafe) {%>
+<button class="receiveButton" id="reqProcedureWeSafe">Exit</button>
+<%} else { %>
 <button class="receiveButton" id="exit" onclick="location.href='/dashboard'">Exit</button>
+<% } %>
+
 <% if (canRequestAssistance == true) {%>
 <% if (flagEnableReqAssButton == 1) {%>
 <input type="button" id="request" value="Send Request Assistance" ><br><br>
