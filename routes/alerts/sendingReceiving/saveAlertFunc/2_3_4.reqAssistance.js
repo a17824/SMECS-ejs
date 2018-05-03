@@ -6,12 +6,8 @@ var models = require('./../../../models');
 
 module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent) {
     function usersScopeToSendAlert(callback) {
-        var boolTrue = true;
-        var boolFalse = false;
-        reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
-        reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
-        utils.forEach(function (utility) {
-            var array = [];
+        var array = [];
+        utils.forEach(function (utility,idx, arr) {
             models.Users.find({email: utility.smecsUsers, pushToken: { "$exists": true }}, function (err, users) {
                 if(err)
                     console.log('err - ',err);
@@ -27,10 +23,10 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
                             userPhoto: user.photo
                         };
                         array.push(userWithPushToken);
-                        //console.log('arraySmecsAppToSentWithPushToken = ',arraySmecsAppToSentWithPushToken);
                     });
-                    console.log('array = ',array.length);
-                    callback(array);
+                    if (idx === arr.length - 1) { //If last forEach loop, then does the callback
+                        callback(array);
+                    }
                 }
             });
         });
@@ -40,13 +36,12 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
                     console.log('err = ', err);
                 }else {
                     arraySmecsAppToSent = arraySmecsAppToSent.concat(result);
-
-                    console.log('arraySmecsAppToSentWithPushToken = ',result.length );
                     alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
+                    var boolTrue = true;
+                    var boolFalse = false;
+                    reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
+                    reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
                     alert.save();
-                    console.log(arraySmecsAppToSent);
-                    console.log('----------------------------------------');
-                    console.log(alert.sentSmecsAppUsersScope);
                 }
             });
 };
@@ -69,7 +64,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                 if (util[1] == alert.requestAssistance[x].utilityName) {
                     if (util[2] == 'smecsApp') {
                         alert.requestAssistance[x].reqSmecsApp.sentReqSmecsApp = boolTrueFalse;
-                        if (boolTrueFalse) {
+                        if (typeof alert.requestAssistance[x].reqSmecsApp.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqSmecsApp.stat = 'open';
                             alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
                             if(alert.alertNameID !== 26)
@@ -78,7 +73,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                     }
                     if (util[2] == 'email') {
                         alert.requestAssistance[x].reqEmail.sentReqEmail = boolTrueFalse;
-                        if (boolTrueFalse) {
+                        if (typeof alert.requestAssistance[x].reqEmail.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqEmail.stat = 'open';
                             alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
                             if(alert.alertNameID !== 26)
@@ -87,7 +82,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                     }
                     if (util[2] == 'call') {
                         alert.requestAssistance[x].reqCall.sentReqCall = boolTrueFalse;
-                        if (boolTrueFalse) {
+                        if (typeof alert.requestAssistance[x].reqCall.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqCall.stat = 'open';
                             alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
                             if(alert.alertNameID !== 26)

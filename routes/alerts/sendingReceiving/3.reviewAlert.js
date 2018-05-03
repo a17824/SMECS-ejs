@@ -45,7 +45,6 @@ module.exports.reviewAlert = function(req, res) {
 };
 
 module.exports.postReviewAlert = function(req, res, next) {
-    //console.log(' ALERT 14 REQUEST ASSISTANCE POST ---------------------------------------------------------');
     var alertToUpdate1 = req.body.alertToUpdate;
     async.waterfall([
         function (callback) {
@@ -104,16 +103,6 @@ module.exports.postReviewAlert = function(req, res, next) {
                         reqAsst.sendPushNotificationReqAssCall(tempAlert, tempAlert.requestAssistance[x]);
                     }
                 }
-
-                /*
-                var stat = alert.status;
-                if (!alert || stat == 'closed') {
-                    console.log(err);
-                    req.flash('error_messages', 'No Request Assistance can be sent because the status of the alert is \'closed\'. This alert was already closed by the Principal or other user with rights to clear/close Alerts' );
-                    res.send({redirect: '/alerts/receiving/receiveAlert/' + alertToUpdate1});
-
-*/
-
             }
             callback(null, tempAlert);
         }

@@ -7,7 +7,6 @@ var functions = require('./../../functions');
 
 //          FLOOR           \\
 module.exports.showFloor = function(req, res) {
-    console.log('FLOOR GET ----------------------------------------------------');
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
@@ -39,7 +38,6 @@ module.exports.showFloor = function(req, res) {
     });
 };
 module.exports.postFloor = function(req, res) {
-    console.log('FLOOR POST ---------------------------------------------------------');
     var alertToUpdate1 = req.body.alertToUpdate;
     var floorID = req.body.floorID;
     var floorName = req.body.floorName;
@@ -133,7 +131,6 @@ module.exports.postFloor = function(req, res) {
 
 //          FLOOR LOCATION          \\
 module.exports.showFloorLocation = function(req, res) {
-    console.log('FLOOR GET ----------------------------------------------------');
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
@@ -165,7 +162,6 @@ module.exports.showFloorLocation = function(req, res) {
 };
 
 module.exports.postFloorLocation = function(req, res) {
-    console.log('FLOOR LOCATION POST ---------------------------------------------------------');
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -207,7 +203,6 @@ module.exports.postFloorLocation = function(req, res) {
 
 //          NOTES          \\
 module.exports.showNotes = function(req, res) {
-    console.log('NOTES GET ----------------------------------------------------');
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
@@ -235,7 +230,6 @@ module.exports.showNotes = function(req, res) {
     });
 };
 module.exports.postNotes = function(req, res) {
-    console.log('NOTES POST ---------------------------------------------------------');
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -431,11 +425,12 @@ module.exports.postMultiSelection = function(req, res) {
 
 
             //ALERT Utilities Failures,
-            if (alert.alertNameID == 14 ) {
+            if (alert.alertNameID == 14 ||
+                alert.alertNameID == 26 ) {
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
                     alert.requestAssistance = [];
                     utils.forEach(function (util) {
-                        var req = {
+                        var request = {
                             utilityID: util.utilityID,
                             utilityName:  util.utilityName,
                             contactName: util.contactName,
@@ -443,9 +438,17 @@ module.exports.postMultiSelection = function(req, res) {
                             email: util.email,
                             smecsApp: util.smecsApp
                         };
-                        alert.requestAssistance.push(req);
+                        alert.requestAssistance.push(request);
                     });
-                    alert.save();
+                    if (alert.alertNameID == 14 ) {
+                        alert.save();
+                    }
+                    if (alert.alertNameID == 26 ) {
+                        var arraySmecsAppToSent =[];
+                        var reqAssOn = req.body.reqAssChecked;
+                        var reqAssOff = req.body.reqAssNotChecked;
+                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
+                    }
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
 
@@ -456,12 +459,12 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.save();
                 res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
             }
-            if (alert.alertNameID == 26 ) {
+           /* if (alert.alertNameID == 26 ) {
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
                     alert.requestAssistance = [];
                     var arraySmecsAppToSent =[];
                     utils.forEach(function (util) {
-                        var req = {
+                        var request = {
                             utilityID: util.utilityID,
                             utilityName:  util.utilityName,
                             contactName: util.contactName,
@@ -469,14 +472,14 @@ module.exports.postMultiSelection = function(req, res) {
                             email: util.email,
                             smecsApp: util.smecsApp
                         };
-                        alert.requestAssistance.push(req);
+                        alert.requestAssistance.push(request);
                     });
                     var reqAssOn = req.body.reqAssChecked;
                     var reqAssOff = req.body.reqAssNotChecked;
                     reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
-            }
+            }*/
         }
     });
 };

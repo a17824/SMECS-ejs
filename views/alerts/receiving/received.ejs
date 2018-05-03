@@ -69,7 +69,7 @@
                     alertToUpdate: alert_ID,
                     alertNameID: alertNameID,
                     alertName: alertName,
-                    alert14AndReq: false,
+                    exitButton: true,
                     procedureCompleted: reqProcedureCompleted,
                     weAreSafe: reqWeAreSafe
 
@@ -128,7 +128,7 @@
                         alertToUpdate: alert_ID,
                         alertNameID: alertNameID,
                         alertName: alertName,
-                        alert14AndReq: true,
+                        exitButton: false,
                         reqAssChecked: searchIDsChecked,
                         reqAssNotChecked: searchIDsNotChecked,
                         procedureCompleted: reqProcedureCompleted,
@@ -378,7 +378,7 @@
 <% } %>
 
 
-<% var flagEnableReqAssButton = 0; %>
+
 
 
 <!-- Alert MultiSelection -->
@@ -388,6 +388,10 @@
 <label for="situation"><b>Situation:</b></label><br>
 
 <!-- checkBox of Multiselection -->
+
+
+<% var flagDisableRequestButton = 0; %> <!-- trigger to disable Request Assistance buttons -->
+
 <% for (var i=0; i < info.multiSelectionNames.length; i++) {%>
 <input type="checkbox" name="checkbox"  value="<%= info.multiSelectionNames[i] %>" checked onclick="return false;">
 <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
@@ -395,13 +399,11 @@
 
 
 
-
-
-
 <!-- REQUEST ASSISTANCE -->
-<% if (info.alertNameID == 14) {%>
+<% if (info.alertNameID == 14 ||
+        info.alertNameID == 26 ) {%>
 <% if (canRequestAssistance == true) {%>
-<% var flagDisableRequestButton = 0; %> <!-- trigger to disable Request Assistance buttons -->
+
 <% var arrayLabels = ["smecs app", "send email", "call"]; %>
 <% var arrayIDs = ["_|_smecsApp", "_|_email", "_|_call"]; %>
 <% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
@@ -416,7 +418,6 @@
         (arrayUtilitiesContact[x] !== false && arrayUtilitiesContact[x] !== "" )) {%>
 
 
-
 <% if (arrayLabels[x] !== "call") {%>
 &emsp;&emsp;&emsp;
 <label for="utilityName"><%= arrayLabels[x] %></label> <!-- contact label for smecs App and email-->
@@ -427,74 +428,119 @@
 &emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <% } %>
 
+<% var flagButtonsFromContacts = 0; %>
 
-<% var flagOn = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
-<% var flagOff = 0; %> <!-- trigger to use  utilities db values instead RequestAssistance db-->
+<% var arrayReqSent = []; %>
+<% info.requestAssistance.forEach(function(requested) { %>
 
-<!-- IF TRUE, check on Utilities db ON OFF values-->
-<% if (info.askedForAssistance == true) {%>
+<% if (typeof requested.reqSmecsApp !== 'undefined' && requested.reqSmecsApp !== null) {%>
+<% if (requested.reqSmecsApp.sentReqSmecsApp == true) {%>
+<% arrayReqSent.push(requested.utilityName); %>
+<% arrayReqSent.push('smecsApp'); %>
+<% arrayReqSent.push(true); %>
+<% flagButtonsFromContacts = 1; %>
+<% }else{ %>
+<% arrayReqSent.push(requested.utilityName); %>
+<% arrayReqSent.push('smecsApp'); %>
+<% arrayReqSent.push(false); %>
+<% }} %>
+<% if (typeof requested.reqEmail !== 'undefined' && requested.reqEmail !== null) {%>
+<% if (requested.reqEmail.sentReqEmail == true) {%><!-- new -->
+<% arrayReqSent.push(requested.utilityName); %>
+<% arrayReqSent.push('email'); %>
+<% arrayReqSent.push(true); %>
+<% flagButtonsFromContacts = 1; %>
+<% }else{ %>
+<% arrayReqSent.push(requested.utilityName); %>
+<% arrayReqSent.push('email'); %>
+<% arrayReqSent.push(false); %>
+<% }} %>
+<% if (typeof requested.reqCall !== 'undefined' && requested.reqCall !== null) {%>
+<% if (requested.reqCall.sentReqCall == true) {%><!-- new -->
+<% arrayReqSent.push(requested.utilityName); %>
+<% arrayReqSent.push('call'); %>
+<% arrayReqSent.push(true); %>
+<% flagButtonsFromContacts = 1; %>
+<% }else{ %>
+<% arrayReqSent.push(requested.utilityName); %>
+<% arrayReqSent.push('call'); %>
+<% arrayReqSent.push(false); %>
+<% }} %>
+<% }); %>
 
-<% var arrayRequestAssistanceType =
-        [utility.smecsApp, utility.email, utility.phone]; %>
+<% info.requestAssistance.forEach(function(requested) { %>
+<% if(requested.utilityID == info.multiSelectionIDs[i]) { %>
 
-<% if (utility.idAlert == info._id && utility.utilityID == info.multiSelectionIDs[i] &&
-        (utility.smecsApp == true || utility.email !== "" || utility.phone !== "")) {%>
+<% if (flagButtonsFromContacts == 1) {%><!-- IF arrayReqSent is not empty, means request was already sent, then draw this slides buttons -->
 
-<% if (arrayRequestAssistanceType[x] == true ) {%>
-<div class="onoffswitchSent" style="display:inline-block;">
-    <input type="checkbox" class="onoffswitch-checkboxSent"
-           id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"  checked disabled>
-    <label class="onoffswitch-labelSent"
-           for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
-        <span class="onoffswitch-innerSent"></span><span class="onoffswitch-switchSent"></span>
-    </label>
-</div>
-<% flagOn = 1; %>
-<% flagDisableRequestButton = 1; %>
-<% } else { %>
-<div class="onoffswitch" style="display:inline-block;">
-    <input type="checkbox" class="onoffswitch-checkbox"
-           id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>" disabled>
-    <label class="onoffswitch-label"
-           for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
-        <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-    </label>
-</div>
-<% flagOff = 1; %>
-<% }%>
-<% }%>
+<% for (var c = 0; c < arrayReqSent.length; c++) { %>
+<!-- Build slide buttons After user has Requested Assistance -->
+    <% if (info.multiSelectionNames[i] == arrayReqSent[c] && arrayDefaultContact[x] == arrayReqSent[c+1] && arrayReqSent[c+2] == true) {%><!-- new -->
+<!-- Build slide button SENT -->
+        <div class="onoffswitchSent" style="display:inline-block;">
+            <input type="checkbox" class="onoffswitch-checkboxSent" name="checkboxRequest"
+                id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"
+                value="<%= info.multiSelectionIDs[i] + '_|_' + info.multiSelectionNames[i] + arrayIDs[x] %>"  checked disabled>
+            <label class="onoffswitch-labelSent"
+                for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
+                <span class="onoffswitch-innerSent"></span><span class="onoffswitch-switchSent"></span>
+            </label>
+        </div>
+    <% } %>
+<!-- end of Build slide button SENT -->
 
+     <% if (info.multiSelectionNames[i] == arrayReqSent[c] && arrayDefaultContact[x] == arrayReqSent[c+1] && arrayReqSent[c+2] == false) { %><!-- new -->
+<!-- Build slide button OFF -->
+        <div class="onoffswitch" style="display:inline-block;">
+            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
+                id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"
+                value="<%= info.multiSelectionIDs[i] + '_|_' + info.multiSelectionNames[i] + arrayIDs[x] %>">
+            <label class="onoffswitch-label"
+                   for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
+                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+        <% flagDisableRequestButton = 1; %>
+    <% } %>
+<!-- end of Build slide button OFF -->
 <% } %>
-<!-- end of IF TRUE, check on RequestAssistance db ON OFF values-->
+<!-- end of Build slide buttons After user has Requested Assistance -->
+<% } %>
+<!-- end of IF arrayReqSent is not empty, means request was already sent, then draw this slides buttons -->
 
-<!-- IF TRUE, check on utilities db ON OFF values-->
-<% if (flagOn == 0 && flagOff == 0) {%> <!-- if flagOn = 0 && flagOff = 0, means radio button needs to be draw from utilities db values-->
-<% flagEnableReqAssButton = 1;%>
+<% if (flagButtonsFromContacts == 0) {%><!-- IF arrayReqSent is empty, do this -->
+<!-- Build slide buttons Before user has Requests Assistance (get defaults values for type of contact -->
 <div class="onoffswitch" style="display:inline-block;">
     <% if (utility.defaultContact == arrayDefaultContact[x]) {%>
+    <!-- Build slide button ON -->
     <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
            id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"
            value="<%= info.multiSelectionIDs[i] + '_|_' + info.multiSelectionNames[i] + arrayIDs[x] %>"  checked>
+    <!-- end OF Build slide button ON -->
     <% } else {%>
+    <!-- Build slide button OFF -->
     <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
            id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"
            value="<%= info.multiSelectionIDs[i] + '_|_' + info.multiSelectionNames[i] + arrayIDs[x] %>">
-    <% } %> <!-- END OF check on db default contact method -->
+    <% } %>
+    <!-- end of Build slide button OFF -->
     <label class="onoffswitch-label"
            for="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>">
         <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
     </label>
 </div>
+<!-- end of Build slide buttons Before user has Requests Assistance (get defaults values for type of contact -->
+<!-- end of IF arrayReqSent is empty, do this -->
+<% flagDisableRequestButton = 1; %>
 <% } %>
+<% } %>
+<% }); %>
 <br>
 <% } %>
-
 <% }); %>
 <!-- end of IF TRUE, check on utilities db ON OFF values-->
-
 <!-- End of ON/OFF switch button for "smecs App"-->
 <% }%>
-
 
 <!--"no contacts available"-->
 <% utilities.forEach(function(utility) { %>
@@ -514,13 +560,11 @@
 <!-- END OF IF to check if alert is softDeleted (or if school owns license)-->
 <% } %>
 <!-- End of REQUEST ASSISTANCE -->
-
-
-
-
 <% } %><!-- End of checkBox of Multiselection -->
 <br><br>
 <% } %>
+
+
 
 
 <% if (info.requestProcedureCompleted || info.requestWeAreSafe) {%>
@@ -529,12 +573,12 @@
 <button class="receiveButton" id="exit" onclick="location.href='/dashboard'">Exit</button>
 <% } %>
 
-<% if (canRequestAssistance == true) {%>
-<% if (flagEnableReqAssButton == 1) {%>
+<% if (canRequestAssistance == true && flagDisableRequestButton == 1) {%>
 <input type="button" id="request" value="Send Request Assistance" ><br><br>
 <%} else { %>
+<% if (info.alertNameID == 14 || info.alertNameID == 26) {%>
 <input type="button" id="request" value="Send Request Assistance" disabled><br><br>
-<% } %>
+<%}%>
 <%}%>
 <% if (enableProcedureButton == true) {%>
 <button class="receiveButton" id="proc" onclick="location.href='/alerts/receiving/procedureR/<%= info.id %>'">Procedure</button>

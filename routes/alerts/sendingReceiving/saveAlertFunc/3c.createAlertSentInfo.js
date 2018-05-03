@@ -70,7 +70,8 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         busMorningAfternoon: tempAlert.busMorningAfternoon,
         busDelayedAhead: tempAlert.busDelayedAhead,
         busTimeChanged: tempAlert.busTimeChanged,
-        busTimeChangedEmail: tempAlert.busTimeChangedEmail
+        busTimeChangedEmail: tempAlert.busTimeChangedEmail,
+        sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope
 
     });
     alert1.save();

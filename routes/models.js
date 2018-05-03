@@ -284,6 +284,15 @@ var AlertSentInfoSchema = new mongoose.Schema({
             stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         }
+    }],
+    sentSmecsAppUsersScope: [{
+        utilityID: Number,
+        utilityName: String,
+        userFirstName: String,
+        userLastName: String,
+        userEmail: String,
+        userPushToken: String,
+        userPhoto: String
     }]
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
