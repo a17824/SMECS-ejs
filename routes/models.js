@@ -317,12 +317,12 @@ var AlertSentTempSchema = new mongoose.Schema({
     whoCanCall911: [String],
     sentRoleIDScope: [Number],
     sentRoleNameScope: [String],      // Teachers, Staff, Parents...
-    sentUsersScope: [{
-        userFirstName: String,
-        userLastName: String,
-        userEmail: String,
-        userPushToken: String,
-        userPhoto: String
+    sentTo: [{
+        firstName: String,
+        lastName: String,
+        email: String,
+        pushToken: String,
+        photo: String
     }],
     sentSmecsAppUsersScope: [{
         utilityID: Number,
@@ -381,7 +381,9 @@ var AlertSentTempSchema = new mongoose.Schema({
             stat: String,                   //status = 'open' or 'closed'
             sentTime: String
         }
-    }]
+    }],
+    reqAssOn: [String],
+    reqAssOff: [String]
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentTemp"}); //stops Mongoose of giving plurals to our collections names
@@ -514,7 +516,7 @@ var UtilitiesSchema = new mongoose.Schema({
     email: String,
     smecsApp: { type: Boolean, default: false },
     smecsUsers: [String],
-    defaultContact: String
+    defaultContact: { type: String, default: 'ask' }
 
 }, {collection:"Utilities"}); //stops Mongoose of giving plurals to our collections names
 var Utilities;

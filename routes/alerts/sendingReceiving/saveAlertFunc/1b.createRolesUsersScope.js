@@ -68,13 +68,13 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
                                 for (var i = 0; i < allUsersToSendAlert.length; i++) {
                                     if(allUsersToSendAlert[i].pushToken){
                                         var user = {
-                                            userFirstName: allUsersToSendAlert[i].firstName,
-                                            userLastName: allUsersToSendAlert[i].lastName,
-                                            userEmail: allUsersToSendAlert[i].email,
-                                            userPushToken: allUsersToSendAlert[i].pushToken,
-                                            userPhoto: allUsersToSendAlert[i].photo};
+                                            firstName: allUsersToSendAlert[i].firstName,
+                                            lastName: allUsersToSendAlert[i].lastName,
+                                            email: allUsersToSendAlert[i].email,
+                                            pushToken: allUsersToSendAlert[i].pushToken,
+                                            photo: allUsersToSendAlert[i].photo};
                                         userArray.push(user);
-                                        alertUpdate.sentUsersScope = userArray;
+                                        alertUpdate.sentTo = userArray;
                                     }
                                 }
                                 alertUpdate.save(function(err, resp) {
@@ -82,7 +82,6 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
                                         console.log('err = ',err);
                                     } else {
                                         console.log('the tempAlert has been saved');
-                                        //console.log('alertUpdate.sentUsersScope = ',alertUpdate.sentUsersScope);
                                     }
                                 });
                                 callback(alertUpdate);

@@ -14,12 +14,12 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
     var wrapped = moment(new Date());
 
     var sentTo = [];
-    tempAlert.sentUsersScope.forEach(function (user) {
+    tempAlert.sentTo.forEach(function (user) {
         var sentToArr = {
-            firstName: user.userFirstName,
-            lastName: user.userLastName,
-            email: user.userEmail,
-            pushToken: user.userPushToken
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            pushToken: user.pushToken
         };
         sentTo.push(sentToArr);
     });

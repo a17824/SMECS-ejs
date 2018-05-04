@@ -54,7 +54,7 @@ module.exports.updateStatus = function(req, res) {
         alert.save();
 
         /*****  CALL HERE NOTIFICATION API  *****/
-        pushNotification.closeAlert(alert);
+        pushNotification.alert(alert, 'closeAlert');
 
         res.redirect('/reports/showReports');
     })

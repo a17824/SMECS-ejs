@@ -1,38 +1,25 @@
 //Dependencies
 var FCM = require('fcm-node');
 
-module.exports.default = function(tempAlert) {
-        tempAlert.sentUsersScope.forEach(function (user) {
-            if (user.userPushToken) {
-                var message = {
-                    to: user.userPushToken, // required fill with device token
-                    data: { //you can send only notification or only data(or include both)
-                        alertID: tempAlert._id,
-                        action: 'newAlert'
-                    }
-                };
-                var userName = user.userFirstName + ' ' + user.userLastName;
-                sendPush(message, userName);
-            }
-        });
-};
+                      /*****  CALL HERE NOTIFICATION API  ****
+                      *  var 'action' can be:                  *
+                      *     .newAlert                        *
+                      *     .updateAlert                     *
+                      *     .closeAlert                      *
+                      *                                      *
+                      ***************************************/
 
-//Send Request Assistance Alert //
-module.exports.requestAssistance = function(req, res, next) {
+//Create message for cellPhone notification
+module.exports.alert= function(alert, action) {
 
-};
-//end of Send Request Assistance Alert //
-
-
-//Send "CLOSE" Alert //
-module.exports.closeAlert= function(alert) {
     alert.sentTo.forEach(function (user) {
         if (user.pushToken) {
+
             var message = {
                 to: user.pushToken, // required fill with device token
                 data: { //you can send only notification or only data(or include both)
                     alertID: alert._id,
-                    action: 'closeAlert'
+                    action: action
                 }
             };
             var userName = user.firstName + ' ' + user.lastName;
@@ -40,9 +27,14 @@ module.exports.closeAlert= function(alert) {
         }
     });
 };
-//end of Send "CLOSE" Alert //
+//end of Create message for cellPhone notification
 
 
+
+
+
+
+//Sening cellPhone notification
 function sendPush(message, userName) {
     var serverKey = 'AIzaSyAQHCWvoiCkDk_8_Aur1rpUInk-Sx_uilk';
     var fcm = new FCM(serverKey);

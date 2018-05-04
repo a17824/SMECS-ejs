@@ -544,15 +544,14 @@
 
 <!--"no contacts available"-->
 <% utilities.forEach(function(utility) { %>
-<% if (info.multiSelectionNames[i] == utility.utilityName && flagDisableRequestButton == 1) {%>
 
-<% } else {%>
 <% if (info.multiSelectionNames[i] == utility.utilityName) {%>
+
 <% if (utility.email == "" && utility.phone == "" && utility.smecsApp == false ) {%>
 &emsp;&emsp;&emsp;<label for="disable" style="color: #575757">(no contacts available)</label>
 <% } %>
 <% } %>
-<% } %>
+
 <% }); %> <!-- end of "no contacts available"-->
 <br><br>
 <% }  %>

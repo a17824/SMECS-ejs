@@ -67,7 +67,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                         if (typeof alert.requestAssistance[x].reqSmecsApp.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqSmecsApp.stat = 'open';
                             alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            if(alert.alertNameID !== 26)
+                            //if(alert.alertNameID !== 26)
                                 reqAsst.sendPushNotificationReqAssSmecsApp(alert, alert.requestAssistance[x]);
                         }
                     }
@@ -76,7 +76,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                         if (typeof alert.requestAssistance[x].reqEmail.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqEmail.stat = 'open';
                             alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            if(alert.alertNameID !== 26)
+                            //if(alert.alertNameID !== 26)
                                 reqAsst.sendPushNotificationReqAssEmail(alert, alert.requestAssistance[x]);
                         }
                     }
@@ -85,7 +85,7 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
                         if (typeof alert.requestAssistance[x].reqCall.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqCall.stat = 'open';
                             alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            if(alert.alertNameID !== 26)
+                            //if(alert.alertNameID !== 26)
                                 reqAsst.sendPushNotificationReqAssCall(alert, alert.requestAssistance[x]);
                         }
                     }

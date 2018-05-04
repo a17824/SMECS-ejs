@@ -440,15 +440,12 @@ module.exports.postMultiSelection = function(req, res) {
                         };
                         alert.requestAssistance.push(request);
                     });
-                    if (alert.alertNameID == 14 ) {
-                        alert.save();
-                    }
+
                     if (alert.alertNameID == 26 ) {
-                        var arraySmecsAppToSent =[];
-                        var reqAssOn = req.body.reqAssChecked;
-                        var reqAssOff = req.body.reqAssNotChecked;
-                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
+                        alert.reqAssOn = req.body.reqAssChecked;
+                        alert.reqAssOff = req.body.reqAssNotChecked;
                     }
+                    alert.save();
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
                 });
 
@@ -459,27 +456,6 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.save();
                 res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
             }
-           /* if (alert.alertNameID == 26 ) {
-                models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
-                    alert.requestAssistance = [];
-                    var arraySmecsAppToSent =[];
-                    utils.forEach(function (util) {
-                        var request = {
-                            utilityID: util.utilityID,
-                            utilityName:  util.utilityName,
-                            contactName: util.contactName,
-                            phone: util.phone,
-                            email: util.email,
-                            smecsApp: util.smecsApp
-                        };
-                        alert.requestAssistance.push(request);
-                    });
-                    var reqAssOn = req.body.reqAssChecked;
-                    var reqAssOff = req.body.reqAssNotChecked;
-                    reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
-                    res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
-                });
-            }*/
         }
     });
 };

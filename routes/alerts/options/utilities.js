@@ -170,7 +170,6 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var utilityToUpdate1 = req.body.utilityToUpdate;
-    //console.log('req.body.defaultContact = ' + req.body.defaultContact);
     models.Utilities.findById({'_id': utilityToUpdate1}, function(err, utility){
         utility.utilityID = req.body.utilityID;
         utility.utilityName = req.body.utilityName;
@@ -178,7 +177,7 @@ module.exports.updatePost = function(req, res) {
         utility.phone = req.body.phone;
         utility.email = req.body.email;
         utility.smecsApp = req.body.smecsApp;
-        utility.defaultContact = req.body.defaultContact;
+        utility.defaultContact =  req.body.defaultContact;
         utility.smecsUsers = req.body.smecsUsers;
         utility.sortID = req.body.sortID;
         utility.save(function (err) {

@@ -143,7 +143,9 @@ function request(alert, user, requestType) {
     }
     console.log('success - ' + requestType + ' for ' + user.firstName + ' ' + user.lastName + ' status changed to ' + user[requestType].boolean);
 
+
     /*****  CALL HERE NOTIFICATION API  *****/
-    //pushNotification.closeAlert(alert); //change closeAlert function? does it need new function?
+    //if user has permission to see who completed procedure or we aresafe
+    pushNotification.alert(alert, 'updateAlert'); //change closeAlert function? does it need new function?
 
 }

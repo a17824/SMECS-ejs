@@ -78,7 +78,6 @@
 <input type="hidden" id="testMode"  value="<%= alert.testModeON %>">
 
 <!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
-<% console.log('alert.id = ',alert.id); %>
 <% if ( aclTest.length >=1 && alert.id == 0) { %>
 <div class="onoffswitch">
     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
