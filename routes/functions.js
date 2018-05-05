@@ -3,6 +3,7 @@ var models = require('./models');
 var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
 
+
 //REDIRECT TO PREVIOUS PAGE
 module.exports.redirectPage = function(req, res, page) {
     models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirect:page}}, {new: true}, function(err, user){
@@ -29,7 +30,6 @@ module.exports.redirectPage = function(req, res, page) {
 };
 
 module.exports.redirectTab = function(req, res, tab) {
-
     if(req.body.tab)
         tab = req.body.tab;
 
@@ -89,6 +89,7 @@ module.exports.aclSideMenu = function(req, res, callback) {
 };
 
 
+
 module.exports.addParentInStudentDocument = function(user, newParentsArray) {
     //save parent in Student database --------------------
     var parent = {
@@ -109,4 +110,18 @@ module.exports.addParentInStudentDocument = function(user, newParentsArray) {
                 console.log('"parentOf" added successfully on STUDENT database');
             }
         });
-}
+};
+
+
+
+
+module.exports.checkUser = function(req) {
+    if (req.decoded) {         // if it is a user from "Phone
+        console.log('API');
+        return 'req.decoded';
+
+    } else {    // if it is a user from "browser
+        console.log('EJS');
+        return 'req';
+    }
+};

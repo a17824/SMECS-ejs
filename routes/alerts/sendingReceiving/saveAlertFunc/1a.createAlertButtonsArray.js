@@ -1,6 +1,7 @@
 //Dependencies
 var models = require('./../../../models');
 var async = require("async");
+var functions = require('./../../../functions');
 
 module.exports.getRealTestAlerts = function(req, callback) {
     async.waterfall([
@@ -29,6 +30,7 @@ module.exports.getRealTestAlerts = function(req, callback) {
 
 function getArrays(req, typeAclAlert, callback) {
     var arrayAlert = [];
+
     async.map(req.user.userRoleID, function (roleX, callback2) {
             //checkboxes that have an "s", not softDeleted and checkBox is "true": put them in array
             models[typeAclAlert].find({

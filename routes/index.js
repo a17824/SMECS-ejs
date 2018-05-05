@@ -1,6 +1,7 @@
 //Dependencies
 var express = require('express');
 var router = express.Router();
+
 var schedule = require('node-schedule');
 
 var users = require('./users/users');
@@ -29,13 +30,14 @@ var rooms = require('./alerts/options/rooms');
 var utilities = require('./alerts/options/utilities');
 var medical = require('./alerts/options/medical');
 var pa = require('./alerts/options/pa');
-
 var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var procedureR = require('./alerts/sendingReceiving/procedureR');
 var functions = require('./functions');
+
+
 
 //Run this function once a month
 //schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
@@ -650,6 +652,8 @@ router.get('/alerts/receiving/procedureR/:id', auth.simpleAuth, auth.requireLogi
 
 /* Tab Redirect ------------------*/
 router.post('/tabRedirectTo', auth.simpleAuth, auth.requireLogin, functions.redirectTab, function(req, res) {});
+
+
 
 
 module.exports = router;

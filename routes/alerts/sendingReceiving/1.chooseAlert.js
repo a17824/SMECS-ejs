@@ -4,13 +4,42 @@ var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray.js');
 var functions = require('./../../functions');
-
+var jwt = require('jsonwebtoken');
+var config = require('./../../config');
 
 /* Choose Group. -------------------------------*/
 module.exports.showGroups = function(req, res) {
-    if(req.user.appSettings.groupAlertsButtons == false)
-        res.redirect('/alerts/sending/chooseAlert');
-    else {
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if(token) { // run SMECS API
+        var decodedToken = jwt.verify(token, config.secret);
+
+        //console.log('decodedToken.user.appSettings.groupAlertsButtons = ',decodedToken.user.appSettings.groupAlertsButtons);
+        models.Users.findOne({'email': decodedToken.user.email}, function (err, user) {
+            if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
+                res.json({
+                    success: true,
+                    redirect: 'chooseAlert'
+                });
+            } else {    //Groups Buttons ON
+                showGroups2();
+            }
+        });
+
+
+
+
+
+    }
+    else{   // run SMECS EJS -----------------
+        if(req.user.appSettings.groupAlertsButtons == false)    //Groups Buttons OFF
+            res.redirect('/alerts/sending/chooseAlert');
+        else {  //Groups Buttons ON
+            showGroups2();
+        }
+    }
+
+
+    function showGroups2() {
         async.parallel([
             function(callback){
                 buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
@@ -54,16 +83,25 @@ module.exports.showGroups = function(req, res) {
                 }
             }
             functions.redirectTab(req, res, 'showUsers');
-            res.render('alerts/sending/chooseGroup',{
-                title:'Choose Alert',
-                userAuthPrivilegeID: req.user.userPrivilegeID,
-                userAuthRoleID: req.user.userRoleID[0],
-                aclReal: arrayGroupsReal,
-                aclTest: arrayGroupsTest,
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
+            if(token){ // run SMECS API
+                res.json({
+                    success: true,
+                    aclReal: arrayGroupsReal,
+                    aclTest: arrayGroupsTest
+
+                });
+
+            }else{  // run SMECS EJS
+                res.render('alerts/sending/chooseGroup',{
+                    title:'Choose Alert',
+                    aclReal: arrayGroupsReal,
+                    aclTest: arrayGroupsTest,
+                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            }
+
 
         })
     }
@@ -148,9 +186,6 @@ module.exports.showAlerts = function(req, res) {
                 userAuthPhoto: req.user.photo
             });
         }
-
-
-
     })
 };
 

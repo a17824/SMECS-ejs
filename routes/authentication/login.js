@@ -1,12 +1,15 @@
 //Dependencies
-var express = require('express');
 var bcrypt = require('bcryptjs');
-var csrf = require('csurf');
 var models = require('./../models');
-var router = express.Router();
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./../config');
 
-router.use(csrf());
+
+
+
+
+
+
 /**
  * Render the registration page.
  */
@@ -50,19 +53,19 @@ router.post('/register', function(req, res) {
 /**
  * Render the login page.
  */
-router.get('/login', function(req, res) {
-    res.render('login', { title: 'SMECS Login', error: "", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    //res.render('login', { title: 'SMECS Login', error: ""});
-});
+module.exports.getLogin = function(req, res, next) {
 
+    console.log('login login get');
+    res.render('login', {title: 'SMECS Login', error: "", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    //res.render('login', { title: 'SMECS Login', error: ""});
+};
 /**
  * Log a user into their account.
  *
  * Once a user is logged in, they will be sent to the dashboard page.
  */
-router.post('/login', function(req, res) {
-
-    if(req.body.pushToken){ // run SMECS API
+module.exports.postLogin = function(req, res, next) {
+    if (req.body.pushToken) { // run SMECS API
         models.Users.findOne({
             email: req.body.email.toLowerCase()
         }, function (err, user) {
@@ -70,12 +73,12 @@ router.post('/login', function(req, res) {
             if (err) throw err;
 
             if (!user) {
-                res.json({ success: false, message: 'Authentication failed. User not found.' });
+                res.json({success: false, message: 'Authentication failed. User not found.'});
             } else if (user) {
 
                 //check if password matches
                 if (!bcrypt.compareSync(req.body.pin, user.pin)) {
-                    res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+                    res.json({success: false, message: 'Authentication failed. Wrong password.'});
                 } else {
                     // if user is found and password is right
                     // create a token
@@ -85,8 +88,11 @@ router.post('/login', function(req, res) {
                     user.pushToken = req.body.pushToken;
                     user.save(function (err) {
                         if (err) {
-                            res.json({ success: false, message: 'contact your system administrator. pushToken not saved' });
-                        }else{
+                            res.json({
+                                success: false,
+                                message: 'contact your system administrator. pushToken not saved'
+                            });
+                        } else {
                             // return the information including token as JSON
                             res.json({
                                 success: true,
@@ -108,19 +114,20 @@ router.post('/login', function(req, res) {
             }
         });
     }
-    else{ //run SMECS EJS
-        models.Users.findOne({ email: req.body.email.toLowerCase()}, function(err, user) {
+    else { //run SMECS EJS
+
+        models.Users.findOne({email: req.body.email.toLowerCase()}, function (err, user) {
             if (!user || user.softDeleted !== null) {
                 //Parent Self Registration Login
-                models.ParentSelfRegistration.findOne({ email: req.body.email.toLowerCase()}, function(err, parentSelfRegistration) {
+                models.ParentSelfRegistration.findOne({email: req.body.email.toLowerCase()}, function (err, parentSelfRegistration) {
                     if (!parentSelfRegistration) {
-                        res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
+                        res.render('login', {error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                     } else {
                         if (req.body.pin == parentSelfRegistration.pin) {
                             req.session.user = parentSelfRegistration;
                             res.redirect('/parentsSelfRegistration/registerParentStep1');
                         } else {
-                            res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
+                            res.render('login', {error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                         }
                     }
                 });
@@ -132,23 +139,22 @@ router.post('/login', function(req, res) {
                     //}
                 } else {
                     //res.status(400).send('Current password does not match');
-                    res.render('login', { error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
+                    res.render('login', {error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
                     //res.render('login', { error: "ERROR: Incorrect email or pin."});
                 }
             }
         });
     }
-
-});
+};
 
 /**
  * Log a user out of their account, then redirect them to the home page.
  */
-router.get('/logout', function(req, res) {
+module.exports.getLogout = function(req, res) {
     //if (req.session) {
         req.session.reset();
     //}
     res.redirect('/');
-});
+};
 
-module.exports = router;
+//module.exports = router;

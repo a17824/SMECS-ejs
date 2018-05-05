@@ -9,13 +9,16 @@ var bluebird = require('bluebird');
 //me
 var mongoose =  require('mongoose');
 var db = mongoose.connection;
-
+var cors = require('cors');
 var session = require('client-sessions');
 var flash = require('express-flash');
 
 //.js file
+var routesApi = require('./routes/api');
+var routesEjs = require('./routes/ejs');
 var routes = require('./routes/index');
-var login = require('./routes/authentication/login');
+
+//var login = require('./routes/authentication/login');
 
 
 
@@ -54,11 +57,14 @@ app.use(function(req, res, next){
     next();
 });
 
+// use cors
+app.use(cors());
+
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+app.use('/api', routesApi);
 app.use('/', routes);
-app.use('/', login);
-
+app.use('/', routesEjs);
 
 //bluebird
 mongoose.Promise = require('bluebird');
