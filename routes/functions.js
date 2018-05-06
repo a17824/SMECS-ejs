@@ -2,7 +2,8 @@
 var models = require('./models');
 var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
-
+var jwt = require('jsonwebtoken');  //API user
+var config = require('./config'); //API user
 
 //REDIRECT TO PREVIOUS PAGE
 module.exports.redirectPage = function(req, res, page) {
@@ -115,13 +116,19 @@ module.exports.addParentInStudentDocument = function(user, newParentsArray) {
 
 
 
-module.exports.checkUser = function(req) {
-    if (req.decoded) {         // if it is a user from "Phone
-        console.log('API');
-        return 'req.decoded';
+module.exports.alertTimeExpired = function(req, res) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
-    } else {    // if it is a user from "browser
-        console.log('EJS');
-        return 'req';
+    console.log('TTL EXPIRED');
+    if(token){ // run SMECS API
+        res.json({
+            success: false,
+            message: 'Alert expired. After choosing alert, you have 10min to fill info and send alert',
+            redirect: 'home'
+        });
+
+    }else{  // run SMECS EJS
+        req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
+        res.send({redirect: '/alerts/sending/chooseGroup'});
     }
 };

@@ -1,6 +1,5 @@
 //Dependencies
 var models = require('./../../../models');
-var async = require("async");
 
 
 
@@ -12,6 +11,7 @@ var async = require("async");
  */
 
 module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     if(alert.testModeON){
         var typeAclAlert = 'AclAlertsTest';
@@ -34,11 +34,32 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
         // the stream is closed............end of retrieve all checkboxes that have an "s" and are "true" and put them in array
         if (arrayRoleID.length < 1 || arrayRoleID == null) {
             console.log('This alert has no Roles to send this alert');
-            req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated.<br />Please, inform your school principal so he/she can add roles to this alert');
-            if(req.user.appSettings.groupAlertsButtons == false)
-                res.send({redirect: '/alerts/sending/chooseAlert'});
-            else
-                res.send({redirect: '/alerts/sending/chooseGroup'});
+
+            if(token){ // run SMECS API
+                models.Users.findOne({'email': decodedToken.user.email}, function (err, user) {
+                    if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
+                        res.json({
+                            success: false,
+                            message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated.Please, inform your school principal so he/she can add roles to this alert',
+                            redirect: 'chooseAlert'
+                        });
+                    } else {    //Groups Buttons ON
+                        res.json({
+                            success: false,
+                            message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated.Please, inform your school principal so he/she can add roles to this alert',
+                            redirect: 'home' // ou chooseGroup?
+                        });
+                    }
+                });
+
+            }else{  // run SMECS EJS
+                req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated.<br />Please, inform your school principal so he/she can add roles to this alert');
+                if(req.user.appSettings.groupAlertsButtons == false)
+                    res.send({redirect: '/alerts/sending/chooseAlert'});
+                else
+                    res.send({redirect: '/alerts/sending/chooseGroup'});
+            }
+
         }
         else {
             models.Users.find({'userRoleID': {$in: arrayRoleID}, 'softDeleted': null}, function (error1, allUsersToSendAlert) {
@@ -47,19 +68,67 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
                 } else {
                     if(allUsersToSendAlert < 1 || allUsersToSendAlert == null){
                         console.log('This alert has no Users to send this alert');
-                        req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated.<br />Please, inform your school principal so he/she can associate users to roles in this alert');
-                        if(req.user.appSettings.groupAlertsButtons == false)
-                            res.send({redirect: '/alerts/sending/chooseAlert'});
-                        else
-                            res.send({redirect: '/alerts/sending/chooseGroup'});
+
+                        if(token){ // run SMECS API
+                            models.Users.findOne({'email': decodedToken.user.email}, function (err, user) {
+                                if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
+                                    res.json({
+                                        success: false,
+                                        message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated. Please, inform your school principal so he/she can associate users to roles in this alert',
+                                        redirect: 'chooseAlert'
+                                    });
+                                } else {    //Groups Buttons ON
+                                    res.json({
+                                        success: false,
+                                        message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated. Please, inform your school principal so he/she can associate users to roles in this alert',
+                                        redirect: 'home' // ou chooseGroup?
+                                    });
+                                }
+                            });
+
+                        }else{  // run SMECS EJS
+                            req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated.<br />Please, inform your school principal so he/she can associate users to roles in this alert');
+                            if(req.user.appSettings.groupAlertsButtons == false)
+                                res.send({redirect: '/alerts/sending/chooseAlert'});
+                            else
+                                res.send({redirect: '/alerts/sending/chooseGroup'});
+                        }
+
+
                     }else{
                         //save to AlertSentTemp all ROLES and USERS that will receive alert
                         models.AlertSentTemp.findById({'_id': alert._id}, function(error, alertUpdate) {
                             if(error || arrayRoleID == null || arrayRoleName == null){
                                 console.log('erro da primeira vez que se escolhe um alerta');
-                                req.flash('error_messages',
-                                    'Please try again and contact the administrator if this message continues to show');
-                                res.send({redirect: '/alerts/sending/chooseAlert/'});
+
+                                if(token){ // run SMECS API
+                                    models.Users.findOne({'email': decodedToken.user.email}, function (err, user) {
+                                        if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
+                                            res.json({
+                                                success: false,
+                                                message: 'Please try again and contact the administrator if this message continues to show',
+                                                redirect: 'chooseAlert'
+                                            });
+                                        } else {    //Groups Buttons ON
+                                            res.json({
+                                                success: false,
+                                                message: 'Please try again and contact the administrator if this message continues to show',
+                                                redirect: 'home' // ou chooseGroup?
+                                            });
+                                        }
+                                    });
+
+                                }else{  // run SMECS EJS
+                                    req.flash('error_messages',
+                                        'Please try again and contact the administrator if this message continues to show');
+                                    if(req.user.appSettings.groupAlertsButtons == false)
+                                        res.send({redirect: '/alerts/sending/chooseAlert'});
+                                    else
+                                        res.send({redirect: '/alerts/sending/chooseGroup'});
+                                }
+
+
+
                             }else {
                                 alertUpdate.sentRoleIDScope = arrayRoleID;
                                 alertUpdate.sentRoleNameScope = arrayRoleName;
@@ -94,13 +163,3 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
         }
     });
 };
-
-/*
-module.exports.sendAlertRequestAssistance = function(utilityName) {
-    models.Utilities.findOne({'utilityName': utilityName}, function(err, users){
-        for (var i=0; i < users.smecsUsers.length; i++ ){
-            console.log('AQUI ENVIA SMECS REQUEST ASSISTANCE ALERT PARA: ' + users.smecsUsers[i])
-        }
-    });
-};
-*/

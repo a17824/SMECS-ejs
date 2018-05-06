@@ -4,15 +4,18 @@ var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray.js');
 var functions = require('./../../functions');
-var jwt = require('jsonwebtoken');
-var config = require('./../../config');
+var jwt = require('jsonwebtoken');  //API user
+var config = require('./../../config'); //API user
+
+
+
 
 /* Choose Group. -------------------------------*/
 module.exports.showGroups = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
+
     if(token) { // run SMECS API
         var decodedToken = jwt.verify(token, config.secret);
-
         //console.log('decodedToken.user.appSettings.groupAlertsButtons = ',decodedToken.user.appSettings.groupAlertsButtons);
         models.Users.findOne({'email': decodedToken.user.email}, function (err, user) {
             if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
@@ -24,11 +27,6 @@ module.exports.showGroups = function(req, res) {
                 showGroups2();
             }
         });
-
-
-
-
-
     }
     else{   // run SMECS EJS -----------------
         if(req.user.appSettings.groupAlertsButtons == false)    //Groups Buttons OFF
@@ -46,7 +44,13 @@ module.exports.showGroups = function(req, res) {
                     callback(null, arrayAlerts);
                 });
             },
-            function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+            function(callback) {
+                if(token)   //API user
+                    callback('API');
+                else    //EJS user
+                    functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
+            }
+
 
         ],function(err, results){
             var real = results[0][0];
@@ -82,7 +86,7 @@ module.exports.showGroups = function(req, res) {
                     arrayGroupsTest.push(arrGroupObjTest);
                 }
             }
-            functions.redirectTab(req, res, 'showUsers');
+
             if(token){ // run SMECS API
                 res.json({
                     success: true,
@@ -92,6 +96,7 @@ module.exports.showGroups = function(req, res) {
                 });
 
             }else{  // run SMECS EJS
+                functions.redirectTab(req, res, 'showUsers');
                 res.render('alerts/sending/chooseGroup',{
                     title:'Choose Alert',
                     aclReal: arrayGroupsReal,
@@ -101,32 +106,47 @@ module.exports.showGroups = function(req, res) {
                     userAuthPhoto: req.user.photo
                 });
             }
-
-
         })
     }
 };
 
 module.exports.showGroupsPost = function(req, res) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
+
     var alertTemp1 = new models.AlertSentTemp({
         alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
         alertGroupName: req.body.alertGroupName,
         testModeON: req.body.testModeON
     });
     alertTemp1.save();
-    return res.send({redirect: '/alerts/sending/chooseGroupAlert/' + alertTemp1._id})
+
+    if(token){ // run SMECS API
+        res.json({
+            success: true,
+            redirect: 'chooseGroupAlert'
+        });
+    }else{  // run SMECS EJS
+        return res.send({redirect: '/alerts/sending/chooseGroupAlert/' + alertTemp1._id})
+    }
 };
 
 
 /* Choose Alert. -------------------------------*/
 module.exports.showAlerts = function(req, res) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
+
     async.parallel([
         function(callback){
             buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
                 callback(null, arrayAlerts);
             });
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {
+            if(token)   //API
+                callback('API');
+            else    //EJS
+                functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
+        }
 
     ],function(err, results){
         if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
@@ -135,10 +155,7 @@ module.exports.showAlerts = function(req, res) {
                     console.log('err - ',err);
                 else{
                     if (!alert) {
-                        console.log(err);
-                        console.log('TTL EXPIRED');
-                        req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
-                        res.redirect('/alerts/sending/chooseAlert');
+                        functions.alertTimeExpired(req,res);
                     }
                     else {
                         var real = results[0][0];
@@ -157,15 +174,23 @@ module.exports.showAlerts = function(req, res) {
                             }
                         }
 
-                        res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
-                            title:'Choose Alert',
-                            alert: alert,
-                            aclReal: arrayAlertsReal,
-                            aclTest: arrayAlertsTest,
-                            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                            userAuthPhoto: req.user.photo
-                        });
+                        if(token){ //API user
+                            res.json({
+                                success: true,
+                                redirect: 'chooseAlert'
+                            });
+                        }else{  //EJS user
+                            res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
+                                title:'Choose Alert',
+                                alert: alert,
+                                aclReal: arrayAlertsReal,
+                                aclTest: arrayAlertsTest,
+                                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                                userAuthPhoto: req.user.photo
+                            });
+                        }
+
 
 
                     }
@@ -175,34 +200,64 @@ module.exports.showAlerts = function(req, res) {
             var alert = {
                 'id': 0
             };
-            functions.redirectTab(req, res, 'showUsers');
-            res.render('alerts/sending/chooseAlert',{
-                title:'Choose Alert',
-                alert: alert,
-                aclReal: results[0][0],
-                aclTest: results[0][1],
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
+
+            if(token){ // run SMECS API
+                res.json({
+                    success: true,
+                    testModeOnArrayReal: results[0][0],
+                    testModeOnArrayTest: results[0][1]
+
+                });
+
+            }else{  // run SMECS EJS
+                functions.redirectTab(req, res, 'showUsers');
+                res.render('alerts/sending/chooseAlert',{
+                    title:'Choose Alert',
+                    alert: alert,
+                    aclReal: results[0][0],
+                    aclTest: results[0][1],
+                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            }
+
         }
     })
 };
 
 module.exports.showAlertsPost = function(req, res) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
+    var redirectAPI; //API user
+    var redirectEJS; //EJS user
+
     async.waterfall([
         function (callback) {
             models.Alerts.find({'alertID': req.body.alertID}, function (err, alert) {
                 if(err){
                     console.log('err = ', alert );
                 }else{
-                    var placeholderNote;
+                    var placeholderNote,
+                        placeholderMissingChildLastPlaceSeen,
+                        placeholderMissingChildClothesWearing,
+                        placeholderStudentWithGunSeated,
+                        placeholderStudentWithGunBehaviour,
+                        placeholderEvacuateWhereTo;
+
                     if (req.body.alertID == 2){placeholderNote = 'ex: Stranger is on my classroom and refuses to leave';}
                     if (req.body.alertID == 3){placeholderNote = 'ex: Many people will be working on the corridors. Please follow the procedure for Lockdown';}
-                    if (req.body.alertID == 4){placeholderNote = 'ex: Anna said he went to pick food';}
-                    if (req.body.alertID == 5){placeholderNote = 'ex: gun is in his pants, left front pocket';}
+                    if (req.body.alertID == 4){
+                        placeholderNote = 'ex: Anna said he went to pick food';
+                        placeholderMissingChildLastPlaceSeen = 'ex: Gym';
+                        placeholderMissingChildClothesWearing = 'ex: School uniform';}
+                    if (req.body.alertID == 5){
+                        placeholderNote = 'ex: gun is in his pants, left front pocket';
+                        placeholderStudentWithGunSeated = 'ex: Second row, second seat from left';
+                        placeholderStudentWithGunBehaviour = 'ex: Normal';}
                     if (req.body.alertID == 6){placeholderNote = 'ex: Corrosives and Flammable spill at lab';}
-                    if (req.body.alertID == 7){placeholderNote = 'ex: there is a strange strong smell on the entire building';}
+                    if (req.body.alertID == 7){
+                        placeholderNote = 'ex: there is a strange strong smell on the entire building';
+                        placeholderEvacuateWhereTo = 'ex: church';}
                     if (req.body.alertID == 8){placeholderNote = 'ex: the caller said bomb will detonate in 5 hours';}
                     if (req.body.alertID == 9){placeholderNote = 'ex: bomb is located behind door of classroom 12';}
                     if (req.body.alertID == 10){placeholderNote = 'ex: computer is on fire. Students are safe';}
@@ -232,7 +287,12 @@ module.exports.showAlertsPost = function(req, res) {
                             requestWeAreSafe: alert[0].alertRequestWeAreSafe,
                             request911Call: alert[0].alertRequest911Call,
                             whoCanCall911: alert[0].whoCanCall911,
-                            placeholderNote: placeholderNote
+                            placeholderNote: placeholderNote,
+                            placeholderMissingChildLastPlaceSeen: placeholderMissingChildLastPlaceSeen,
+                            placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
+                            placeholderStudentWithGunSeated: placeholderStudentWithGunSeated,
+                            placeholderStudentWithGunBehaviour: placeholderStudentWithGunBehaviour,
+                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo
                         });
                         alertTemp1.save();
                         callback(null, alertTemp1);
@@ -245,9 +305,7 @@ module.exports.showAlertsPost = function(req, res) {
                                 console.log('err - ',err);
                             else {
                                 if (!alertTemp) {
-                                    console.log('TTL EXPIRED');
-                                    req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
-                                    res.send({redirect: '/alerts/sending/chooseAlert/'});
+                                    functions.alertTimeExpired(req,res);
                                 }
                                 else {
                                     alertTemp.alertNameID = req.body.alertID;
@@ -283,10 +341,13 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 10 ||
                         req.body.alertID == 11 ||
                         req.body.alertID == 15 ||
-                        req.body.alertID == 23 ) {
+                        req.body.alertID == 23 ||
+                        req.body.alertID == 26) {
 
-                        return res.send({redirect: '/alerts/sending/floor/' + alertTemp1._id})
+                        redirectAPI = 'floor';
+                        redirectEJS = '/alerts/sending/floor/' + alertTemp1._id;
                     }
+
                     if (req.body.alertID == 3 ||
                         req.body.alertID == 8 ||
                         req.body.alertID == 12 ||
@@ -295,21 +356,36 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 21 ||
                         req.body.alertID == 22 ||
                         req.body.alertID == 27 ) {
-                        return res.send({redirect: '/alerts/sending/notes/' + alertTemp1._id})
+
+                        redirectAPI = 'notes';
+                        redirectEJS = '/alerts/sending/notes/' + alertTemp1._id;
                     }
+
                     if (req.body.alertID == 4 ||
                         req.body.alertID == 5 ||
                         req.body.alertID == 16 ||
                         req.body.alertID == 17 ||
                         req.body.alertID == 19 ) {
 
-                        return res.send({redirect: '/alerts/sending/student/' + alertTemp1._id})
+                        redirectAPI = 'student';
+                        redirectEJS = '/alerts/sending/student/' + alertTemp1._id;
                     }
+
                     if (req.body.alertID == 14 ||
                         req.body.alertID == 18 ||
                         req.body.alertID == 26 ) {
 
-                        return res.send({redirect: '/alerts/sending/multiSelection/' + alertTemp1._id})
+                        redirectAPI = 'multiSelection';
+                        redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;
+                    }
+
+                    if(token){ // run SMECS API
+                        res.json({
+                            success: true,
+                            redirect: redirectAPI
+                        });
+                    }else{  // run SMECS EJS
+                        return res.send({redirect: redirectEJS})
                     }
                 }
             }
