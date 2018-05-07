@@ -18,7 +18,6 @@ var routesApi = require('./routes/api');
 var routesEjs = require('./routes/ejs');
 var routes = require('./routes/index');
 
-//var login = require('./routes/authentication/login');
 
 
 

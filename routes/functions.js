@@ -2,8 +2,7 @@
 var models = require('./models');
 var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
-var jwt = require('jsonwebtoken');  //API user
-var config = require('./config'); //API user
+
 
 //REDIRECT TO PREVIOUS PAGE
 module.exports.redirectPage = function(req, res, page) {
@@ -117,10 +116,8 @@ module.exports.addParentInStudentDocument = function(user, newParentsArray) {
 
 
 module.exports.alertTimeExpired = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
-
     console.log('TTL EXPIRED');
-    if(token){ // run SMECS API
+    if(req.decoded){ // run SMECS API
         res.json({
             success: false,
             message: 'Alert expired. After choosing alert, you have 10min to fill info and send alert',

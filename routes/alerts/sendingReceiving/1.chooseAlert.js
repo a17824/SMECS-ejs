@@ -4,31 +4,29 @@ var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray.js');
 var functions = require('./../../functions');
-var jwt = require('jsonwebtoken');  //API user
-var config = require('./../../config'); //API user
+
 
 
 
 
 /* Choose Group. -------------------------------*/
 module.exports.showGroups = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
-    if(token) { // run SMECS API
-        var decodedToken = jwt.verify(token, config.secret);
-        //console.log('decodedToken.user.appSettings.groupAlertsButtons = ',decodedToken.user.appSettings.groupAlertsButtons);
-        models.Users.findOne({'email': decodedToken.user.email}, function (err, user) {
-            if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
+    if(req.decoded) { // run SMECS API
+        models.Users.findOne({'email': req.decoded.user.email}, function (err, user) {
+            if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF ----------
                 res.json({
                     success: true,
                     redirect: 'chooseAlert'
                 });
             } else {    //Groups Buttons ON
+
                 showGroups2();
             }
         });
     }
     else{   // run SMECS EJS -----------------
+
         if(req.user.appSettings.groupAlertsButtons == false)    //Groups Buttons OFF
             res.redirect('/alerts/sending/chooseAlert');
         else {  //Groups Buttons ON
@@ -45,7 +43,7 @@ module.exports.showGroups = function(req, res) {
                 });
             },
             function(callback) {
-                if(token)   //API user
+                if(req.decoded)   //API user
                     callback('API');
                 else    //EJS user
                     functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
@@ -53,8 +51,13 @@ module.exports.showGroups = function(req, res) {
 
 
         ],function(err, results){
+
+            console.log('results[0] = ',results[0]);
+
             var real = results[0][0];
             var test = results[0][1];
+
+
 
             var arrayGroupsReal = [];
             var groupReal = 99999;
@@ -87,7 +90,7 @@ module.exports.showGroups = function(req, res) {
                 }
             }
 
-            if(token){ // run SMECS API
+            if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
                     aclReal: arrayGroupsReal,
@@ -111,8 +114,6 @@ module.exports.showGroups = function(req, res) {
 };
 
 module.exports.showGroupsPost = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
-
     var alertTemp1 = new models.AlertSentTemp({
         alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
         alertGroupName: req.body.alertGroupName,
@@ -120,7 +121,7 @@ module.exports.showGroupsPost = function(req, res) {
     });
     alertTemp1.save();
 
-    if(token){ // run SMECS API
+    if(req.decoded){ // run SMECS API
         res.json({
             success: true,
             redirect: 'chooseGroupAlert'
@@ -133,22 +134,23 @@ module.exports.showGroupsPost = function(req, res) {
 
 /* Choose Alert. -------------------------------*/
 module.exports.showAlerts = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
-
+    console.log('1');
     async.parallel([
         function(callback){
             buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
+                console.log('2');
                 callback(null, arrayAlerts);
             });
         },
         function(callback) {
-            if(token)   //API
+            if(req.decoded)   //API
                 callback('API');
             else    //EJS
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
         }
 
     ],function(err, results){
+        console.log('3');
         if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
             models.AlertSentTemp.findById(req.params.id, function (err, alert) {
                 if(err)
@@ -174,7 +176,7 @@ module.exports.showAlerts = function(req, res) {
                             }
                         }
 
-                        if(token){ //API user
+                        if(req.decoded){ //API user
                             res.json({
                                 success: true,
                                 redirect: 'chooseAlert'
@@ -197,15 +199,299 @@ module.exports.showAlerts = function(req, res) {
                 }
             })
         }else { //---------------- Groups Buttons OFF --------------------
+            console.log('3');
+            //console.log(results[0][0]);
+
+            var x = [ { groupID: 1,
+                alertTypeSortID: 1,
+                alertTypeName: 'Panic',
+                alertID: 1,
+                alertSortID: 1,
+                alertName: 'Possession of a Firearm/Hostage Situation',
+                alertColor: 'Panic',
+                alertColorValue: undefined },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 2,
+                    alertSortID: 2,
+                    alertName: 'Stranger/Trespasser in Building',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 3,
+                    alertSortID: 3,
+                    alertName: 'Lockdown',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 4,
+                    alertSortID: 4,
+                    alertName: 'Missing Child',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 5,
+                    alertSortID: 5,
+                    alertName: 'Student with a Gun',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 6,
+                    alertSortID: 6,
+                    alertName: 'Hazardous Materials Spill',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 3,
+                    alertTypeSortID: 3,
+                    alertTypeName: 'Green',
+                    alertID: 7,
+                    alertSortID: 7,
+                    alertName: 'Evacuate',
+                    alertColor: 'Green',
+                    alertColorValue: '008000' },
+                { groupID: 3,
+                    alertTypeSortID: 3,
+                    alertTypeName: 'Green',
+                    alertID: 8,
+                    alertSortID: 8,
+                    alertName: 'Bomb Threat to School',
+                    alertColor: 'Green',
+                    alertColorValue: '008000' },
+                { groupID: 3,
+                    alertTypeSortID: 3,
+                    alertTypeName: 'Green',
+                    alertID: 9,
+                    alertSortID: 9,
+                    alertName: 'Bomb Device Found or Suspected',
+                    alertColor: 'Green',
+                    alertColorValue: '008000' },
+                { groupID: 3,
+                    alertTypeSortID: 3,
+                    alertTypeName: 'Green',
+                    alertID: 10,
+                    alertSortID: 10,
+                    alertName: 'Fire/Explosion',
+                    alertColor: 'Green',
+                    alertColorValue: '008000' },
+                { groupID: 3,
+                    alertTypeSortID: 3,
+                    alertTypeName: 'Green',
+                    alertID: 11,
+                    alertSortID: 11,
+                    alertName: 'Suspicious Package or Mail',
+                    alertColor: 'Green',
+                    alertColorValue: '008000' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 12,
+                    alertSortID: 12,
+                    alertName: 'Bus Transportation Accident',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 27,
+                    alertSortID: 13,
+                    alertName: 'Bus Transportation early/late',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 14,
+                    alertSortID: 14,
+                    alertName: 'Utility Failures',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 15,
+                    alertSortID: 15,
+                    alertName: 'Observing Abandoned Firearm',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 16,
+                    alertSortID: 16,
+                    alertName: 'Suspected Drug/Alcohol Use',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 17,
+                    alertSortID: 17,
+                    alertName: 'Suicide Threat/Rumors',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 13,
+                    alertSortID: 27,
+                    alertName: 'Weather-Related Emergencies',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 5,
+                    alertTypeSortID: 5,
+                    alertTypeName: 'Yellow',
+                    alertID: 18,
+                    alertSortID: 18,
+                    alertName: 'Medical Emergencies',
+                    alertColor: 'Yellow',
+                    alertColorValue: 'FFD700' },
+                { groupID: 5,
+                    alertTypeSortID: 5,
+                    alertTypeName: 'Yellow',
+                    alertID: 19,
+                    alertSortID: 19,
+                    alertName: 'Suicide Actual/Attempted',
+                    alertColor: 'Yellow',
+                    alertColorValue: 'FFD700' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 20,
+                    alertSortID: 20,
+                    alertName: 'Media',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 21,
+                    alertSortID: 21,
+                    alertName: 'Crime Scene',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 22,
+                    alertSortID: 22,
+                    alertName: 'Mental Health',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 23,
+                    alertSortID: 23,
+                    alertName: 'Violence',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 24,
+                    alertSortID: 24,
+                    alertName: 'PA',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 26,
+                    alertSortID: 25,
+                    alertName: 'Request Repair Assistance',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' } ];
+            var y = [ { groupID: 1,
+                alertTypeSortID: 1,
+                alertTypeName: 'Panic',
+                alertID: 1,
+                alertSortID: 1,
+                alertName: 'Possession of a Firearm/Hostage Situation',
+                alertColor: 'Panic',
+                alertColorValue: undefined },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 2,
+                    alertSortID: 2,
+                    alertName: 'Stranger/Trespasser in Building',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 3,
+                    alertSortID: 3,
+                    alertName: 'Lockdown',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 4,
+                    alertSortID: 4,
+                    alertName: 'Missing Child',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 5,
+                    alertSortID: 5,
+                    alertName: 'Student with a Gun',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 2,
+                    alertTypeSortID: 2,
+                    alertTypeName: 'Red',
+                    alertID: 6,
+                    alertSortID: 6,
+                    alertName: 'Hazardous Materials Spill',
+                    alertColor: 'Red',
+                    alertColorValue: 'ff0000' },
+                { groupID: 4,
+                    alertTypeSortID: 4,
+                    alertTypeName: 'Blue',
+                    alertID: 15,
+                    alertSortID: 15,
+                    alertName: 'Observing Abandoned Firearm',
+                    alertColor: 'Blue',
+                    alertColorValue: '0000FF' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 20,
+                    alertSortID: 20,
+                    alertName: 'Media',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' },
+                { groupID: 6,
+                    alertTypeSortID: 6,
+                    alertTypeName: 'Other',
+                    alertID: 21,
+                    alertSortID: 21,
+                    alertName: 'Crime Scene',
+                    alertColor: 'Other',
+                    alertColorValue: 'CD69C9' } ];
             var alert = {
                 'id': 0
             };
 
-            if(token){ // run SMECS API
+            if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
-                    testModeOnArrayReal: results[0][0],
-                    testModeOnArrayTest: results[0][1]
+                    alert: alert,
+                    testModeOnArrayReal: x, //results[0][0],
+                    testModeOnArrayTest: y //results[0][1]
 
                 });
 
@@ -227,7 +513,6 @@ module.exports.showAlerts = function(req, res) {
 };
 
 module.exports.showAlertsPost = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
     var redirectAPI; //API user
     var redirectEJS; //EJS user
 
@@ -235,7 +520,7 @@ module.exports.showAlertsPost = function(req, res) {
         function (callback) {
             models.Alerts.find({'alertID': req.body.alertID}, function (err, alert) {
                 if(err){
-                    console.log('err = ', alert );
+                    console.log('err chooseAlert post line 522 = ', alert );
                 }else{
                     var placeholderNote,
                         placeholderMissingChildLastPlaceSeen,
@@ -276,9 +561,10 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
 
+
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
                         var alertTemp1 = new models.AlertSentTemp({
-                            alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
+                            alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
@@ -379,10 +665,11 @@ module.exports.showAlertsPost = function(req, res) {
                         redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;
                     }
 
-                    if(token){ // run SMECS API
+                    if(req.decoded){ // run SMECS API
                         res.json({
                             success: true,
-                            redirect: redirectAPI
+                            redirect: redirectAPI,
+                            _id: alertTemp1._id
                         });
                     }else{  // run SMECS EJS
                         return res.send({redirect: redirectEJS})
@@ -391,5 +678,6 @@ module.exports.showAlertsPost = function(req, res) {
             }
         });
     });
+
 };
 /*-------------------------end of choosing Alerts*/

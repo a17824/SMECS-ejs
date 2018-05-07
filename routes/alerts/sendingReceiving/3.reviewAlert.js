@@ -8,6 +8,7 @@ var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var pushNotification = require('./pushNotification.js');
 var functions = require('./../../functions');
 
+
 module.exports.reviewAlert = function(req, res) {
     async.parallel([
         function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
@@ -16,30 +17,47 @@ module.exports.reviewAlert = function(req, res) {
         function(callback){models.Alerts.find().exec(callback);},
         function(callback){models.AclAlertsReal.find().exec(callback);},
         function(callback){models.AclAlertsTest.find().exec(callback);},
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {
+            if(req.decoded) { //API user
+                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
+            }else{  //EJS user
+                functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
+            }
+        }
 
     ],function(err, results){
         if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.redirect('/alerts/sending/chooseAlert');
+            functions.alertTimeExpired(req,res);
         }
         else {
-            res.render('alerts/sending/reviewAlert', {
-                title: 'Review Alert',
-                userAuthID: req.user.userRoleID,
-                userAuthRoleName: req.user.userRoleName,
-                info: results[0],
-                floor: results[1],
-                utilities: results[2],
-                alerts: results[3], // check if alert is softDeleted for Utilities Failure
-                aclReal: results[4], // to check if user has permission to send Request Assistance Alert
-                aclTest: results[5], // to check if user has permission to send Request Assistance Alert
-                aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
+
+            if(req.decoded){ // run SMECS API
+                res.json({
+                    success: true,
+                    userAuthGroupAlerts: results[6].userRoleName, //for Call911 button
+                    info: results[0],
+                    floor: results[1],
+                    utilities: results[2],
+                    results: results[3], // check if alert is softDeleted for Utilities Failure
+                    aclReal: results[4], // to check if user has permission to send Request Assistance Alert
+                    aclTest: results[5], // to check if user has permission to send Request Assistance Alert
+                });
+
+            }else{  // run SMECS EJS
+                res.render('alerts/sending/reviewAlert', {
+                    title: 'Review Alert',
+                    userAuthRoleName: req.user.userRoleName,
+                    info: results[0],
+                    floor: results[1],
+                    utilities: results[2],
+                    alerts: results[3], // check if alert is softDeleted for Utilities Failure
+                    aclReal: results[4], // to check if user has permission to send Request Assistance Alert
+                    aclTest: results[5], // to check if user has permission to send Request Assistance Alert
+                    aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            }
         }
     })
 };
@@ -115,6 +133,16 @@ module.exports.postReviewAlert = function(req, res, next) {
 
         /*****  CALL HERE NOTIFICATION API  *****/
         pushNotification.alert(tempAlert, 'newAlert');
-        res.send({redirect: '/alerts/received/receiveAlert/' + tempAlert._id});
+
+        if(req.decoded){ //API user
+            res.json({
+                success: true,
+                message: 'Alert Successfully sent.',
+                redirect: 'home'
+            });
+
+        }else{  //EJS user
+            res.send({redirect: '/alerts/received/receiveAlert/' + tempAlert._id});
+        }
     });
 };

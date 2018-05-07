@@ -13,13 +13,18 @@ module.exports.receivedAlert = function(req, res) {
         function(callback){models.Utilities.find().exec(callback);},
         function(callback){models.AclAlertsReal.find().exec(callback);},
         function(callback){models.AclAlertsTest.find().exec(callback);},
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {
+            if(req.decoded) { //API user
+                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
+            }else{  //EJS user
+                functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
+            }
+        }
 
     ],function(err, results){
         if (!results[0]) {
             console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
+            console.log('RECEIVED ALERT NOT FOUND');
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
@@ -37,10 +42,18 @@ module.exports.receivedAlert = function(req, res) {
                                     }else{
                                         var typeAclAlert = results[3];
                                     }
+
+                                    // API EJS ----------
+                                    var userApiEjs = req.user.userRoleID; // EJS user
+                                    if (req.decoded)  {      // API user
+                                        userApiEjs = req.decoded.user.userRoleID;
+                                    }
+                                    //-------------------
+
                                     //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
                                     for (var i=0; i < typeAclAlert.length; i++) {
-                                        for (var t = 0; t < req.user.userRoleID.length; t++) {
-                                            if (typeAclAlert[i].checkBoxID == 's' + req.user.userRoleID[t] + 26 && typeAclAlert[i].checkBoxValue == true) {
+                                        for (var t = 0; t < userApiEjs.length; t++) {
+                                            if (typeAclAlert[i].checkBoxID == 's' + userApiEjs[t] + 26 && typeAclAlert[i].checkBoxValue == true) {
                                                 canRequestAssistance = true;
                                                 break;
                                             }
@@ -61,20 +74,34 @@ module.exports.receivedAlert = function(req, res) {
                     });
                 }
             ], function (err, canRequestAssistance, enableProcedureButton) {
-                res.render('alerts/receiving/received', {
-                    title: 'Received Alert',
-                    userAuthID: req.user.userRoleID,
-                    userAuthRoleName: req.user.userRoleName,
-                    userAuthEmail: req.user.email,
-                    info: results[0],
-                    floor: results[1],
-                    utilities: results[2],
-                    canRequestAssistance: canRequestAssistance,
-                    enableProcedureButton: enableProcedureButton,
-                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                    userAuthPhoto: req.user.photo
-                });
+
+                if(req.decoded){ //API user
+                    res.json({
+                        success: 'true',
+                        userAuthRoleName: results[3].userRoleName,
+                        userAuthEmail: results[3].email,
+                        alertInfo: results[0],
+                        floor: results[1],
+                        utilities: results[2],
+                        canRequestAssistance: canRequestAssistance,
+                        enableProcedureButton: enableProcedureButton
+                    });
+
+                }else{  //EJS user
+                    res.render('alerts/receiving/received', {
+                        title: 'Received Alert',
+                        userAuthRoleName: req.user.userRoleName,
+                        userAuthEmail: req.user.email,
+                        info: results[0],
+                        floor: results[1],
+                        utilities: results[2],
+                        canRequestAssistance: canRequestAssistance,
+                        enableProcedureButton: enableProcedureButton,
+                        aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                        userAuthPhoto: req.user.photo
+                    });
+                }
             });
         }
     })
@@ -86,6 +113,13 @@ module.exports.postReceivedAlert = function(req, res, next) {
     var procedureCompleted = req.body.procedureCompleted;
     var weAreSafe = req.body.weAreSafe;
 
+    // API EJS ----------
+    var userApiEjs = req.user.email; // EJS user
+    if (req.decoded)  {      // API user
+        userApiEjs = req.decoded.user.email;
+    }
+    //-------------------
+
     models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
         if(err){
             console.log('err - changing Alert STATUS');
@@ -93,16 +127,16 @@ module.exports.postReceivedAlert = function(req, res, next) {
             // All ALERTS
             if(alert.requestProcedureCompleted){
                 alert.sentTo.forEach(function (user) {
-                    if (user.email == req.user.email && user.procedureCompleted.boolean.toString() !== procedureCompleted.toString()) {
-                        request(alert, user, 'procedureCompleted');
+                    if (user.email == userApiEjs && user.procedureCompleted.boolean.toString() !== procedureCompleted.toString()) {
+                        updateProcedureCompletedWeAreSafe(alert, user, 'procedureCompleted');
                     }
                 });
             }
             // All ALERTS
             if(alert.requestWeAreSafe){
                 alert.sentTo.forEach(function (user) {
-                    if (user.email == req.user.email && user.weAreSafe.boolean.toString() !== weAreSafe.toString()) {
-                        request(alert, user, 'weAreSafe');
+                    if (user.email == userApiEjs && user.weAreSafe.boolean.toString() !== weAreSafe.toString()) {
+                        updateProcedureCompletedWeAreSafe(alert, user, 'weAreSafe');
                     }
                 });
             }
@@ -129,7 +163,7 @@ module.exports.postReceivedAlert = function(req, res, next) {
     });
 };
 
-function request(alert, user, requestType) {
+function updateProcedureCompletedWeAreSafe(alert, user, requestType) {
     var wrapped = moment(new Date());
 
     if(!user[requestType].boolean){

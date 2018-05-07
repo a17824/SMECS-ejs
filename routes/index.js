@@ -607,7 +607,10 @@ router.post('/pa/newAnnouncement', auth.simpleAuth, auth.requireLogin, pa.addPos
 router.get('/alerts/sending/chooseGroup', auth.simpleAuth, auth.requireLogin, chooseAlert.showGroups, function(req, res) {});
 router.post('/alerts/sending/chooseGroup', auth.simpleAuth, auth.requireLogin, chooseAlert.showGroupsPost, function(req, res) {});
 
+/* Send Alert - Alerts ChooseGroup buttons ON. -------------------------------*/
 router.get('/alerts/sending/chooseGroupAlert/:id', auth.simpleAuth, auth.requireLogin, chooseAlert.showAlerts, function(req, res) {});
+/* Send Alert - Alerts ChooseGroup buttons OFF. -------------------------------*/
+
 router.get('/alerts/sending/chooseAlert', auth.simpleAuth, auth.requireLogin, chooseAlert.showAlerts, function(req, res) {});
 
 router.post('/alerts/sending/chooseAlert', auth.simpleAuth, auth.requireLogin, chooseAlert.showAlertsPost, function(req, res) {});

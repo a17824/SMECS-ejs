@@ -1,7 +1,7 @@
 //Dependencies
 var models = require('./../models');
 var jwt = require('jsonwebtoken');
-var config = require('./../config');
+var config = require('../api/config');
 
 /**
  * A simple authentication middleware for Express.

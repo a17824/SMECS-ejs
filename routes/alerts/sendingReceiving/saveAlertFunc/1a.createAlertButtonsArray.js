@@ -36,7 +36,6 @@ function getArrays(req, typeAclAlert, callback) {
         typeApiEjs = 'req.decoded.user.userRoleID';
     }
 
-
     async.map(typeApiEjs, function (roleX, callback2) {
             //checkboxes that have an "s", not softDeleted and checkBox is "true": put them in array
             models[typeAclAlert].find({
@@ -48,6 +47,7 @@ function getArrays(req, typeAclAlert, callback) {
         function (err, data) {
             // comes here after all individual async calls have completed
             // check errors; array of results is in data
+            console.log('data = ');
             data.forEach(function (alert) {
                 for (var i = 0; i < alert.length; i++) {
                     //checks is alertID already exits. If Exits, remove duplicate

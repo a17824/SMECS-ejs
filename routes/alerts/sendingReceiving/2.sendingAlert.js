@@ -2,13 +2,10 @@
 var models = require('./../../models');
 var async = require("async");
 var functions = require('./../../functions');
-var jwt = require('jsonwebtoken');  //API user
-var config = require('./../../config'); //API user
+
 
 //          FLOOR           \\
 module.exports.showFloor = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
-
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
@@ -17,9 +14,8 @@ module.exports.showFloor = function(req, res) {
             models.Floors.find().sort({"floorID":1}).exec(callback);
         },
         function(callback) {
-            if(token) { //API user
-                var decodedToken = jwt.verify(token, config.secret);
-                models.Users.findOne({'email': decodedToken.user.email}).exec(callback);
+            if(req.decoded) { //API user
+                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
             }else{  //EJS user
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
             }
@@ -30,8 +26,8 @@ module.exports.showFloor = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-
-            if(token){ // run SMECS API
+console.log('results[2] = ',results[2]);
+            if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
                     userAuthGroupAlerts: results[2].appSettings.groupAlertsButtons, //for Back or Exit button
@@ -55,7 +51,6 @@ module.exports.showFloor = function(req, res) {
     });
 };
 module.exports.postFloor = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
     var redirectAPI; //API user
     var redirectEJS; //EJS user
 
@@ -145,7 +140,7 @@ module.exports.postFloor = function(req, res) {
                 redirectAPI = 'floorMap';
                 redirectEJS = '/alerts/sending/floorLocation/' + alertToUpdate1;
             }
-            if(token){ // run SMECS API
+            if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
                     redirect: redirectAPI
@@ -159,8 +154,6 @@ module.exports.postFloor = function(req, res) {
 
 //          FLOOR LOCATION          \\
 module.exports.showFloorLocation = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
-
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
@@ -169,18 +162,20 @@ module.exports.showFloorLocation = function(req, res) {
             models.Floors.find().exec(callback);
         },
         function(callback) {
-            if(token)   //API
+            if(req.decoded)   //API
                 callback('API');
             else    //EJS
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
         }
 
     ],function(err, results){
+        console.log('results[0] = ',results[0]);
         if (!results[0]) {
+            console.log('yyyyyyyyyyyyyyyyyyyyyy');
             functions.alertTimeExpired(req,res);
         }
         else {
-            if(token){ //API user
+            if(req.decoded){ //API user
                 res.json({
                     success: true,
                     alert: results[0],
@@ -204,7 +199,6 @@ module.exports.showFloorLocation = function(req, res) {
 };
 
 module.exports.postFloorLocation = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
@@ -236,7 +230,7 @@ module.exports.postFloorLocation = function(req, res) {
                 alert.alertNameID == 23 ||
                 alert.alertNameID == 26 ) {
 
-                if(token){ // run SMECS API
+                if(req.decoded){ // run SMECS API
                     res.json({
                         success: true,
                         redirect: 'notes'
@@ -251,16 +245,14 @@ module.exports.postFloorLocation = function(req, res) {
 
 //          NOTES          \\
 module.exports.showNotes = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
         },
         function(callback) {
-            if(token) { //API user
-                var decodedToken = jwt.verify(token, config.secret);
-                models.Users.findOne({'email': decodedToken.user.email}).exec(callback);
+            if(req.decoded) { //API user
+                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
             }else{  //EJS user
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
             }
@@ -271,7 +263,7 @@ module.exports.showNotes = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            if(token){ //API user
+            if(req.decoded){ //API user
                 res.json({
                     success: true,
                     userAuthGroupAlerts: results[1].appSettings.groupAlertsButtons, //for Back or Exit button
@@ -300,7 +292,7 @@ module.exports.showNotes = function(req, res) {
     });
 };
 module.exports.postNotes = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
+
     var redirectAPI; //API user
     var redirectEJS; //EJS user
     var allFloorsButtonHidden;  //API user
@@ -376,7 +368,7 @@ module.exports.postNotes = function(req, res) {
                 redirectEJS = '/alerts/sending/reviewAlert/' + alertToUpdate1;
             }
 
-            if(token){ // run SMECS API
+            if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
                     redirect: redirectAPI,
@@ -391,7 +383,6 @@ module.exports.postNotes = function(req, res) {
 
 //          STUDENT           \\
 module.exports.showStudent = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     async.parallel([
         function(callback){
@@ -401,9 +392,8 @@ module.exports.showStudent = function(req, res) {
             models.Students.find().exec(callback);
         },
         function(callback) {
-            if(token) { //API user
-                var decodedToken = jwt.verify(token, config.secret);
-                models.Users.findOne({'email': decodedToken.user.email}).exec(callback);
+            if(req.decoded) { //API user
+                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
             }else{  //EJS user
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
             }
@@ -415,7 +405,7 @@ module.exports.showStudent = function(req, res) {
         }
         else {
 
-            if(token){ //API user
+            if(req.decoded){ //API user
                 res.json({
                     success: true,
                     testModeON: results[0].testModeON,
@@ -441,7 +431,6 @@ module.exports.showStudent = function(req, res) {
 };
 
 module.exports.postStudent = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     var alertToUpdate1 = req.body.alertToUpdate;
     var studentName = req.body.student;
@@ -469,7 +458,7 @@ module.exports.postStudent = function(req, res) {
                 alert.studentPhoto = studentPhoto;
                 alert.save();
 
-                if(token){ // run SMECS API
+                if(req.decoded){ // run SMECS API
                     res.json({
                         success: true,
                         redirect: 'floor'
@@ -484,7 +473,6 @@ module.exports.postStudent = function(req, res) {
 
 //          MULTI SELECTION          \\
 module.exports.showMultiSelection = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     async.parallel([
         function(callback){
@@ -497,9 +485,8 @@ module.exports.showMultiSelection = function(req, res) {
             models.Medical.find().sort({"medicalName":1}).exec(callback);
         },
         function(callback) {
-            if(token) { //API user
-                var decodedToken = jwt.verify(token, config.secret);
-                models.Users.findOne({'email': decodedToken.user.email}).exec(callback);
+            if(req.decoded) { //API user
+                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
             }else{  //EJS user
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
             }
@@ -510,7 +497,7 @@ module.exports.showMultiSelection = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            if(token){ //API user
+            if(req.decoded){ //API user
                 res.json({
                     success: true,
                     title: results[0].alertName,
@@ -537,7 +524,6 @@ module.exports.showMultiSelection = function(req, res) {
 };
 
 module.exports.postMultiSelection = function(req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token']; //API user
 
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
@@ -572,7 +558,7 @@ module.exports.postMultiSelection = function(req, res) {
                     }
                     alert.save();
 
-                    if(token){ // run SMECS API
+                    if(req.decoded){ // run SMECS API
                         res.json({
                             success: true,
                             redirect: 'floor'
@@ -588,7 +574,7 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.medicalInjuredParties = req.body.medicalInjuredParties;
                 alert.save();
 
-                if(token){ // run SMECS API
+                if(req.decoded){ // run SMECS API
                     res.json({
                         success: true,
                         redirect: 'floor'

@@ -2,7 +2,7 @@
 var bcrypt = require('bcryptjs');
 var models = require('./../models');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('./../config');
+var config = require('../api/config');
 
 
 
