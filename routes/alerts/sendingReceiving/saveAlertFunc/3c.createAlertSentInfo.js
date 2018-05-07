@@ -33,10 +33,11 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
     }
 
-    var sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName; // EJS user
-    if (req.decoded)  {      // API user
+    var sentByApiEjs;
+    if (req.decoded)        // API user
         sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
-    }
+    else
+        sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
 
     var alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,

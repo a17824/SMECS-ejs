@@ -1,11 +1,16 @@
 <!-- sidebar menu -->
+
 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
+          <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
         <li><a href="/users/showUsers"><i class="fa fa-users"></i> Users <span class="fa fa-chevron-right"></span></a>
+            <% } %>
         </li>
+          <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
         <li><a href="/students/showStudents"><i class="fa fa-graduation-cap"></i> Students <span class="fa fa-chevron-right"></span></a>
+            <% } %>
         </li>
         <li><a><i class="fa fa-cog"></i> Roles & Privileges <span class="fa fa-chevron-right"></span></a>
           <ul class="nav child_menu">

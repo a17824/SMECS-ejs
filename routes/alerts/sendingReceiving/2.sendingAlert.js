@@ -163,15 +163,13 @@ module.exports.showFloorLocation = function(req, res) {
         },
         function(callback) {
             if(req.decoded)   //API
-                callback('API');
+                callback(null, 'API');
             else    //EJS
                 functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
         }
 
     ],function(err, results){
-        console.log('results[0] = ',results[0]);
         if (!results[0]) {
-            console.log('yyyyyyyyyyyyyyyyyyyyyy');
             functions.alertTimeExpired(req,res);
         }
         else {

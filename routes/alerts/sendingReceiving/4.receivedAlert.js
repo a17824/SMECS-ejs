@@ -44,10 +44,11 @@ module.exports.receivedAlert = function(req, res) {
                                     }
 
                                     // API EJS ----------
-                                    var userApiEjs = req.user.userRoleID; // EJS user
-                                    if (req.decoded)  {      // API user
+                                    var userApiEjs;
+                                    if (req.decoded)        // API user
                                         userApiEjs = req.decoded.user.userRoleID;
-                                    }
+                                    else
+                                        userApiEjs = req.user.userRoleID; // EJS user
                                     //-------------------
 
                                     //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
@@ -114,10 +115,11 @@ module.exports.postReceivedAlert = function(req, res, next) {
     var weAreSafe = req.body.weAreSafe;
 
     // API EJS ----------
-    var userApiEjs = req.user.email; // EJS user
-    if (req.decoded)  {      // API user
+    var userApiEjs;
+    if (req.decoded)       // API user
         userApiEjs = req.decoded.user.email;
-    }
+    else
+        userApiEjs = req.user.email; // EJS user
     //-------------------
 
     models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
