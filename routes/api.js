@@ -17,6 +17,7 @@ routerApi.post('/forgot', email.forgotPost, function(req, res) {});
 
 /* Send Alert - ChooseGroup (HOME). -------------------------------*/
 routerApi.get('/alerts/sending/chooseGroup', auth.auth, chooseAlert.showGroups, function(req, res) {});
+routerApi.post('/alerts/sending/chooseGroup', auth.auth, chooseAlert.showGroupsPost, function(req, res) {});
 
 /* Send Alert - Alerts ChooseGroup buttons ON. -------------------------------*/
 routerApi.get('/alerts/sending/chooseGroupAlert/:id', auth.auth, chooseAlert.showAlerts, function(req, res) {});

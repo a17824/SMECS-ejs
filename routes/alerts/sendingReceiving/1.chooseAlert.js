@@ -122,7 +122,8 @@ module.exports.showGroupsPost = function(req, res) {
     if(req.decoded){ // run SMECS API
         res.json({
             success: true,
-            redirect: 'chooseGroupAlert'
+            redirect: 'chooseGroupAlert',
+            _id: alertTemp1._id
         });
     }else{  // run SMECS EJS
         return res.send({redirect: '/alerts/sending/chooseGroupAlert/' + alertTemp1._id})
@@ -174,7 +175,9 @@ module.exports.showAlerts = function(req, res) {
                         if(req.decoded){ //API user
                             res.json({
                                 success: true,
-                                redirect: 'chooseAlert'
+                                alert: alert,
+                                aclReal: arrayAlertsReal,
+                                aclTest: arrayAlertsTest
                             });
                         }else{  //EJS user
                             res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
