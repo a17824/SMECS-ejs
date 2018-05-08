@@ -54,7 +54,7 @@
                         {RgbValue: 'FFFF00', ColorName: 'Yellow'},
                         {RgbValue: 'FFD700', ColorName: 'Gold'},
                         {RgbValue: '000000', ColorName: 'Black'},
-                        {RgbValue: 'FFFFFF', ColorName: 'White'},
+                        //{RgbValue: 'FFFFFF', ColorName: 'White'},
                         {RgbValue: 'FF00FF', ColorName: 'Magenta'},
                         {RgbValue: 'FFA500', ColorName: 'Orange'},
                         {RgbValue: '76EEC6', ColorName: 'Aquamarine'},
@@ -123,6 +123,7 @@
 
                 console.log('colorName = ',colorName);
                 console.log('colorValue = ',colorValue);
+
                 $.post("/alertGroups/updateAlertGroups",{
                     alertGroupToUpdate: alertGroup1,
                     oldAlertGroupID: oldAlertGroupID,

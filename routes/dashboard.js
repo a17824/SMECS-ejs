@@ -14,6 +14,10 @@ module.exports.show = function(req, res, next) {
             function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
         ],function(err, results){
+
+            console.log('results[1]');
+            console.log(results[1]);
+
             res.render('dashboard',{
                 userAuthEmail: req.user.email,
                 utilityUsers: results[0],

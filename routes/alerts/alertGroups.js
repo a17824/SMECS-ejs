@@ -82,6 +82,7 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
+
     var alertGroup1 = new models.AlertsGroup({
         alertTypeID: req.body.alertGroupID,
         alertTypeName: req.body.alertGroupName,

@@ -47,7 +47,6 @@ function getArrays(req, typeAclAlert, callback) {
         function (err, data) {
             // comes here after all individual async calls have completed
             // check errors; array of results is in data
-            console.log('data = ');
             data.forEach(function (alert) {
                 for (var i = 0; i < alert.length; i++) {
                     //checks is alertID already exits. If Exits, remove duplicate

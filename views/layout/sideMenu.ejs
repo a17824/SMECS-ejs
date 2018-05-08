@@ -5,19 +5,22 @@
       <h3>General</h3>
       <ul class="nav side-menu">
           <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-        <li><a href="/users/showUsers"><i class="fa fa-users"></i> Users <span class="fa fa-chevron-right"></span></a>
-            <% } %>
-        </li>
+            <li><a href="/users/showUsers"><i class="fa fa-users"></i> Users <span class="fa fa-chevron-right"></span></a></li>
+          <% } %>
+
           <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
-        <li><a href="/students/showStudents"><i class="fa fa-graduation-cap"></i> Students <span class="fa fa-chevron-right"></span></a>
-            <% } %>
-        </li>
-        <li><a><i class="fa fa-cog"></i> Roles & Privileges <span class="fa fa-chevron-right"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="/roles2/showRoles2">Show Roles</a></li>
-            <li><a href="/privilege/showPrivilege">Show Privileges</a></li>
-          </ul>
-        </li>
+            <li><a href="/students/showStudents"><i class="fa fa-graduation-cap"></i> Students <span class="fa fa-chevron-right"></span></a></li>
+          <% } %>
+
+          <% if (aclSideMenu == null || aclSideMenu.roles2.checkBoxValue == true){%>
+          <li><a href="/roles2/showRoles2"><i class="fa fa-graduation-cap"></i> Roles <span class="fa fa-chevron-right"></span></a></li>
+          <% } %>
+
+          <% if (aclSideMenu == null || aclSideMenu.privilege.checkBoxValue == true){%>
+          <li><a href="/privilege/showPrivilege"><i class="fa fa-graduation-cap"></i> Privileges <span class="fa fa-chevron-right"></span></a></li>
+          <% } %>
+
+
         <li><a><i class="fa fa-bell"></i> Alerts & Groups <span class="fa fa-chevron-right"></span></a>
           <ul class="nav child_menu">
             <li><a href="/alertGroups/showAlertGroups">Alert Groups</a></li>
