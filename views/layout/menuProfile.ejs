@@ -2,10 +2,10 @@
 
 <!-- Custom Theme Style -->
 <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
-<link href="/public/gentelella/build/css/showUsers.css" rel="stylesheet">
+<link href="/public/gentelella/build/css/showAvatar.css" rel="stylesheet">
 
 <div class="navbar nav_title" style="border: 0;">
-    <a href="/dashboard" class="site_title"><i class="fa fa-graduation-cap"></i> <span>Dashboard</span></a>
+    <a href="/dashboard" class="site_title"><img src="/schoolLogos/STS-Logo-Horizontal.png"> </a>
 </div>
 
 <div class="clearfix"></div>
@@ -15,7 +15,7 @@
         <% if (user.photo == "" || user.photo == undefined) { %>
             <img src="/photosNotAvailable/photoNotAvailable.bmp" alt="..." class="img-circle profile_img">
         <% } else { %>
-            <img src="/photosUsers/<%= userAuthPhoto %>" alt="..." class="avatar-circle">
+            <img src="/photosUsers/<%= userAuthPhoto %>" alt="..." class="avatarMenuProfile">
         <% } %>
     </div>
     <div class="profile_info">

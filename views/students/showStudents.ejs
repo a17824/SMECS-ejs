@@ -26,8 +26,7 @@
 
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.css" rel="stylesheet">
+
     <!-- NProgress -->
     <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
     <!-- iCheck -->
@@ -36,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
-      <link href="/public/gentelella/build/css/showStudents.css" rel="stylesheet">
+
   </head>
 
   <body class="nav-md">
@@ -44,11 +43,7 @@
       <div class="main_container">
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="/dashboard" class="site_title"><i class="fa fa-graduation-cap"></i> <span>Dashboard</span></a>
-            </div>
 
-            <div class="clearfix"></div>
 
             <!-- menu profile quick info -->
             <% include ../layout/menuProfile.ejs %>
@@ -122,7 +117,7 @@
                           </td>
                           <% } else { %>
                           <td align="center">
-                              <a href="/photos/addPhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="center-cropped"></a>
+                              <a href="/photos/addPhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
                           </td>
                           <% } %>
                           <td><%= student.firstName %></td>
