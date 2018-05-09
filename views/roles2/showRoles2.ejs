@@ -4,14 +4,25 @@
     <title>Show Roles</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+    <!-- <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
+    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script> -->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
 
     <script type = "text/javascript">
         $(document).ready(function()
-                {
-                    $("#myTable").tablesorter();
-                }
+            {
+                $("#myTable").tablesorter();
+            }
         );
         $("#role2Link").live("click", function () {
             $.ajax({
@@ -29,55 +40,112 @@
     </script>
 
 </head>
-<body>
-<h1><%= title %></h1>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
-<form action="/roles2/addRole2">
-    <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
-    <input type="submit" value="Add Role"><br><br>
-    <% } else { %>
-    <input type="submit" value="Add Role" disabled><br><br>
-    <% } %>
-</form>
-<table id="myTable" class="tablesorter">
-    <thead>
-        <tr>
-            <th>Sort #</th>
-            <th>Role Name</th>
-            <% if (userAuthID == 1) {%>
-            <th>Role ID</th>
-            <% } %>
-            <th>Update</th>
-            <th>Delete</th>
+                <h1><%= title %></h1>
 
-        </tr>
-    <tbody>
-        <% roles2.forEach(function(role2) { %>
-            <tr>
-                <td><%= role2.sortID %></td>
-                <td><%= role2.roleName %></td>
-                <% if (userAuthID == 1) {%>
-                <td><%= role2.roleID %></td>
-                <% } %>
-                <td>
-                    <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
-                    <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>
-                    <% } else { %>
-                    <a href="/roles2/updateRole2/<%= role2.id %>"><button disabled>update</button></a>
-                    <% } %>
-                </td>
-                <td>
-                    <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true) {%>
-                    <a href="/roles2/showRoles2/<%= role2.id %>" id="roleLink"><button>delete</button></a>
-                    <% } else { %>
-                    <a href="/roles2/showRoles2/<%= role2.id %>" id="role2Link"><button disabled>delete</button></a>
-                    <% } %>
-                </td>
-            </tr>
-        <% }); %>
-    </tbody>
-</table><br>
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
 
+                <br />
+
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <ul>
+                                <div align="center">
+                                    <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/roles2/addRole2'">Add Role</button>
+                                    <% } else { %>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/roles2/addRole2'" disabled>Add Role</button>
+                                    <% } %>
+                                </div>
+                            </ul>
+                            <table id="datatable" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Sort #</th>
+                                    <th>Role Name</th>
+                                    <% if (userAuthID == 1) {%>
+                                    <th>Role ID</th>
+                                    <% } %>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+
+                                </tr>
+                                <tbody>
+                                <% roles2.forEach(function(role2) { %>
+                                <tr>
+                                    <td><%= role2.sortID %></td>
+                                    <td><%= role2.roleName %></td>
+                                    <% if (userAuthID == 1) {%>
+                                    <td><%= role2.roleID %></td>
+                                    <% } %>
+                                    <td>
+                                        <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
+                                        <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>
+                                        <% } else { %>
+                                        <a href="/roles2/updateRole2/<%= role2.id %>"><button disabled>update</button></a>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true) {%>
+                                        <a href="/roles2/showRoles2/<%= role2.id %>" id="roleLink"><button>delete</button></a>
+                                        <% } else { %>
+                                        <a href="/roles2/showRoles2/<%= role2.id %>" id="role2Link"><button disabled>delete</button></a>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                                </tbody>
+                            </table><br>
+                            <!-- footer content -->
+                            <% include ../layout/footer.ejs %>
+                            <!-- /footer content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
+<!-- Datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Google Analytics -->
 
 
 <form action="/dashboard">

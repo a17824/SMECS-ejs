@@ -7,16 +7,21 @@
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
+
+          <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+          <li><a href="/reports/showReports"><i class="fa fa-chart-line fa-lg"></i> Reports <span class="fa fa-chevron-right"></span></a></li>
+          <% } %>
+
+          <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
+          <li><a href="/students/showStudents"><i class="fa fa-graduation-cap fa-lg"></i> Students <span class="fa fa-chevron-right"></span></a></li>
+          <% } %>
+
           <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
             <li><a href="/users/showUsers"><i class="fa fa-users fa-lg"></i> Users <span class="fa fa-chevron-right"></span></a></li>
           <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
-            <li><a href="/students/showStudents"><i class="fa fa-graduation-cap fa-lg"></i> Students <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
-
           <% if (aclSideMenu == null || aclSideMenu.roles2.checkBoxValue == true){%>
-          <li><a href="/roles2/showRoles2"><i class="fa fa-list fa-lg"></i> Roles <span class="fa fa-chevron-right"></span></a></li>
+          <li><a href="/roles2/showRoles2"><i class="fa fa-chess fa-lg"></i> Roles <span class="fa fa-chevron-right"></span></a></li>
           <% } %>
 
           <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
@@ -80,9 +85,7 @@
           </ul>
         </li>
           <% } %>
-          <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-          <li><a href="/reports/showReports"><i class="fa fa-chart-line fa-lg"></i> Reports <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+
           <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
           <li><a href="/alerts/sending/chooseGroup"><i class="fa fa-shipping-fast fa-lg"></i> Send Alert <span class="fa fa-chevron-right"></span></a></li>
           <% } %>
