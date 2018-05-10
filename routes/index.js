@@ -640,6 +640,7 @@ router.post('/alerts/sending/multiSelection', auth.simpleAuth, auth.requireLogin
 
 router.get('/alerts/sending/reviewAlert/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.reviewAlert, function(req, res, next) {});
 router.post('/alerts/sending/reviewAlert', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});
+router.post('/alerts/sending/panic/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});
 
 
 /*RECEIVING ALERTS*/

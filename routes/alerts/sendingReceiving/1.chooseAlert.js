@@ -335,6 +335,11 @@ module.exports.showAlertsPost = function(req, res) {
                 if(alertTemp1.sentRoleIDScope < 1){
                     console.log('No scopes or users to send this alert');
                 }else {
+                    if (req.body.alertID == 1 ) {
+                        redirectAPI = 'panic';
+                        return res.redirect(307, '/alerts/sending/panic/' + alertTemp1._id);
+                    }
+
                     if (req.body.alertID == 2 ||
                         req.body.alertID == 6 ||
                         req.body.alertID == 7 ||
