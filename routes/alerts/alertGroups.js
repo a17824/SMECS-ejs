@@ -5,6 +5,7 @@ var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
 
 /* SHOW ALL AlertGroups. */
+/*
 module.exports.show = function(req, res, next) {
     async.parallel([
         function(callback){
@@ -16,8 +17,8 @@ module.exports.show = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
-        res.render('alertGroups/showAlertGroups',{
+        functions.redirectTabUsers(req, res, 'showUsers');
+        res.render('alertsAndGroups/showAlertsAndGroups',{
             title:'Alert Groups',
             userAuthID: req.user.userPrivilegeID,
             alertGroup: results[0],
@@ -31,6 +32,7 @@ module.exports.show = function(req, res, next) {
         });
     })
 };
+*/
 
 /* ADD AlertGroups. -------------------------------*/
 module.exports.add = function(req, res) {
@@ -66,7 +68,7 @@ module.exports.add = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             console.log('arraySort = ',arraySort);
-            res.render('alertGroups/addAlertGroups',{
+            res.render('alertsAndGroups/alertGroups/addAlertGroups',{
                 title:'Add Alert Group',
                 arraySort: arraySort,
                 array: array,
@@ -133,7 +135,7 @@ module.exports.update = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            res.render('alertGroups/updateAlertGroups',{
+            res.render('alertsAndGroups/alertGroups/updateAlertGroups',{
                 title:'Update Alert Group',
                 userAuthID: req.user.userPrivilegeID,
                 arraySort: arraySort,

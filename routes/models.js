@@ -33,7 +33,8 @@ var UsersSchema = new mongoose.Schema({
     receptionPA: { type: Boolean, default: false},
     pushToken: String,
     redirect: { type: String, default: 'home'},
-    redirectTab: { type: String, default: 'showUsers'},
+    redirectTabUsers: { type: String, default: 'showUsers'},
+    redirectTabAlertGroups: { type: String, default: 'showGroups'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
         groupAlertsLogo: String,
@@ -252,8 +253,8 @@ var AlertSentInfoSchema = new mongoose.Schema({
     studentWithGunSeated: String,
     studentWithGunBehaviour: String,
     evacuateWhereTo: String,
-    busAccidentLocation1: String,           //Accident Location
-    busAccidentLocation2: String,           //Location of Principal CellPhone
+    latitude: String,           //bus accident alert gps
+    longitude: String,           //bus accident alert gps
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...
@@ -350,8 +351,8 @@ var AlertSentTempSchema = new mongoose.Schema({
     studentWithGunSeated: String,
     studentWithGunBehaviour: String,
     evacuateWhereTo: String,
-    busAccidentLocation1: String,           //Accident Location
-    busAccidentLocation2: String,           //Location of Principal CellPhone
+    latitude: String,           //bus accident alert gps
+    longitude: String,           //bus accident alert gps
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...

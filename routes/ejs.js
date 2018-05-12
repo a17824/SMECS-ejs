@@ -2,11 +2,6 @@
 var express = require('express');
 var routerEjs = express.Router();
 var login = require('./authentication/login');
-var auth = require('./authentication/auth');
-var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
-
-
-var login = require('./authentication/login');
 var csrf = require('csurf');
 
 routerEjs.use(csrf());

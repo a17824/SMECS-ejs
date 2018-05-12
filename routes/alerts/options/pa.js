@@ -17,7 +17,7 @@ module.exports.showReceptionUsers = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
+        functions.redirectTabUsers(req, res, 'showUsers');
         res.render('pa/showPaReceptionUsers',{
             title:'PA SYSTEM',
             users: results[0],
@@ -67,7 +67,7 @@ module.exports.showRecorded = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
+        functions.redirectTabUsers(req, res, 'showUsers');
         res.render('pa/showPaRecorded',{
             title:'PA SYSTEM',
             userAuthID: req.user.userPrivilegeID,

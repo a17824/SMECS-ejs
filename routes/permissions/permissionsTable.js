@@ -35,7 +35,7 @@ module.exports.show = function(req, res) {
             res.redirect('/dashboard');
         }
         else {
-            functions.redirectTab(req, res, 'showUsers');
+            functions.redirectTabUsers(req, res, 'showUsers');
             res.render('permissions/showPermissionsTable', {
                 title: 'Permissions Table',
                 userAuthID: req.user.userPrivilegeID,

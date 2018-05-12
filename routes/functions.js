@@ -29,16 +29,30 @@ module.exports.redirectPage = function(req, res, page) {
     });
 };
 
-module.exports.redirectTab = function(req, res, tab) {
+module.exports.redirectTabUsers = function(req, res, tab) {
     if(req.body.tab)
         tab = req.body.tab;
 
-    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirectTab:tab}}, {new: true}, function(err, user){
+    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirectTabUsers:tab}}, {new: true}, function(err, user){
         if(err){
             console.log("Something wrong when updating user.redirect!");
         }
         else {
-            console.log('successfully updated user.redirect');
+            console.log('successfully updated user.redirectTabUsers');
+        }
+    });
+};
+
+module.exports.redirectTabAlertGroups = function(req, res, tab) {
+    if(req.body.tab)
+        tab = req.body.tab;
+
+    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirectTabAlertGroups:tab}}, {new: true}, function(err, user){
+        if(err){
+            console.log("Something wrong when updating user.redirect!");
+        }
+        else {
+            console.log('successfully updated user.redirectTabAlertGroups');
         }
     });
 };

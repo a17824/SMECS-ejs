@@ -23,11 +23,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+      <!-- Datatables -->
+      <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
-    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+      <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
 
   </head>
 
@@ -37,12 +42,11 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
 
-
             <!-- menu profile quick info -->
             <% include ../layout/menuProfile.ejs %>
             <!-- /menu profile quick info -->
 
-            <br />
+            <br>
 
             <!-- sidebar menu -->
             <% include ../layout/sideMenu.ejs %>
@@ -56,7 +60,6 @@
         <!-- /top navigation -->
 
         <div class="right_col" role="main">
-          <div class="clearfix"></div>
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
@@ -81,13 +84,14 @@
                       <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiImage'" disabled>Add Multiple Students Photos</button>
                       <% } %>
                       </div>
-
+                      <br>
 
                   </ul>
-                  <table id="datatable" class="table table-hover">
+                  <table id="datatable-buttons" class="table table-hover">
                     <thead>
                       <tr>
-                        <th >Photo</th>
+                          <th></th>
+                        <th>Photo</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>ID</th>
@@ -100,16 +104,17 @@
                     <tbody>
                       <% students.forEach(function(student) { %>
                       <tr>
+                          <td></td>
                           <% if (student.photo == "" || student.photo == undefined) { %>
-                          <td align="center">
+                          <td>
                               <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable">add</button></a>
+                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary">add</button></a>
                               <% } else { %>
-                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" class="inTable" disabled>add</button></a>
+                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" disabled>add</button></a>
                               <% } %>
                           </td>
                           <% } else { %>
-                          <td align="center">
+                          <td >
                               <a href="/photos/addPhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
                           </td>
                           <% } %>
@@ -168,8 +173,22 @@
     <!-- iCheck -->
     <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
-    <!-- Datatables -->
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+    !-- Datatables -->
+    <script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+    <script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
 
     <!-- Custom Theme Scripts -->
     <script src="/public/gentelella/build/js/custom.js"></script>

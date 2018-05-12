@@ -38,7 +38,7 @@ function showTable(req, res, typeAclAlert, title){
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
+        functions.redirectTabUsers(req, res, 'showUsers');
         res.render('alerts/showAlertPermissionsTable',{
             title: title,
             roles2Count: results[0],

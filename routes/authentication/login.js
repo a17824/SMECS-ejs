@@ -55,7 +55,6 @@ router.post('/register', function(req, res) {
  */
 module.exports.getLogin = function(req, res, next) {
 
-    console.log('login login get');
     res.render('login', {title: 'SMECS Login', error: "", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     //res.render('login', { title: 'SMECS Login', error: ""});
 };
@@ -117,8 +116,8 @@ module.exports.postLogin = function(req, res, next) {
     else { //run SMECS EJS
 
         models.Users.findOne({email: req.body.email.toLowerCase()}, function (err, user) {
-            if (!user || user.softDeleted !== null) {
-                //Parent Self Registration Login
+
+            if (!user || user.softDeleted !== null) {   //Parent Self Registration Login
                 models.ParentSelfRegistration.findOne({email: req.body.email.toLowerCase()}, function (err, parentSelfRegistration) {
                     if (!parentSelfRegistration) {
                         res.render('login', {error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
@@ -131,16 +130,16 @@ module.exports.postLogin = function(req, res, next) {
                         }
                     }
                 });
-                //END OF checks for users in UtilityUsers database
-            } else {
+                //END OF Parent Self Registration Login
+
+            } else {    //Users  Login
                 if (bcrypt.compareSync(req.body.pin, user.pin)) { // if user is found and password is right
                     req.session.user = user;
                     res.redirect('/dashboard');
-                    //}
+
                 } else {
                     //res.status(400).send('Current password does not match');
-                    res.render('login', {error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
-                    //res.render('login', { error: "ERROR: Incorrect email or pin."});
+                    res.render('login', {error: "ERROR: Incorrect email or pin.", warning: '', csrfToken: req.csrfToken()}); //final error message is been written in login.ejs
                 }
             }
         });

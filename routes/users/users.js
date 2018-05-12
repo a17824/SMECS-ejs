@@ -37,7 +37,7 @@ module.exports.show = function(req, res, next) {
                 aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo,
-                redirectTab: req.user.redirectTab
+                redirectTab: req.user.redirectTabUsers
             });
         }
     })

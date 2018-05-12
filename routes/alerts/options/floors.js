@@ -22,7 +22,7 @@ module.exports.show = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
+        functions.redirectTabUsers(req, res, 'showUsers');
         res.render('floors/showFloors',{
             title:'FLOORS',
             userAuthID: req.user.userPrivilegeID,

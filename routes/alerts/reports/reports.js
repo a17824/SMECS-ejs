@@ -18,7 +18,7 @@ module.exports.reportsAlerts = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
+        functions.redirectTabUsers(req, res, 'showUsers');
         res.render('reports/showReports',{
             title: 'REPORTS SENT',
             reportSent: results[0],

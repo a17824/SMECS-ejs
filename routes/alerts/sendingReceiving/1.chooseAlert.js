@@ -97,7 +97,7 @@ module.exports.showGroups = function(req, res) {
                 });
 
             }else{  // run SMECS EJS
-                functions.redirectTab(req, res, 'showUsers');
+                functions.redirectTabUsers(req, res, 'showUsers');
                 res.render('alerts/sending/chooseGroup',{
                     title:'Choose Alert',
                     aclReal: arrayGroupsReal,
@@ -211,7 +211,7 @@ module.exports.showAlerts = function(req, res) {
                 });
 
             }else{  // run SMECS EJS
-                functions.redirectTab(req, res, 'showUsers');
+                functions.redirectTabUsers(req, res, 'showUsers');
                 res.render('alerts/sending/chooseAlert',{
                     title:'Choose Alert',
                     alert: alert,

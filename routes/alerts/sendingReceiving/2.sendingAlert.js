@@ -317,7 +317,6 @@ module.exports.postNotes = function(req, res) {
                     alert.alertNameID == 9 ||
                     alert.alertNameID == 10 ||
                     alert.alertNameID == 11 ||
-                    alert.alertNameID == 12 ||
                     alert.alertNameID == 13 ||
                     alert.alertNameID == 14 ||
                     alert.alertNameID == 15 ||
@@ -351,6 +350,12 @@ module.exports.postNotes = function(req, res) {
 
                     alert.evacuateWhereTo = req.body.whereToEvacuate;
                     allFloorsButtonHidden = false; //API user
+                    alert.save();
+                }
+                if (alert.alertNameID == 12 ) {
+
+                    alert.latitude = req.body.latitude;
+                    alert.longitude = req.body.longitude;
                     alert.save();
                 }
                 if (alert.alertNameID == 27 ) {

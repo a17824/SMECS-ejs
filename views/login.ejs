@@ -2,119 +2,130 @@
 <html lang="en">
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <!-- Meta, title, CSS, favicons, etc. -->
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>SMECS Login</title>
+    <!-- Meta, Refresh page every 5 minutes. -->
+    <meta http-equiv="refresh" content="300">
 
-  <!-- Bootstrap -->
-  <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <!-- NProgress -->
-  <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- iCheck -->
-  <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-  <!-- bootstrap-progressbar -->
-  <link href="/public/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
-  <!-- PNotify -->
-  <link href="/public/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
-  <link href="/public/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
-  <link href="/public/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+    <title>SMECS Login</title>
 
-  <!-- Custom Theme Style -->
-  <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="/public/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- PNotify -->
+    <link href="/public/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
 </head>
 
 <body class="login">
-  <div class="login_wrapper">
+<div class="login_wrapper">
     <div class="animate form login_form">
-      <section class="login_content">
-        <% if (error != "") { %>
-          <div class="alert alert-danger" role="alert">
-            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            Incorrect email or pin
-          </div>
-        <% }; %>
-          <% if ( error_messages ) { %>
-        <p style="color: red"><%= error_messages %></p>
-          <% } %>
-        <form action="/login" method="post">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <h1>Login</h1>
-          <div>
-            <input type="email" name="email" class="form-control" placeholder="Email" required="" />
-          </div>
-          <div>
-            <input type="password" name="pin" class="form-control" placeholder="Pin" required="" />
-          </div>
-          <div>
-            <button class="btn btn-default submit" type="submit" value="Login">Login</button>
-            <a class="to-register" href="#register">Lost your password?</a>
-          </div>
-          <div class="clearfix"></div>
-          <div class="separator">
-            <div class="clearfix"></div>
-            <br>
-            <div>
-              <h1>
-                <i class="fa fa-graduation-cap"></i> SMECS</h1>
-              <p>©2018 All Rights Reserved.</p>
+        <section class="login_content">
+
+            <% if (error) { %>
+            <% if (error == '403') { %>
+            <div class="alert alert-warning" role="alert">
+                <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                Sorry, we will need you to input your email and pin again
             </div>
-          </div>
-        </form>
-      </section>
+            <% }else { %>
+            <div class="alert alert-danger" role="alert">
+                <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                Incorrect email or pin, please try again.
+            </div>
+            <% } %>
+            <% } %>
+
+            <% if ( error_messages ) { %>
+            <p style="color: red"><%= error_messages %></p>
+            <% } %>
+            <form action="/login" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <h1>Login</h1>
+                <div>
+                    <input type="email" name="email" class="form-control" placeholder="Email" required="" />
+                </div>
+                <div>
+                    <input type="password" name="pin" class="form-control" placeholder="Pin" required="" />
+                </div>
+                <div>
+                    <button class="btn btn-default submit" type="submit" value="Login">Login</button>
+                    <a class="to-register" href="#register">Lost your password?</a>
+                </div>
+                <div class="clearfix"></div>
+                <div class="separator">
+                    <div class="clearfix"></div>
+                    <br>
+                    <div>
+                        <h1>
+                            <i class="fa fa-graduation-cap"></i> SMECS</h1>
+                        <p>©2018 All Rights Reserved.</p>
+                    </div>
+                </div>
+            </form>
+        </section>
     </div>
 
     <div id="register" class="animate form registration_form">
-      <section class="login_content">
-        <h1>Reset Pin</h1>
-        <form action="/forgot" method="post">
+        <section class="login_content">
+            <h1>Reset Pin</h1>
+            <form action="/forgot" method="post">
 
-          <input type="email" name="email" class="form-control" placeholder="Email" required="" />
+                <input type="email" name="email" class="form-control" placeholder="Email" required="" />
 
-          <button class="btn btn-default submit" type="submit">Reset Password</button>
+                <button class="btn btn-default submit" type="submit">Reset Password</button>
 
-          <div class="clearfix"></div>
+                <div class="clearfix"></div>
 
-          <div class="separator">
-            <p class="change_link">Already a member ?
-              <a href="#signin" class="to_register"> Log in </a>
-            </p>
+                <div class="separator">
+                    <p class="change_link">Already a member ?
+                        <a href="#signin" class="to_register"> Log in </a>
+                    </p>
 
-            <div class="clearfix"></div>
-            <br />
+                    <div class="clearfix"></div>
+                    <br />
 
-            <div>
-              <h1>
-                <i class="fa fa-graduation-cap"></i> SMECS</h1>
-              <p>©2018 All Rights Reserved.</p>
-            </div>
-          </div>
-        </form>
-      </section>
+                    <div>
+                        <h1>
+                            <i class="fa fa-graduation-cap"></i> SMECS</h1>
+                        <p>©2018 All Rights Reserved.</p>
+                    </div>
+                </div>
+            </form>
+        </section>
     </div>
-  </div>
-  <!-- jQuery -->
-  <script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap -->
-  <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- FastClick -->
-  <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
-  <!-- NProgress -->
-  <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
-  <!-- bootstrap-progressbar -->
-  <script src="/public/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-  <!-- iCheck -->
-  <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
-  <!-- PNotify -->
-  <script src="/public/gentelella/vendors/pnotify/dist/pnotify.js"></script>
-  <script src="/public/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
-  <script src="/public/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+</div>
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="/public/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- PNotify -->
+<script src="/public/gentelella/vendors/pnotify/dist/pnotify.js"></script>
+<script src="/public/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
+<script src="/public/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
 </body>
 
 </html>

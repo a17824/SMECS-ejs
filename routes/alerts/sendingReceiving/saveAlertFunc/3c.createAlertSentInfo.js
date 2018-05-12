@@ -76,7 +76,9 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
         busDelayedAhead: tempAlert.busDelayedAhead,
         busTimeChanged: tempAlert.busTimeChanged,
         busTimeChangedEmail: tempAlert.busTimeChangedEmail,
-        sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope
+        sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope,
+        latitude: tempAlert.latitude,
+        longitude: tempAlert.longitude
 
     });
     alert1.save();

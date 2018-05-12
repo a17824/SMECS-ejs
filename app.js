@@ -88,6 +88,14 @@ app.use(function(req, res, next) {
     next(err);
 });
 
+
+// catch 403 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Forbidden');
+    err.status = 403;
+    res.render('login', {error: "403", csrfToken: req.csrfToken()});
+});
+
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {

@@ -3,6 +3,8 @@ var models = require('./../models');
 var jwt = require('jsonwebtoken');
 var config = require('../api/config');
 
+
+
 /**
  * A simple authentication middleware for Express.
  *
@@ -44,6 +46,8 @@ module.exports.requireLogin = function(req, res, next) {
         next();
     }
 };
+
+
 
 
 /*****  CALL HERE NOTIFICATION API  ****

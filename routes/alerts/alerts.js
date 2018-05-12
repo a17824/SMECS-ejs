@@ -6,6 +6,7 @@ var slug = require('slug');
 var functions = require('./../functions');
 
 /* SHOW Active Alerts. */
+/*
 module.exports.show = function(req, res, next) {
     async.parallel([
         function(callback){
@@ -21,8 +22,8 @@ module.exports.show = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTab(req, res, 'showUsers');
-        res.render('alerts/showAlerts',{
+        functions.redirectTabUsers(req, res, 'showUsers');
+        res.render('alertsAndGroups/showAlertsAndGroups',{
             title:'Alerts',
             userAuthID: req.user.userPrivilegeID,
             alert: results[0],
@@ -37,6 +38,7 @@ module.exports.show = function(req, res, next) {
         });
     })
 };
+*/
 /* end of SHOW active Alerts. */
 
 /* SHOW SoftDeleted ALERTS. */
@@ -51,7 +53,8 @@ module.exports.showSoftDeleted = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('alerts/addAlerts',{
+        functions.redirectPage(req, res, 'addAlerts');
+        res.render('alertsAndGroups/alerts/addAlerts',{
             title:'Add Alerts',
             userAuthID: req.user.userPrivilegeID,
             alert: results[0],
@@ -106,7 +109,7 @@ module.exports.create = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            res.render('alerts/createAlert',{
+            res.render('alertsAndGroups/alerts/createAlert',{
                 title:'Create Alert',
                 arraySort: arraySort,
                 array: array,
@@ -151,7 +154,7 @@ module.exports.createPost = function(req, res) {
                 typeAclAlert = 'AclAlertsTest';
                 addAclAlerts(req, res, typeAclAlert);
 
-                return res.send({redirect:'/alerts/showAlerts'})
+                return res.send({redirect:'/alertGroups/showAlertGroups'})
             }
             //-------- adding ACL ALERTS
             function addAclAlerts(req, res, typeAclAlert){
@@ -236,7 +239,7 @@ module.exports.update = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('alerts/updateAlerts', {
+            res.render('alertsAndGroups/alerts/updateAlerts', {
                 title: 'Update Alert',
                 arraySort: arraySort,
                 array: array,
@@ -278,7 +281,7 @@ module.exports.updatePost = function(req, res) {
                     typeAclAlert = 'AclAlertsTest';
                     updateAclAlerts(typeAclAlert);
 
-                    res.send({redirect: '/alerts/showAlerts'});
+                    res.send({redirect: '/alertGroups/showAlertGroups'});
                 }
                 //UPDATE ACL ALERTS--------
                 function updateAclAlerts(typeAclAlert){
@@ -330,8 +333,9 @@ module.exports.procedure = function(req, res) {
 
     ],function(err, results){
 
-        res.render('alerts/procedure', {
+        res.render('alertsAndGroups/alerts/procedure', {
             userAuthID: req.user.userPrivilegeID,
+            userAuthRedirect: req.user.redirect,
             alert: results[0],
             aclModifyProcedure: results[1], //aclPermissions modifyProcedure
             aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
@@ -351,7 +355,6 @@ module.exports.procedurePost = function(req, res) {
                 console.log(err);
                 return res.status(409).send('showAlert')
             }
-            //res.send({redirect:'/alerts/showAlerts'});
         });
     });
 };
@@ -361,10 +364,11 @@ module.exports.procedurePost = function(req, res) {
 /* SoftDeleted Alerts. */
 module.exports.softDelete = function(req, res) {
     var alertToSoftDelete = req.params.id;
+
     models.Alerts.findById({'_id': alertToSoftDelete}, function(err, alert){
         alert.softDeleted = true;
         alert.save();
-        res.redirect('/alerts/showAlerts');
+        res.redirect('/alertGroups/showAlertGroups');
 
         //UPDATE ACL ALERTS--------
         var aclAlertsToUpdate =  alert.alertID;
@@ -469,7 +473,7 @@ module.exports.show911UserRoles = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('alerts/crud911Users',{
+        res.render('alertsAndGroups/alerts/crud911Users',{
             title: results[0].alertName,
             utility: results[0],
             allUtilUsers: results[1],
@@ -493,7 +497,7 @@ module.exports.update911UserRolesPost = function(req, res) {
             utility.alertRequest911Call = 'false';
         }
         utility.save();
-        return res.send({redirect:'/alerts/showAlerts'})
+        return res.send({redirect:'/alertGroups/showAlertGroups'})
     });
 };
 /*-------------------------end of SHOW/UPDATE/DELETE 911 USER ROLES*/

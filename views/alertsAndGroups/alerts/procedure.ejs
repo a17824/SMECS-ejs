@@ -108,9 +108,14 @@
     <% } %>
 </form>
 
-
-<form action="/alerts/showAlerts">
+<% if (userAuthRedirect == 'addAlerts') {%>
+<form action="/alerts/addAlerts">
     <input type="submit" value="Back">
 </form>
+<% } else { %>
+<form action="/alertGroups/showAlertGroups">
+    <input type="submit" value="Back">
+</form>
+<% } %>
 </body>
 </html>

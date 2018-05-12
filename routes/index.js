@@ -1,9 +1,7 @@
 //Dependencies
 var express = require('express');
 var router = express.Router();
-
 var schedule = require('node-schedule');
-
 var users = require('./users/users');
 var students = require('./students/students');
 var parentsSelfRegistration = require('./parentsSelfRegistration/parentsSelfRegistration');
@@ -18,7 +16,6 @@ var alerts = require('./alerts/alerts');
 var dashboard = require('./dashboard');
 var reports = require('./alerts/reports/reports');
 var photos = require('./photos/addUpdatePhoto');
-
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 
 var auth = require('./authentication/auth');
@@ -36,7 +33,7 @@ var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var procedureR = require('./alerts/sendingReceiving/procedureR');
 var functions = require('./functions');
-
+var showAlertsAndGroups = require('./alerts/showAlertsAndGroups');
 
 
 //Run this function once a month
@@ -297,8 +294,8 @@ router.get('/privilege/showPrivilege/:id', auth.simpleAuth, auth.requireLogin, p
 
 
 
-/* SHOW ALL AlertGroups. */
-router.get('/alertGroups/showAlertGroups', auth.simpleAuth, auth.requireLogin, alertGroups.show, function(req, res, next) {
+/* SHOW ALL AlertGroups and Alerts. */
+router.get('/alertGroups/showAlertGroups', auth.simpleAuth, auth.requireLogin, showAlertsAndGroups.show, function(req, res, next) {
 });
 
 /* ADD AlertGroups. -------------------------------*/
@@ -322,8 +319,8 @@ router.get('/alertGroups/showAlertGroups/:id', auth.simpleAuth, auth.requireLogi
 
 
 /* SHOW ALL Alerts. */
-router.get('/alerts/showAlerts', auth.simpleAuth, auth.requireLogin, alerts.show, function(req, res, next) {
-});
+//router.get('/alerts/showAlerts', auth.simpleAuth, auth.requireLogin, alerts.show, function(req, res, next) {
+//});
 
 /* CREATE Alert. -------------------------------*/
 router.get('/alerts/createAlert', auth.simpleAuth, auth.requireLogin, alerts.create, function(req, res) {
@@ -655,7 +652,8 @@ router.get('/alerts/receiving/procedureR/:id', auth.simpleAuth, auth.requireLogi
 
 
 /* Tab Redirect ------------------*/
-router.post('/tabRedirectTo', auth.simpleAuth, auth.requireLogin, functions.redirectTab, function(req, res) {});
+router.post('/redirectTabUsers', auth.simpleAuth, auth.requireLogin, functions.redirectTabUsers, function(req, res) {});
+router.post('/redirectTabAlertGroups', auth.simpleAuth, auth.requireLogin, functions.redirectTabAlertGroups, function(req, res) {});
 
 
 
