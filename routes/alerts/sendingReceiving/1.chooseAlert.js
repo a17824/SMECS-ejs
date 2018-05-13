@@ -337,7 +337,8 @@ module.exports.showAlertsPost = function(req, res) {
                 }else {
                     if (req.body.alertID == 1 ) {
                         redirectAPI = 'panic';
-                        return res.redirect(307, '/alerts/sending/panic/' + alertTemp1._id);
+                        redirectEJS = '/alerts/sending/panic/' + alertTemp1._id;
+
                     }
 
                     if (req.body.alertID == 2 ||
@@ -392,7 +393,10 @@ module.exports.showAlertsPost = function(req, res) {
                             _id: alertTemp1._id
                         });
                     }else{  // run SMECS EJS
-                        return res.send({redirect: redirectEJS})
+                        if (req.body.alertID == 1 )
+                            return res.redirect(307, redirectEJS);
+                        else
+                            return res.send({redirect: redirectEJS})
                     }
                 }
             }

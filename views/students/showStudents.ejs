@@ -108,9 +108,9 @@
                           <% if (student.photo == "" || student.photo == undefined) { %>
                           <td>
                               <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary">add</button></a>
+                              &ensp;<a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-round btn-info">add</button></a>
                               <% } else { %>
-                              <a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                              &ensp;<a href="/students/addPhoto/<%= student.id %>"><button class="btn btn-round btn-info" disabled>add</button></a>
                               <% } %>
                           </td>
                           <% } else { %>
@@ -129,8 +129,11 @@
                           <td >
                             <% if (student.parentOf.length > 0) { %>
                             <% for (var x = 0; x < student.parentOf.length; x++) {%>
-                            <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
-                            <% } %>
+
+                              <p class="image">
+                                  <img src="/photosUsers/5858436a4f98f0ac16fd679b_01015.BMP" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                              </p>
+                              <% } %>
                             <% } %>
                           </td>
                           <td align="center">

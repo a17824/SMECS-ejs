@@ -93,7 +93,16 @@
             missingPopulate('#timeSelect');
             }
             /********** end of Last Time seen missing student ************/
-
+            if(alertID.value == 12) {
+                var destLatitude = '';
+                var destLongitude = '';
+                if (alertID.value == 12) {
+                    navigator.geolocation.getCurrentPosition(function (location) {
+                        destLatitude = location.coords.latitude;
+                        destLongitude = location.coords.longitude;
+                    });
+                }
+            }
 
             $("#<%= alert.id %>").click(function(){
                 var alert_ID=$(this).attr('id');
@@ -133,6 +142,17 @@
                         time = hours + ':' + minutes + ' ' + ampm;
                     }
                 }
+
+                if(alertNameID == 12) {
+                    if (document.getElementById("busAccidentNoInjuries") === null) {
+                        var busAccidentNoInjuries = false;
+                    } else {
+                        var busAccidentNoInjuries = document.getElementById("busAccidentNoInjuries").checked;
+                    }
+
+
+                }
+
                 if(alertNameID == 27){
 
                     var busTime2;
@@ -179,7 +199,10 @@
                         clothesWearing: clothesWearing,
                         seat: seat,
                         studentBehaviour: studentBehaviour,
-                        whereToEvacuate: whereToEvacuate
+                        whereToEvacuate: whereToEvacuate,
+                        busAccidentNoInjuries: busAccidentNoInjuries,
+                        latitude: destLatitude,
+                        longitude: destLongitude
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -263,6 +286,16 @@
     <% } %>
     <% } %>
 
+
+    <% if (alert.alertNameID == 12) {%>
+        <label for="busAccidentNoInjuries"><b>No injuries:</b></label>
+        <% if (alert.busAccidentNoInjuries) { %>
+            <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= alert.busAccidentNoInjuries %>" checked>
+        <% }else { %>
+            <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= alert.busAccidentNoInjuries %>">
+        <% } %>
+    <br><br>
+    <% } %>
 
     <% if (alert.alertNameID == 6) {%>
     <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>

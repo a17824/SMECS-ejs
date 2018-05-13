@@ -4,6 +4,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/receiveAlert.css' />
 
+
+    <% var latidtude2 %>
     <!-- Alert that requires FLOOR -->
     <% if (info.alertNameID == 2 ||
             info.alertNameID == 4  ||
@@ -40,8 +42,18 @@
     <% } %>
     <!-- end of Alert that requires FLOOR -->
 
+
     <script>
             $(document).ready(function(){
+
+                <!-- Alert that requires GPS -->
+                var destLatitude, destLongitude;
+                navigator.geolocation.getCurrentPosition(function(location) {
+                    destLatitude = location.coords.latitude;
+                    destLongitude = location.coords.longitude;
+                   });
+
+
 
                 // Alert UTILITY FAILURE OR REQUEST ASSISTANCE
                 var alert_ID, alertNameID, alertName, requestAssistance, utilityName, smecsApp, email, call;
@@ -71,7 +83,9 @@
                             utilityName: utilityName,
                             raSmecsApp: smecsApp,
                             raEmail: email,
-                            raCall: call
+                            raCall: call,
+                            latitude: destLatitude,
+                            longitude: destLongitude
 
                         }, function (data) {
                             if (data === 'done') {
@@ -239,6 +253,27 @@
     <textarea id="whereToEvacuate" rows="2"  cols="33" placeholder="n/a" readonly><%= info.evacuateWhereTo %></textarea><br><br>
 <% } %>
 
+<!-- Alert BUS TRANSPORTATION -->
+<% if (info.alertNameID == 12 ) {%>
+<label for="busAccidentNoInjuries"><b>No injuries:</b></label>
+<% if (info.busAccidentNoInjuries) { %>
+<input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" checked disabled>
+<% }else { %>
+<input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" disabled>
+<% } %>
+<br><br>
+
+<p id="demo2"></p>
+<input type="hidden" id="demo" value="">
+
+<script>
+
+</script>
+
+<!-- <iframe src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d378757.6250705166!2d-71.4861799315366!3d42.12794243510983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m5!1s0x89e37f3cc09fed65%3A0x97b42ec0b39147df!2sSt+Theresa+of+Avila+School%2C+Boston%2C+MA!3m2!1d42.2780798!2d-71.157955!4m3!3m2!1d41.9224861!2d-71.293221!5e0!3m2!1sen!2sus!4v1481423770414" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+<br><br>
+-->
+<% } %>
 
 <% if (info.alertNameID == 27 ) {%>
 <label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
@@ -268,11 +303,10 @@
     <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
 <% } %>
 
-<!-- Alert BUS TRANSPORTATION -->
-<% if (info.alertNameID == 12 ) {%>
-<iframe src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d378757.6250705166!2d-71.4861799315366!3d42.12794243510983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m5!1s0x89e37f3cc09fed65%3A0x97b42ec0b39147df!2sSt+Theresa+of+Avila+School%2C+Boston%2C+MA!3m2!1d42.2780798!2d-71.157955!4m3!3m2!1d41.9224861!2d-71.293221!5e0!3m2!1sen!2sus!4v1481423770414" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
-<br><br>
-<% } %>
+
+
+
+
 
 
 

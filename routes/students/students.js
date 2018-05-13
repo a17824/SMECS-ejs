@@ -94,7 +94,8 @@ module.exports.addPost = function(req, res) {
                             var user = {
                                 _id: users[i]._id,
                                 parentFirstName: users[i].firstName,
-                                parentLastName: users[i].lastName
+                                parentLastName: users[i].lastName,
+                                parentPhoto: users[i].photo
                             };
                             student.push(user);
                             addParentArray.push(users[i]._id);
@@ -290,7 +291,8 @@ module.exports.updatePost = function(req, res) {
                                 var user = {
                                     _id: users[i]._id,
                                     parentFirstName: users[i].firstName,
-                                    parentLastName: users[i].lastName
+                                    parentLastName: users[i].lastName,
+                                    parentPhoto: users[i].photo
                                 };
                                 student.parentOf.push(user);
                                 addParentArray.push(users[i]._id);
@@ -779,7 +781,8 @@ function addDeleteStudentsParents(res,busTransportation) {
                 var parent = {
                     _id: user._id,
                     parentFirstName: user.firstName,
-                    parentLastName: user.lastName
+                    parentLastName: user.lastName,
+                    parentPhoto: user.photo
                 };
                 async.eachSeries(user.parentOf, function (child, callback1) { //loop through array
                     if (!child) {

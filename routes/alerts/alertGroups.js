@@ -231,9 +231,10 @@ module.exports.delete = function(req, res) {
 
             if (result) {
                 console.log("Alert Group NOT deleted");
-                return res.status(409).send(' ALERT! ' + alertGroup.alertTypeName + ' Group not deleted because there are Alerts using this Alert Group. Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.')
-            }
-            else {
+                //return res.status(409).send(' ALERT! ' + alertGroup.alertTypeName + ' Group not deleted because there are Alerts using this Alert Group. Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.');
+                req.flash('error_messages', ' Attention! ' + alertGroup.alertTypeName + ' Group not deleted because there are Alerts using this Alert Group. <br> Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.');
+                res.redirect('/alertGroups/showAlertGroups');
+            } else {
                 models.AlertsGroup.remove({'_id': alertGroupToDelete}, function(err) {
                     //res.send((err === null) ? { msg: 'Role not deleted' } : { msg:'error: ' + err });
                     return res.redirect('/alertGroups/showAlertGroups');

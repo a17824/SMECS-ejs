@@ -109,8 +109,22 @@ module.exports.addParentInStudentDocument = function(user, newParentsArray) {
     var parent = {
         _id: user._id,
         parentFirstName: user.firstName,
-        parentLastName: user.lastName
+        parentLastName: user.lastName,
+        parentPhoto: user.photo
     };
+
+
+    models.Students.update({studentID: {$in: newParentsArray}},
+        { name : 'Ted', age : 50 }, { upsert : true },
+        function (err) {
+            if(err){
+                console.log('student not updated successfully');
+                throw err;
+            }else {
+                console.log('"parentOf" added successfully on STUDENT database');
+            }
+        });
+
     //find student with id = to 'parents[i]' -> {'_id': parents[i]
     //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
     models.Students.update({studentID: {$in: newParentsArray}, 'parentOf._id': {$ne: parent._id}},
@@ -124,6 +138,21 @@ module.exports.addParentInStudentDocument = function(user, newParentsArray) {
                 console.log('"parentOf" added successfully on STUDENT database');
             }
         });
+
+    /*
+    models.Students.find({studentID: {$in: newParentsArray}}, function (err, students) {
+        if(err)
+            console.log('err - ',err);
+        else{
+            if(students.length < 1)
+                console.log('users found in student parents collection to update');
+            else{
+
+            }
+        }
+        });
+        */
+
 };
 
 

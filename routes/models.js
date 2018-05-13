@@ -19,7 +19,8 @@ var UsersSchema = new mongoose.Schema({
     parentOf: [{
         studentID: Number,
         studentFirstName: String,
-        studentLastName: String
+        studentLastName: String,
+        studentPhoto: String
     }],
     companyName: String,
     contactName: String,
@@ -65,6 +66,7 @@ var UsersAddTempSchema = new mongoose.Schema({
         studentID: Number,
         studentFirstName: String,
         studentLastName: String,
+        photo: String
     }],
     parentOfOld: [],    //for back button on ejs to be able to get values
     studentsWithParents: [],
@@ -116,6 +118,7 @@ var StudentsSchema = new mongoose.Schema({
     parentOf: [{
         parentFirstName: String,
         parentLastName: String,
+        parentPhoto: String
     }]
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Students"}); //stops Mongoose of giving plurals to our collections names
@@ -255,6 +258,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     latitude: String,           //bus accident alert gps
     longitude: String,           //bus accident alert gps
+    busAccidentNoInjuries : { type: Boolean, default: false },
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...
@@ -353,6 +357,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     latitude: String,           //bus accident alert gps
     longitude: String,           //bus accident alert gps
+    busAccidentNoInjuries : { type: Boolean, default: false },
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...

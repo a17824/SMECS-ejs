@@ -26,7 +26,7 @@ module.exports.showFloor = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-console.log('results[2] = ',results[2]);
+
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -356,6 +356,7 @@ module.exports.postNotes = function(req, res) {
 
                     alert.latitude = req.body.latitude;
                     alert.longitude = req.body.longitude;
+                    alert.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
                     alert.save();
                 }
                 if (alert.alertNameID == 27 ) {

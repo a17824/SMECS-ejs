@@ -10,7 +10,6 @@ var functions = require('./../../functions');
 
 
 module.exports.reviewAlert = function(req, res) {
-    console.log('111111111111111');
     async.parallel([
         function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
         function(callback){models.Floors.find().exec(callback);},
@@ -64,8 +63,8 @@ module.exports.reviewAlert = function(req, res) {
 };
 
 module.exports.postReviewAlert = function(req, res, next) {
-
     var alertToUpdate1;
+
     if(req.body.alertToUpdate == 0) //panic alert
         alertToUpdate1 = req.params.id;
     else
@@ -75,8 +74,6 @@ module.exports.postReviewAlert = function(req, res, next) {
     async.waterfall([
         function (callback) {
             models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
-                console.log('tempAlert = ',tempAlert);
-
 
                 // Alert that requires FLOOR function
                 if (tempAlert.alertNameID == 2 ||

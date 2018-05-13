@@ -645,7 +645,8 @@ module.exports.updatePost = function(req, res) {
                                 _id: students[i]._id,
                                 studentID: students[i].studentID,
                                 studentFirstName: students[i].firstName,
-                                studentLastName: students[i].lastName
+                                studentLastName: students[i].lastName,
+                                studentPhoto: students[i].lastName
                             };
                             if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
                                 //studentsWithParents.push(students[i]._id);

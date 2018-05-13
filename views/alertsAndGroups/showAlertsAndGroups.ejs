@@ -131,13 +131,23 @@
 
                                     <% if (userAuthID == 1) {%>
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/alerts/createAlert'">Create Alert</button>
-                                    <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/alerts/createAlert'" disabled>Create Alert</button>
                                     <% } %>
                                     <% if (aclAddAlert == null || aclAddAlert.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/alerts/addAlerts'">Add/Delete Alert</button>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/alerts/addAlerts'">Add Alert</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/alerts/addAlerts'" disabled>Add/Delete Alert</button>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/alerts/addAlerts'" disabled>Add Alert</button>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+                            <ul>
+                                <% console.log('error_messages = ',error_messages) %>
+                                <div align="center" style="size: 100px">
+                                    <% if ( error_messages.length >= 1) { %>
+                                    <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                    <strong><%- error_messages %></strong>
+                                    </div>
                                     <% } %>
 
                                 </div>
@@ -287,9 +297,9 @@
 
                                             <td>
                                                 <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
-                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable">show</button></a>
+                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info">show</button></a>
                                                 <% } else { %>
-                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable" disabled>show</button></a>
+                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info" disabled>show</button></a>
                                                 <% } %>
                                             </td>
                                             <td>
@@ -348,7 +358,7 @@
 <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>

@@ -173,9 +173,9 @@
                                             <% if (user.photo == "" || user.photo == undefined) { %>
                                             <td >
                                                 <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-info">add</button></a>
                                                 <% } else { %>
-                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-info" disabled>add</button></a>
                                                 <% } %>
                                             </td>
                                             <% } else { %>
@@ -264,9 +264,9 @@
                                             <% if (user.photo == "" || user.photo == undefined) { %>
                                             <td align="center">
                                                 <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-primary">add</button></a>
+                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-info">add</button></a>
                                                 <% } else { %>
-                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-primary" disabled>add</button></a>
+                                                <a href="/photos/addPhoto/<%= user.id %>"><button class="btn btn-info" disabled>add</button></a>
                                                 <% } %>
                                             </td>
                                             <% } else { %>
