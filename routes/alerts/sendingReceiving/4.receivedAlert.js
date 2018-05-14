@@ -7,6 +7,7 @@ var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
 
 module.exports.receivedAlert = function(req, res) {
+
     async.parallel([
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
         function(callback){models.Floors.find().exec(callback);},

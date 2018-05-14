@@ -4,6 +4,27 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/receiveAlert.css' />
 
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw&callback=initMap"
+            type="text/javascript"></script>
+
+    <script>
+
+            var principalLatitude = '';
+            var principalDestLongitude = '';
+            navigator.geolocation.getCurrentPosition(function (location) {
+                principalLatitude = location.coords.latitude;
+                principalDestLongitude = location.coords.longitude;
+
+                document.getElementById("demo").innerHTML = principalLatitude;
+                document.getElementById("gps").value = principalLatitude;
+                document.getElementByTagName("iframe").src = "https://www.google.com/maps/embed/v1/directions?origin=42.278178,-71.157988&destination=" + principalLatitude + "," + principalDestLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw"
+
+
+            });
+
+    </script>
+
+
     <!-- Alert that requires FLOOR -->
     <% if (info.alertNameID == 2 ||
             info.alertNameID == 4  ||
@@ -155,6 +176,7 @@
 </head>
 <body>
 
+
 <h1> <%= title %></h1>
 
 
@@ -250,18 +272,34 @@
 <% } %>
 <br><br>
 
-<script>
+<!-- get gps location of Prinipal cellphone or browser -->
 
-    <% var oriLatitude = ''; %>
-    <% var oriLongitude = ''; %>
-    <%  navigator.geolocation.getCurrentPosition(function (location) { %>
-    <%      oriLatitude = location.coords.latitude; %>
-    <%      oriLongitude = location.coords.longitude; %>
-    <iframe width="600" height="450" frameborder="0" style="border:0"
-    src="https://www.google.com/maps/embed/v1/directions?origin=<%= oriLatitude %>&destination=...&key=..." allowfullscreen></iframe>
-    <%  }); %>
 
-</script>
+
+
+
+
+<p id="demo"></p>
+
+
+
+<!-- end of get gps location of Prinipal cellphone or browser -->
+
+<% var busLat = info.latitude %>
+<% var busLon = info.longitude %>
+
+<% var startLat;%>
+<input type="text" name="gps" id="gps" >
+<% var startLon = -71.157988 %>
+
+
+<% console.log('startLat = ',startLat); %>
+
+<iframe width="600" height="450" frameborder="0" style="border:0"
+        src= "https://www.google.com/maps/embed/v1/directions?origin=41.919689399999996,-71.2933485&destination= + <%= startLat %> + , + <%= startLon %> + &key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw" allowfullscreen></iframe>
+
+
+
 
 <% } %>
 

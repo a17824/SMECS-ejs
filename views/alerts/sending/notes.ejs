@@ -93,16 +93,17 @@
             missingPopulate('#timeSelect');
             }
             /********** end of Last Time seen missing student ************/
+
+            // get gps location of bus
             if(alertID.value == 12) {
                 var destLatitude = '';
                 var destLongitude = '';
-                if (alertID.value == 12) {
-                    navigator.geolocation.getCurrentPosition(function (location) {
-                        destLatitude = location.coords.latitude;
-                        destLongitude = location.coords.longitude;
-                    });
-                }
+                navigator.geolocation.getCurrentPosition(function (location) {
+                    destLatitude = location.coords.latitude;
+                    destLongitude = location.coords.longitude;
+                });
             }
+            // end of  get gps location of bus
 
             $("#<%= alert.id %>").click(function(){
                 var alert_ID=$(this).attr('id');

@@ -36,7 +36,7 @@ module.exports.alert= function(alert, action) {
 
 //Sening cellPhone notification
 function sendPush(message, userName) {
-    var serverKey = 'AIzaSyAQHCWvoiCkDk_8_Aur1rpUInk-Sx_uilk';
+    var serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
     var fcm = new FCM(serverKey);
 
     fcm.send(message, function (err, response) {
