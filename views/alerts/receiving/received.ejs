@@ -9,18 +9,6 @@
 
     <script>
 
-            var principalLatitude = '';
-            var principalDestLongitude = '';
-            navigator.geolocation.getCurrentPosition(function (location) {
-                principalLatitude = location.coords.latitude;
-                principalDestLongitude = location.coords.longitude;
-
-                document.getElementById("demo").innerHTML = principalLatitude;
-                document.getElementById("gps").value = principalLatitude;
-                document.getElementByTagName("iframe").src = "https://www.google.com/maps/embed/v1/directions?origin=42.278178,-71.157988&destination=" + principalLatitude + "," + principalDestLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw"
-
-
-            });
 
     </script>
 
@@ -64,7 +52,29 @@
     <script>
 
         // All Alerts (less alert UTILITY FAILURE)
-        $(document).ready(function(){
+        $(document).ready(function() {
+
+            // Google map direction map
+            var alert_name_ID = $("#alert_name_ID").val();
+            if (alert_name_ID == 12){
+
+                var busLatitude = $("#busLatitude").val();
+                var busLongitude = $("#busLongitude").val();
+
+                var principalLatitude, principalDestLongitude;
+
+                navigator.geolocation.getCurrentPosition(function (location) {
+                    principalLatitude = location.coords.latitude;
+                    principalDestLongitude = location.coords.longitude;
+
+                    var iframe = document.querySelector('iframe');
+                    iframe.src = "https://www.google.com/maps/embed/v1/directions?origin=" + principalLatitude + "," + principalDestLongitude + "&destination=" + busLatitude + "," + busLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw";
+                });
+            }
+            // end of Google map direction map
+
+
+
             var alert_ID, alertNameID, alertName;
             $("#reqProcedureWeSafe").click(function() {
                 alert_ID = $("#alert_ID").val();
@@ -181,9 +191,9 @@
 
 
 <input type="hidden" id="alert_ID"  value="<%= info.id %>">
-<input type="hidden" id="alertNameID"  value="<%= info.alertNameID %>">
-<input type="hidden" id="alertName"  value="<%= info.alertName %>">
-
+<input type="hidden" id="busLatitude"  value="<%= info.latitude %>">
+<input type="hidden" id="busLongitude"  value="<%= info.longitude %>">
+<input type="hidden" id="alert_name_ID"  value="<%= info.alertNameID %>">
 
 <% if (info.testModeON == true ) {%>
 <h2 style="color: #34A7C1"> TEST MODE ON </h2>
@@ -271,38 +281,7 @@
 <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" disabled>
 <% } %>
 <br><br>
-
-<!-- get gps location of Prinipal cellphone or browser -->
-
-
-
-
-
-
-<p id="demo"></p>
-
-
-
-<!-- end of get gps location of Prinipal cellphone or browser -->
-
-<% var busLat = info.latitude %>
-<% var busLon = info.longitude %>
-
-<% var startLat;%>
-<input type="text" name="gps" id="gps" >
-<% var startLon = -71.157988 %>
-
-
-<% console.log('startLat = ',startLat); %>
-
-<iframe width="600" height="450" frameborder="0" style="border:0"
-        src= "https://www.google.com/maps/embed/v1/directions?origin=41.919689399999996,-71.2933485&destination= + <%= startLat %> + , + <%= startLon %> + &key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw" allowfullscreen></iframe>
-
-
-
-
 <% } %>
-
 
 
 <% if (info.request911Call == true ) {%>
@@ -427,6 +406,17 @@
 
 <label for="note"><b>Note:</b></label><br>
 <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
+<% } %>
+
+
+
+
+<% if (info.alertNameID == 12 ) {%>
+<!-- Drawing google map -->
+<iframe width="600" height="450" frameborder="0" style="border:0"
+        allowfullscreen></iframe>
+<!-- end of Drawing google map -->
+<br><br>
 <% } %>
 
 

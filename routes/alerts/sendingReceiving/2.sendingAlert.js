@@ -353,10 +353,11 @@ module.exports.postNotes = function(req, res) {
                     alert.save();
                 }
                 if (alert.alertNameID == 12 ) {
-
+                    console.log(req.body.map);
                     alert.latitude = req.body.latitude;
                     alert.longitude = req.body.longitude;
                     alert.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
+                    alert.mapBus = req.body.mapBus;
                     alert.save();
                 }
                 if (alert.alertNameID == 27 ) {

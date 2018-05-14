@@ -169,6 +169,7 @@ module.exports.alertTimeExpired = function(req, res) {
 
     }else{  // run SMECS EJS
         req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
-        res.send({redirect: '/alerts/sending/chooseGroup'});
+        //res.send({redirect: '/alerts/sending/chooseGroup'});
+        res.redirect('/alerts/sending/chooseAlert');
     }
 };

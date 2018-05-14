@@ -65,8 +65,9 @@
                             window.location = data.redirect;
                         }
                     },
-                    error: function() {
+                    error: function(data) {
                         console.log('process error');
+                        window.location = data.redirect;
                     }
                 });
             });

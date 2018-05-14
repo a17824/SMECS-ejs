@@ -182,6 +182,7 @@
                 //-----forms validation------------------------------------
 
 
+                var mapBus = "https://maps.googleapis.com/maps/api/staticmap?center=" + destLatitude + "," + destLongitude + "&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C" + destLatitude + "," + destLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw"
 
                 //--------------------------------forms validation end-------
                 $.ajax({
@@ -203,14 +204,16 @@
                         whereToEvacuate: whereToEvacuate,
                         busAccidentNoInjuries: busAccidentNoInjuries,
                         latitude: destLatitude,
-                        longitude: destLongitude
+                        longitude: destLongitude,
+                        mapBus: mapBus
                     },
                     dataType: 'json',
                     success: function(data) {
                             window.location = data.redirect;
                     },
-                    error: function() {
+                    error: function(data) {
                         console.log('process error');
+                        window.location = data.redirect;
                     }
 
 
