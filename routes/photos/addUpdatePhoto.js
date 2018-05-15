@@ -194,6 +194,6 @@ module.exports.cleanOldPhotos = function (){
 
 
 function updateParentPhotoInStudentsDocument(user){
-    models.Students.update(studentID: {$in: user.parentOf}, {'$set': {'parentOf.$.parentPhoto': parent.parentPhoto}},function(err) {)
+    //models.Students.update(studentID: {$in: user.parentOf}, {'$set': {'parentOf.$.parentPhoto': parent.parentPhoto}},function(err) {)
 
 }
