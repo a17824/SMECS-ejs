@@ -127,19 +127,16 @@ router.get('/users/deletedUsers/:id', auth.simpleAuth, auth.requireLogin, users.
 });
 
 
-// show user photo-------------------------------
-router.get('/users/showPhoto/:id', auth.simpleAuth, auth.requireLogin, users.showPhoto, function(req, res) {
-});
 
-//--ADD or UPDATE user photo -------------------------------------
 
+//--ADD or UPDATE PHOTO -------------------------------------
 router.get('/photos/addPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhoto, function (req, res){
 });
 router.post('/photos/addPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhotoPost, function (req, res){
 });
 
-// delete user photo------------------
-router.get('/users/deletePhoto/:id', auth.simpleAuth, auth.requireLogin, users.deletePhoto, function(req, res) {
+// DELETE  PHOTO------------------
+router.get('/users/deletePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.deletePhoto, function(req, res) {
 });
 
 
@@ -173,15 +170,7 @@ router.post('/students/updateStudent', auth.simpleAuth, auth.requireLogin, stude
 router.get('/students/deleteStudent/:id', auth.simpleAuth, auth.requireLogin, students.delete, function(req, res) {
 });
 
-// show STUDENT photo-------------------------------
-router.get('/students/showPhoto/:id', auth.simpleAuth, auth.requireLogin, students.showPhoto, function(req, res) {
-});
 
-//--ADD or CHANGE STUDENT photo -------------------------------------
-router.get('/students/addPhoto/:id', auth.simpleAuth, auth.requireLogin, students.addUpdatePhoto, function (req, res){
-});
-router.post('/students/addPhoto/:id', auth.simpleAuth, auth.requireLogin, students.addUpdatePhotoPost, function (req, res){
-});
 
 // ADD MULTIPLE PHOTOS AND DELETE ALL OLD PHOTOS IN STUDENTS PHOTOS FOLDER--------------
 router.get('/students/addMultiImage', auth.simpleAuth, auth.requireLogin, students.addMultiplePhotos, function (req, res){

@@ -18,7 +18,11 @@
     <% if (user.photo === '' || user.photo == undefined) {%>
     <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
     <% } else { %>
-    <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= user.photo %>" /><br><br>
+        <% if (userType === 'Users') {%>
+                <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= user.photo %>" /><br><br>
+        <% } else { %>
+                <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosStudents/<%= user.photo %>" /><br><br>
+        <% } %>
     <% } %>
 
     <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>

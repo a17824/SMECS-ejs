@@ -39,6 +39,7 @@ module.exports.show = function(req, res, next) {
 
 
     ],function(err, results){
+        functions.redirectPage(req, res, 'showStudents');
         functions.redirectTabUsers(req, res, 'showUsers');
         res.render('students/showStudents',{
             title:'STUDENTS',
@@ -400,95 +401,7 @@ module.exports.delete = function(req, res) {
 };
 /* ------------ end of DELETE STUDENT. */
 
-// show STUDENT photo-------------------------------
-module.exports.showPhoto = function(req, res) {
-    models.Students.findById(req.params.id,function(error, student) {
-        functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
-            res.render('students/showPhoto', {
-                title: 'Student Photo', students: student,
-                aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        });
-    });
-};
-// -----------------------------end show STUDENT photo
 
-//--ADD or CHANGE STUDENT photo -------------------------------------
-module.exports.addUpdatePhoto = function (req, res){
-    models.Students.findById(req.params.id,function(error, student) {
-        functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
-            res.render('students/addPhoto', {
-                title: 'ADD PHOTO', student: student,
-                aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        });
-    });
-};
-module.exports.addUpdatePhotoPost = function (req, res){
-    var fields =[];
-    var form = new formidable.IncomingForm();
-
-    form.parse(req, function(err, fields, files) {
-        console.log(util.inspect({fields: fields, files: files}));
-    });
-
-    //save student id from field value to "fields"
-    form.on('field', function (field, value) {
-        //console.log(field);
-        //console.log(value);
-        fields[field] = value;
-
-        form.on('end', function(fields, files) {
-            /* Temporary location of our uploaded file */
-            var temp_path = this.openedFiles[0].path;
-            /* The file name of the uploaded file */
-            var file_name = this.openedFiles[0].name;
-            /* Location where we want to copy the uploaded file */
-            var new_location = 'public/photosStudents/';
-
-            if (this.openedFiles[0].name){ // if a file is selected do this
-                models.Students.findById({'_id': field}, function(err, student){
-                    var oldPhoto = student.photo;
-                    var newStudent = "";
-                    if ((student.id + '_' + file_name != oldPhoto) && (oldPhoto != newStudent )) { //delete old photo if exists
-                        fs.unlinkSync(new_location + oldPhoto);
-                        console.log('successfully deleted ' + oldPhoto);
-                    }
-                    //if old photo doesn't exits or has been deleted, save new file
-                    fs.copy(temp_path, new_location + student.id + '_' + file_name, function (err) { // save file
-                        if (err) {
-                            console.error(err);
-                        } else {
-                            student.photo = student.id + '_' + file_name; //save uploaded file name to user.photo
-                            student.save();
-                            console.log("success! saved " + file_name);
-                        }
-                        fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
-                            if (err) {
-                                //return res.send(500, 'Something went wrong');
-                            }
-                        });//------------------------------#end - unlink
-                        res.redirect('/students/showStudents');
-                    })
-                });//--------end of student.photo
-            } else { // if no file is selected delete temp file
-                console.log('no files added');
-                //delete file from temp folder-------
-                fs.unlink(temp_path, function (err) {
-                    if (err) {
-                        return res.send(500, 'Something went wrong');
-                    }
-                });
-                //------------------#end - unlink
-            }
-        });
-    });
-};
-//-----------------------------------------end of ADD or CHANGE STUDENT photo
 
 
 // ADD MULTIPLE PHOTOS AND DELETE ALL OLD PHOTOS IN STUDENTS PHOTOS FOLDER--------------

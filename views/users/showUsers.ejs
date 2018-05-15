@@ -292,7 +292,14 @@
                                             <td >
                                                 <% if (user.parent == true) { %>
                                                 <% for (var x = 0; x < user.parentOf.length; x++) {%>
-                                                <%= user.parentOf[x].studentFirstName%> <%= user.parentOf[x].studentLastName%><br>
+                                                <p class="image">
+                                                    <% if (user.parentOf[x].studentPhoto == '') { %>
+                                                    <img src="/photosNotAvailable/user.png" class="avatarParentsUsers" alt="Avatar"> <%= user.parentOf[x].studentFirstName%> <%= user.parentOf[x].studentLastName%><br>
+
+                                                    <% } else { %>
+                                                    <img src="/photosStudents/<%= user.parentOf[x].studentPhoto%>" class="avatarParentsUsers" alt="Avatar"> <%= user.parentOf[x].studentFirstName%> <%= user.parentOf[x].studentLastName%><br>
+                                                    <% } %>
+                                                </p>
                                                 <% } %>
                                                 <% } %>
                                             </td>

@@ -852,45 +852,6 @@ module.exports.erase = function(req, res) {
 };
 /* ------------ end of DELETE USERS. */
 
-module.exports.showPhoto = function(req, res) {
-    async.parallel([
-        function(callback){
-            models.Users.findById(req.params.id).exec(callback);
-        },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
-
-    ],function(err, results){
-        res.render('users/showPhoto',{
-            title:'User Photo',
-            users: results[0],
-            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
-    })
-};
-
-
-
-// delete user photo------------------
-module.exports.deletePhoto = function(req, res) {
-    var new_location = 'public/photosUsers/';
-    models.Users.findById({'_id': req.params.id}, function(err, user){
-        var photoToDelete = user.photo;
-        if (fs.existsSync(new_location + photoToDelete) && photoToDelete !== "") { //delete old photo if exists
-            fs.unlinkSync(new_location + photoToDelete);
-            console.log('successfully deleted ' + photoToDelete);
-        }
-        user.photo = "";
-        user.save();
-        if(req.user.redirect == 'showUsers')
-            res.redirect('/users/showUsers');
-        if(req.user.redirect == 'updateUser')
-            res.redirect('/users/updateUser/' + user.id);
-    });
-};
-//----------------end delete user photo
-
 
 
 

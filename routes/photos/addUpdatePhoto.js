@@ -11,7 +11,8 @@ module.exports.addUpdatePhoto = function (req, res){
     async.parallel([
         //function(callback){models.Users.findById(req.params.id).exec(callback);},
         function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});}, //aclPermissions sideMenu
+        function(callback){aclPermissions.modifyStudent(req, res, callback);}   //aclPermissions modifyUsers
 
     ],function(err, results){
 
@@ -20,22 +21,40 @@ module.exports.addUpdatePhoto = function (req, res){
         } else {                                        // if it is a user from "ParentSelfRegistration" database
             var title = 'Parent registration Step2';
         }
-        models.Users.findById(req.params.id, function (err, user) {
-            console.log('user = ',user);
+
+        if(req.session.user.redirect == 'showStudents'){ //if photo to update is from a Student
+            var userType = 'Students';
+            var aclType = results[2];
+
+        }else {                                          //if photo to update is from a User
+            var userType = 'Users';
+            var aclType = results[0];
+        }
+
+        models[userType].findById(req.params.id, function (err, user) {
             res.render('photos/addPhoto',{
                 title: title,
                 user: user,
-                aclModifyUsers: results[0], //aclPermissions modifyUsers
+                userType: userType,
+                aclModifyUsers: aclType, //aclPermissions modifyUsers
                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
         });
+
     })
 };
 
 
 module.exports.addUpdatePhotoPost = function (req, res){
+    var locationType = 'public/photosUsers/'; //if photo is from a user document
+    var userType = 'Users';
+    if(req.user.redirect == 'showStudents'){    //if photo is from a student document
+        locationType = 'public/photosStudents/';
+        userType = 'Students';
+    }
+
     var fields =[];
     var form = new formidable.IncomingForm();
 
@@ -55,10 +74,10 @@ module.exports.addUpdatePhotoPost = function (req, res){
             /* The file name of the uploaded file */
             var file_name = this.openedFiles[0].name;
             /* Location where we want to copy the uploaded file */
-            var new_location = 'public/photosUsers/';
+            var new_location = locationType;
 
             if (this.openedFiles[0].name){ // if a file is selected do this
-                models.Users.findById({'_id': field}, function(err, user){
+                models[userType].findById({'_id': field}, function(err, user){
                     var oldPhoto = user.photo;
                     var newUser = "";
 
@@ -93,6 +112,9 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                 res.redirect('/users/showUsers');
                             if(req.user.redirect == 'updateUser')
                                 res.redirect('/users/updateUser/' + user.id);
+                            if(req.user.redirect == 'showStudents')
+                                res.redirect('/students/showStudents');
+
                         } else if(err.code == 'ENOENT') { // file does not exist
 
                             //save new file
@@ -101,9 +123,18 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                     console.error(err);
                                 } else {
                                     user.photo = user.id + '_' + file_name; //save uploaded file name to user.photo
-                                    user.save();
-                                    if(user.parent)
-                                        updateParentPhotoInStudentsDocument(user);
+                                    user.save(function (err) {
+                                        if(err)
+                                            console.log('err - ',err);
+                                        else{
+                                            if(userType == 'Users' && user.parent)
+                                                updateParentPhotoInStudentsDocument(user); //update photo in 'Students' document 'parentOf' field
+                                            if(userType == 'Students' && user.parentOf.length >= 1)
+                                                updateParentPhotoInUsersDocument(user); //update photo in 'Students' document 'parentOf' field
+                                        }
+                                    });
+
+
 
                                     console.log("success! saved " + file_name);
                                 }
@@ -118,6 +149,8 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                     res.redirect('/users/updateUser/' + user.id);
                                 if(req.user.redirect == 'registerParent')
                                     res.redirect('/login');
+                                if(req.user.redirect == 'showStudents')
+                                    res.redirect('/students/showStudents');
                             });
 
                         } else {
@@ -141,6 +174,46 @@ module.exports.addUpdatePhotoPost = function (req, res){
     });
 };
 //-----------------------------------------end ADD or CHANGE user photo
+
+
+// DELETE PHOTO------------------
+module.exports.deletePhoto = function(req, res) {
+    var new_location = 'public/photosUsers/'; //if photo is from a user document
+    var userType = 'Users';
+    if(req.user.redirect == 'showStudents'){    //if photo is from a student document
+        new_location = 'public/photosStudents/';
+        userType = 'Students';
+    }
+
+
+    models[userType].findById({'_id': req.params.id}, function(err, user){
+        var photoToDelete = user.photo;
+        if (fs.existsSync(new_location + photoToDelete) && photoToDelete !== "") { //delete old photo if exists
+            fs.unlinkSync(new_location + photoToDelete);
+            console.log('successfully deleted ' + photoToDelete);
+        }
+        user.photo = "";
+        user.save(function (err) {
+            if(err)
+                console.log('err - ',err);
+            else{
+                if(userType == 'Users' && user.parent)
+                    updateParentPhotoInStudentsDocument(user); //update photo in 'Students' document 'parentOf' field
+                if(userType == 'Students' && user.parentOf.length >= 1)
+                    updateParentPhotoInUsersDocument(user); //update photo in 'Students' document 'parentOf' field
+            }
+        });
+
+        if(req.user.redirect == 'showUsers')
+            res.redirect('/users/showUsers');
+        if(req.user.redirect == 'updateUser')
+            res.redirect('/users/updateUser/' + user.id);
+        if(req.user.redirect == 'showStudents')
+            res.redirect('/students/showStudents');
+    });
+};
+//----------------end of DELETE PHOTO
+
 
 module.exports.cleanOldPhotos = function (){
     async.parallel([
@@ -185,7 +258,7 @@ module.exports.cleanOldPhotos = function (){
                     if(field == arrayPhotos[i]) {
                         fs.unlinkSync('./public/photosUsers/' + file);  //delete file
                         console.log('successfully deleted ' + file);
-                        }
+                    }
                 });
             }
         }
@@ -194,6 +267,31 @@ module.exports.cleanOldPhotos = function (){
 
 
 function updateParentPhotoInStudentsDocument(user){
-    //models.Students.update(studentID: {$in: user.parentOf}, {'$set': {'parentOf.$.parentPhoto': parent.parentPhoto}},function(err) {)
+    var studentIds = [];
+    user.parentOf.forEach(function(student){
+        studentIds.push(student.studentID);
+    });
 
-}
+    models.Students.update({studentID: {$in: studentIds}, 'parentOf._id': user._id}, {'parentOf.$.parentPhoto': user.photo}, {multi: true}, function (err, user) {
+        if(err)
+            console.log('err - ',err);
+        else{
+            console.log('success updating photo in student parentOf');
+        }
+    });
+};
+
+function updateParentPhotoInUsersDocument(student){
+    var parentIds = [];
+    student.parentOf.forEach(function(user){
+        parentIds.push(user._id);
+    });
+
+    models.Users.update({_id: {$in: parentIds}, 'parentOf.studentID': student.studentID}, {'parentOf.$.studentPhoto': student.photo}, {multi: true}, function (err, user) {
+        if(err)
+            console.log('err - ',err);
+        else{
+            console.log('success updating photo in user parentOf');
+        }
+    });
+};
