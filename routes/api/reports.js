@@ -1,6 +1,5 @@
 var models = require('./../models');
 var jwt = require('jsonwebtoken');
-var config = require('./config');
 var moment = require('moment');
 
 /* Send all alerts. -------------------------------*/
@@ -90,19 +89,7 @@ module.exports.proceduresGet = function (req, res) {
 
 /* Receive the receipt for message delivered -------------------------------*/
 module.exports.alertReceiptPost = function (req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    var email;
-    var alertID = req.body.alertID;
-    jwt.verify(token, config.secret, function (err, decoded) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to authenticate token.'
-            });
-        } else {
-            email = decoded.user.email;
-        }
-    });
+    var email = req.decoded.email;
     var wrapped = moment(new Date());
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
@@ -144,6 +131,102 @@ module.exports.alertViewedPost = function (req, res) {
             'sentTo.$.viewed.viewedBoolean': true,
             'sentTo.$.viewed.viewedDate': wrapped.format('YYYY-MM-DD'),
             'sentTo.$.viewed.viewedTime': wrapped.format('h:mm:ss a')
+        }
+    }, {
+        new: true
+    }, function (err, alert) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: 'Failed to locate user.'
+            });
+        } else {
+            return res.json({
+                success: true
+            });
+        }
+    });
+};
+
+/* Receive the called 911 for message delivered -------------------------------*/
+module.exports.alertCalled911 = function (req, res) {
+    var email = req.decoded.email;
+    var alertID = req.body.alertID;
+
+    var wrapped = moment(new Date());
+    models.AlertSentInfo.findOneAndUpdate({
+        '_id': alertID,
+        'sentTo.email': email,
+        'sentTo.called911.called911Boolean': false
+    }, {
+        $set: {
+            'sentTo.$.called911.called911Boolean': true,
+            'sentTo.$.called911.called911Date': wrapped.format('YYYY-MM-DD'),
+            'sentTo.$.called911.called911Time': wrapped.format('h:mm:ss a')
+        }
+    }, {
+        new: true
+    }, function (err, alert) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: 'Failed to locate user.'
+            });
+        } else {
+            return res.json({
+                success: true
+            });
+        }
+    });
+};
+
+/* Receive the procedure completed for message delivered -------------------------------*/
+module.exports.alertProcedureCompleted = function (req, res) {
+    var email = req.decoded.email;
+    var alertID = req.body.alertID;
+
+    var wrapped = moment(new Date());
+    models.AlertSentInfo.findOneAndUpdate({
+        '_id': alertID,
+        'sentTo.email': email,
+        'sentTo.procedureCompleted.boolean': false
+    }, {
+        $set: {
+            'sentTo.$.procedureCompleted.boolean': true,
+            'sentTo.$.procedureCompleted.date': wrapped.format('YYYY-MM-DD'),
+            'sentTo.$.procedureCompleted.time': wrapped.format('h:mm:ss a')
+        }
+    }, {
+        new: true
+    }, function (err, alert) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: 'Failed to locate user.'
+            });
+        } else {
+            return res.json({
+                success: true
+            });
+        }
+    });
+};
+
+/* Receive the procedure completed for message delivered -------------------------------*/
+module.exports.alertWeAreSafe = function (req, res) {
+    var email = req.decoded.email;
+    var alertID = req.body.alertID;
+
+    var wrapped = moment(new Date());
+    models.AlertSentInfo.findOneAndUpdate({
+        '_id': alertID,
+        'sentTo.email': email,
+        'sentTo.weAreSafe.boolean': false
+    }, {
+        $set: {
+            'sentTo.$.weAreSafe.boolean': true,
+            'sentTo.$.weAreSafe.date': wrapped.format('YYYY-MM-DD'),
+            'sentTo.$.weAreSafe.time': wrapped.format('h:mm:ss a')
         }
     }, {
         new: true
