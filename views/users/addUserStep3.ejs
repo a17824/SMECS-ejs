@@ -47,6 +47,7 @@
 
     <label for="userPrivilege"><b>User Privilege:</b></label><br>
     <% privilege.forEach(function(privilege) { %>
+
     <% if (userAuthID == 1) {%>
         <% if (principalRole == 1 && privilege.privilegeID == 2) {%>
             <input type="radio"
@@ -83,6 +84,7 @@
     <br>
     <% } else { %>
         <% if (userAuthID != 1) {%>
+
             <% if (principalRole == 1 && privilege.privilegeID == 2) {%>
                 <input type="radio"
                 name="userPrivilegeID"
@@ -90,26 +92,34 @@
                 value="<%= privilege.privilegeID %>" checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
                 <small> - by default, has Full Access</small>
             <% } else { %>
-                <input type="radio"
-                name="userPrivilegeID"
-                id=<%= privilege.privilegeName %>
-                value="<%= privilege.privilegeID %>" ><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
-                <% if (privilege.privilegeID == 2 ) { %>
-                    <small> - by default, has Full Access</small>
-                <% } %>
-                <% if (privilege.privilegeID == 3 ) { %>
-                    <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
-                <% } %>
-                <% if (privilege.privilegeID == 4 ) { %>
-                    <small> - by default, can Add/Delete Users</small>
-                <% } %>
-                <% if (privilege.privilegeID == 5 ) { %>
-                    <small> - by default, No Web Dashboard Access</small>
-                <% } %>
+
+                    <% if (privilege.privilegeID == 2 ||
+                        privilege.privilegeID == 3 ||
+                        privilege.privilegeID == 4 ||
+                        privilege.privilegeID == 5) { %>
+
+                        <input type="radio"
+                        name="userPrivilegeID"
+                        id=<%= privilege.privilegeName %>
+                        value="<%= privilege.privilegeID %>" ><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+
+                        <% if (privilege.privilegeID == 2 ) { %>
+                            <small> - by default, has Full Access</small>
+                        <% } %>
+                        <% if (privilege.privilegeID == 3 ) { %>
+                            <small> - by default, can choose who sends/receives Alerts and Add/Delete Users</small>
+                        <% } %>
+                        <% if (privilege.privilegeID == 4 ) { %>
+                            <small> - by default, can Add/Delete Users</small>
+                        <% } %>
+                        <% if (privilege.privilegeID == 5 ) { %>
+                            <small> - by default, No Web Dashboard Access</small>
+                        <% } %>
+                    <% } %>
             <% } %>
         <% } %>
     <% } %>
-
+    <br>
     <% }); %>
         <% if (aclShowPermissionsTable == null || aclShowPermissionsTable.checkBoxValue == true) {%>
             <p>All Administrator Levels and Regular User permissions can be customized in: "<a href="/permissions/showPermissionsTable">Table: Permissions</a>"</p>

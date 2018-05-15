@@ -131,23 +131,14 @@ module.exports.alertReceiptPost = function (req, res) {
 
 /* Receive the viewed for message delivered -------------------------------*/
 module.exports.alertViewedPost = function (req, res) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    var email;
+    var email = req.decoded.email;
     var alertID = req.body.alertID;
-    jwt.verify(token, config.secret, function (err, decoded) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to authenticate token.'
-            });
-        } else {
-            email = decoded.user.email;
-        }
-    });
+
     var wrapped = moment(new Date());
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
-        'sentTo.email': email
+        'sentTo.email': email,
+        'sentTo.viewed.viewedBoolean': false
     }, {
         $set: {
             'sentTo.$.viewed.viewedBoolean': true,

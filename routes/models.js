@@ -66,7 +66,7 @@ var UsersAddTempSchema = new mongoose.Schema({
         studentID: Number,
         studentFirstName: String,
         studentLastName: String,
-        photo: String
+        studentPhoto: String
     }],
     parentOfOld: [],    //for back button on ejs to be able to get values
     studentsWithParents: [],
@@ -258,7 +258,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     evacuateWhereTo: String,
     latitude: String,           //bus accident alert gps
     longitude: String,           //bus accident alert gps
-    mapBus: String,             //tp view map image in alert reports
+    mapBus: String,             //tp view map image in reports
     busAccidentNoInjuries : { type: Boolean, default: false },
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead

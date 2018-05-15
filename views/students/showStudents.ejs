@@ -131,7 +131,12 @@
                             <% for (var x = 0; x < student.parentOf.length; x++) {%>
 
                               <p class="image">
-                                  <img src="/photosUsers/5858436a4f98f0ac16fd679b_01015.BMP" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                                  <% if (student.parentOf[x].parentPhoto == '') { %>
+                                  <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+
+                                  <% } else { %>
+                                  <img src="/photosUsers/<%= student.parentOf[x].parentPhoto%>" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                                  <% } %>
                               </p>
                               <% } %>
                             <% } %>

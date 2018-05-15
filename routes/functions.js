@@ -2,7 +2,7 @@
 var models = require('./models');
 var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
-
+//var bulk = models.Students.collection.initializeOrderedBulkOp();
 
 //REDIRECT TO PREVIOUS PAGE
 module.exports.redirectPage = function(req, res, page) {
@@ -113,49 +113,75 @@ module.exports.addParentInStudentDocument = function(user, newParentsArray) {
         parentPhoto: user.photo
     };
 
-
-    models.Students.update({studentID: {$in: newParentsArray}},
-        { name : 'Ted', age : 50 }, { upsert : true },
-        function (err) {
-            if(err){
-                console.log('student not updated successfully');
-                throw err;
-            }else {
-                console.log('"parentOf" added successfully on STUDENT database');
+    //bulk1 if parent exists, updates parent array first name and last name
+    //bulk2 if parent doesn't exists, add parent to array
+    models.Students.bulkWrite([
+        {
+            updateMany: {
+                filter: {
+                    studentID: {$in: newParentsArray},
+                    'parentOf._id': parent._id  //find in parentOf array for field _id
+                },
+                update: {
+                    'parentOf.$.parentFirstName': parent.parentFirstName,   //update array position
+                    'parentOf.$.parentLastName': parent.parentLastName
+                }
             }
-        });
-
-    //find student with id = to 'parents[i]' -> {'_id': parents[i]
-    //if student already has that parent do not update -> 'parentOf._id': {$ne: parent._id}
-    models.Students.update({studentID: {$in: newParentsArray}, 'parentOf._id': {$ne: parent._id}},
-        { "$push": { "parentOf": parent } },
-        { "new": true},
-        function (err) {
-            if(err){
-                console.log('student not updated successfully');
-                throw err;
-            }else {
-                console.log('"parentOf" added successfully on STUDENT database');
-            }
-        });
-
-    /*
-    models.Students.find({studentID: {$in: newParentsArray}}, function (err, students) {
-        if(err)
-            console.log('err - ',err);
-        else{
-            if(students.length < 1)
-                console.log('users found in student parents collection to update');
-            else{
-
+        },
+        {
+            updateMany: {
+                filter: {
+                    studentID: {$in: newParentsArray},  //find student with id = to newParentsArray'
+                    'parentOf._id': {$ne: parent._id}   //if student already has that parent do not update
+                },
+                update: {
+                    "$push": { "parentOf": parent }
+                }
             }
         }
-        });
-        */
-
+    ]).then(function(bulkWriteOpResult) {
+        //console.log(bulkWriteOpResult);
+    });
 };
 
+module.exports.addParentInUserDocument = function(student, newParentsArray) {
+    //save parent in Student database --------------------
+    var parent = {
+        studentID: student.studentID,
+        studentFirstName: student.firstName,
+        studentLastName: student.lastName,
+        studentPhoto: student.photo
+    };
 
+    models.Users.bulkWrite([
+        {
+            updateMany: {
+                filter: {
+                    _id: {$in: newParentsArray},
+                    'parentOf.studentID': parent.studentID
+                },
+                update: {
+                    'parentOf.$.studentID': parent.studentID,
+                    'parentOf.$.studentFirstName': parent.studentFirstName,
+                    'parentOf.$.studentLastName': parent.studentLastName
+                }
+            }
+        },
+        {
+            updateMany: {
+                filter: {
+                    _id: {$in: newParentsArray},
+                    'parentOf.studentID': {$ne: parent.studentID}   //if student already has that parent do not update
+                },
+                update: {
+                    "$push": { "parentOf": parent }
+                }
+            }
+        }
+    ]).then(function(bulkWriteOpResult) {
+        //console.log(bulkWriteOpResult);
+    });
+};
 
 
 module.exports.alertTimeExpired = function(req, res) {

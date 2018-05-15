@@ -223,7 +223,8 @@ module.exports.addStep2Post = function(req, res) {
                                     _id: students[i]._id,
                                     studentID: students[i].studentID,
                                     studentFirstName: students[i].firstName,
-                                    studentLastName: students[i].lastName
+                                    studentLastName: students[i].lastName,
+                                    studentPhoto: students[i].photo
                                 };
                                 user.parentOf.push(student);
                                 user.studentsWithParents.push(students[i].studentID);
@@ -274,7 +275,6 @@ module.exports.addStep3 = function(req, res) {
             console.log('TTL EXPIRED');
             req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
             res.redirect('/users/showUsers/');
-            //res.send({redirect: '/users/showUsers/'});
         }
         else {
             var ifUserHasPrincipalRole = 0;
@@ -646,7 +646,7 @@ module.exports.updatePost = function(req, res) {
                                 studentID: students[i].studentID,
                                 studentFirstName: students[i].firstName,
                                 studentLastName: students[i].lastName,
-                                studentPhoto: students[i].lastName
+                                studentPhoto: students[i].photo
                             };
                             if(ifUserHasParentRole == 0 && oldIfUserHasParentRole == 1){
                                 //studentsWithParents.push(students[i]._id);

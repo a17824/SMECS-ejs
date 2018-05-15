@@ -102,6 +102,9 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                 } else {
                                     user.photo = user.id + '_' + file_name; //save uploaded file name to user.photo
                                     user.save();
+                                    if(user.parent)
+                                        updateParentPhotoInStudentsDocument(user);
+
                                     console.log("success! saved " + file_name);
                                 }
                                 fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
@@ -188,3 +191,9 @@ module.exports.cleanOldPhotos = function (){
         }
     });
 };
+
+
+function updateParentPhotoInStudentsDocument(user){
+    models.Students.update(studentID: {$in: user.parentOf}, {'$set': {'parentOf.$.parentPhoto': parent.parentPhoto}},function(err) {)
+
+}

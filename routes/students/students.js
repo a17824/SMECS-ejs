@@ -126,7 +126,8 @@ module.exports.addPost = function(req, res) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 return res.status(409).send('showAlert')
             }else{
-                updateParentInUserDocument(req, student1, newParentArray, oldParentArray);
+                deleteParentInUserDocument(req, student1, newParentArray, oldParentArray);
+                functions.addParentInUserDocument(student1, newParentArray);
                 return res.send({redirect:'/students/showStudents'});
             }
         });
@@ -321,7 +322,8 @@ module.exports.updatePost = function(req, res) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 return res.status(409).send('showAlert')
             }else{
-                updateParentInUserDocument(req, student, newParentArray, oldParentArray);
+                deleteParentInUserDocument(req, student, newParentArray, oldParentArray);
+                functions.addParentInUserDocument(student, newParentArray);
                 return res.send({redirect:'/students/showStudents'})
             }
         });
@@ -613,40 +615,8 @@ module.exports.deletePhoto = function(req, res) {
 
 
 
-function updateParentInUserDocument(req, student, newParentArray, oldParentArray) {
-    var parent = {
-        studentID: student.studentID,
-        studentFirstName: student.firstName,
-        studentLastName: student.lastName
-    };
+function deleteParentInUserDocument(req, student, newParentArray, oldParentArray) {
     async.waterfall([
-        function (callback) {
-
-            //ADDING student to parent.of of User collection ---------
-            models.Users.find({'_id': newParentArray}, function (err, users) {
-                if (err) {
-                    console.log('error finding users to add');
-                } else {
-                    users.forEach(function (user) {
-                        var parentAlreadyExists = 0;
-                        for(var z=0; z < user.parentOf.length; z++){
-                            if(user.parentOf[z].studentID == parent.studentID){
-                                parentAlreadyExists = 1;
-                                break;
-                            }
-                        }
-                        if(parentAlreadyExists == 0){
-                            user.parentOf.push(parent);
-                        }
-                        user.save();
-                    });
-                }
-                console.log('Finished -> adding student to parentOf document of User Collection');
-                callback(null);
-            });
-            //--------end of ADDING student to parent.of of User collection
-
-        },
         function (callback) {
             //Building arrayParentsToDelete ------
             var arrayParentsToDelete = [];
@@ -682,7 +652,7 @@ function updateParentInUserDocument(req, student, newParentArray, oldParentArray
 
                             for(var z=0; z < user.parentOf.length; z++){
                                 var index = z;
-                                if(user.parentOf[z].studentID == parent.studentID){
+                                if(user.parentOf[z].studentID == student.studentID){
 
                                     // If user has more than 1 child
                                     if(user.parentOf && user.parentOf.length > 1){
