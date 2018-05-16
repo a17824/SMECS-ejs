@@ -38,7 +38,6 @@ var UsersSchema = new mongoose.Schema({
     redirectTabAlertGroups: { type: String, default: 'showGroups'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
-        groupAlertsLogo: String,
         theme: String,
         soundPanic: String,
         soundSend: String,
@@ -94,7 +93,9 @@ module.exports.ParentSelfRegistration = mongoose.model("ParentSelfRegistration",
 // DEFINE PRIVILEGE COLLECTION IN MONGOdb
 var PrivilegeSchema = new mongoose.Schema({
     privilegeID: { type: Number, unique: true },
-    privilegeName: { type: String, unique: true } // Administrator, PowerUser, Regular User
+    privilegeName: { type: String, unique: true }, // Administrator, PowerUser, Regular User
+    icon: String
+
 }, {collection:"Privilege"}); //stops Mongoose of giving plurals to our collections names
 var Privilege;
 module.exports.Privilege = mongoose.model("Privilege", PrivilegeSchema);
@@ -166,7 +167,9 @@ var AlertsGroupSchema = new mongoose.Schema({
     alertTypeID: { type: Number, unique: true },
     alertTypeName: { type: String, unique: true }, // Users, Alerts, Students
     colorName: String,
-    colorValue: String
+    colorValue: String,
+    icon: String
+
 }, {collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
 var AlertsGroup;
 module.exports.AlertsGroup = mongoose.model("AlertsGroup", AlertsGroupSchema);

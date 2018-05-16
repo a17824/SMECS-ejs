@@ -2,6 +2,39 @@
 <head>
     <title>add role</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+    <script>
+        var iconSelect;
+        var selectedText;
+
+        window.onload = function(){
+            selectedText = document.getElementById('selected-text');
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+            });
+
+            iconSelect = new IconSelect("my-icon-select",
+                {'selectedIconWidth':23,
+                    'selectedIconHeight':23,
+                    'selectedBoxPadding':1,
+                    'iconsWidth':48,
+                    'iconsHeight':48,
+                    'boxIconSpace':1,
+                    'vectoralIconNumber':8,
+                    'horizontalIconNumber':6});
+
+            var icons = [];
+            iconBuild(icons);
+            iconSelect.refresh(icons, 1);
+        };
+    </script>
+
     <script>
         $(document).ready(function(){
             var oldSortID = $("#oldSortID").val();
@@ -18,7 +51,7 @@
             }
             $('#sort_select').html(select_sort);
 
-            var roleID,roleName,sortID;
+            var roleID,roleName,sortID,icon;
             var select = '';
             var myArray = $("#inUseRoleID").val().split(",").map(Number);
             for (i=1;i<=99;i++){
@@ -32,6 +65,7 @@
                 roleID=$("#some_select").val();
                 roleName=$("#roleName").val();
                 sortID=$("#sort_select").val();
+                icon=$("#selected-text").val();
 
                 //-----forms validation------------------------------------
                 if (roleName == "" ) {
@@ -53,7 +87,9 @@
                 $.post("/roles2/addRole2",{
                     roleID: roleID,
                     roleName: roleName,
-                    sortID: sortID
+                    sortID: sortID,
+                    icon: icon
+
                 },function(data){
                     if(data==='done')
                     {
@@ -81,6 +117,12 @@
 
     <label for="roleName"><b>Role Name:</b></label><br>
     <input type="text" id="roleName" size="40" placeholder="ex: Teacher"><br><br>
+
+
+    <label for="icon"><b>Icon:</b></label><br>
+    <div id="my-icon-select"></div><br>
+    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+
 
     <input type="hidden" id="inUseRoleID" value="<%= array %>">
 

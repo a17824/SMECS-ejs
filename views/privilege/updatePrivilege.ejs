@@ -2,6 +2,43 @@
 <head>
     <title>update privilege</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+    <script>
+        var iconSelect;
+        var selectedText;
+        var savedIcon;
+
+        window.onload = function(){
+            savedIcon = document.getElementById('savedIcon').value;
+            selectedText = document.getElementById('selected-text');
+            savedIcon = savedIcon-1;
+            console.log('savedIcon = ',savedIcon)
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+            });
+
+            iconSelect = new IconSelect("my-icon-select",
+                {'selectedIconWidth':23,
+                    'selectedIconHeight':23,
+                    'selectedBoxPadding':1,
+                    'iconsWidth':48,
+                    'iconsHeight':48,
+                    'boxIconSpace':1,
+                    'vectoralIconNumber':8,
+                    'horizontalIconNumber':6});
+
+            var icons = [];
+            iconBuild(icons);
+            iconSelect.refresh(icons, savedIcon);
+        };
+    </script>
+
     <script>
         $(document).ready(function(){
             var oldPrivilegeID = $("#oldPrivilegeID").val();
@@ -18,13 +55,14 @@
             }
             $('#some_select').html(select);
 
-            var privilege1,oldPrivilegeName,oldPrivilegeID,privilegeID,privilegeName;
+            var privilege1,oldPrivilegeName,oldPrivilegeID,privilegeID,privilegeName,icon;
             $("#<%= privilege.id %>").click(function(){
                 privilege1=$(this).attr('id');
                 oldPrivilegeID=$("#oldPrivilegeID").val();
                 privilegeID=$("#some_select").val();
                 oldPrivilegeName=$("#oldPrivilegeName").val();
                 privilegeName=$("#privilegeName").val();
+                icon=$("#selected-text").val();
 
                 //-----forms validation------------------------------------
                 if (privilegeName == "" ) {
@@ -42,7 +80,9 @@
                     oldPrivilegeID: oldPrivilegeID,
                     privilegeID: privilegeID,
                     oldPrivilegeName: oldPrivilegeName,
-                    privilegeName: privilegeName
+                    privilegeName: privilegeName,
+                    icon: icon
+
                 },function(data){
                     if(data==='done')
                     {
@@ -73,6 +113,12 @@
     <input type="hidden" id="inUsePrivilegeID" value="<%= array %>">
     <select id='some_select'></select><br><br>
     <input type="hidden" id="oldPrivilegeName" value="<%= privilege.privilegeName %>">
+
+    <label for="icon"><b>Icon:</b></label><br>
+    <div id="my-icon-select"></div><br>
+    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+    <input type="text" id="savedIcon" name="savedIcon" value="<%= privilege.icon %>" hidden>
+
     <input type="hidden" id="oldPrivilegeID" value="<%= privilege.privilegeID %>"><br>
 
     <% if (aclModifyPrivilege == null || aclModifyPrivilege.checkBoxValue == true) {%>

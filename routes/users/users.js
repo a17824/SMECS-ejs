@@ -15,6 +15,7 @@ module.exports.show = function(req, res, next) {
             models.Users.find().sort({"firstName":1}).exec(callback);
         },
         function(callback){models.Roles2.find().exec(callback);},
+        function(callback){models.Privilege.find().exec(callback);},
         function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
@@ -31,12 +32,13 @@ module.exports.show = function(req, res, next) {
                 title:'USERS',
                 users: results[0],
                 roles: results[1],
+                privileges: results[2],
                 userAuthID: req.user.userPrivilegeID,
-                aclShowDeletedUsers: results[2], //aclPermissions showDeletedUsers
-                aclAddUsers: results[3], //aclPermissions addUsers
-                aclModifyUsers: results[4],  //aclPermissions modifyUsers
-                aclDeleteUsers: results[5],  //aclPermissions deleteUsers
-                aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclShowDeletedUsers: results[3], //aclPermissions showDeletedUsers
+                aclAddUsers: results[4], //aclPermissions addUsers
+                aclModifyUsers: results[5],  //aclPermissions modifyUsers
+                aclDeleteUsers: results[6],  //aclPermissions deleteUsers
+                aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo,
                 redirectTab: req.user.redirectTabUsers
@@ -756,12 +758,10 @@ module.exports.updateAppSettings = function(req, res) {
 
 module.exports.updateAppSettingsPost = function(req, res) {
 
-    var userToUpdate = req.body.studentToUpdate;
+    var appSettingsToUpdate = req.body.appSettingsToUpdate;
     var groupAlertsButtons = req.body.groupAlertsButtons;
-    var oldGroupLogo = req.body.oldGroupLogo;
-    var newGroupLogo = req.body.newGroupLogo;
 
-    models.Users.findById({'_id': userToUpdate}, function(err, user){
+    models.Users.findById({'_id': appSettingsToUpdate}, function(err, user){
         if (err) {
             console.log('POST - something wrong updating App Settings');
         }else{

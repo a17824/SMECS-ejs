@@ -89,7 +89,8 @@ module.exports.addPost = function(req, res) {
     var role1 = new models.Roles2({
         roleID: req.body.roleID,
         roleName: req.body.roleName,
-        sortID: req.body.sortID
+        sortID: req.body.sortID,
+        icon: req.body.icon
     });
     role1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {

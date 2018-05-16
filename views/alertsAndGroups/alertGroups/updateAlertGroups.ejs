@@ -3,6 +3,42 @@
     <title>update Alert Group</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/alertGroup.css' />
+
+    <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+    <script>
+        var iconSelect;
+        var selectedText;
+        var savedIcon;
+
+        window.onload = function(){
+            savedIcon = document.getElementById('savedIcon').value;
+            selectedText = document.getElementById('selected-text');
+            savedIcon = savedIcon-1;
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+            });
+
+            iconSelect = new IconSelect("my-icon-select",
+                {'selectedIconWidth':23,
+                    'selectedIconHeight':23,
+                    'selectedBoxPadding':1,
+                    'iconsWidth':48,
+                    'iconsHeight':48,
+                    'boxIconSpace':1,
+                    'vectoralIconNumber':8,
+                    'horizontalIconNumber':6});
+
+            var icons = [];
+            iconBuild(icons);
+            iconSelect.refresh(icons, savedIcon);
+        };
+    </script>
+
     <script>
         var color;
         var colorName;
@@ -101,7 +137,7 @@
             }
             $('#some_select').html(select);
 
-            var alertGroup1,oldAlertGroupName,oldAlertGroupID,alertGroupID,alertGroupName,sortID;
+            var alertGroup1,oldAlertGroupName,oldAlertGroupID,alertGroupID,alertGroupName,sortID,icon;
             $("#<%= alertGroup.id %>").click(function(){
                 alertGroup1=$(this).attr('id');
                 oldAlertGroupID=$("#oldAlertGroupID").val();
@@ -109,6 +145,7 @@
                 oldAlertGroupName=$("#oldAlertGroupName").val();
                 alertGroupName=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
+                icon=$("#selected-text").val();
 
                 //-----forms validation------------------------------------
                 if (alertGroupName == "" ) {
@@ -132,7 +169,8 @@
                     alertGroupName: alertGroupName,
                     sortID: sortID,
                     colorName: colorName,
-                    colorValue: colorValue
+                    colorValue: colorValue,
+                    icon: icon
 
                 },function(data){
                     if(data==='done')
@@ -169,6 +207,11 @@
     </select><br><br>
     <% } %>
 
+
+    <label for="icon"><b>Icon:</b></label><br>
+    <div id="my-icon-select"></div><br>
+    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+    <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
 
 
     <label for="sortID"><b>Sort ID:</b></label><br>

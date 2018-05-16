@@ -191,6 +191,7 @@
                                             <th>Alert Group ID</th>
                                             <% } %>
                                             <th>Alert Group Color</th>
+                                            <th>Icon</th>
                                             <th>Update</th>
                                             <th>Delete</th>
                                         </tr>
@@ -207,8 +208,8 @@
                                             <td>N/A</td>
                                             <% } else { %>
                                             <td><%= alertGroup.colorName %></td>
-
                                             <% } %>
+                                            <td><img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons" alt="Avatar"></td>
                                             <td>
                                                 <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
                                                 <a href="/alertGroups/updateAlertGroups/<%= alertGroup.id %>"><button class="btn btn-warning">update</button></a>

@@ -2,9 +2,46 @@
 <head>
     <title>add privilege</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+    <script>
+        var iconSelect;
+        var selectedText;
+        var savedIcon;
+
+        window.onload = function(){
+            savedIcon = document.getElementById('savedIcon').value;
+            selectedText = document.getElementById('selected-text');
+            savedIcon = savedIcon-1;
+            console.log('savedIcon = ',savedIcon)
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+            });
+
+            iconSelect = new IconSelect("my-icon-select",
+                {'selectedIconWidth':23,
+                    'selectedIconHeight':23,
+                    'selectedBoxPadding':1,
+                    'iconsWidth':48,
+                    'iconsHeight':48,
+                    'boxIconSpace':1,
+                    'vectoralIconNumber':8,
+                    'horizontalIconNumber':6});
+
+            var icons = [];
+            iconBuild(icons);
+            iconSelect.refresh(icons, savedIcon);
+        };
+    </script>
+
     <script>
         $(document).ready(function(){
-            var privilegeID,privilegeName;
+            var privilegeID,privilegeName,icon;
             var select = '';
             var myArray = $("#inUsePrivilegeID").val().split(",").map(Number);
             for (i=1;i<=99;i++){
@@ -17,6 +54,7 @@
             $("#btSubmit").click(function(){
                 privilegeID=$("#some_select").val();
                 privilegeName=$("#privilegeName").val();
+                icon=$("#selected-text").val();
 
                 //-----forms validation------------------------------------
                 if (privilegeName == "" ) {
@@ -37,7 +75,9 @@
 
                 $.post("/privilege/addPrivilege",{
                     privilegeID: privilegeID,
-                    privilegeName: privilegeName
+                    privilegeName: privilegeName,
+                    icon: icon
+
                 },function(data){
                     if(data==='done')
                     {
@@ -63,6 +103,12 @@
 
     <label for="privilegeName"><b>Privilege Name:</b></label><br>
     <input type="text" id="privilegeName" size="40" placeholder="ex: super user" ><br><br>
+
+    <label for="icon"><b>Icon:</b></label><br>
+    <div id="my-icon-select"></div><br>
+    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+    <input type="text" id="savedIcon" name="savedIcon" hidden>
+
     <label for="privilegeID"><b>Privilege ID:</b></label><br>
     <input type="hidden" id="inUsePrivilegeID" value="<%= array %>">
     <select id='some_select'></select><br><br>

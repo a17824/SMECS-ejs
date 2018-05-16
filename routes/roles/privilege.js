@@ -72,7 +72,8 @@ module.exports.addPost = function(req, res) {
     //console.log(req.body.privilegeID);
     var privilege1 = new models.Privilege({
         privilegeID: req.body.privilegeID,
-        privilegeName: req.body.privilegeName
+        privilegeName: req.body.privilegeName,
+        icon: req.body.icon
     });
     privilege1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
@@ -141,6 +142,7 @@ module.exports.updatePost = function(req, res) {
     models.Privilege.findById({'_id': privilegeToUpdate1}, function(err, privilege){
         privilege.privilegeID = req.body.privilegeID;
         privilege.privilegeName = req.body.privilegeName;
+        privilege.icon = req.body.icon;
         privilege.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 console.log(err);

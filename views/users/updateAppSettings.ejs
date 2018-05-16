@@ -6,22 +6,20 @@
     <script>
 
         $(document).ready(function(){
-            var student_ID,groupAlertsButtons,oldGroupLogo,newGroupLogo;
+            var appSettingsToUpdate,groupAlertsButtons;
             $("#<%= user.id %>").click(function(){
-                student_ID=$(this).attr('id');
+                appSettingsToUpdate=$(this).attr('id');
                 groupAlertsButtons = document.getElementById("groupAlertsButtons").checked;
-                oldGroupLogo=$("#oldGroupLogo").val();
-                newGroupLogo=$("#newGroupLogo").val();
+
 
                 //-----forms validation------------------------------------
 
                 //--------------------------------forms validation end-------
 
                 $.post("/updateAppSettings",{
-                    studentToUpdate: student_ID,
-                    groupAlertsButtons: groupAlertsButtons,
-                    oldGroupLogo: oldGroupLogo,
-                    newGroupLogo: newGroupLogo
+                    appSettingsToUpdate: appSettingsToUpdate,
+                    groupAlertsButtons: groupAlertsButtons
+
                 },function(data){
                     if(data==='done')
                     {
@@ -42,7 +40,7 @@
     <input type="submit" value="Home"><br>
 </form>
 <form>
-    <input type="hidden" id="oldGroupLogo" value="<%= user.appSettings.groupAlertsLogo %>">
+
 
     <label for="busRide"><b>Show "Groups Buttons":</b></label>
     <% if (user.appSettings.groupAlertsButtons == true) {%>
@@ -50,12 +48,7 @@
     <% }else{%>
     <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>"><br><br>
     <% } %>
-    <label for="groupLogo"><b>Groups Buttons logo:</b></label>
-    <% if (user.appSettings.groupAlertsLogo === '' || user.appSettings.groupAlertsLogo == undefined) {%>
-    N/A
-    <% } else { %>
-    <img id="newGroupLogo" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/groupAlertLogos/<%= user.appSettings.groupAlertsLogo %>" /><br><br>
-    <% } %>
+
 
     <br><br>
     <% if (userAuthID == 1) {%>

@@ -4,35 +4,7 @@ var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
 
-/* SHOW ALL AlertGroups. */
-/*
-module.exports.show = function(req, res, next) {
-    async.parallel([
-        function(callback){
-            models.AlertsGroup.find().sort({"sortID":1}).exec(callback);
-        },
-        function(callback){aclPermissions.addAlertGroup(req, res, callback);},   //aclPermissions addAlertGroup
-        function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},   //aclPermissions modifyAlertGroup
-        function(callback){aclPermissions.deleteAlertGroup(req, res, callback);},   //aclPermissions deleteAlertGroup
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
-    ],function(err, results){
-        functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('alertsAndGroups/showAlertsAndGroups',{
-            title:'Alert Groups',
-            userAuthID: req.user.userPrivilegeID,
-            alertGroup: results[0],
-            aclAddAlertGroup: results[1], //aclPermissions addAlertGroup
-            aclModifyAlertGroup: results[2], //aclPermissions modifyAlertGroup
-            aclDeleteAlertGroup: results[3], //aclPermissions deleteAlertGroup
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-
-        });
-    })
-};
-*/
 
 /* ADD AlertGroups. -------------------------------*/
 module.exports.add = function(req, res) {
@@ -90,7 +62,8 @@ module.exports.addPost = function(req, res) {
         alertTypeName: req.body.alertGroupName,
         sortID: req.body.sortID,
         colorName: req.body.colorName,
-        colorValue: req.body.colorValue
+        colorValue: req.body.colorValue,
+        icon: req.body.icon
 
     });
     alertGroup1.save(function (err) {
@@ -157,6 +130,7 @@ module.exports.updatePost = function(req, res) {
         alertGroup.sortID = req.body.sortID;
         alertGroup.colorName = req.body.colorName;
         alertGroup.colorValue = req.body.colorValue;
+        alertGroup.icon = req.body.icon;
 
         alertGroup.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {

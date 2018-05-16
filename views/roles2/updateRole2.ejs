@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
 
     <script>
         var iconSelect;
@@ -17,7 +18,6 @@
             savedIcon = document.getElementById('savedIcon').value;
             selectedText = document.getElementById('selected-text');
             savedIcon = savedIcon-1;
-            console.log('savedIcon = ',savedIcon)
 
             document.getElementById('my-icon-select').addEventListener('changed', function(e){
                 selectedText.value = iconSelect.getSelectedValue();
@@ -30,28 +30,11 @@
                     'iconsWidth':48,
                     'iconsHeight':48,
                     'boxIconSpace':1,
-                    'vectoralIconNumber':6,
+                    'vectoralIconNumber':8,
                     'horizontalIconNumber':6});
 
             var icons = [];
-            icons.push({'iconFilePath':'/public/icons/1.png', 'iconValue':'1'});
-            icons.push({'iconFilePath':'/public/icons/2.png', 'iconValue':'2'});
-            icons.push({'iconFilePath':'/public/icons/3.png', 'iconValue':'3'});
-            icons.push({'iconFilePath':'/public/icons/4.png', 'iconValue':'4'});
-            icons.push({'iconFilePath':'/public/icons/5.png', 'iconValue':'5'});
-            icons.push({'iconFilePath':'/public/icons/6.png', 'iconValue':'6'});
-            icons.push({'iconFilePath':'/public/icons/7.png', 'iconValue':'7'});
-            icons.push({'iconFilePath':'/public/icons/8.png', 'iconValue':'8'});
-            icons.push({'iconFilePath':'/public/icons/9.png', 'iconValue':'9'});
-            icons.push({'iconFilePath':'/public/icons/10.png', 'iconValue':'10'});
-            icons.push({'iconFilePath':'/public/icons/11.png', 'iconValue':'11'});
-            icons.push({'iconFilePath':'/public/icons/12.png', 'iconValue':'12'});
-            icons.push({'iconFilePath':'/public/icons/13.png', 'iconValue':'13'});
-            icons.push({'iconFilePath':'/public/icons/14.png', 'iconValue':'14'});
-            icons.push({'iconFilePath':'/public/icons/15.png', 'iconValue':'15'});
-            icons.push({'iconFilePath':'/public/icons/16.png', 'iconValue':'16'});
-            icons.push({'iconFilePath':'/public/icons/17.png', 'iconValue':'17'});
-
+            iconBuild(icons);
             iconSelect.refresh(icons, savedIcon);
         };
     </script>
@@ -151,7 +134,7 @@
 
 
     <label for="icon"><b>Icon:</b></label><br>
-    <div id="my-icon-select"></div>
+    <div id="my-icon-select"></div><br>
     <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
     <input type="text" id="savedIcon" name="savedIcon" value="<%= roles2.icon %>" hidden>
 

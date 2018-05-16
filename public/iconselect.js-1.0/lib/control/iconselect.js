@@ -29,6 +29,9 @@ IconSelect.DEFAULT.VECTORAL_ICON_NUMBER = 3;
 
 IconSelect.COMPONENT_ICON_FILE_PATH = "/public/iconselect.js-1.0/images/control/icon-select/arrow.png";
 
+
+
+
 function IconSelect($$elementID, $$parameters) {
     
     var _icons = [];

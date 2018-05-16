@@ -210,8 +210,14 @@
                                                 <% } %>
                                                 <% } %>
                                             </td>
-                                            <td><%= user.userPrivilegeName %></td>
-
+                                            <td>
+                                            <% for (var i = 0; i < privileges.length; i++) {%>
+                                            <% if (privileges[i].privilegeName == user.userPrivilegeName) {%>
+                                            <img src="/icons/<%= privileges[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userPrivilegeName %><br>
+                                            <% break%>
+                                            <% } %>
+                                            <% } %>
+                                            </td>
                                             <td align="center">
                                                 <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
                                                 <a href="/users/updateUser/<%= user.id %>"><button class="btn btn-warning">update</button></a>
