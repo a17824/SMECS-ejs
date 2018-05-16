@@ -79,6 +79,7 @@
                                     <% if (userAuthID == 1) {%>
                                     <th>Role ID</th>
                                     <% } %>
+                                    <th>Icon</th>
                                     <th>Update</th>
                                     <th>Delete</th>
 
@@ -91,6 +92,7 @@
                                     <% if (userAuthID == 1) {%>
                                     <td><%= role2.roleID %></td>
                                     <% } %>
+                                    <td><img src="/icons/<%= role2.icon %>.png" class="avatarIcons" alt="Avatar"></td>
                                     <td>
                                         <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
                                         <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>

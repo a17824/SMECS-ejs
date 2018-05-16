@@ -108,6 +108,19 @@ p { margin: 1px }
 p { margin: 1px }
 /* end of Parents in showUsers.ejs Avatar */
 
+
+.avatarIcons {
+    object-fit: cover; /* Do not scale the image */
+    /*object-position: 50% 20%;*/ /* Center the image within the element */
+    height: 20px;
+    width: 20px;
+    /*border-radius: 10%;*/
+    /*border: 1px solid #ddd;*/
+    /*padding: 2px;*/
+
+}
+
+
 /*
 .xAvatar {
     border-radius: 10%;

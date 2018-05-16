@@ -103,7 +103,9 @@ module.exports.Privilege = mongoose.model("Privilege", PrivilegeSchema);
 var Roles2Schema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     roleID: { type: Number, unique: true },
-    roleName: { type: String, unique: true } // Principal, Teacher, Staff, OfficeStaff, Bus Driver, Nurse, Parents, Counselor
+    roleName: { type: String, unique: true }, // Principal, Teacher, Staff, OfficeStaff, Bus Driver, Nurse, Parents, Counselor
+    icon: String
+
 }, {collection:"Roles2"}); //stops Mongoose of giving plurals to our collections names
 var Roles2;
 module.exports.Roles2 = mongoose.model("Roles2", Roles2Schema);

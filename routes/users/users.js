@@ -14,6 +14,7 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.Users.find().sort({"firstName":1}).exec(callback);
         },
+        function(callback){models.Roles2.find().exec(callback);},
         function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
@@ -29,12 +30,13 @@ module.exports.show = function(req, res, next) {
             res.render('users/showUsers',{
                 title:'USERS',
                 users: results[0],
+                roles: results[1],
                 userAuthID: req.user.userPrivilegeID,
-                aclShowDeletedUsers: results[1], //aclPermissions showDeletedUsers
-                aclAddUsers: results[2], //aclPermissions addUsers
-                aclModifyUsers: results[3],  //aclPermissions modifyUsers
-                aclDeleteUsers: results[4],  //aclPermissions deleteUsers
-                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclShowDeletedUsers: results[2], //aclPermissions showDeletedUsers
+                aclAddUsers: results[3], //aclPermissions addUsers
+                aclModifyUsers: results[4],  //aclPermissions modifyUsers
+                aclDeleteUsers: results[5],  //aclPermissions deleteUsers
+                aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo,
                 redirectTab: req.user.redirectTabUsers

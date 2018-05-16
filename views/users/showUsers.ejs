@@ -154,11 +154,11 @@
                                             <th>Photo</th>
                                             <th>First Name</th>
                                             <th>Last Name</th>
-                                            <th>SMECS<br>Installed</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>SMECS<br>Settings</th>
                                             <% } %>
                                             <th>Email</th>
+                                            <th>SMECS<br>Installed</th>
                                             <th>Role</th>
                                             <th>Privilege</th>
                                             <th align="center">Update</th>
@@ -185,6 +185,12 @@
                                             <% } %>
                                             <td><%= user.firstName %></td>
                                             <td><%= user.lastName %></td>
+                                            <% if (userAuthID == 1) {%>
+                                            <td>
+                                                <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
+                                            </td>
+                                            <% } %>
+                                            <td><%= user.email %></td>
                                             <td>
                                                 <% if (user.pushToken) { %>
                                                 <img  src="/miscPictures/greenCheckmarkWeb20.png">
@@ -192,16 +198,15 @@
                                                 <img  src="/miscPictures/redCross20.png">
                                                 <% } %>
                                             </td>
-                                            <% if (userAuthID == 1) {%>
-                                            <td>
-                                                <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
-                                            </td>
-                                            <% } %>
-                                            <td><%= user.email %></td>
                                             <td >
                                                 <% if (user.userRoleName.length > 0) { %>
                                                 <% for (var x = 0; x < user.userRoleName.length; x++) {%>
-                                                <%= user.userRoleName[x] %><br>
+                                                    <% for (var i = 0; i < roles.length; i++) {%>
+                                                        <% if (roles[i].roleName == user.userRoleName[x]) {%>
+                                                            <img src="/icons/<%= roles[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userRoleName[x] %><br>
+                                                            <% break%>
+                                                        <% } %>
+                                                    <% } %>
                                                 <% } %>
                                                 <% } %>
                                             </td>

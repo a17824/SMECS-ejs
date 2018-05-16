@@ -185,11 +185,11 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var roleToUpdate1 = req.body.roleToUpdate;
-    console.log("iiiiiiiiiiiiiiii");
     models.Roles2.findById({'_id': roleToUpdate1}, function(err, role){
         role.roleID = req.body.roleID;
         role.roleName = req.body.roleName;
         role.sortID = req.body.sortID;
+        role.icon = req.body.icon;
         role.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
                 console.log(err);
@@ -214,8 +214,6 @@ module.exports.updatePost = function(req, res) {
                     if( err || !users) console.log("No Users found in database");
                     else users.forEach( function(user) {
                         for (var i=0; i < user.userRoleID.length; i++) {
-                            console.log(oldRoleIdToUpdate);
-                            console.log(oldRoleNameToUpdate);
                             if (user.userRoleID[i] == oldRoleIdToUpdate){
                                 user.userRoleID[i] = parseInt(req.body.roleID);
                                 user.markModified("userRoleID");
