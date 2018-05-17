@@ -94,6 +94,7 @@ module.exports.ParentSelfRegistration = mongoose.model("ParentSelfRegistration",
 var PrivilegeSchema = new mongoose.Schema({
     privilegeID: { type: Number, unique: true },
     privilegeName: { type: String, unique: true }, // Administrator, PowerUser, Regular User
+    useIcon: { type: Boolean, default: false },
     icon: String
 
 }, {collection:"Privilege"}); //stops Mongoose of giving plurals to our collections names
@@ -105,6 +106,7 @@ var Roles2Schema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     roleID: { type: Number, unique: true },
     roleName: { type: String, unique: true }, // Principal, Teacher, Staff, OfficeStaff, Bus Driver, Nurse, Parents, Counselor
+    useIcon: { type: Boolean, default: false },
     icon: String
 
 }, {collection:"Roles2"}); //stops Mongoose of giving plurals to our collections names
@@ -123,6 +125,7 @@ var StudentsSchema = new mongoose.Schema({
         parentLastName: String,
         parentPhoto: String
     }]
+
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Students"}); //stops Mongoose of giving plurals to our collections names
 var Students;
@@ -137,6 +140,7 @@ var UtilityUsersSchema = new mongoose.Schema({
     softDeleted: { type: String, default: null},
     resetPasswordToken: String,
     resetPasswordExpires: Date
+
 }, {collection:"UtilityUsers"}); //stops Mongoose of giving plurals to our collections names
 var UtilityUsers;
 module.exports.UtilityUsers = mongoose.model("UtilityUsers", UtilityUsersSchema);
@@ -146,6 +150,7 @@ var PermissionsGroupSchema = new mongoose.Schema({
     permissionsGroupID: { type: Number, unique: true },
     permissionsGroupName: { type: String, unique: true }, // Users, Alerts, Students
     sortID: { type: Number, unique: true }
+
 }, {collection:"PermissionsGroup"}); //stops Mongoose of giving plurals to our collections names
 var PermissionsGroup;
 module.exports.PermissionsGroup = mongoose.model("PermissionsGroup", PermissionsGroupSchema);
@@ -157,6 +162,7 @@ var PermissionsSchema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     permissionsID: { type: Number, unique: true },
     permissionsName: { type: String, unique: true } // Permission to Add Users, Delete Users, Modify Users, Add User Photo
+
 }, {collection:"Permissions"}); //stops Mongoose of giving plurals to our collections names
 var Permissions;
 module.exports.Permissions = mongoose.model("Permissions", PermissionsSchema);
@@ -168,6 +174,7 @@ var AlertsGroupSchema = new mongoose.Schema({
     alertTypeName: { type: String, unique: true }, // Users, Alerts, Students
     colorName: String,
     colorValue: String,
+    useIcon: { type: Boolean, default: false },
     icon: String
 
 }, {collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
@@ -190,7 +197,10 @@ var AlertsSchema = new mongoose.Schema({
     whoCanCall911: [String],
     alertRequestProcedureCompleted: { type: Boolean, default: true },
     alertRequestWeAreSafe: { type: Boolean, default: true },
-    softDeleted: { type: Boolean, default: false }
+    softDeleted: { type: Boolean, default: false },
+    useIcon: { type: Boolean, default: false },
+    icon: String
+
 }, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;
 module.exports.Alerts = mongoose.model("Alerts", AlertsSchema);
@@ -561,3 +571,17 @@ var PA_RecordedSchema = new mongoose.Schema({
 }, {collection:"PA_Recorded"}); //stops Mongoose of giving plurals to our collections names
 var PA_Recorded;
 module.exports.PA_Recorded = mongoose.model("PA_Recorded", PA_RecordedSchema);
+
+
+// DEFINE Icons COLLECTION IN MONGOdb
+var IconsSchema = new mongoose.Schema({
+    useAlertGroupIcons: { type: Boolean, default: false },
+    useAlertsIcons: { type: Boolean, default: false },
+    useRolesIcons: { type: Boolean, default: false },
+    usePrivilegeIcons: { type: Boolean, default: false },
+    useParentsUsersIcons: { type: Boolean, default: true },
+    useParentsStudentsIcons: { type: Boolean, default: true },
+
+}, {collection:"Icons"}); //stops Mongoose of giving plurals to our collections names
+var Icons;
+module.exports.Icons = mongoose.model("Icons", IconsSchema);

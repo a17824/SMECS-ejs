@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
         //Detect if user is using the back/foreward button, then reload whole page
         if (!!window.performance && window.performance.navigation.type === 2) {
@@ -28,6 +29,46 @@
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function() {
+            var useIcons;
+            <% console.log('nao ebtrou = ') %>
+/*
+            $(function () {
+
+                if ($(this).is(":checked")) {
+                    $('img').removeClass("grayOut");
+                    useIcons = true;
+                } else {
+                    $('img').addClass("grayOut");
+                    useIcons = false;
+                }
+*/
+                $('input:checkbox').change(function () {
+
+                    if ($(this).is(":checked")) {
+                        $('img').removeClass("grayOut");
+                        useIcons = true;
+                    } else {
+                        $('img').addClass("grayOut");
+                        useIcons = false;
+                    }
+                    $.post("/icons", {
+                        iconType: 'roles',
+                        useIcons: useIcons
+
+                    }, function (data) {
+                        if (data === 'done') {
+                            alert("login success");
+                        }
+                        window.location = data.redirect
+                    });
+                });
+   //         });
+
+        });
+    </script>
 
 </head>
 
@@ -71,6 +112,8 @@
                                 </div>
                                 <br>
                             </ul>
+
+
                             <table id="datatable" class="table table-hover">
                                 <thead>
                                 <tr>
@@ -79,7 +122,13 @@
                                     <% if (userAuthID == 1) {%>
                                     <th>Role ID</th>
                                     <% } %>
-                                    <th>Icon</th>
+                                    <% console.log('useIcons = ',useIcons) %>
+                                    <% if(useIcons == true) { %>
+                                    <th>Icon <input type="checkbox" id="iconsCheck" checked/></th>
+                                    <% }else {%>
+
+                                    <th>Icon <input type="checkbox" id="iconsCheck"/></th>
+                                    <% } %>
                                     <th>Update</th>
                                     <th>Delete</th>
 
@@ -92,7 +141,9 @@
                                     <% if (userAuthID == 1) {%>
                                     <td><%= role2.roleID %></td>
                                     <% } %>
-                                    <td><img src="/icons/<%= role2.icon %>.png" class="avatarIcons" alt="Avatar"></td>
+                                    <td>
+
+                                        <img id="iconsImg" src="/icons/<%= role2.icon %>.png" class="avatarIcons grayOut" alt="Avatar"></td>
                                     <td>
                                         <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
                                         <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>

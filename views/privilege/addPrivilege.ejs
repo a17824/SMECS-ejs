@@ -11,13 +11,10 @@
     <script>
         var iconSelect;
         var selectedText;
-        var savedIcon;
+
 
         window.onload = function(){
-            savedIcon = document.getElementById('savedIcon').value;
             selectedText = document.getElementById('selected-text');
-            savedIcon = savedIcon-1;
-            console.log('savedIcon = ',savedIcon)
 
             document.getElementById('my-icon-select').addEventListener('changed', function(e){
                 selectedText.value = iconSelect.getSelectedValue();
@@ -35,7 +32,7 @@
 
             var icons = [];
             iconBuild(icons);
-            iconSelect.refresh(icons, savedIcon);
+            iconSelect.refresh(icons, 1);
         };
     </script>
 
@@ -107,7 +104,6 @@
     <label for="icon"><b>Icon:</b></label><br>
     <div id="my-icon-select"></div><br>
     <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
-    <input type="text" id="savedIcon" name="savedIcon" hidden>
 
     <label for="privilegeID"><b>Privilege ID:</b></label><br>
     <input type="hidden" id="inUsePrivilegeID" value="<%= array %>">

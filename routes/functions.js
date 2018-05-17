@@ -58,6 +58,19 @@ module.exports.redirectTabAlertGroups = function(req, res, tab) {
 };
 
 
+module.exports.useIcons = function(req, res) {
+    console.log('CRIUI');
+    var iconType = req.body.iconType;
+    var useIcons = req.body.useIcons;
+
+    if(iconType == 'roles'){
+        models.Icons.findOneAndUpdate({_id: '5afcab36dcba311ccc719b0a'}, {$set:{useRolesIcons:useIcons}}, {new: true}, function(err){
+            if(err) console.log("Something wrong when updating useRolesIcons");});}
+
+};
+
+
+
 //SIDE MENU PERMISSIONS
 module.exports.aclSideMenu = function(req, res, callback) {
     async.parallel([

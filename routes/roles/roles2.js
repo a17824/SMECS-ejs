@@ -15,6 +15,7 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.Roles2.find().sort({"sortID": 1}).exec(callback);
         },
+        function(callback){models.Icons.findById('5afcab36dcba311ccc719b0a').exec(callback);},
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
         function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
@@ -22,14 +23,16 @@ module.exports.show = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
+    console.log('useIconsdfsf = ',results[1]);
         res.render('roles2/showRoles2',{
             title:'Roles',
             userAuthID: req.user.userPrivilegeID,
             roles2: results[0],
-            aclAddRoles2: results[1], //aclPermissions addRoles2
-            aclModifyRoles2: results[2],  //aclPermissions modifyRoles2
-            aclDeleteRoles2: results[3],  //aclPermissions deleteRoles2
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            useIcons: results[1].useRolesIcons,
+            aclAddRoles2: results[2], //aclPermissions addRoles2
+            aclModifyRoles2: results[3],  //aclPermissions modifyRoles2
+            aclDeleteRoles2: results[4],  //aclPermissions deleteRoles2
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
 
