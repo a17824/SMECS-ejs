@@ -91,158 +91,134 @@ module.exports.proceduresGet = function (req, res) {
 module.exports.alertReceiptPost = function (req, res) {
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
-    console.log(email);
     var wrapped = moment(new Date());
-    models.AlertSentInfo.findOneAndUpdate({
-        '_id': alertID,
-        'sentTo.email': email
-    }, {
-        $set: {
-            'sentTo.$.received.receivedBoolean': true,
-            'sentTo.$.received.receivedDate': wrapped.format('YYYY-MM-DD'),
-            'sentTo.$.received.receivedTime': wrapped.format('h:mm:ss a')
+
+    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to locate user.'});
+            } else {
+                for (var i = 0; i < alert.sentTo.length; i++) {
+                    if(alert.sentTo[i].email == email ){
+                        alert.sentTo[i].received.receivedBoolean = true;
+                        alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
+                        alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
+                        alert.save();
+                        res.json({
+                            success: true
+                        });
+                        break
+                    }
+                }
+            }
         }
-    }, {
-        new: true
-    }, function (err, alert) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to locate user.'
-            });
-        } else {
-            return res.json({
-                success: true
-            });
-        }
-    });
+    );
 };
 
 /* Receive the viewed for message delivered -------------------------------*/
 module.exports.alertViewedPost = function (req, res) {
+    var wrapped = moment(new Date());
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
-    console.log('alertID = ', alertID);
 
-    var wrapped = moment(new Date());
-    models.AlertSentInfo.findOneAndUpdate({
-        '_id': alertID,
-        'sentTo.email': email,
-        //'sentTo.viewed.viewedBoolean': false //<-- here is my issue. It's not finding this.
-    }, {
-        $set: {
-            'sentTo.$.viewed.viewedBoolean': true,
-            'sentTo.$.viewed.viewedDate': wrapped.format('YYYY-MM-DD'),
-            'sentTo.$.viewed.viewedTime': wrapped.format('h:mm:ss a')
+    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to locate user.'});
+            } else {
+                for (var i = 0; i < alert.sentTo.length; i++) {
+
+                    if(alert.sentTo[i].email == email && alert.sentTo[i].viewed.viewedBoolean == false ){
+                        alert.sentTo[i].viewed.viewedBoolean = true;
+                        alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
+                        alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
+                        alert.save();
+                        res.json({
+                            success: true
+                        });
+                        break
+                    }
+                }
+            }
         }
-    }, {
-        new: true
-    }, function (err, alert) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to locate user.'
-            });
-        } else {
-            return res.json({
-                success: true
-            });
-        }
-    });
+    );
 };
 
 /* Receive the called 911 for message delivered -------------------------------*/
 module.exports.alertCalled911 = function (req, res) {
     var email = req.decoded.email;
     var alertID = req.body.alertID;
-
     var wrapped = moment(new Date());
-    models.AlertSentInfo.findOneAndUpdate({
-        '_id': alertID,
-        'sentTo.email': email,
-        //'sentTo.called911.called911Boolean': false
-    }, {
-        $set: {
-            'sentTo.$.called911.called911Boolean': true,
-            'sentTo.$.called911.called911Date': wrapped.format('YYYY-MM-DD'),
-            'sentTo.$.called911.called911Time': wrapped.format('h:mm:ss a')
+
+    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to locate user.'});
+            } else {
+                for (var i = 0; i < alert.sentTo.length; i++) {
+                    if(alert.sentTo[i].email == email && alert.sentTo[i].called911.called911Boolean == false ){
+                        alert.sentTo[i].called911.called911Boolean = true;
+                        alert.sentTo[i].called911.called911Date = wrapped.format('YYYY-MM-DD');
+                        alert.sentTo[i].called911.called911Time = wrapped.format('h:mm:ss a');
+                        alert.save();
+                        res.json({
+                            success: true
+                        });
+                        break
+                    }
+                }
+            }
         }
-    }, {
-        new: true
-    }, function (err, alert) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to locate user.'
-            });
-        } else {
-            return res.json({
-                success: true
-            });
-        }
-    });
+    );
 };
 
 /* Receive the procedure completed for message delivered -------------------------------*/
 module.exports.alertProcedureCompleted = function (req, res) {
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
-
     var wrapped = moment(new Date());
-    models.AlertSentInfo.findOneAndUpdate({
-        '_id': alertID,
-        'sentTo.email': email,
-        //'sentTo.procedureCompleted.boolean': false
-    }, {
-        $set: {
-            'sentTo.$.procedureCompleted.boolean': true,
-            'sentTo.$.procedureCompleted.date': wrapped.format('YYYY-MM-DD'),
-            'sentTo.$.procedureCompleted.time': wrapped.format('h:mm:ss a')
+
+    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to locate user.'});
+            } else {
+                for (var i = 0; i < alert.sentTo.length; i++) {
+                    if(alert.sentTo[i].email == email && alert.sentTo[i].procedureCompleted.boolean == false ){
+                        alert.sentTo[i].procedureCompleted.boolean = true;
+                        alert.sentTo[i].procedureCompleted.date = wrapped.format('YYYY-MM-DD');
+                        alert.sentTo[i].procedureCompleted.time = wrapped.format('h:mm:ss a');
+                        alert.save();
+                        res.json({
+                            success: true
+                        });
+                        break
+                    }
+                }
+            }
         }
-    }, {
-        new: true
-    }, function (err, alert) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to locate user.'
-            });
-        } else {
-            return res.json({
-                success: true
-            });
-        }
-    });
+    );
 };
 
 /* Receive the procedure completed for message delivered -------------------------------*/
 module.exports.alertWeAreSafe = function (req, res) {
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
-
     var wrapped = moment(new Date());
-    models.AlertSentInfo.findOneAndUpdate({
-        '_id': alertID,
-        'sentTo.email': email,
-        //'sentTo.weAreSafe.boolean': false
-    }, {
-        $set: {
-            'sentTo.$.weAreSafe.boolean': true,
-            'sentTo.$.weAreSafe.date': wrapped.format('YYYY-MM-DD'),
-            'sentTo.$.weAreSafe.time': wrapped.format('h:mm:ss a')
+
+    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to locate user.'});
+            } else {
+                for (var i = 0; i < alert.sentTo.length; i++) {
+                    if(alert.sentTo[i].email == email && alert.sentTo[i].weAreSafe.boolean == false ){
+                        alert.sentTo[i].weAreSafe.boolean = true;
+                        alert.sentTo[i].weAreSafe.date = wrapped.format('YYYY-MM-DD');
+                        alert.sentTo[i].weAreSafe.time = wrapped.format('h:mm:ss a');
+                        alert.save();
+                        res.json({
+                            success: true
+                        });
+                        break
+                    }
+                }
+            }
         }
-    }, {
-        new: true
-    }, function (err, alert) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to locate user.'
-            });
-        } else {
-            return res.json({
-                success: true
-            });
-        }
-    });
+    );
 };

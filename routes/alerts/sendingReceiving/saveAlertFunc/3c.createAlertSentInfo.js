@@ -10,7 +10,7 @@ var moment = require('moment');
  *
  */
 
-module.exports.alertSentInfo = function(req, res, tempAlert) {
+module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
     var wrapped = moment(new Date());
 
     var sentTo = [];
@@ -84,7 +84,7 @@ module.exports.alertSentInfo = function(req, res, tempAlert) {
 
     });
     alert1.save();
-
+    callback(alert1._id)
 
 
 };

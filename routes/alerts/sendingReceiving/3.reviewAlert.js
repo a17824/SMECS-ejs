@@ -110,10 +110,6 @@ module.exports.postReviewAlert = function(req, res, next) {
             });
         },
         function (tempAlert, callback) {
-            create.alertSentInfo(req, res, tempAlert); //create AlertSentInfo
-            callback(null, tempAlert);
-        },
-        function (tempAlert, callback) {
 
             // Alert Request Assistance
             if (tempAlert.alertNameID == 26 ){
@@ -139,8 +135,12 @@ module.exports.postReviewAlert = function(req, res, next) {
 
     ], function (err, tempAlert) {
 
-        /*****  CALL HERE NOTIFICATION API  *****/
-        pushNotification.alert(tempAlert, 'newAlert');
+        create.alertSentInfo(req, res, tempAlert,function (result,err) {  //create AlertSentInfo
+
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.alert(tempAlert, 'newAlert');
+
+        });
 
         if(req.decoded){ //API user
             res.json({

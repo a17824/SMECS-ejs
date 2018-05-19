@@ -282,7 +282,6 @@ router.get('/privilege/showPrivilege/:id', auth.simpleAuth, auth.requireLogin, p
 
 
 
-
 /* SHOW ALL AlertGroups and Alerts. */
 router.get('/alertGroups/showAlertGroups', auth.simpleAuth, auth.requireLogin, showAlertsAndGroups.show, function(req, res, next) {
 });
