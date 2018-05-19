@@ -91,18 +91,8 @@ module.exports.auth = function (req, res, next) {
 // route middleware to verify pin
 module.exports.pin = function (req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    var email;
+    var email = req.decoded.user.email;
     var pushToken = req.body.pushToken;
-    jwt.verify(token, config.secret, function (err, decoded) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to authenticate token.'
-            });
-        } else {
-            email = decoded.user.email;
-        }
-    });
     models.Users.findOne({'email': email}, function (err, user) {
         if (err) {
             return res.json({

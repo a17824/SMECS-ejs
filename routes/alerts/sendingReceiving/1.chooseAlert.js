@@ -11,7 +11,6 @@ var functions = require('./../../functions');
 
 /* Choose Group. -------------------------------*/
 module.exports.showGroups = function(req, res) {
-
     if(req.decoded) { // run SMECS API
         models.Users.findOne({'email': req.decoded.user.email}, function (err, user) {
             if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF ----------

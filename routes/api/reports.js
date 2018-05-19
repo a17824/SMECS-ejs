@@ -89,7 +89,9 @@ module.exports.proceduresGet = function (req, res) {
 
 /* Receive the receipt for message delivered -------------------------------*/
 module.exports.alertReceiptPost = function (req, res) {
-    var email = req.decoded.email;
+    var email = req.decoded.user.email;
+    var alertID = req.body.alertID;
+    console.log(email);
     var wrapped = moment(new Date());
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
@@ -118,14 +120,15 @@ module.exports.alertReceiptPost = function (req, res) {
 
 /* Receive the viewed for message delivered -------------------------------*/
 module.exports.alertViewedPost = function (req, res) {
-    var email = req.decoded.email;
+    var email = req.decoded.user.email;
     var alertID = req.body.alertID;
+    console.log('alertID = ', alertID);
 
     var wrapped = moment(new Date());
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
         'sentTo.email': email,
-        'sentTo.viewed.viewedBoolean': false
+        //'sentTo.viewed.viewedBoolean': false //<-- here is my issue. It's not finding this.
     }, {
         $set: {
             'sentTo.$.viewed.viewedBoolean': true,
@@ -157,7 +160,7 @@ module.exports.alertCalled911 = function (req, res) {
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
         'sentTo.email': email,
-        'sentTo.called911.called911Boolean': false
+        //'sentTo.called911.called911Boolean': false
     }, {
         $set: {
             'sentTo.$.called911.called911Boolean': true,
@@ -182,14 +185,14 @@ module.exports.alertCalled911 = function (req, res) {
 
 /* Receive the procedure completed for message delivered -------------------------------*/
 module.exports.alertProcedureCompleted = function (req, res) {
-    var email = req.decoded.email;
+    var email = req.decoded.user.email;
     var alertID = req.body.alertID;
 
     var wrapped = moment(new Date());
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
         'sentTo.email': email,
-        'sentTo.procedureCompleted.boolean': false
+        //'sentTo.procedureCompleted.boolean': false
     }, {
         $set: {
             'sentTo.$.procedureCompleted.boolean': true,
@@ -214,14 +217,14 @@ module.exports.alertProcedureCompleted = function (req, res) {
 
 /* Receive the procedure completed for message delivered -------------------------------*/
 module.exports.alertWeAreSafe = function (req, res) {
-    var email = req.decoded.email;
+    var email = req.decoded.user.email;
     var alertID = req.body.alertID;
 
     var wrapped = moment(new Date());
     models.AlertSentInfo.findOneAndUpdate({
         '_id': alertID,
         'sentTo.email': email,
-        'sentTo.weAreSafe.boolean': false
+        //'sentTo.weAreSafe.boolean': false
     }, {
         $set: {
             'sentTo.$.weAreSafe.boolean': true,
