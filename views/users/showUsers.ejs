@@ -201,22 +201,31 @@
                                             <td >
                                                 <% if (user.userRoleName.length > 0) { %>
                                                 <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                                                    <% if(useRolesIcons == true) { %>
                                                     <% for (var i = 0; i < roles.length; i++) {%>
                                                         <% if (roles[i].roleName == user.userRoleName[x]) {%>
                                                             <img src="/icons/<%= roles[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userRoleName[x] %><br>
                                                             <% break%>
                                                         <% } %>
                                                     <% } %>
+                                                    <% }else {%>
+                                                    <%= user.userRoleName[x] %><br>
+                                                    <% } %>
                                                 <% } %>
                                                 <% } %>
                                             </td>
                                             <td>
-                                            <% for (var i = 0; i < privileges.length; i++) {%>
-                                            <% if (privileges[i].privilegeName == user.userPrivilegeName) {%>
-                                            <img src="/icons/<%= privileges[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userPrivilegeName %><br>
-                                            <% break%>
-                                            <% } %>
-                                            <% } %>
+                                                 <% /* if(useRolesIcons == true) { */ %>
+                                                <% if(usePrivilegeIcons == true) { %>
+                                                <% for (var i = 0; i < privileges.length; i++) {%>
+                                                <% if (privileges[i].privilegeName == user.userPrivilegeName) {%>
+                                                <img src="/icons/<%= privileges[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userPrivilegeName %><br>
+                                                <% break%>
+                                                <% } %>
+                                                <% } %>
+                                                <% }else {%>
+                                                <%= user.userPrivilegeName %>
+                                                <% } %>
                                             </td>
                                             <td align="center">
                                                 <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>

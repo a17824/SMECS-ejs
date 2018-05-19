@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script>
         //Detect if user is using the back/foreward button, then reload whole page
         if (!!window.performance && window.performance.navigation.type === 2) {
@@ -33,40 +34,26 @@
     <script>
         $(document).ready(function() {
             var useIcons;
-            <% console.log('nao ebtrou = ') %>
-/*
-            $(function () {
-
+            $('input:checkbox').change(function () {
                 if ($(this).is(":checked")) {
-                    $('img').removeClass("grayOut");
+                    $('img.avatarIcons').removeClass("grayOut");
                     useIcons = true;
                 } else {
-                    $('img').addClass("grayOut");
+                    $('img.avatarIcons').addClass("grayOut");
                     useIcons = false;
                 }
-*/
-                $('input:checkbox').change(function () {
 
-                    if ($(this).is(":checked")) {
-                        $('img').removeClass("grayOut");
-                        useIcons = true;
-                    } else {
-                        $('img').addClass("grayOut");
-                        useIcons = false;
+                $.post("/icons", {
+                    iconType: 'roles',
+                    useIcons: useIcons
+
+                }, function (data) {
+                    if (data === 'done') {
+                        alert("login success");
                     }
-                    $.post("/icons", {
-                        iconType: 'roles',
-                        useIcons: useIcons
-
-                    }, function (data) {
-                        if (data === 'done') {
-                            alert("login success");
-                        }
-                        window.location = data.redirect
-                    });
+                    window.location = data.redirect
                 });
-   //         });
-
+            });
         });
     </script>
 
@@ -122,13 +109,13 @@
                                     <% if (userAuthID == 1) {%>
                                     <th>Role ID</th>
                                     <% } %>
-                                    <% console.log('useIcons = ',useIcons) %>
+                                    <th>
                                     <% if(useIcons == true) { %>
-                                    <th>Icon <input type="checkbox" id="iconsCheck" checked/></th>
+                                    Icon <input type="checkbox" id="iconsCheck" checked/>
                                     <% }else {%>
-
-                                    <th>Icon <input type="checkbox" id="iconsCheck"/></th>
+                                    Icon <input type="checkbox" id="iconsCheck"/>
                                     <% } %>
+                                    </th>
                                     <th>Update</th>
                                     <th>Delete</th>
 
@@ -142,8 +129,12 @@
                                     <td><%= role2.roleID %></td>
                                     <% } %>
                                     <td>
-
-                                        <img id="iconsImg" src="/icons/<%= role2.icon %>.png" class="avatarIcons grayOut" alt="Avatar"></td>
+                                        <% if(useIcons == true) { %>
+                                        <img id="iconsImg" src="/icons/<%= role2.icon %>.png" class="avatarIcons" alt="Avatar">
+                                    <% }else {%>
+                                    <img id="iconsImg" src="/icons/<%= role2.icon %>.png" class="avatarIcons grayOut" alt="Avatar">
+                                    <% } %>
+                                    </td>
                                     <td>
                                         <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
                                         <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>

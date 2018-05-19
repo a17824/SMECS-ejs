@@ -5,41 +5,7 @@ var aclPermissions = require('./../acl/aclPermissions');
 var slug = require('slug');
 var functions = require('./../functions');
 
-/* SHOW Active Alerts. */
-/*
-module.exports.show = function(req, res, next) {
-    async.parallel([
-        function(callback){
-            models.Alerts.find().sort({"sortID":1}).sort({"sortID":1}).exec(callback);
-        },
-        function(callback){
-            models.AlertsGroup.find().sort({"sortID":1}).exec(callback);
-        },
-        function(callback){aclPermissions.addAlerts(req, res, callback);},   //aclPermissions addAlerts
-        function(callback){aclPermissions.modifyAlert(req, res, callback);},   //aclPermissions modifyAlert
-        function(callback){aclPermissions.deleteAlert(req, res, callback);},   //aclPermissions deleteAlert
-        function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
-    ],function(err, results){
-        functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('alertsAndGroups/showAlertsAndGroups',{
-            title:'Alerts',
-            userAuthID: req.user.userPrivilegeID,
-            alert: results[0],
-            alertsGroup: results[1],
-            aclAddAlert: results[2], //aclPermissions addAlerts
-            aclModifyAlert: results[3], //aclPermissions modifyAlert
-            aclDeleteAlert: results[4], //aclPermissions deleteAlert
-            aclShowProcedure: results[5], //aclPermissions showProcedure
-            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
-    })
-};
-*/
-/* end of SHOW active Alerts. */
 
 /* SHOW SoftDeleted ALERTS. */
 module.exports.showSoftDeleted = function(req, res, next) {
@@ -142,7 +108,9 @@ module.exports.createPost = function(req, res) {
             alertName: req.body.alertName,
             alertSlugName: slug(req.body.alertName),
             alertProcedure: req.body.alertProcedure,
-            sortID: req.body.sortID
+            sortID: req.body.sortID,
+            icon: req.body.icon
+
         });
         alert1.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
@@ -269,6 +237,8 @@ module.exports.updatePost = function(req, res) {
             alert.sortID = req.body.sortID;
             alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
             alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
+            alert.icon = req.body.icon;
+
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {
                     console.log(err);

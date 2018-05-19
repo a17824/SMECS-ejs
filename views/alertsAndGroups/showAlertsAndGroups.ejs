@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-        //Detect if user is using the back/foreward button, then reload whole page
-        if (!!window.performance && window.performance.navigation.type === 2) {
-            // value 2 means "The page was accessed by navigating into the history"
-            console.log('Reloading');
-            window.location.reload(); // reload whole page
-        }
-        //end of Detect if user is using the back/foreward button, then reload whole page
 
-        // reload whole page if page is cached
-        window.onpageshow = function (event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
-        };
-        // end of Reload whole page if page is cached
-    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
@@ -34,58 +18,100 @@
     <!-- Custom Theme Style -->
 
 
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
     <script type="text/javascript">
 
         $(document).ready(function () {
-                $('a[role="tab"]').on('shown.bs.tab', function (e) {
-                    var target = $(e.target).attr("id") // activated tab
-                    //alert(target);
+/*
+            $('#datatable').live('page', function() {
+                //This will get called when data table data gets redrawn to the      table.
+                alert("clicked");
+            });
+*/
+                $('#datatablewrapper').find('.dataTables_paginate').on('click', 'li:not(.disabled) a', function() { alert("clicked") });
+               /* $('#datatable').dataTable().api().ajax.reload(null, false);*/
 
-                    $.post("/redirectTabAlertGroups", {
-                        tab: target
+            var useGroupIcons;
+            var useAlertsIcons;
+            $('.iconGroup').on('change',function () {
+                if ($(this).is(":checked")) {
+                    $('img.avatarIcons').removeClass("grayOut");
+                    useGroupIcons = true;
+                } else {
+                    $('img.avatarIcons').addClass("grayOut");
+                    useGroupIcons = false;
+                }
 
-                    }, function (data) {
-                        if (data === 'done') {
-                            alert("login success");
-                        }
-                        window.location = data.redirect
-                    });
+                $.post("/icons", {
+                    iconType: 'groups',
+                    useIcons: useGroupIcons
+
+                }, function (data) {
+                    window.location = data.redirect
                 });
+            });
+            $('.iconAlerts').on('change',function () {
+                if ($(this).is(":checked")) {
+                    $('img.alerts').removeClass("grayOut");
+                    useAlertsIcons = true;
+                } else {
+                    $('img.alerts').addClass("grayOut");
+                    useAlertsIcons = false;
+                }
 
-                $("#alertGroupLink").live("click", function () {
-                    $.ajax({
-                        url: '/alertGroups/showAlertGroups',
-                        type: 'GET',
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
+                $.post("/icons", {
+                    iconType: 'alerts',
+                    useIcons: useAlertsIcons
 
-                        error: function(error){
-                            if(error.responseText == 'showAlert')
-                                alert("Alert Group NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
-                        }
-                    });
+                }, function (data) {
+                    window.location = data.redirect
                 });
+            });
 
-                $("#alertLink").live("click", function () {
-                    $.ajax({
-                        url: '/alerts/showAlerts',
-                        type: 'GET',
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
+            $('a[role="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("id") // activated tab
+                //alert(target);
 
-                        error: function(error){
-                            if(error.responseText == 'showAlert')
-                                alert("Alert not deleted.")
-                        }
-                    });
+                $.post("/redirectTabAlertGroups", {
+                    tab: target
+
+                }, function (data) {
+                    window.location = data.redirect
                 });
+            });
 
-                $("#btSubmit").click(function () {
+            $("#alertGroupLink").on("click", function () {
+                $.ajax({
+                    url: '/alertGroups/showAlertGroups',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
 
+                    error: function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Alert Group NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
+                    }
                 });
+            });
+
+            $("#alertLink").on("click", function () {
+                $.ajax({
+                    url: '/alerts/showAlerts',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+
+                    error: function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Alert not deleted.")
+                    }
+                });
+            });
+
+            $("#btSubmit").click(function () {
+
+            });
             }
         );
     </script>
@@ -191,7 +217,13 @@
                                             <th>Alert Group ID</th>
                                             <% } %>
                                             <th>Alert Group Color</th>
-                                            <th>Icon</th>
+                                            <th>
+                                                <% if(useGroupIcons == true) { %>
+                                                Icon <input type="checkbox" class="iconGroup" checked/>
+                                                <% }else {%>
+                                                Icon <input type="checkbox" class="iconGroup"/>
+                                                <% } %>
+                                            </th>
                                             <th>Update</th>
                                             <th>Delete</th>
                                         </tr>
@@ -209,7 +241,13 @@
                                             <% } else { %>
                                             <td><%= alertGroup.colorName %></td>
                                             <% } %>
-                                            <td><img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons" alt="Avatar"></td>
+                                            <td>
+                                                <% if(useGroupIcons == true) { %>
+                                                <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups" alt="Avatar">
+                                                <% }else {%>
+                                                <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups grayOut" alt="Avatar">
+                                                <% } %>
+                                            </td>
                                             <td>
                                                 <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
                                                 <a href="/alertGroups/updateAlertGroups/<%= alertGroup.id %>"><button class="btn btn-warning">update</button></a>
@@ -248,6 +286,13 @@
                                             <th>Alert Group</th>
                                             <th>Alert #</th>
                                             <th>Alert Name</th>
+                                            <th>
+                                                <% if(useAlertsIcons == true) { %>
+                                                Icon <input type="checkbox" class="iconAlerts" checked/>
+                                                <% }else {%>
+                                                Icon <input type="checkbox" class="iconAlerts"/>
+                                                <% } %>
+                                            </th>
                                             <% if (userAuthID == 1) {%>
                                             <th>Alert ID</th>
                                             <% } %>
@@ -269,6 +314,14 @@
                                             <td><%= alert.alertTypeName %></td>
                                             <td><%= alert.sortID %></td>
                                             <td><%= alert.alertName %></td>
+
+                                            <td>
+                                                <% if(useAlertsIcons == true) { %>
+                                                <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts" alt="Avatar">
+                                                <% }else {%>
+                                                <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts grayOut" alt="Avatar">
+                                                <% } %>
+                                            </td>
 
                                             <% if (userAuthID == 1) {%>
                                             <td><%= alert.alertID %></td>

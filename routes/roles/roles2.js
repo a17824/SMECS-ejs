@@ -23,7 +23,6 @@ module.exports.show = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
-    console.log('useIconsdfsf = ',results[1]);
         res.render('roles2/showRoles2',{
             title:'Roles',
             userAuthID: req.user.userPrivilegeID,

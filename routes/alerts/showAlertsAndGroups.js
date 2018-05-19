@@ -13,7 +13,7 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.Alerts.find().sort({"sortID":1}).sort({"sortID":1}).exec(callback);
         },
-
+        function(callback){models.Icons.findById('5afcab36dcba311ccc719b0a').exec(callback);},
         function(callback){aclPermissions.addAlertGroup(req, res, callback);},   //aclPermissions addAlertGroup
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},   //aclPermissions modifyAlertGroup
         function(callback){aclPermissions.deleteAlertGroup(req, res, callback);},   //aclPermissions deleteAlertGroup
@@ -32,14 +32,16 @@ module.exports.show = function(req, res, next) {
             userAuthID: req.user.userPrivilegeID,
             alertGroup: results[0],
             alert: results[1],
-            aclAddAlertGroup: results[2], //aclPermissions addAlertGroup
-            aclModifyAlertGroup: results[3], //aclPermissions modifyAlertGroup
-            aclDeleteAlertGroup: results[4], //aclPermissions deleteAlertGroup
-            aclAddAlert: results[5], //aclPermissions addAlerts
-            aclModifyAlert: results[6], //aclPermissions modifyAlert
-            aclDeleteAlert: results[7], //aclPermissions deleteAlert
-            aclShowProcedure: results[8], //aclPermissions showProcedure
-            aclSideMenu: results[9],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            useGroupIcons: results[2].useAlertGroupIcons,
+            useAlertsIcons: results[2].useAlertsIcons,
+            aclAddAlertGroup: results[3], //aclPermissions addAlertGroup
+            aclModifyAlertGroup: results[4], //aclPermissions modifyAlertGroup
+            aclDeleteAlertGroup: results[5], //aclPermissions deleteAlertGroup
+            aclAddAlert: results[6], //aclPermissions addAlerts
+            aclModifyAlert: results[7], //aclPermissions modifyAlert
+            aclDeleteAlert: results[8], //aclPermissions deleteAlert
+            aclShowProcedure: results[9], //aclPermissions showProcedure
+            aclSideMenu: results[10],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,
             redirectTab: req.user.redirectTabAlertGroups

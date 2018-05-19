@@ -19,6 +19,36 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+
+
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+      <script>
+          $(document).ready(function() {
+              var useIcons;
+              $('input:checkbox').change(function () {
+                  if ($(this).is(":checked")) {
+                      $('img.avatarIcons').removeClass("grayOut");
+                      useIcons = true;
+                  } else {
+                      $('img.avatarIcons').addClass("grayOut");
+                      useIcons = false;
+                  }
+
+                  $.post("/icons", {
+                      iconType: 'privilege',
+                      useIcons: useIcons
+
+                  }, function (data) {
+                      if (data === 'done') {
+                          alert("login success");
+                      }
+                      window.location = data.redirect
+                  });
+              });
+          });
+      </script>
+
   </head>
 
   <body class="nav-md">
@@ -51,19 +81,8 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_content">
-                  <div class="" role="tabpanel" data-example-id="togglable-tabs">
-                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                      <li role="presentation" class=""><a href="#tab_content1" role="tab" data-toggle="tab" aria-expanded="true">Roles</a>
-                      </li>
-                      <li role="presentation" class="active"><a href="#tab_content2" role="tab" data-toggle="tab" aria-expanded="false">Privileges</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div id="myTabContent" class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1">
 
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content2">
+
                       <form action="/privilege/addPrivilege">
                         <% if (aclAddPrivilege == null || aclAddPrivilege.checkBoxValue == true) {%>
                         <button class="btn btn-primary" type="submit" value="Add Privilege">Add Privilege</button>
@@ -77,7 +96,13 @@
                             <th></th>
                             <th>Privilege Name</th>
                             <th>Privilege ID</th>
-                            <th>Icon</th>
+                              <th>
+                                  <% if(useIcons == true) { %>
+                                  Icon <input type="checkbox" id="iconsCheck" checked/>
+                                  <% }else {%>
+                                  Icon <input type="checkbox" id="iconsCheck"/>
+                                  <% } %>
+                              </th>
                             <th>Update</th>
                             <th>Delete</th>
                           </tr>
@@ -88,7 +113,13 @@
                             <td></td>
                             <td><%= privilege.privilegeName %></td>
                             <td><%= privilege.privilegeID %></td>
-                              <td><img src="/icons/<%= privilege.icon %>.png" class="avatarIcons" alt="Avatar"></td>
+                              <td>
+                                  <% if(useIcons == true) { %>
+                                  <img id="iconsImg" src="/icons/<%= privilege.icon %>.png" class="avatarIcons" alt="Avatar">
+                                  <% }else {%>
+                                  <img id="iconsImg" src="/icons/<%= privilege.icon %>.png" class="avatarIcons grayOut" alt="Avatar">
+                                  <% } %>
+                              </td>
                             <td>
                               <% if (aclModifyPrivilege == null || aclModifyPrivilege.checkBoxValue == true) {%>
                               <a href="/privilege/updatePrivilege/<%= privilege.id %>"><button class="btn btn-primary">update</button></a>
@@ -107,17 +138,13 @@
                           <% }); %>
                         </tbody>
                       </table>
-                    </div>
-
                     <!-- footer content -->
                     <% include ../layout/footer.ejs %>
                     <!-- /footer content -->
-
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

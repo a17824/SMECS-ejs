@@ -4,6 +4,40 @@
     <link rel='stylesheet' href='/stylesheets/addUtility.css' />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+    <script>
+        var iconSelect;
+        var selectedText;
+
+        window.onload = function(){
+
+            selectedText = document.getElementById('selected-text');
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+            });
+
+            iconSelect = new IconSelect("my-icon-select",
+                {'selectedIconWidth':23,
+                    'selectedIconHeight':23,
+                    'selectedBoxPadding':1,
+                    'iconsWidth':48,
+                    'iconsHeight':48,
+                    'boxIconSpace':1,
+                    'vectoralIconNumber':8,
+                    'horizontalIconNumber':6});
+
+            var icons = [];
+            iconBuild(icons);
+            iconSelect.refresh(icons, 1);
+        };
+    </script>
+
     <script>
 
         var choices;
@@ -94,7 +128,7 @@
                 }
             });
 
-            var alertGroupID,alertGroupName,alertID,alertName, alertProcedure, request911Call, sortID;
+            var alertGroupID,alertGroupName,alertID,alertName, alertProcedure, request911Call, sortID, icon;
             $("#btSubmit").click(function(){
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -113,6 +147,7 @@
                 alertName=$("#alertName").val();
                 alertProcedure=$("#alertProcedure").val();
                 sortID=$("#sort_select").val();
+                icon=$("#selected-text").val();
                 var alertRequestProcedureCompleted = document.getElementById("checkboxProc").checked;
                 var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
 
@@ -145,7 +180,8 @@
                     alertProcedure: alertProcedure,
                     sortID: sortID,
                     alertRequestProcedureCompleted: alertRequestProcedureCompleted,
-                    alertRequestWeAreSafe: alertRequestWeAreSafe
+                    alertRequestWeAreSafe: alertRequestWeAreSafe,
+                    icon: icon
 
                 },function(data){
                     if(data==='done')
@@ -173,6 +209,10 @@
 
     <label for="alertName"><b>Alert Name:</b></label><br>
     <input type="text" id="alertName" size="40" placeholder="ex: Evacuate" ><br><br>
+
+    <label for="icon"><b>Icon:</b></label><br>
+    <div id="my-icon-select"></div><br>
+    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
 
     <input type="hidden" id="inUseAlertID" value="<%= array %>">
     <input type="hidden" id="alertProcedure" >

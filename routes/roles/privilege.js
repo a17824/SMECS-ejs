@@ -16,6 +16,7 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.Privilege.find().sort({"privilegeID":1}).exec(callback);
         },
+        function(callback){models.Icons.findById('5afcab36dcba311ccc719b0a').exec(callback);},
         function(callback){aclPermissions.addPrivilege(req, res, callback);},      //aclPermissions addPrivilege
         function(callback){aclPermissions.modifyPrivilege(req, res, callback);},   //aclPermissions modifyPrivilege
         function(callback){aclPermissions.deletePrivilege(req, res, callback);},    //aclPermissions deletePrivilege
@@ -26,10 +27,11 @@ module.exports.show = function(req, res, next) {
         res.render('privilege/showPrivilege',{
             title:'Privilege Privilege',
             privilege: results[0],
-            aclAddPrivilege: results[1],       //aclPermissions addPrivilege
-            aclModifyPrivilege: results[2],    //aclPermissions modifyPrivilege
-            aclDeletePrivilege: results[3],     //aclPermissions deletePrivilege
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            useIcons: results[1].usePrivilegeIcons,
+            aclAddPrivilege: results[2],       //aclPermissions addPrivilege
+            aclModifyPrivilege: results[3],    //aclPermissions modifyPrivilege
+            aclDeletePrivilege: results[4],     //aclPermissions deletePrivilege
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });

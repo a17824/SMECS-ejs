@@ -580,7 +580,7 @@ var IconsSchema = new mongoose.Schema({
     useRolesIcons: { type: Boolean, default: false },
     usePrivilegeIcons: { type: Boolean, default: false },
     useParentsUsersIcons: { type: Boolean, default: true },
-    useParentsStudentsIcons: { type: Boolean, default: true },
+    useParentsStudentsIcons: { type: Boolean, default: true }
 
 }, {collection:"Icons"}); //stops Mongoose of giving plurals to our collections names
 var Icons;
