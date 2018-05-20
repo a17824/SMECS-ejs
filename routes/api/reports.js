@@ -119,24 +119,24 @@ module.exports.alertViewedPost = function (req, res) {
     var wrapped = moment(new Date());
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
+    var success = false;
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
             if (err) {
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {
-
                     if(alert.sentTo[i].email == email && alert.sentTo[i].viewed.viewedBoolean == false ){
                         alert.sentTo[i].viewed.viewedBoolean = true;
                         alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
                         alert.save();
-                        res.json({
-                            success: true
-                        });
+                        success = true;
                         break
                     }
                 }
+                res.json({success: success});
+
             }
         }
     );
@@ -173,22 +173,38 @@ module.exports.alertCalled911 = function (req, res) {
 module.exports.alertProcedureCompleted = function (req, res) {
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
+    var completed = req.body.completed;
     var wrapped = moment(new Date());
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
             if (err) {
-                return res.json({success: false, message: 'Failed to locate user.'});
+                return res.json({success: false, message: 'Failed to locate alert.'});
             } else {
-                for (var i = 0; i < alert.sentTo.length; i++) {
-                    if(alert.sentTo[i].email == email && alert.sentTo[i].procedureCompleted.boolean == false ){
-                        alert.sentTo[i].procedureCompleted.boolean = true;
-                        alert.sentTo[i].procedureCompleted.date = wrapped.format('YYYY-MM-DD');
-                        alert.sentTo[i].procedureCompleted.time = wrapped.format('h:mm:ss a');
-                        alert.save();
-                        res.json({
-                            success: true
-                        });
-                        break
+                if (completed == 'true') {
+                    for (var i = 0; i < alert.sentTo.length; i++) {
+                        if(alert.sentTo[i].email == email && alert.sentTo[i].procedureCompleted.boolean == false ){
+                            alert.sentTo[i].procedureCompleted.boolean = true;
+                            alert.sentTo[i].procedureCompleted.date = wrapped.format('YYYY-MM-DD');
+                            alert.sentTo[i].procedureCompleted.time = wrapped.format('h:mm:ss a');
+                            alert.save();
+                            res.json({
+                                success: true
+                            });
+                            break
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < alert.sentTo.length; i++) {
+                        if(alert.sentTo[i].email == email && alert.sentTo[i].procedureCompleted.boolean == true ){
+                            alert.sentTo[i].procedureCompleted.boolean = false;
+                            alert.sentTo[i].procedureCompleted.date = undefined;
+                            alert.sentTo[i].procedureCompleted.time = undefined;
+                            alert.save();
+                            res.json({
+                                success: true
+                            });
+                            break
+                        }
                     }
                 }
             }
@@ -200,12 +216,14 @@ module.exports.alertProcedureCompleted = function (req, res) {
 module.exports.alertWeAreSafe = function (req, res) {
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
+    var completed = req.body.completed;
     var wrapped = moment(new Date());
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
             if (err) {
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
+                if (completed == 'true') {
                 for (var i = 0; i < alert.sentTo.length; i++) {
                     if(alert.sentTo[i].email == email && alert.sentTo[i].weAreSafe.boolean == false ){
                         alert.sentTo[i].weAreSafe.boolean = true;
@@ -218,6 +236,20 @@ module.exports.alertWeAreSafe = function (req, res) {
                         break
                     }
                 }
+            } else {
+                for (var i = 0; i < alert.sentTo.length; i++) {
+                    if(alert.sentTo[i].email == email && alert.sentTo[i].weAreSafe.boolean == true ){
+                        alert.sentTo[i].weAreSafe.boolean = false;
+                        alert.sentTo[i].weAreSafe.date = undefined;
+                        alert.sentTo[i].weAreSafe.time = undefined;
+                        alert.save();
+                        res.json({
+                            success: true
+                        });
+                        break
+                    }
+                }
+            }
             }
         }
     );
