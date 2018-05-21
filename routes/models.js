@@ -213,6 +213,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     alertName: String,          //stranger, evacuate
     //alertSlugName: String,
     sentBy: String,
+    sentDate: String,
     sentTime: String,
     sentRoleIDScope: [Number],
     sentRoleNameScope: [String],      // Teachers, Staff, Parents...

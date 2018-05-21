@@ -11,7 +11,7 @@ var functions = require('../../functions');
 module.exports.reportsAlerts = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.AlertSentInfo.find().exec(callback);
+            models.AlertSentInfo.find().sort({"sentDate":-1}).sort({"sentTime":-1}).exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
@@ -19,7 +19,7 @@ module.exports.reportsAlerts = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('reports/showReports',{
+        res.render('reports/reports',{
             title: 'REPORTS SENT',
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
@@ -33,8 +33,12 @@ module.exports.reportsAlerts = function(req, res, next) {
 
 /* Update STATUS Report. */
 module.exports.updateStatus = function(req, res) {
+
+    console.log('--------- ',req.params.id);
+
     var statusToChange = req.params.id;
     var wrapped = moment(new Date());
+
     models.AlertSentInfo.findById({'_id': statusToChange}, function(err, alert){
         if(err){
             console.log('err - changing Alert STATUS');
@@ -54,10 +58,11 @@ module.exports.updateStatus = function(req, res) {
         alert.save();
 
         /*****  CALL HERE NOTIFICATION API  *****/
-        pushNotification.alert(alert, 'closeAlert');
+        //pushNotification.alert(alert, 'closeAlert');
 
         res.redirect('/reports/showReports');
     })
+
 };
 /* ------------ end of SoftDeleted USERS. */
 

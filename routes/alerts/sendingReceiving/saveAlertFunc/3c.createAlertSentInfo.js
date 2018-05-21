@@ -42,7 +42,8 @@ module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
     var alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,
         sentBy: sentByApiEjs,
-        sentTime: wrapped.format('YYYY-MM-DD, h:mm:ss a'),
+        sentDate: wrapped.format('YYYY-MM-DD'),
+        sentTime: wrapped.format('h:mm:ss a'),
         alertGroupID: tempAlert.alertGroupID,
         alertGroupName: tempAlert.alertGroupName,
         alertNameID: tempAlert.alertNameID,

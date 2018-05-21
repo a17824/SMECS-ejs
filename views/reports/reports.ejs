@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- Datatables -->
+      <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+      <!-- iCheck -->
+      <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+      <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
+
+
+
+
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+
+            <!-- menu profile quick info -->
+            <% include ../layout/menuProfile.ejs %>
+            <!-- /menu profile quick info -->
+
+            <br>
+
+            <!-- sidebar menu -->
+            <% include ../layout/sideMenu.ejs %>
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+
+            <div class="row top_tiles">
+                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                    <div class="tile-stats">
+                        <div class="icon"><i class="fa fa-hourglass-end"></i></div>
+                        <div class="count">5 min</div>
+                        <h3>Ann Lee</h3>
+                        <p>Slowest user to view alerts.</p>
+                    </div>
+                </div>
+                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                    <div class="tile-stats">
+                        <div class="icon"><i class="fa fa-hourglass-half"></i></div>
+                        <div class="count">33 sec</div>
+                        <h3>.</h3>
+                        <p>Average users time to view alerts.</p>
+                    </div>
+                </div>
+                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                    <div class="tile-stats">
+                        <div class="icon"><i class="fa fa-hourglass-start"></i></div>
+                        <div class="count">7 sec</div>
+                        <h3>Carol Bee</h3>
+                        <p>Fastest user to view alerts.</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+
+
+              <div class="x_panel">
+                <div class="x_content">
+
+                    <table id="datatable-buttons" class="table ">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Alert</th>
+                            <th>Sent by</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Change<br>Alert Status</th>
+                            <th>Delete <input type="checkbox"
+                                              name="S"
+                                              id="S"
+                                              class="chk-all"
+                                              data-child="S"/> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% reportSent.forEach(function(reportS) { %>
+
+                        <% if ( reportS.status.statusString == 'open'){ %>
+                        <% var color = "#efad4c"  %>
+                        <% } else { %>
+                        <% var color = "#FFF" %>
+                        <% } %>
+                        <tr bgcolor= "<%= color %>">
+                            <td></td>
+                            <td><%= reportS.sentDate %></td>
+                            <td><%= reportS.sentTime %></td>
+                            <td><%= reportS.alertGroupName %></td>
+                            <td><%= reportS.alertName %></td>
+                            <td><%= reportS.sentBy %></td>
+                            <td><a href="/reports/showReportsDetails/<%= reportS.id %>"><button class="btn btn-info">show</button></a></td>
+                            <% if ( reportS.status.statusString == 'closed'){ %>
+                                <td><a href="/reportStatus/<%= reportS.id %>"><%= reportS.status.statusString %></a></td>
+
+
+                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               checked="checked"
+                                               onclick='window.location.assign("/reportStatus/<%= reportS.id %>")'>
+                                    </td>
+                                <% } else { %>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               checked="checked" disabled>
+                                    </td>
+                                <% } %>
+
+                            <% } else { %>
+                                <td><a href="/reportStatus/<%= reportS.id %>">in progress...</a></td>
+                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               onclick='window.location.assign("/reportStatus/<%= reportS.id %>")'>
+                                    </td>
+                                <% } else { %>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green" disabled>
+                                    </td>
+                                <% } %>
+
+                            <% } %>
+                            <td align="center">
+                                <% if (aclDeleteReports == null || aclDeleteReports.checkBoxValue == true) {%>
+                                <a href="/reports/showReports"><button class="btn btn-danger">delete</button></a>
+                                <% } else { %>
+                                <a href="/reports/showReports"><button class="btn btn-danger" disabled>delete</button></a>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          <!-- footer content -->
+          <% include ../layout/footer.ejs %>
+          <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+    <!-- Bootstrap -->
+    <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- FastClick -->
+    <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
+    !-- Datatables -->
+    <script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+    <script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+
+
+
+
+    <!-- Custom Theme Scripts -->
+    <script src="/public/gentelella/build/js/custom.js"></script>
+    <!-- Google Analytics -->
+
+  </body>
+
+</html>
