@@ -152,8 +152,7 @@
                                         <tr>
                                             <th></th>
                                             <th>Photo</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
+                                            <th>Name</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>SMECS<br>Settings</th>
                                             <% } %>
@@ -183,8 +182,7 @@
                                                 <a href="/photos/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>"  class="avatarUsers"></a>
                                             </td>
                                             <% } %>
-                                            <td><%= user.firstName %></td>
-                                            <td><%= user.lastName %></td>
+                                            <td><%= user.firstName %> <%= user.lastName %></td>
                                             <% if (userAuthID == 1) {%>
                                             <td>
                                                 <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
@@ -264,8 +262,7 @@
                                         <tr>
                                             <th></th>
                                             <th align="center">Photo</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
+                                            <th>Name</th>
                                             <th>SMECS<br>Installed</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>SMECS<br>Settings</th>
@@ -294,8 +291,7 @@
                                                 <a href="/photos/addPhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="avatarUsers"></a>
                                             </td>
                                             <% } %>
-                                            <td><%= user.firstName %></td>
-                                            <td><%= user.lastName %></td>
+                                            <td><%= user.firstName %> <%= user.lastName %></td>
                                             <td>
                                                 <% if (user.pushToken) { %>
                                                 <img  src="/miscPictures/greenCheckmarkWeb20.png">
