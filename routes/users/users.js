@@ -6,6 +6,8 @@ var models = require('./../models');
 var moment = require('moment');
 var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
+var pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
+
 
 
 /* SHOW Active USERS. */
@@ -770,6 +772,9 @@ module.exports.updateAppSettingsPost = function(req, res) {
         }else{
             user.appSettings.groupAlertsButtons = groupAlertsButtons;
             user.save();
+
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.alert(alert, 'closeAlert');
         }
         return res.send({redirect: '/users/showUsers'})
     });
