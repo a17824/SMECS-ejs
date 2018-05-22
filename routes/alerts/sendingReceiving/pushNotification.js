@@ -29,7 +29,17 @@ module.exports.alert= function(alert, action) {
 };
 //end of Create message for cellPhone notification
 
-
+//Create message for cellPhone notification
+module.exports.notifyUser = function(userPushToken, action) {
+            var message = {
+                to: userPushToken, // required fill with device token
+                data: { //you can send only notification or only data(or include both)
+                    action: action
+                }
+            };
+            sendPush(message, userName);
+};
+//end of Create message for cellPhone notification
 
 
 
