@@ -30,14 +30,16 @@ module.exports.alert= function(alert, action) {
 //end of Create message for cellPhone notification
 
 //Create message for cellPhone notification
-module.exports.notifyUser = function(userPushToken, action) {
+module.exports.notifyUser = function(user, action) {
             var message = {
-                to: userPushToken, // required fill with device token
+                to: user.pushToken, // required fill with device token
                 data: { //you can send only notification or only data(or include both)
-                    action: action
+                    action: action,
+                    groupAlertsButtons: user.appSettings.groupAlertsButtons,
+                    theme: user.appSettings.theme
                 }
             };
-            sendPush(message, userName);
+            sendPush(message, user.firstName + ' ' + user.lastName);
 };
 //end of Create message for cellPhone notification
 

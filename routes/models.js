@@ -38,10 +38,8 @@ var UsersSchema = new mongoose.Schema({
     redirectTabAlertGroups: { type: String, default: 'showGroups'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
-        theme: String,
-        soundPanic: String,
-        soundSend: String,
-        soundReceive: String
+        theme: String
+
     }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
@@ -175,7 +173,8 @@ var AlertsGroupSchema = new mongoose.Schema({
     colorName: String,
     colorValue: String,
     useIcon: { type: Boolean, default: false },
-    icon: String
+    icon: String,
+    sound: String
 
 }, {collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
 var AlertsGroup;
