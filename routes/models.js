@@ -174,7 +174,11 @@ var AlertsGroupSchema = new mongoose.Schema({
     colorValue: String,
     useIcon: { type: Boolean, default: false },
     icon: String,
-    sound: String
+    sound: {
+        type: String,
+        name: String,
+        mp3: String
+    }
 
 }, {collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
 var AlertsGroup;

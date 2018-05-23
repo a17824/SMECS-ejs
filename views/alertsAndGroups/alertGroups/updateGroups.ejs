@@ -1,6 +1,9 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
 
     <!-- color dropdown menu -->
@@ -15,15 +18,9 @@
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
     <script type="text/javascript" src="/public/icons/js/icons.js"></script>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
-    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
     <script>
         var iconSelect;
@@ -40,14 +37,14 @@
             });
 
             iconSelect = new IconSelect("my-icon-select",
-                {'selectedIconWidth':23,
-                    'selectedIconHeight':23,
+                {'selectedIconWidth':30,
+                    'selectedIconHeight':30,
                     'selectedBoxPadding':1,
                     'iconsWidth':48,
                     'iconsHeight':48,
                     'boxIconSpace':1,
-                    'vectoralIconNumber':8,
-                    'horizontalIconNumber':6});
+                    'vectoralIconNumber':7,
+                    'horizontalIconNumber':4});
 
             var icons = [];
             iconBuild(icons);
@@ -68,10 +65,10 @@
         }
 
         $(document).ready(function(){
-            
+
             //dropdown rectangle color
             $(function() {
-                
+
                 $.widget("custom.selectmenu", $.ui.selectmenu, {
                     _renderItem: function(ul, item) {
 
@@ -99,28 +96,13 @@
                     .selectmenu("menuWidget")
                     .addClass("ui-menu-icons customicons");
 
-                var Color = {
-                    Data: [
-                        {RgbValue: 'ff0000', ColorName: 'Red'},
-                        {RgbValue: '008000', ColorName: 'Green'},
-                        {RgbValue: '0000FF', ColorName: 'Blue'},
-                        {RgbValue: 'FFFF00', ColorName: 'Yellow'},
-                        {RgbValue: 'FFD700', ColorName: 'Gold'},
-                        {RgbValue: '000000', ColorName: 'Black'},
-                        //{RgbValue: 'FFFFFF', ColorName: 'White'},
-                        {RgbValue: 'FF00FF', ColorName: 'Magenta'},
-                        {RgbValue: 'FFA500', ColorName: 'Orange'},
-                        {RgbValue: '76EEC6', ColorName: 'Aquamarine'},
-                        {RgbValue: '4682B4', ColorName: 'Steelblue'},
-                        {RgbValue: 'CD69C9', ColorName: 'Orchild'},
-                        {RgbValue: '6A5ACD', ColorName: 'Slateblue'},
-                        {RgbValue: '8FBC8F', ColorName: 'Darkseagreen'}
-                    ]
-                };
+                colorBuild(function (result) {
+                    var Color = result;
+                    for (var i = 0; i < Color.Data.length; i++) {
+                        $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName));
+                    }
+                });
 
-                for (var i = 0; i < Color.Data.length; i++) {
-                    $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName)		);
-                }
             });
             //end off dropdown rectangle color
 
@@ -174,7 +156,7 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
-                
+
 
                 $.post("/alertGroups/updateAlertGroups",{
                     alertGroupToUpdate: alertGroup1,
@@ -184,7 +166,8 @@
                     alertGroupName: alertGroupName,
                     sortID: sortID,
                     colorName: colorName,
-                    colorValue: colorValue
+                    colorValue: colorValue,
+                    icon: icon
 
                 },function(data){
                     if(data==='done')
@@ -232,15 +215,36 @@
             <div class="page-title">
                 <div class="title_left">
                     <h3>Update Group</h3>
+                    <div >
+                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
+                        <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="<%= alertGroup.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success">Save
+                        </button>
+
+                        <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                        <% } else { %>
+                        <button type="button"
+                                id="<%= alertGroup.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success" disabled>Save
+                        </button>
+                        <% } %>
+                    </div>
                 </div>
 
+
+
                 <div class="title_right">
+
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search for...">
-                            <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
                         </div>
                     </div>
                 </div>
@@ -248,27 +252,21 @@
 
             <div class="clearfix"></div>
 
+
+
+
+
             <div class="row">
                 <div class="col-md-6 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2><small>Details </small> </h2>
+                            <h2><small>Name & Sort</small></h2>
 
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon: </label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <div id="my-icon-select"></div>
-                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
-                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
-                                    </div>
-                                </div>
-
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name: </label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
@@ -285,18 +283,6 @@
                                 </div>
 
                                 <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
-
-                                <% if (alertGroup.alertTypeID !== 1) {%>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color: </label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select name="DropDownID" id="DropDownID" >
-                                            <option style="alignment: center" value="<%= alertGroup.colorValue %>" selected disabled hidden><%= alertGroup.colorName %></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <% } %>
-
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number: <span class="required">*</span>
@@ -321,89 +307,103 @@
                                 <% } %>
                                 <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.alertTypeID %>">
 
-
-
-                                <div class="ln_solid"></div>
-                                <div class="form-group">
-                                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-
-                                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
-                                        <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
-                                        <input type="button" id="<%= alertGroup.id %>" value="Submit" onClick="GetSelectedItem('DropDownID');"><br>
-                                        <!-- <button type="submit" class="btn btn-success">Submit</button> -->
-                                        <% } else { %>
-                                        <input type="button" id="<%= alertGroup.id %>" value="Submit" disabled><br>
-                                        <% } %>
-
-                                    </div>
-                                </div>
-
-
-
-
                             </form>
+                            <div class="ln_solid"></div>
                         </div>
                     </div>
 
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Icon & Color</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <% if (alertGroup.alertTypeID !== 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color: </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select name="DropDownID" id="DropDownID" >
+                                            <option style="alignment: center" value="<%= alertGroup.colorValue %>" selected disabled hidden><%= alertGroup.colorName %></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon: </label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div id="my-icon-select"></div>
+                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <br><br><br><br><br>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
-
-
-
 
                 <div class="col-md-6 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
                             <h2><small>Sound</small></h2>
+
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
                             <br />
                             <form class="form-horizontal form-label-left">
 
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sound Type</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select class="form-control" id="getName" onchange="admSelectCheck(this);">
+                                            <% for (var i = 0; i < sounds[0].length; i++) { %>
+                                            <option value="<%= sounds[0][i] %>"><%= sounds[0][i] %></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
 
-
+                                <% var type = 'Animals'; %>
+                                    <div class="divider-dashed"></div>
+                                    <% for (var i = 0; i < sounds[1][type].length; i++) { %>
+                                    <label>
+                                        <input type="radio"
+                                               style="margin-bottom: 5px"
+                                               id="1"
+                                               class="icheckbox_flat-green"
+                                               name="iCheck"> <%= sounds[1].Animals[i].name %>
+                                    </label>
+                                    <div class="divider-dashed"></div>
+                                    <% } %>
 
                             </form>
+
                         </div>
                     </div>
                 </div>
 
 
 
-
-
-
-
-
             </div>
 
+
+
+
+
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <!-- /page content -->
@@ -421,7 +421,8 @@
 <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
 <!-- NProgress -->
 <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
-
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.min.js"></script>
 <!-- Google Analytics -->

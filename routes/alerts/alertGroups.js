@@ -3,7 +3,7 @@ var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
-
+var buildIconsColorSound = require('./../../public/icons/js/icons');
 
 
 /* ADD AlertGroups. -------------------------------*/
@@ -85,12 +85,16 @@ module.exports.update = function(req, res) {
 
             }).exec(callback);
         },
+        function(callback){buildIconsColorSound.soundBuild(function(sound){callback(null, sound);});},  //sounds
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
 
     ],function(err, results){
         var arraySort = [];
         var array = [];
+
+        console.log('SOUNDS = ',results[1][0]);
 
         var streamSort = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
@@ -115,8 +119,9 @@ module.exports.update = function(req, res) {
                 arraySort: arraySort,
                 array: array,
                 alertGroup: results[0],
-                aclModifyAlertGroup: results[1],      //aclPermissions modifyAlertGroup
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                sounds: results[1], //ex: sounds[0][1] -> Sirens | ex: sounds[1].Animals[1].name -> Ambulance
+                aclModifyAlertGroup: results[2],      //aclPermissions modifyAlertGroup
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
