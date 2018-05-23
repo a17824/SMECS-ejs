@@ -7,6 +7,7 @@ var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var email = require('./authentication/email');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
+var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var reports = require('./api/reports.js');
 
 /* AUTHENTICATE ---------------------- */
@@ -51,6 +52,8 @@ routerApi.get('/alerts/sending/reviewAlert/:id', auth.auth, reviewAlert.reviewAl
 routerApi.post('/alerts/sending/reviewAlert', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
 routerApi.post('/alerts/sending/panic/:id', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
 
+/* Receive alert ------------------------------------------*/
+routerApi.get('/alerts/received/receiveAlert/:id', auth.auth, receiveAlert.receivedAlert, function(req, res, next) {});
 
 /* Update pushToken ------------------------------------*/
 routerApi.post('/updatePushToken', auth.auth, auth.pin, function(req, res) {});

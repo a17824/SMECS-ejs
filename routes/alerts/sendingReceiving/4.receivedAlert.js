@@ -80,8 +80,8 @@ module.exports.receivedAlert = function(req, res) {
                 if(req.decoded){ //API user
                     res.json({
                         success: 'true',
-                        userAuthRoleName: results[3].userRoleName,
-                        userAuthEmail: results[3].email,
+                        userAuthRoleName: req.decoded.user.userRoleName,
+                        userAuthEmail: req.decoded.user.email,
                         alertInfo: results[0],
                         floor: results[1],
                         utilities: results[2],
