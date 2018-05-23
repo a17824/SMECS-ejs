@@ -92,8 +92,7 @@
                       <tr>
                           <th></th>
                         <th>Photo</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Name</th>
                         <th>ID</th>
                         <th>Uses Bus</th>
                         <th>Parent</th>
@@ -118,8 +117,7 @@
                               <a href="/photos/addPhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
                           </td>
                           <% } %>
-                          <td><%= student.firstName %></td>
-                          <td><%= student.lastName %></td>
+                          <td><%= student.firstName %> <%= student.lastName %></td>
                           <td><%= student.studentID %></td>
                           <% if (student.busRide == true) { %>
                             <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
@@ -159,14 +157,15 @@
                       <% }); %>
                     </tbody>
                   </table>
-                  <!-- footer content -->
-                  <% include ../layout/footer.ejs %>
-                  <!-- /footer content -->
+
                 </div>
               </div>
             </div>
           </div>
         </div>
+          <!-- footer content -->
+          <% include ../layout/footer.ejs %>
+          <!-- /footer content -->
       </div>
     </div>
 

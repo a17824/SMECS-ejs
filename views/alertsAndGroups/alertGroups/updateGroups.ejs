@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <!-- color dropdown menu -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/public/stylesheets/alertGroup.css' />
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Icons menu -->
+    <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
+    <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
+    <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+
+    <script>
+        var iconSelect;
+        var selectedText;
+        var savedIcon;
+
+        window.onload = function(){
+            savedIcon = document.getElementById('savedIcon').value;
+            selectedText = document.getElementById('selected-text');
+            savedIcon = savedIcon-1;
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+            });
+
+            iconSelect = new IconSelect("my-icon-select",
+                {'selectedIconWidth':23,
+                    'selectedIconHeight':23,
+                    'selectedBoxPadding':1,
+                    'iconsWidth':48,
+                    'iconsHeight':48,
+                    'boxIconSpace':1,
+                    'vectoralIconNumber':8,
+                    'horizontalIconNumber':6});
+
+            var icons = [];
+            iconBuild(icons);
+            iconSelect.refresh(icons, savedIcon);
+        };
+    </script>
+
+    <script>
+        var color;
+        var colorName;
+        var colorValue;
+        function GetSelectedItem(el)
+        {
+            var e = document.getElementById(el);
+            color = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
+            colorName = e.options[e.selectedIndex].text;
+            colorValue = e.options[e.selectedIndex].value;
+        }
+
+        $(document).ready(function(){
+            
+            //dropdown rectangle color
+            $(function() {
+                
+                $.widget("custom.selectmenu", $.ui.selectmenu, {
+                    _renderItem: function(ul, item) {
+
+                        console.log(item);
+                        var li = $("<li>"),
+                            wrapper = $("<div>");
+
+                        if (item.disabled) {
+                            li.addClass("ui-state-disabled");
+                        }
+
+                        $("<span>", {
+                            style: "background-color: #" + item.value,
+                            "class": "ui-color-chip"
+                        })
+                            .appendTo(wrapper);
+                        wrapper.append(item.label);
+
+                        return li.append(wrapper).appendTo(ul);
+                    }
+                });
+
+                $("#DropDownID")
+                    .selectmenu()
+                    .selectmenu("menuWidget")
+                    .addClass("ui-menu-icons customicons");
+
+                var Color = {
+                    Data: [
+                        {RgbValue: 'ff0000', ColorName: 'Red'},
+                        {RgbValue: '008000', ColorName: 'Green'},
+                        {RgbValue: '0000FF', ColorName: 'Blue'},
+                        {RgbValue: 'FFFF00', ColorName: 'Yellow'},
+                        {RgbValue: 'FFD700', ColorName: 'Gold'},
+                        {RgbValue: '000000', ColorName: 'Black'},
+                        //{RgbValue: 'FFFFFF', ColorName: 'White'},
+                        {RgbValue: 'FF00FF', ColorName: 'Magenta'},
+                        {RgbValue: 'FFA500', ColorName: 'Orange'},
+                        {RgbValue: '76EEC6', ColorName: 'Aquamarine'},
+                        {RgbValue: '4682B4', ColorName: 'Steelblue'},
+                        {RgbValue: 'CD69C9', ColorName: 'Orchild'},
+                        {RgbValue: '6A5ACD', ColorName: 'Slateblue'},
+                        {RgbValue: '8FBC8F', ColorName: 'Darkseagreen'}
+                    ]
+                };
+
+                for (var i = 0; i < Color.Data.length; i++) {
+                    $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName)		);
+                }
+            });
+            //end off dropdown rectangle color
+
+
+
+            var oldSortID = $("#oldSortID").val();
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var oldAlertGroupID = $("#oldAlertGroupID").val();
+            var select = '';
+            var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldAlertGroupID){
+                    if(i == oldAlertGroupID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var alertGroup1,oldAlertGroupName,oldAlertGroupID,alertGroupID,alertGroupName,sortID,icon;
+            $("#<%= alertGroup.id %>").click(function(){
+                alertGroup1=$(this).attr('id');
+                oldAlertGroupID=$("#oldAlertGroupID").val();
+                alertGroupID=$("#some_select").val();
+                oldAlertGroupName=$("#oldAlertGroupName").val();
+                alertGroupName=$("#alertGroupName").val();
+                sortID=$("#sort_select").val();
+                icon=$("#selected-text").val();
+
+                //-----forms validation------------------------------------
+                if (alertGroupName == "" ) {
+                    alert("Alert Group Name must be filled out");
+                    return false;
+                }
+                if (alertGroupID == "" ) {
+                    alert("Alert Group ID must be filled out");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+                
+
+                $.post("/alertGroups/updateAlertGroups",{
+                    alertGroupToUpdate: alertGroup1,
+                    oldAlertGroupID: oldAlertGroupID,
+                    alertGroupID: alertGroupID,
+                    oldAlertGroupName: oldAlertGroupName,
+                    alertGroupName: alertGroupName,
+                    sortID: sortID,
+                    colorName: colorName,
+                    colorValue: colorValue
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Alert Group NAME already in use. Choose a different Name.")
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ./../../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Update Group</h3>
+                </div>
+
+                <div class="title_right">
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Details </small> </h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon: </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <div id="my-icon-select"></div>
+                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name: </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="Parents Alerts"
+                                               id="alertGroupName"
+                                               value="<%= alertGroup.alertTypeName %>">
+
+                                        <input type="hidden"
+                                               id="oldAlertGroupName"
+                                               value="<%= alertGroup.alertTypeName %>">
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
+
+                                <% if (alertGroup.alertTypeID !== 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color: </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select name="DropDownID" id="DropDownID" >
+                                            <option style="alignment: center" value="<%= alertGroup.colorValue %>" selected disabled hidden><%= alertGroup.colorName %></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <% } %>
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number: <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="hidden" id="oldSortID" value="<%= alertGroup.sortID %>">
+                                        <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+                                        <select id='sort_select' class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <% if (userAuthID == 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group ID: <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <select id='some_select' style="display:none;"></select>
+                                <% } %>
+                                <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.alertTypeID %>">
+
+
+
+                                <div class="ln_solid"></div>
+                                <div class="form-group">
+                                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+
+                                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
+                                        <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
+                                        <input type="button" id="<%= alertGroup.id %>" value="Submit" onClick="GetSelectedItem('DropDownID');"><br>
+                                        <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                                        <% } else { %>
+                                        <input type="button" id="<%= alertGroup.id %>" value="Submit" disabled><br>
+                                        <% } %>
+
+                                    </div>
+                                </div>
+
+
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Sound</small></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left">
+
+
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <% include ./../../layout/footer.ejs %>
+        <!-- /footer content -->
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
+
+</body>
+
+</html>

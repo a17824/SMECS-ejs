@@ -17,39 +17,60 @@
   </head>
 
   <body class="nav-md">
-  <div class="container body">
+    <div class="container body">
       <div class="main_container">
-          <div class="col-md-3 left_col">
-              <div class="left_col scroll-view">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
 
 
-                  <!-- menu profile quick info -->
-                  <% include ./layout/menuProfile.ejs %>
-                  <!-- /menu profile quick info -->
+            <!-- menu profile quick info -->
+            <% include ./layout/menuProfile.ejs %>
+            <!-- /menu profile quick info -->
 
-                  <br>
+            <br />
+            <!-- sidebar menu -->
+            <% include ./layout/sideMenu.ejs %>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
 
-                  <!-- sidebar menu -->
-                  <% include ./layout/sideMenu.ejs %>
-                  <!-- /sidebar menu -->
+        <!-- top navigation -->
+        <% include ./layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Page</h3>
               </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Plain Page</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    Add content to the page ...
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+        <!-- /page content -->
 
-          <!-- top navigation -->
-          <% include ./layout/topNavigation.ejs %>
-          <!-- /top navigation -->
-
-          <!-- page content -->
-          <div class="right_col" role="main">
-
-          </div>
-          <!-- /page content -->
-
-          <!-- footer content -->
-          <% include ./layout/footer.ejs %>
-          <!-- /footer content -->
-      </div>
+   <!-- footer content -->
+   <% include ./layout/footer.ejs %>
+  <!-- /footer content -->
   </div>
+</div>
 
 <!-- jQuery -->
 <script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>

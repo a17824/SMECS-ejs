@@ -63,7 +63,8 @@ module.exports.addPost = function(req, res) {
         sortID: req.body.sortID,
         colorName: req.body.colorName,
         colorValue: req.body.colorValue,
-        icon: req.body.icon
+        icon: req.body.icon,
+        sound: req.body.sound
 
     });
     alertGroup1.save(function (err) {
@@ -108,7 +109,7 @@ module.exports.update = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            res.render('alertsAndGroups/alertGroups/updateAlertGroups',{
+            res.render('alertsAndGroups/alertGroups/updateGroups',{
                 title:'Update Alert Group',
                 userAuthID: req.user.userPrivilegeID,
                 arraySort: arraySort,
@@ -131,6 +132,7 @@ module.exports.updatePost = function(req, res) {
         alertGroup.colorName = req.body.colorName;
         alertGroup.colorValue = req.body.colorValue;
         alertGroup.icon = req.body.icon;
+        alertGroup.sound = req.body.sound;
 
         alertGroup.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
