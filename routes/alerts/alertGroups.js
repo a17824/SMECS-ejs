@@ -94,8 +94,6 @@ module.exports.update = function(req, res) {
         var arraySort = [];
         var array = [];
 
-        console.log('SOUNDS = ',results[1][0]);
-
         var streamSort = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
@@ -130,6 +128,13 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var alertGroupToUpdate1 = req.body.alertGroupToUpdate;
+
+    var soundArray = req.body.sound.split(",").map(String);
+    var soundTypeId = parseInt(soundArray[0]);
+    var soundType = soundArray[1];
+    var soundName = soundArray[2];
+    var soundMp3 = soundArray[3];
+
     models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
         alertGroup.alertTypeID = req.body.alertGroupID;
         alertGroup.alertTypeName = req.body.alertGroupName;
@@ -137,7 +142,10 @@ module.exports.updatePost = function(req, res) {
         alertGroup.colorName = req.body.colorName;
         alertGroup.colorValue = req.body.colorValue;
         alertGroup.icon = req.body.icon;
-        alertGroup.sound = req.body.sound;
+        alertGroup.sound.soundTypeId = soundTypeId;
+        alertGroup.sound.soundType = soundType;
+        alertGroup.sound.name = soundName;
+        alertGroup.sound.mp3 = soundMp3;
 
         alertGroup.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {

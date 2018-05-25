@@ -26,7 +26,7 @@ module.exports.show = function(req, res, next) {
     ],function(err, results){
         functions.redirectPage(req, res, 'showAlertsAndGroups');
         functions.redirectTabUsers(req, res, 'showUsers');
-        console.log('req.user.redirect = ',req.user.redirect);
+
         res.render('alertsAndGroups/showAlertsAndGroups',{
             title:'Alert & Groups',
             userAuthID: req.user.userPrivilegeID,

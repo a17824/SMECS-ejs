@@ -175,12 +175,14 @@ var AlertsGroupSchema = new mongoose.Schema({
     useIcon: { type: Boolean, default: false },
     icon: String,
     sound: {
-        type: String,
+        soundTypeId: { type: Number },
+        soundType: String,
         name: String,
         mp3: String
     }
 
-}, {collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"AlertsGroup"}); //stops Mongoose of giving plurals to our collections names
 var AlertsGroup;
 module.exports.AlertsGroup = mongoose.model("AlertsGroup", AlertsGroupSchema);
 

@@ -1,7 +1,7 @@
 /* side menu Font color*/
 /* sideMenu hover font color */
 /* side-menu active horizontal color */
-
+/* sideMenu background color */
 
 
 
@@ -149,6 +149,7 @@ html , body{
 .calendar-exibit .calendar-table {
     padding: 0 0 4px 0
 }
+/* sideMenu background color */
 .left_col {
     background: #2A3F54
 }
