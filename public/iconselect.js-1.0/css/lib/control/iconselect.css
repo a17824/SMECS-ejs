@@ -20,6 +20,7 @@ and open the template in the editor.
      width: 70px; /* sil */
      height: 60px; /* sil */
      border: 1px solid #999999;
+     z-index: 10;
 
      -webkit-border-radius: 3px;
      -moz-border-radius: 3px;

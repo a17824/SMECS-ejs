@@ -121,7 +121,7 @@
 
             var select = '';
             var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
-            for (i=1;i<=99;i++){
+            for (var i=1;i<=99;i++){
                 if(myArray.indexOf(i) == -1){
                     select += '<option val=' + i + '>' + i + '</option>';
                 }
@@ -138,16 +138,16 @@
 
                 //-----forms validation------------------------------------
                 if (alertGroupName == "" ) {
-                    alert("Alert Group Name must be filled out");
+                    alert("Group Name must be filled out");
                     return false;
                 }
                 var numbers = /[0-99]|\./;
                 if (!numbers.test(alertGroupID)) {
-                    alert("Alert Group ID must be between 0 and 99 ");
+                    alert("Group ID must be between 0 and 99 ");
                     return false;
                 }
                 if (!colorValue) {
-                    alert("Please choose Alert Group Color");
+                    alert("Please choose Group Color");
                     return false;
                 }
                 //--------------------------------forms validation end-------

@@ -2,8 +2,8 @@
 /* sideMenu hover font color */
 /* side-menu active horizontal color */
 /* sideMenu background color */
-
-
+/* profile background color*/
+/* bottom right side background color (to fix)*/
 
 html , body{
 
@@ -364,6 +364,7 @@ body .container.body .right_col {
     padding: 10px 20px 0;
     margin-left: 230px
 }
+/* profile background color*/
 .nav_title {
     width: 230px;
     float: left;
@@ -497,6 +498,7 @@ body .container.body .right_col {
 .top_nav .nav .open>a:hover {
     background: #D9DEE4
 }
+/* bottom right side background color (to fix)*/
 body {
     color: #73879C;
     background: #2A3F54;

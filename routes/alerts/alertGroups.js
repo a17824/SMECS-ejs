@@ -14,6 +14,7 @@ module.exports.add = function(req, res) {
 
             }).exec(callback);
         },
+        function(callback){buildIconsColorSound.soundBuild(function(sound){callback(null, sound);});},  //sounds
         function(callback){aclPermissions.showAlertGroups(req, res, callback);}, //aclPermissions showAlertGroups
         function(callback){aclPermissions.addAlertGroup(req, res, callback);},  //aclPermissions addAlertGroup
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
@@ -40,15 +41,16 @@ module.exports.add = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             console.log('arraySort = ',arraySort);
-            res.render('alertsAndGroups/alertGroups/addAlertGroups',{
+            res.render('alertsAndGroups/alertGroups/addGroups',{
                 title:'Add Alert Group',
                 arraySort: arraySort,
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 alertGroup: results[0],
-                aclShowAlertGroups: results[1],     //aclPermissions showAddAlertGroup
-                aclAddAlertGroup: results[2],      //aclPermissions addAddAlertGroup
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                sounds: results[1],
+                aclShowAlertGroups: results[2],     //aclPermissions showAddAlertGroup
+                aclAddAlertGroup: results[3],      //aclPermissions addAddAlertGroup
+                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -56,6 +58,11 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
+    var soundArray = req.body.sound.split(",").map(String);
+    var soundTypeId = parseInt(soundArray[0]);
+    var soundType = soundArray[1];
+    var soundName = soundArray[2];
+    var soundMp3 = soundArray[3];
 
     var alertGroup1 = new models.AlertsGroup({
         alertTypeID: req.body.alertGroupID,
@@ -64,8 +71,12 @@ module.exports.addPost = function(req, res) {
         colorName: req.body.colorName,
         colorValue: req.body.colorValue,
         icon: req.body.icon,
-        sound: req.body.sound
-
+        sound: {
+            soundTypeId: soundTypeId,
+            soundType: soundType,
+            name: soundName,
+            mp3: soundMp3
+        }
     });
     alertGroup1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
@@ -117,7 +128,7 @@ module.exports.update = function(req, res) {
                 arraySort: arraySort,
                 array: array,
                 alertGroup: results[0],
-                sounds: results[1], //ex: sounds[0][1] -> Sirens | ex: sounds[1].Animals[1].name -> Ambulance
+                sounds: results[1],
                 aclModifyAlertGroup: results[2],      //aclPermissions modifyAlertGroup
                 aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,

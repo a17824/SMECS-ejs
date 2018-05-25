@@ -1,77 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
 
 
-    <!-- Bootstrap -->
-    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
 
-      <!-- Custom Theme Style -->
+  <!-- Custom Theme Style -->
 
 
-  </head>
+</head>
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
+<body class="nav-md">
+<div class="container body">
+  <div class="main_container">
+    <div class="col-md-3 left_col">
+      <div class="left_col scroll-view">
 
 
-            <!-- menu profile quick info -->
-            <% include ./layout/menuProfile.ejs %>
-            <!-- /menu profile quick info -->
+        <!-- menu profile quick info -->
+          <% include ./layout/menuProfile.ejs %>
+        <!-- /menu profile quick info -->
 
-            <br />
-            <!-- sidebar menu -->
-            <% include ./layout/sideMenu.ejs %>
-            <!-- /sidebar menu -->
+        <br />
+        <!-- sidebar menu -->
+          <% include ./layout/sideMenu.ejs %>
+        <!-- /sidebar menu -->
+      </div>
+    </div>
+
+    <!-- top navigation -->
+      <% include ./layout/topNavigation.ejs %>
+    <!-- /top navigation -->
+
+    <!-- page content -->
+
+
+    <div class="right_col" role="main">
+      <div class="">
+        <div class="page-title">
+          <div class="title_left">
+            <h3>Page</h3>
+
+
+
           </div>
         </div>
 
-        <!-- top navigation -->
-        <% include ./layout/topNavigation.ejs %>
-        <!-- /top navigation -->
+        <div class="clearfix"></div>
 
-        <!-- page content -->
-
-
-        <div class="right_col" role="main">
-          <div class="">
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Page</h3>
-
-
-
+        <div class="row">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+              <div class="x_title">
+                <h2>Plain Page</h2>
+                <div class="clearfix"></div>
               </div>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Plain Page</h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
+              <div class="x_content">
 
 
-                    Add content to the page ...
-                  </div>
-                </div>
+                Add content to the page ...
               </div>
             </div>
           </div>
         </div>
-        <!-- /page content -->
+      </div>
+    </div>
+    <!-- /page content -->
 
-   <!-- footer content -->
-   <% include ./layout/footer.ejs %>
-  <!-- /footer content -->
+    <!-- footer content -->
+      <% include ./layout/footer.ejs %>
+    <!-- /footer content -->
   </div>
 </div>
 

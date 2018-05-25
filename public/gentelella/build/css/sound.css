@@ -39,3 +39,9 @@
     height: 0px;
     padding: 0px 0px;
 }
+
+/* to make bottom of Icon/Color box same height as Sound box*/
+.condensedlines {
+    line-height: 225%;
+
+}
