@@ -165,16 +165,17 @@ module.exports.updatePost = function(req, res) {
             }else{
                 //UPDATE Alerts Group_name & Group_id DATABASE--------
                 var alertToUpdate1 = req.body.oldAlertGroupID;
-                models.Alerts.find({}, function(err, groups) {
-                    if( err || !groups) console.log("No Permission groups found");
-                    else groups.forEach( function(group) {
-                        if (group.alertTypeID == alertToUpdate1){
-                            group.alertTypeID = req.body.alertGroupID;
-                            group.alertTypeSortID = req.body.sortID;
-                            group.alertTypeName = req.body.alertGroupName;
-                            group.alertTypeColorName = req.body.colorName;
-                            group.alertTypeColorValue = req.body.colorValue;
-                            group.save(function (err) {
+                models.Alerts.find({}, function(err, alerts) {
+                    if( err || !alerts) console.log("No alerts to update");
+                    else alerts.forEach( function(alert) {
+                        if (alert.alertTypeID == alertToUpdate1){
+                            alert.alertTypeID = req.body.alertGroupID;
+                            alert.alertTypeSortID = req.body.sortID;
+                            alert.alertTypeName = req.body.alertGroupName;
+                            alert.alertTypeColorName = req.body.colorName;
+                            alert.alertTypeColorValue = req.body.colorValue;
+                            alert.mp3 = soundMp3;
+                            alert.save(function (err) {
                                 if (err && (err.code === 11000 || err.code === 11001)) {
                                     console.log(err);
                                     return res.status(409).send('showAlert')
@@ -189,18 +190,18 @@ module.exports.updatePost = function(req, res) {
                                 //UPDATE ACL ALERTS--------
                                 function updateAclAlerts(typeAclAlert){
                                     models[typeAclAlert].find({}, function(err, aclGroups) {
-                                        if( err || !aclGroups) console.log("No Alerts groups found");
+                                        if( err || !aclGroups) console.log("No aclAlerts found");
                                         else aclGroups.forEach( function(aclGroup) {
                                             if (aclGroup.checkBoxID == 's'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID ){
-                                                aclGroup.alertTypeID = group.alertTypeID;
-                                                aclGroup.alertTypeSortID = group.alertTypeSortID;
+                                                aclGroup.alertTypeID = alert.alertTypeID;
+                                                aclGroup.alertTypeSortID = alert.alertTypeSortID;
                                                 aclGroup.alertTypeName = req.body.alertGroupName;
                                                 aclGroup.alertTypeValue = req.body.colorValue;
                                                 aclGroup.save();
                                             }
                                             if (aclGroup.checkBoxID == 'r'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID){
-                                                aclGroup.alertTypeID = group.alertTypeID;
-                                                aclGroup.alertTypeSortID = group.alertTypeSortID;
+                                                aclGroup.alertTypeID = alert.alertTypeID;
+                                                aclGroup.alertTypeSortID = alert.alertTypeSortID;
                                                 aclGroup.alertTypeName = req.body.alertGroupName;
                                                 aclGroup.alertTypeValue = req.body.colorValue;
                                                 aclGroup.save();

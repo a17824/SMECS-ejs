@@ -18,9 +18,9 @@ module.exports.alert= function(alert, action) {
             var message = {
                 to: user.pushToken, // required fill with device token
                 notification: {
-                    title: 'Title of your push notification', 
-                    body: 'Body of your push notification',
-                    sound : "buzzer", //<-- this can be changed to a different file name but files need to exit in ionic
+                    title: alert.alertGroupName,
+                    body: alert.alertName,
+                    sound : alert.groupSound,
                     vibrate: true
                 },
                 data: { //you can send only notification or only data(or include both)

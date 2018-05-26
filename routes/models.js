@@ -204,7 +204,8 @@ var AlertsSchema = new mongoose.Schema({
     alertRequestWeAreSafe: { type: Boolean, default: true },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
-    icon: String
+    icon: String,
+    mp3: String
 
 }, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;
@@ -320,7 +321,8 @@ var AlertSentInfoSchema = new mongoose.Schema({
         userEmail: String,
         userPushToken: String,
         userPhoto: String
-    }]
+    }],
+    groupSound: String
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names
@@ -412,7 +414,8 @@ var AlertSentTempSchema = new mongoose.Schema({
         }
     }],
     reqAssOn: [String],
-    reqAssOff: [String]
+    reqAssOff: [String],
+    groupSound: String
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentTemp"}); //stops Mongoose of giving plurals to our collections names

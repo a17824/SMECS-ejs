@@ -93,9 +93,10 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.createPost = function(req, res) {
+
     models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
         var alert1 = new models.Alerts({
-            alertTypeID: req.body.alertGroupID,
+            alertTypeID: alertGroup[0].alertGroupID,
             alertTypeSortID: alertGroup[0].sortID,
             alertTypeName: req.body.alertGroupName,
             alertTypeColorName: alertGroup[0].colorName,
@@ -109,7 +110,8 @@ module.exports.createPost = function(req, res) {
             alertSlugName: slug(req.body.alertName),
             alertProcedure: req.body.alertProcedure,
             sortID: req.body.sortID,
-            icon: req.body.icon
+            icon: req.body.icon,
+            mp3: req.body.sound
 
         });
         alert1.save(function (err) {
@@ -238,6 +240,7 @@ module.exports.updatePost = function(req, res) {
             alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
             alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
             alert.icon = req.body.icon;
+            alert.mp3 = req.body.sound;
 
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {

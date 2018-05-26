@@ -138,10 +138,18 @@
                 }
             });
 
-            var id,alertGroupName,alertGroupID,alertName,alertID,alertProcedure, request911Call, sortID, icon;
+            var id,alertGroupName,alertName,alertID,alertProcedure, request911Call, sortID, icon;
             $("#<%= alert.id %>").click(function(){
+
+                var alertGroupIdAndSound=$("input:radio[name='alertGroupID']:checked").val();
+                console.log('alertGroupIdAndSound = ',alertGroupIdAndSound);
+                if(alertGroupIdAndSound){
+                    var alertGroupIdAndSoundArray = alertGroupIdAndSound.split(",").map(String);
+                    var alertGroupID = parseInt(alertGroupIdAndSoundArray[0]);
+                    var sound = alertGroupIdAndSoundArray[1];
+                }
+
                 id=$(this).attr('id');
-                alertGroupID=$("input:radio[name='alertGroupID']:checked").val();
                 request911Call=$("input:radio[name='request911']:checked").val();
                 alertGroupName = $("input:radio[name='alertGroupID']:checked + label").text();
                 alertName=$("#alertName").val();
@@ -211,7 +219,8 @@
                     sortID: sortID,
                     alertRequestProcedureCompleted: alertRequestProcedureCompleted,
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
-                    icon: icon
+                    icon: icon,
+                    sound: sound
 
                 },function(data){
                     if(data==='done')
@@ -256,9 +265,9 @@
     <label for="alertGroup"><b>Alert Group:</b></label><br>
     <% alertGroup.forEach(function(alertGroup) { %>
     <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
-    <input type="radio" name="alertGroupID" id=<%= alertGroup.alertTypeName %> value="<%= alertGroup.alertTypeID %>" checked><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
+    <input type="radio" name="alertGroupID" id="<%= alertGroup.alertTypeName %>" value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>" checked><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
     <% }else {%>
-    <input type="radio" name="alertGroupID" id=<%= alertGroup.alertTypeName %> value="<%= alertGroup.alertTypeID %>"><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
+    <input type="radio" name="alertGroupID" id="<%= alertGroup.alertTypeName %>" value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>"><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
     <% }%>
     <% }); %><br>
 

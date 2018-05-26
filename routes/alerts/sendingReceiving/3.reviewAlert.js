@@ -138,7 +138,7 @@ module.exports.postReviewAlert = function(req, res, next) {
         create.alertSentInfo(req, res, tempAlert,function (result,err) {  //create AlertSentInfo
 
             /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.alert(tempAlert, 'newAlert');
+            pushNotification.alert(result, 'newAlert');
 
         });
 

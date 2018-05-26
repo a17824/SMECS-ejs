@@ -128,7 +128,7 @@
                 }
             });
 
-            var alertGroupID,alertGroupName,alertID,alertName, alertProcedure, request911Call, sortID, icon;
+            var alertGroupName,alertID,alertName, alertProcedure, request911Call, sortID, icon;
             $("#btSubmit").click(function(){
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -140,7 +140,14 @@
                     }
                 }
 
-                alertGroupID=$("input:radio[name='alertGroupID']:checked").val();
+                var alertGroupIdAndSound=$("input:radio[name='alertGroupID']:checked").val();
+                console.log('alertGroupIdAndSound = ',alertGroupIdAndSound);
+                if(alertGroupIdAndSound){
+                    var alertGroupIdAndSoundArray = alertGroupIdAndSound.split(",").map(String);
+                    var alertGroupID = parseInt(alertGroupIdAndSoundArray[0]);
+                    var sound = alertGroupIdAndSoundArray[1];
+                }
+
                 request911Call=$("input:radio[name='request911']:checked").val();
                 alertGroupName = $("input:radio[name='alertGroupID']:checked + label").text();
                 alertID=$("#some_select").val();
@@ -170,6 +177,8 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
+
+
                 $.post("/alerts/createAlert",{
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
@@ -181,7 +190,8 @@
                     sortID: sortID,
                     alertRequestProcedureCompleted: alertRequestProcedureCompleted,
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
-                    icon: icon
+                    icon: icon,
+                    sound: sound
 
                 },function(data){
                     if(data==='done')
@@ -219,7 +229,8 @@
 
     <label for="alertGroup"><b>Alert Group:</b></label><br>
     <% alertGroup.forEach(function(alertGroup) { %>
-    <input type="radio" name="alertGroupID" id=<%= alertGroup.alertTypeName %> value="<%= alertGroup.alertTypeID %>"><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
+    <input type="radio" name="alertGroupID" id="<%= alertGroup.alertTypeName %>" value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>">
+    <label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
     <% }); %><br>
 
     <label for="busRide"><b>Request Procedure completed:</b></label>

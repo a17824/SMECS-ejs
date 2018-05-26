@@ -292,7 +292,8 @@ module.exports.showAlertsPost = function(req, res) {
                             placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
                             placeholderStudentWithGunSeated: placeholderStudentWithGunSeated,
                             placeholderStudentWithGunBehaviour: placeholderStudentWithGunBehaviour,
-                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo
+                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo,
+                            groupSound: alert[0].mp3
                         });
                         alertTemp1.save();
                         callback(null, alertTemp1);
@@ -315,6 +316,8 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.request911Call = alert[0].alertRequest911Call;
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.placeholderNote = placeholderNote;
+                                    alertTemp.groupSound = alert[0].mp3;
+
                                     alertTemp.save();
                                     callback(null, alertTemp);
                                 }

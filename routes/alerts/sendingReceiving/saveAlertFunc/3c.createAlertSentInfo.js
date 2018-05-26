@@ -81,11 +81,12 @@ module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
         sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope,
         latitude: tempAlert.latitude,
         longitude: tempAlert.longitude,
-        mapBus: tempAlert.mapBus
+        mapBus: tempAlert.mapBus,
+        groupSound: tempAlert.groupSound
 
     });
     alert1.save();
-    callback(alert1._id)
+    callback(alert1)
 
 
 };
