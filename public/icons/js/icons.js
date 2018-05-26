@@ -45,32 +45,32 @@ module.exports.soundBuild = function(callback) {
 
     var animals = [
 
-        'Animals','Fire Truck Horn','fire-truck-air-horn_daniel-simion',
-        'Animals','Railroad Crossing Bell','railroad_crossing_bell-Brylon_Terry-1551570865',
-        'Animals','Missile Alert','BOMB_SIREN-BOMB_SIREN-247265934',
-        'Animals','Crazy Brain','Crazy_Brain-Mike_Koenig-1457119440',
-        'Animals','Tornado Siren II','Tornado_Siren_II-Delilah-747233690',
-        'Animals','Wake Up Call','Wake Up Call-SoundBible.com-1842390350',
-        'Animals','Wake Up Call','Wake Up Call-SoundBible.com-1842390350',
-        'Animals','Wake Up Call','Wake Up Call-SoundBible.com-1842390350'
+        'Animals','Fire Truck Horn','fire_truck_air_horn',
+        'Animals','Railroad Crossing Bell','railroad',
+        'Animals','Missile Alert','bomb_siren',
+        'Animals','Crazy Brain','crazy_brain',
+        'Animals','Tornado Siren II','tornado',
+        'Animals','Wake Up Call','wake_up',
+        'Animals','Wake Up Call','wake_up',
+        'Animals','Wake Up Call','wake_up'
 
     ];
 
     var sirens = [
-        'Sirens','Alien Siren','Alien_Siren-KevanGC-610357990',
-        'Sirens','Car Alarm','Car Alarm-SoundBible.com-2096911689',
-        'Sirens','School Fire Alarm','School_Fire_Alarm-Cullen_Card-202875844',
-        'Sirens','Ambulance','Police-TheCristi95-214716303',
-        'Sirens','Mandatory Evacuation','gentex_cammander_3_code_3_horn-Brandon-938131891',
-        'Sirens','Train Whistle','Train Whistle-SoundBible.com-458982136',
-        'Animals','Wake Up Call','Wake Up Call-SoundBible.com-1842390350',
-        'Animals','Wake Up Call','Wake Up Call-SoundBible.com-1842390350'
+        'Sirens','Alien Siren','alien_siren',
+        'Sirens','Car Alarm','car_alarm',
+        'Sirens','School Fire Alarm','fire_alarm',
+        'Sirens','Ambulance','police',
+        'Sirens','Mandatory Evacuation','gentex',
+        'Sirens','Train Whistle','train_whistle',
+        'Animals','Wake Up Call','wake_up',
+        'Animals','Wake Up Call','wake_up'
 
     ];
 
     var misc = [
-        'Misc','Eas Beep','Eas Beep-SoundBible.com-238025417',
-        'Misc','Sunday Church Ambiance','Sunday Church Ambiance-SoundBible.com-974744686'
+        'Misc','Eas Beep','eas_beep',
+        'Misc','Sunday Church Ambiance','church'
 
     ];
 
