@@ -48,7 +48,7 @@
                     'iconsHeight':48,
                     'boxIconSpace':1,
                     'vectoralIconNumber':7,
-                    'horizontalIconNumber':4});
+                    'horizontalIconNumber':7});
 
             var icons = [];
             iconBuild(icons);
@@ -140,25 +140,28 @@
                 $('#smecsUserUl').removeClass().addClass('enable');
                 $('#clickHere').removeClass().addClass('enable');
             }
+
+            //This will check the status of radio button on page load
             $('input[name=request911]:checked').each(function() {
                 var checkVal = $(this).val();
                 if (checkVal == 'false'){
                     radioOff();
                 } else {
+                    $('#smecsUserDiv').show(); //to remove display: none
                     radioOn();
                 }
             });
             //This will check the status of radio button onclick
-            $('input:radio[name=request911]').click(function() {
-                var checkVal = $(this).val();
-                if (checkVal == 'false'){
-                    radioOff();
-                } else {
-                    radioOn();
-                }
-            });
+            $('#request911').on('ifChecked', function () {
+                radioOff();
+            })
+            $('#request911').on('ifUnchecked', function () {
+                $('#smecsUserDiv').show(); //to remove display: none
+                radioOn();
+            })
 
-            var id,alertGroupName,alertName,alertID,alertProcedure, request911Call, sortID, icon;
+
+            var id,alertName,alertID,alertProcedure, request911Call, sortID, icon;
             $("#<%= alert.id %>").click(function(){
 
                 var alertGroupIdAndSound=$("input:radio[name='alertGroupID']:checked").val();
@@ -166,12 +169,14 @@
                 if(alertGroupIdAndSound){
                     var alertGroupIdAndSoundArray = alertGroupIdAndSound.split(",").map(String);
                     var alertGroupID = parseInt(alertGroupIdAndSoundArray[0]);
-                    var sound = alertGroupIdAndSoundArray[1];
+                    var alertGroupName = alertGroupIdAndSoundArray[1];
+                    var sound = alertGroupIdAndSoundArray[2];
                 }
+
 
                 id=$(this).attr('id');
                 request911Call=$("input:radio[name='request911']:checked").val();
-                alertGroupName = $("input:radio[name='alertGroupID']:checked + label").text();
+
                 alertName=$("#alertName").val();
                 alertID=$("#some_select").val();
                 alertProcedure=$("#alertProcedure").val();
@@ -253,6 +258,7 @@
                         alert("Alert Name already already in use. Choose a different Name.")
 
                 });
+
             });
         });
     </script>
@@ -301,7 +307,6 @@
                         <button type="button"
                                 id="<%= alert.id %>"
                                 value="Submit"
-                                onClick="GetSelectedItem('DropDownID');"
                                 class="btn btn-success">Save
                         </button>
 
@@ -309,7 +314,6 @@
                         <button type="button"
                                 id="<%= alert.id %>"
                                 value="Submit"
-                                onClick="GetSelectedItem('DropDownID');"
                                 class="btn btn-success" disabled>Save
                         </button>
                         <% } %>
@@ -339,7 +343,7 @@
                 <div class="col-md-6 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2><small>Name & Sort</small></h2>
+                            <h2><small>Information</small></h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -359,7 +363,7 @@
 
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert sort #:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='sort_select' class="form-control"></select>
                                     </div>
@@ -377,23 +381,9 @@
                                 <% } %>
 
 
-                            </form>
-
-                        </div>
-                    </div>
-
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2><small>Icon</small></h2>
-
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <br />
-                            <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon: </label>
-                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert icon: </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
                                         <div id="my-icon-select"></div>
                                         <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
                                         <input type="text" id="savedIcon" name="savedIcon" value="<%= alert.icon %>" hidden>
@@ -401,60 +391,45 @@
 
                                 </div>
 
-                            </form>
-                            <br><br><br><br><br class="condensedlines">
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 col-xs-12">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2><small>Alert Group</small></h2>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-
-                            <form class="form-horizontal form-label-left">
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert Group:</label>
-                                    <div class="col-md-7 col-sm-7 col-xs-12">
-
-                                            <% alertGroup.forEach(function(alertGroup, idx, array) { %>
-                                            <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
-                                            <input type="radio"
-                                                   class="icheckbox_flat-green"
-                                                   style="margin-bottom: 2px"
-                                                   name="alertGroupID"
-                                                   id="<%= alertGroup.alertTypeName %>"
-                                                   value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>" checked>
-                                            <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
-                                            <% }else {%>
-                                            <input type="radio"
-                                                   class="icheckbox_flat-green"
-                                                   style="margin-bottom: 2px"
-                                                   name="alertGroupID"
-                                                   id="<%= alertGroup.alertTypeName %>"
-                                                   value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>">
-                                            <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
-                                            <% } %>
-                                            <% if (idx !== array.length - 1){ %> <!-- if is not the last loop do... -->
-                                                <br>
-                                            <% } %>
-                                            <% }); %>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert group: </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <% alertGroup.forEach(function(alertGroup, idx, array) { %>
+                                        <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+                                        <input type="radio"
+                                               class="flat"
+                                               style="margin-bottom: 2px"
+                                               name="alertGroupID"
+                                               id="<%= alertGroup.alertTypeName %>"
+                                               value="<%= alertGroup.alertTypeID %>,<%= alertGroup.alertTypeName %>,<%= alertGroup.sound.mp3 %>" checked>
+                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
+                                        <% }else {%>
+                                        <input type="radio"
+                                               class="flat"
+                                               style="margin-bottom: 2px"
+                                               name="alertGroupID"
+                                               id="<%= alertGroup.alertTypeName %>"
+                                               value="<%= alertGroup.alertTypeID %>,<%= alertGroup.alertTypeName %>,<%= alertGroup.sound.mp3 %>">
+                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
+                                        <% } %>
+                                        <% if (idx !== array.length - 1){ %> <!-- if is not the last loop do... -->
+                                        <br>
+                                        <% } %>
+                                        <% }); %>
                                     </div>
+
                                 </div>
+
 
                             </form>
 
                         </div>
                     </div>
+
+
+
                 </div>
-
-
 
                 <div class="col-md-6 col-xs-12">
                     <div class="x_panel">
@@ -467,44 +442,40 @@
                             <form class="form-horizontal form-label-left">
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Procedure completed:</label>
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxProc">Procedure completed:</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
                                         <% if (alert.alertRequestProcedureCompleted == true) {%>
                                         <input type="checkbox"
-                                               class="icheckbox_flat-green"
                                                name="checkboxProc"
                                                id="checkboxProc"
                                                value="<%= alert.alertRequestProcedureCompleted %>" checked>
                                         <% }else{%>
                                         <input type="checkbox"
-                                               class="icheckbox_flat-green"
                                                name="checkboxProc"
                                                id="checkboxProc"
                                                value="<%= alert.alertRequestProcedureCompleted %>">
                                         <% } %>
-
+                                            <label for="checkboxProc"></label>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">We are safe!:</label>
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">We are safe!:</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
                                         <% if (alert.alertRequestProcedureCompleted == true) {%>
                                         <input type="checkbox"
-                                               class="icheckbox_flat-green"
                                                name="checkboxSafe"
                                                id="checkboxSafe"
                                                value="<%= alert.alertRequestWeAreSafe %>" checked>
                                         <% }else{%>
                                         <input type="checkbox"
-                                               class="icheckbox_flat-green"
                                                name="checkboxSafe"
                                                id="checkboxSafe"
                                                value="<%= alert.alertRequestWeAreSafe %>">
                                         <% } %>
-
+                                        <label for="checkboxSafe"></label>
                                     </div>
                                 </div>
 
@@ -515,31 +486,34 @@
                                         <%if (alert.alertRequest911Call == false) { %>
                                         <input
                                                 type="radio"
-                                                class="icheckbox_flat-green"
+                                                class="flat"
+                                                id="request911"
                                                 name="request911"
                                                 value="false" checked>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >No</label>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >No</label>&emsp;&emsp;
                                         <input type="radio"
-                                               class="icheckbox_flat-green"
-                                               style="margin-left: 30px"
+                                               class="flat"
+                                               id="request911"
                                                name="request911"
                                                value="true">
                                         <label for="req911" style="font-weight:normal; position: relative; top: 4px" >Yes</label>
                                         <% }else {%>
                                         <input type="radio"
-                                               class="icheckbox_flat-green"
+                                               class="flat"
+                                               id="request911"
                                                name="request911"
                                                value="false">
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >No</label>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >No</label>&emsp;&emsp;
                                         <input type="radio"
-                                               class="icheckbox_flat-green"
-                                               style="margin-left: 30px"
+                                               class="flat"
+                                               id="request911"
                                                name="request911"
                                                value="true" checked>
                                         <label for="req911" style="font-weight:normal; position: relative; top: 4px" >Yes</label>
                                         <% }%>
                                         <br><br>
-                                        <div id="smecsUserDiv" class="enable" style="margin-left: -130px">
+
+                                        <div id="smecsUserDiv" class="enable" style="margin-left: -130px; display: none;">
                                             <label for="smecsUserLabel" id="smecsUserLabel" class="enable" style="margin-left: 10px">Who can call:</label><br>
 
                                             <ul id="smecsUserUl" class="enable">
@@ -573,8 +547,14 @@
                 </div>
 
 
+
+
+
+
             </div>
+            <br><br><br><br><br><br><br><br>
         </div>
+
         <!-- /page content -->
 
         <!-- footer content -->

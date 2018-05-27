@@ -11,7 +11,7 @@
     <!-- color dropdown menu -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/public/stylesheets/alertGroup.css' />
-
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- Icons menu -->
@@ -47,7 +47,7 @@
                     'iconsHeight':48,
                     'boxIconSpace':1,
                     'vectoralIconNumber':7,
-                    'horizontalIconNumber':7});
+                    'horizontalIconNumber':4});
 
             var icons = [];
             iconBuild(icons);
@@ -298,7 +298,7 @@
                 <div class="col-md-6 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2><small>Information</small></h2>
+                            <h2><small>Name & Sort</small></h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -343,18 +343,31 @@
                                 <% } %>
                                 <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.alertTypeID %>">
 
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Icon & Color</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
 
                                 <% if (alertGroup.alertTypeID !== 1) {%>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select name="DropDownID" id="DropDownID">
+                                        <select name="DropDownID" id="DropDownID" >
                                             <option style="alignment: center" value="<%= alertGroup.colorValue %>" selected disabled hidden><%= alertGroup.colorName %></option>
                                         </select>
                                     </div>
                                 </div>
                                 <% } %>
-
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group icon: </label>
@@ -366,13 +379,11 @@
 
                                 </div>
 
-
                             </form>
+                            <br><br><br><br><br class="condensedlines">
                             <div class="ln_solid"></div>
                         </div>
                     </div>
-
-
 
 
 

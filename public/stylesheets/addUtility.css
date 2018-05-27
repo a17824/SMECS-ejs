@@ -1,17 +1,29 @@
 div.disable {
     background-color: ghostwhite;
-    border: solid 2px #ccc;
+    border: solid 1px #ccc;
     margin: auto 0em;
     padding: 1em;
     width: 292px;
-    display: none;
+
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+
+    -webkit-transition: opacity 600ms, visibility 600ms;
+    transition: opacity 600ms, visibility 600ms;
+
 }
 div.enable {
     background-color: #fff;
-    border: solid 2px #ccc;
+    border: solid 1px #ccc;
     margin: auto 0em;
     padding: 1em;
     width: 292px;
+
+    visibility: visible;
+    -webkit-transition: opacity 600ms, visibility 600ms;
+    transition: opacity 600ms, visibility 600ms;
+
 }
 
 
@@ -101,3 +113,73 @@ a.disable {
 .fontColor { color: #0D3349; }
 
 .fontColor2 { color: black; }
+
+
+
+
+
+
+
+input[type=checkbox] + label {
+
+    /* box size*/
+    width: 20px;
+    height: 20px;
+
+    border: 3px solid #ccd0ce;
+    border-radius: 20%;
+
+    /* box position*/
+    margin-left: 10px;
+    margin-top: 15px;
+    transform: translate(-50%, -50%);
+    transition: all ease-out 200ms;
+    text-indent: 10px;
+    font: normal normal 10px/10px "Helvetica";
+    white-space: nowrap;
+    color: #ccd0ce;
+    background-color: #fafafa;
+    user-select: none;
+}
+input[type=checkbox] + label:after {
+    content: "";
+    position: absolute;
+
+    /* arrow transition when checked and unchecked */
+    width: 0px;
+    height: 0px;
+
+    /* arrow left line border size and right line border size */
+    border-bottom: 4px solid #18c09c;
+    border-left: 6px solid #18c09c;
+
+    border-radius: 20%;
+
+    /* arrow position */
+    top: 20%;
+    left: 50%;
+
+    transform-origin: bottom left;
+    transform: rotate(-45deg);
+    opacity: 0;
+    transition: all ease-out 200ms;
+}
+
+input[type=checkbox]:checked + label {
+    border: 3px solid #ccd0ce;
+}
+input[type=checkbox]:checked + label:after {
+    opacity: 1;
+
+    /* arrow left line size and right line size */
+    width: 25px;
+    height: 10px;
+}
+
+#checkboxProc {
+    display: none;
+}
+#checkboxSafe {
+    display: none;
+}
+

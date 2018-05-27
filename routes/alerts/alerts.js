@@ -227,6 +227,7 @@ module.exports.update = function(req, res) {
     })
 };
 module.exports.updatePost = function(req, res) {
+
     var alertToUpdate1 = req.body.alertToUpdate;
     models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
         models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){

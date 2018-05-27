@@ -345,7 +345,7 @@
                                             <% } %>
 
                                             <td >
-                                                <% if (alert.whoCanCall911.length > 0) { %>
+                                                <% if (alert.alertRequest911Call) { %>
                                                 <% for (var x = 0; x < alert.whoCanCall911.length; x++) {%>
                                                 <%= alert.whoCanCall911[x] %><br>
                                                 <% } %>
