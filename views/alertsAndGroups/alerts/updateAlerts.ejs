@@ -1,13 +1,30 @@
-<html>
-<head>
-    <title>update Alert</title>
-    <link rel='stylesheet' href='/stylesheets/addUtility.css' />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/sound.css" rel="stylesheet">
+    <link rel='stylesheet' href='/public/stylesheets/addUtility.css' />
+
+    <!-- color dropdown menu -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <link rel='stylesheet' href='/public/stylesheets/alertGroup.css' />
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Icons menu -->
     <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
     <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
+
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
 
     <script>
         var iconSelect;
@@ -22,15 +39,16 @@
             document.getElementById('my-icon-select').addEventListener('changed', function(e){
                 selectedText.value = iconSelect.getSelectedValue();
             });
+
             iconSelect = new IconSelect("my-icon-select",
-                {'selectedIconWidth':23,
-                    'selectedIconHeight':23,
+                {'selectedIconWidth':30,
+                    'selectedIconHeight':30,
                     'selectedBoxPadding':1,
                     'iconsWidth':48,
                     'iconsHeight':48,
                     'boxIconSpace':1,
-                    'vectoralIconNumber':8,
-                    'horizontalIconNumber':6});
+                    'vectoralIconNumber':7,
+                    'horizontalIconNumber':4});
 
             var icons = [];
             iconBuild(icons);
@@ -39,6 +57,7 @@
     </script>
 
     <script>
+        //Request calling 911
         var choices;
         function selectUser(select)
         {
@@ -71,6 +90,7 @@
             var choice = user.getElementsByTagName('input');
             usersToRemove.push(choice[0].value);
         }
+        //end of Request calling 911
 
         $(document).ready(function(){
             var oldSortID = $("#oldSortID").val();
@@ -236,108 +256,346 @@
             });
         });
     </script>
+
+
 </head>
-<body>
-<h1><%= title %></h1>
-<form action="/dashboard">
-    <input type="submit" value="Home"><br>
-</form>
-<form>
 
-    <label for="sortID"><b>Sort ID:</b></label><br>
-    <input type="hidden" id="oldSortID" value="<%= alert.sortID %>">
-    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
-    <select id='sort_select'></select><br><br>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
-    <label for="alertName"><b>Alert Name:</b></label><br>
-    <input type="text" id="alertName" size="40" value="<%= alert.alertName %>"><br><br>
 
-    <label for="icon"><b>Icon:</b></label><br>
-    <div id="my-icon-select"></div><br>
-    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
-    <input type="text" id="savedIcon" name="savedIcon" value="<%= alert.icon %>" hidden>
+                <!-- menu profile quick info -->
+                <% include ./../../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
 
-    <input type="hidden" id="oldAlertID" value="<%= alert.alertID %>">
-    <input type="hidden" id="inUseAlertID" value="<%= array %>">
-    <input type="hidden" id="alertProcedure" >
-    <input type="hidden" id="savedValuewhoCanCall911" value="<%= alert.whoCanCall911 %>">
+                <br>
 
-    <label for="alertGroup"><b>Alert Group:</b></label><br>
-    <% alertGroup.forEach(function(alertGroup) { %>
-    <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
-    <input type="radio" name="alertGroupID" id="<%= alertGroup.alertTypeName %>" value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>" checked><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
-    <% }else {%>
-    <input type="radio" name="alertGroupID" id="<%= alertGroup.alertTypeName %>" value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>"><label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
-    <% }%>
-    <% }); %><br>
+                <!-- sidebar menu -->
+                <% include ./../../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Update Alert</h3>
+                </div>
 
 
 
-    <label for="alertRequestProcedureCompleted"><b>Request Procedure completed:</b></label>
-    <% if (alert.alertRequestProcedureCompleted == true) {%>
-    <input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" value="<%= alert.alertRequestProcedureCompleted %>" checked>
-    <% }else{%>
-    <input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" value="<%= alert.alertRequestProcedureCompleted %>">
-    <% } %>
-    <br>
-    <label for="alertRequestWeAreSafe"><b>Request We are safe!:</b></label>
-    <% if (alert.alertRequestWeAreSafe == true) {%>
-    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" value="<%= alert.alertRequestWeAreSafe %>" checked>
-    <% }else{%>
-    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" value="<%= alert.alertRequestWeAreSafe %>">
-    <% } %>
-    <br><br>
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
+                        <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="<%= alert.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success">Save
+                        </button>
+
+                        <% } else { %>
+                        <button type="button"
+                                id="<%= alert.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success" disabled>Save
+                        </button>
+                        <% } %>
+                    </div>
+
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+
+            <input type="hidden" id="oldAlertID" value="<%= alert.alertID %>">
+            <input type="hidden" id="inUseAlertID" value="<%= array %>">
+            <input type="hidden" id="alertProcedure" >
+            <input type="hidden" id="savedValuewhoCanCall911" value="<%= alert.whoCanCall911 %>">
+            <input type="hidden" id="oldSortID" value="<%= alert.sortID %>">
+            <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+
+
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Name & Sort</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="<%= alert.alertName %>">
+                                    </div>
+                                </div>
 
 
 
-    <label for="requestCall"><b>Request calling 911:</b></label><br>
-    <%if (alert.alertRequest911Call == false) { %>
-    <input type="radio" name="request911" value="false" checked> No &emsp;
-    <input type="radio" name="request911" value="true"> Yes<br>
-    <% }else {%>
-    <input type="radio" name="request911" value="false"> No &emsp;
-    <input type="radio" name="request911" value="true" checked> Yes<br>
-    <% }%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='sort_select' class="form-control"></select>
+                                    </div>
+                                </div>
 
-    <div id="smecsUserDiv" class="enable">
-        <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Who can call 911:</label><br>
+                                <% if (userAuthID == 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <select id='some_select' style="display:none;"></select>
+                                <% } %>
 
-        <ul id="smecsUserUl" class="enable">
-            <% for (var a = 0; a < alert.whoCanCall911.length; a++) { %>
-            <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
-                <input type="hidden" name="users[]" value="<%= alert.whoCanCall911[a] %>" />
-                <%= alert.whoCanCall911[a] %>
-            </li>
-            <% } %>
 
-        </ul>
+                            </form>
 
-        <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
-            <!–– <option selected disabled hidden> -- select a role -- </option> ––>
-            <option disabled selected value> -- select a user role from dropdown list -- </option>
-            <% roles.forEach(function(role) { %>
-            <option value="<%= role.roleName %>" ><%= role.roleName %></option>
-            <% }); %>
-        </select>
-        <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
-        <br><br>
+                        </div>
+                    </div>
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Icon</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon: </label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div id="my-icon-select"></div>
+                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alert.icon %>" hidden>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                            <br><br><br><br><br class="condensedlines">
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Alert Group</small></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <form class="form-horizontal form-label-left">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert Group:</label>
+                                    <div class="col-md-7 col-sm-7 col-xs-12">
+
+                                            <% alertGroup.forEach(function(alertGroup, idx, array) { %>
+                                            <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+                                            <input type="radio"
+                                                   class="icheckbox_flat-green"
+                                                   style="margin-bottom: 2px"
+                                                   name="alertGroupID"
+                                                   id="<%= alertGroup.alertTypeName %>"
+                                                   value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>" checked>
+                                            <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
+                                            <% }else {%>
+                                            <input type="radio"
+                                                   class="icheckbox_flat-green"
+                                                   style="margin-bottom: 2px"
+                                                   name="alertGroupID"
+                                                   id="<%= alertGroup.alertTypeName %>"
+                                                   value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>">
+                                            <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
+                                            <% } %>
+                                            <% if (idx !== array.length - 1){ %> <!-- if is not the last loop do... -->
+                                                <br>
+                                            <% } %>
+                                            <% }); %>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Requests</small></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <form class="form-horizontal form-label-left">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Procedure completed:</label>
+                                    <div class="col-md-7 col-sm-7 col-xs-12">
+
+                                        <% if (alert.alertRequestProcedureCompleted == true) {%>
+                                        <input type="checkbox"
+                                               class="icheckbox_flat-green"
+                                               name="checkboxProc"
+                                               id="checkboxProc"
+                                               value="<%= alert.alertRequestProcedureCompleted %>" checked>
+                                        <% }else{%>
+                                        <input type="checkbox"
+                                               class="icheckbox_flat-green"
+                                               name="checkboxProc"
+                                               id="checkboxProc"
+                                               value="<%= alert.alertRequestProcedureCompleted %>">
+                                        <% } %>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">We are safe!:</label>
+                                    <div class="col-md-7 col-sm-7 col-xs-12">
+
+                                        <% if (alert.alertRequestProcedureCompleted == true) {%>
+                                        <input type="checkbox"
+                                               class="icheckbox_flat-green"
+                                               name="checkboxSafe"
+                                               id="checkboxSafe"
+                                               value="<%= alert.alertRequestWeAreSafe %>" checked>
+                                        <% }else{%>
+                                        <input type="checkbox"
+                                               class="icheckbox_flat-green"
+                                               name="checkboxSafe"
+                                               id="checkboxSafe"
+                                               value="<%= alert.alertRequestWeAreSafe %>">
+                                        <% } %>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Call 911:</label>
+                                    <div class="col-md-7 col-sm-7 col-xs-12">
+
+                                        <%if (alert.alertRequest911Call == false) { %>
+                                        <input
+                                                type="radio"
+                                                class="icheckbox_flat-green"
+                                                name="request911"
+                                                value="false" checked>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >No</label>
+                                        <input type="radio"
+                                               class="icheckbox_flat-green"
+                                               style="margin-left: 30px"
+                                               name="request911"
+                                               value="true">
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >Yes</label>
+                                        <% }else {%>
+                                        <input type="radio"
+                                               class="icheckbox_flat-green"
+                                               name="request911"
+                                               value="false">
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >No</label>
+                                        <input type="radio"
+                                               class="icheckbox_flat-green"
+                                               style="margin-left: 30px"
+                                               name="request911"
+                                               value="true" checked>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >Yes</label>
+                                        <% }%>
+                                        <br><br>
+                                        <div id="smecsUserDiv" class="enable" style="margin-left: -130px">
+                                            <label for="smecsUserLabel" id="smecsUserLabel" class="enable" style="margin-left: 10px">Who can call:</label><br>
+
+                                            <ul id="smecsUserUl" class="enable">
+                                                <% for (var a = 0; a < alert.whoCanCall911.length; a++) { %>
+                                                <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                                                    <input type="hidden" name="users[]" value="<%= alert.whoCanCall911[a] %>" />
+                                                    <%= alert.whoCanCall911[a] %>
+                                                </li>
+                                                <% } %>
+
+                                            </ul>
+
+                                            <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+                                                <!–– <option selected disabled hidden> -- select a role -- </option> ––>
+                                                <option disabled selected value> -- select a role -- </option>
+                                                <% roles.forEach(function(role) { %>
+                                                <option value="<%= role.roleName %>" ><%= role.roleName %></option>
+                                                <% }); %>
+                                            </select>
+                                            <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+                                            <br><br>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <% include ./../../layout/footer.ejs %>
+        <!-- /footer content -->
     </div>
+</div>
 
 
-
-    <% if (userAuthID == 1) {%>
-    <label for="alertID"><b>Alert ID:</b></label><br>
-    <select id='some_select'></select><br><br>
-    <% } else { %>
-    <select id='some_select' style="display:none;"></select>
-    <% } %>
-
-
-    <input type="button" id="<%= alert.id %>" value="Submit">
-</form>
-<form action="/alertGroups/showAlertGroups">
-    <input type="submit" value="Back">
-</form>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
 
 </body>
+
 </html>

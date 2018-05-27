@@ -186,6 +186,7 @@ module.exports.update = function(req, res) {
         function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
+        function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
@@ -217,7 +218,8 @@ module.exports.update = function(req, res) {
                 alert: results[0],
                 alertGroup: results[1],
                 roles: results[2],
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclModifyAlertGroup: results[3],      //aclPermissions modifyAlertGroup
+                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

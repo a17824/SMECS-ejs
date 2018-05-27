@@ -252,9 +252,14 @@
         <div class="right_col" role="main">
 
             <div class="page-title">
+
                 <div class="title_left">
                     <h3>Update Group</h3>
-                    <div >
+                </div>
+
+                <div class="title_right">
+
+                    <div class="pull-left">
                         <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
                         <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
                         <button type="button"
@@ -263,8 +268,6 @@
                                 onClick="GetSelectedItem('DropDownID');"
                                 class="btn btn-success">Save
                         </button>
-
-                        <!-- <button type="submit" class="btn btn-success">Submit</button> -->
                         <% } else { %>
                         <button type="button"
                                 id="<%= alertGroup.id %>"
@@ -274,11 +277,6 @@
                         </button>
                         <% } %>
                     </div>
-                </div>
-
-
-
-                <div class="title_right">
 
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                         <div class="input-group">
@@ -287,6 +285,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="clearfix"></div>

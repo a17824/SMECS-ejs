@@ -196,7 +196,7 @@
                                     <% var activeAlerts = '' %>
                                     <% } %>
 
-                                    <li role="presentation" class="<%= activeGroups %>"><a href="#tab_content1" id="showGroups" role="tab" data-toggle="tab" aria-expanded="true">Alert Groups</a>
+                                    <li role="presentation" class="<%= activeGroups %>"><a href="#tab_content1" id="showGroups" role="tab" data-toggle="tab" aria-expanded="true">Groups</a>
                                     </li>
                                     <li role="presentation" class="<%= activeAlerts %>"><a href="#tab_content2" role="tab" id="showAlerts" data-toggle="tab" aria-expanded="false">Alerts</a>
                                     </li>
@@ -215,16 +215,17 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Alert Group Name</th>
+                                            <th>Group Name</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>Alert Group ID</th>
                                             <% } %>
-                                            <th>Alert Group Color</th>
+                                            <th>Group Color</th>
+                                            <th>Group Sound</th>
                                             <th>
                                                 <% if(useGroupIcons == true) { %>
-                                                Icon <input type="checkbox" class="iconGroup" checked/>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconGroup" checked/>
                                                 <% }else {%>
-                                                Icon <input type="checkbox" class="iconGroup"/>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconGroup"/>
                                                 <% } %>
                                             </th>
                                             <th>Update</th>
@@ -244,6 +245,7 @@
                                             <% } else { %>
                                             <td><%= alertGroup.colorName %></td>
                                             <% } %>
+                                            <td><%= alertGroup.sound.name %></td>
                                             <td>
                                                 <% if(useGroupIcons == true) { %>
                                                 <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups" alt="Avatar">
@@ -291,9 +293,9 @@
                                             <th>Alert Name</th>
                                             <th>
                                                 <% if(useAlertsIcons == true) { %>
-                                                Icon <input type="checkbox" class="iconAlerts" checked/>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts" checked/>
                                                 <% }else {%>
-                                                Icon <input type="checkbox" class="iconAlerts"/>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts"/>
                                                 <% } %>
                                             </th>
                                             <% if (userAuthID == 1) {%>
@@ -401,14 +403,8 @@
 <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
 <!-- Bootstrap -->
 <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
-<!-- FastClick -->
-<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
-<!-- NProgress -->
-<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
-<!-- iCheck -->
-<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
-!-- Datatables -->
+<!-- Datatables -->
 <script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
@@ -427,7 +423,7 @@
 
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.js"></script>
-<!-- Google Analytics -->
+
 
 </body>
 

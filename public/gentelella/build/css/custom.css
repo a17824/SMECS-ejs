@@ -520,7 +520,7 @@ body {
     padding: 10px 0
 }
 .page-title .title_left {
-    width: 45%;
+    width: 43.5%;
     float: left;
     display: block
 }
@@ -528,9 +528,13 @@ body {
     margin: 9px 0
 }
 .page-title .title_right {
-    width: 55%;
+    width: 56.5%;
     float: left;
     display: block
+}
+.page-title .title_right .pull-left {
+    margin: 10px 0;
+
 }
 .page-title .title_right .pull-right {
     margin: 10px 0
