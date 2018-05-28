@@ -13,3 +13,9 @@ table tr td:first-child::before {
     min-width: 20em;
     margin-right: 0.5em;
 }
+
+/* reports.ejs action button */
+.dropdownMenuLeft {
+    position:relative;
+    right:-200px;
+}

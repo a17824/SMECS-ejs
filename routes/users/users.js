@@ -776,7 +776,7 @@ module.exports.updateAppSettingsPost = function(req, res) {
             /*****  CALL HERE NOTIFICATION API  *****/
             pushNotification.notifyUser(user, 'updateAppSettings');
         }
-        return res.send({redirect: '/users/showUsers'})
+
     });
 };
 

@@ -432,11 +432,19 @@ router.post('/permissions/showPermissionsTable', auth.simpleAuth, auth.requireLo
 /* SHOW REPORTS. */
 router.get('/reports/showReports', auth.simpleAuth, auth.requireLogin, reports.reportsAlerts, function(req, res, next) {
 });
+/* SHOW REPORTS Archived. */
+router.get('/reports/showArchived', auth.simpleAuth, auth.requireLogin, reports.reportsArchived, function(req, res, next) {
+});
+/* SHOW REPORTS Archived. */
+router.get('/reports/showTrashReports', auth.simpleAuth, auth.requireLogin, reports.reportsTrash, function(req, res, next) {
+});
 
 /* UPDATE Report STATUS  ---------------------------------------------------*/
-router.get('/reportStatus/:id', auth.simpleAuth, auth.requireLogin, reports.updateStatus, function(req, res) {
+router.post('/reportStatus', auth.simpleAuth, auth.requireLogin, reports.updateStatus, function(req, res) {
 });
-/*
+/*  Move Alerts to Archive.  ---------------------------------------------------*/
+router.post('/moveToArchiveOrInbox', auth.simpleAuth, auth.requireLogin, reports.moveToArchiveOrInbox, function(req, res) {
+});
 
 /* SHOW ALERT REPORTS Received. */
 router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogin, reports.reportsUsers,function(req, res) {

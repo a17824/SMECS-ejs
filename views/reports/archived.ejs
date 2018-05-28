@@ -56,12 +56,9 @@
               //--------------------------------forms validation end-------
 
               var route
-              if (action == 'status')
-                  route = "/reportStatus";
-              if (action == 'archive')
+              if (action == 'inbox'){
                   route = "/moveToArchiveOrInbox";
-              if (action == 'delete')
-                  route = "/deleteReports";
+              }
 
               $.post(route, {
                   searchIDsChecked: searchIDsChecked,
@@ -76,7 +73,6 @@
                   window.location = data.redirect
               });
           }
-
       </script>
   </head>
 
@@ -105,32 +101,10 @@
 
         <div class="right_col" role="main">
 
-            <div class="row top_tiles">
-                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-hourglass-end"></i></div>
-                        <div class="count">5 min</div>
-                        <h3>Ann Lee</h3>
-                        <p>Slowest user to view alerts.</p>
-                    </div>
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Archive</h3>
                 </div>
-                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-hourglass-half"></i></div>
-                        <div class="count">33 sec</div>
-                        <h3>.</h3>
-                        <p>Average users time to view alerts.</p>
-                    </div>
-                </div>
-                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-hourglass-start"></i></div>
-                        <div class="count">7 sec</div>
-                        <h3>Carol Bee</h3>
-                        <p>Fastest user to view alerts.</p>
-                    </div>
-                </div>
-
             </div>
 
 
@@ -141,20 +115,6 @@
               <div class="x_panel">
                 <div class="x_content">
 
-                    <ul>
-                        <div align="right">
-                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'">Show archived alerts</button>
-                            <% } else { %>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'" disabled>Archived alerts</button>
-                            <% } %>
-                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showTrashReports'">Trash</button>
-                            <% } else { %>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showTrashReports'" disabled>Trash</button>
-                            <% } %>
-                        </div>
-                    </ul>
 
                     <table id="datatable-buttons" class="table ">
                         <thead>
@@ -165,9 +125,8 @@
                                 <div class="input-group-btn">
                                     <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-xs" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
                                     <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
-                                        <li><a onclick="changeStatus('status','/reports/showReports')">Change alert status</a></li>
-                                        <li><a onclick="changeStatus('archive','/reports/showReports')">Archive alerts selected</a></li>
-                                        <li><a href="#">Delete alerts selected</a></li>
+                                        <li><a onclick="changeStatus('inbox','/reports/showArchived')">Move to inbox</a></li>
+                                        <li><a href="#">Move to trash</a></li>
                                         <li class="divider"></li>
                                         <li><a onclick="selectAll()">Select All</a></li>
                                         <li><a onclick="deselectAll()">Deselect All</a></li>
@@ -187,7 +146,7 @@
                         </thead>
                         <tbody>
                         <% reportSent.forEach(function(reportS) { %>
-                        <% if (!reportS.archived) { %>
+                        <% if (reportS.archived) { %>
                         <% if ( reportS.status.statusString == 'open'){ %>
                         <% var color = "#efad4c"  %>
                         <% } else { %>

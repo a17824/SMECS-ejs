@@ -34,7 +34,7 @@
                 var searchIDsChecked = $('input[name="aclPermissionsCheckBox"]:checked').map(function () {
                     return $(this).val();
                 }).get();
-                //console.log("NOT selected::::" + searchIDsNotChecked);
+                console.log("NOT selected::::" + searchIDsNotChecked);
                 //console.log("selected::::" + searchIDsChecked);
                 $.ajax({
                     url:'/permissions/showPermissionsTable',

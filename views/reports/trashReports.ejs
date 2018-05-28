@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <!-- Datatables -->
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
+
+    <script>
+
+        function selectAll() {
+            $('input:checkbox').prop('checked','checked');
+            $(this).val();
+        }
+        function deselectAll() {
+            $('input:checkbox').removeAttr('checked');
+            $(this).val();
+        }
+
+        function changeStatus(action, page) {
+
+            var searchIDsChecked = $('input[name="actionCheckbox"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+
+            console.log("selected::::" + searchIDsChecked);
+
+            //-----forms validation------------------------------------
+
+            if (searchIDsChecked.length < 1 ){
+                alert("No alerts checked to preform action chosen. Please check a checkbox first and then choose the action desired.");
+                return false;
+            }
+
+            //--------------------------------forms validation end-------
+
+            var route
+            if (action == 'inbox' || action == 'archive'){
+                route = "/moveToArchiveOrInbox";
+            }
+
+            $.post(route, {
+                searchIDsChecked: searchIDsChecked,
+                action: action,
+                page: page
+
+            },function(data){
+                if(data==='done')
+                {
+                    alert("login success");
+                }
+                window.location = data.redirect
+            });
+        }
+    </script>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Trash</h3>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+
+
+                    <div class="x_panel">
+                        <div class="x_content">
+
+
+                            <table id="datatable-buttons" class="table ">
+                                <thead>
+                                <tr>
+                                    <th width="10"></th>
+                                    <th width="50">
+
+                                        <div class="input-group-btn">
+                                            <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-xs" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
+                                                <li><a onclick="changeStatus('inbox','/reports/showTrashReports')">Move to inbox</a></li>
+                                                <li><a onclick="changeStatus('archive','/reports/showTrashReports')">Move to archive</a></li>
+                                                <li class="divider"></li>
+                                                <li><a onclick="selectAll()">Select All</a></li>
+                                                <li><a onclick="deselectAll()">Deselect All</a></li>
+                                            </ul>
+                                        </div>
+                                    </th>
+                                    <th width="60">Status</th>
+                                    <th width="60">Date</th>
+                                    <th width="60">Time</th>
+                                    <th>Group</th>
+                                    <th>Alert</th>
+                                    <th width="50">Real/Drill</th>
+                                    <th width="50">Details</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% reportSent.forEach(function(reportS) { %>
+                                <% if (reportS.softDeleted) { %>
+                                <% if ( reportS.status.statusString == 'open'){ %>
+                                <% var color = "#efad4c"  %>
+                                <% } else { %>
+                                <% var color = "#FFF" %>
+                                <% } %>
+                                <tr bgcolor= "<%= color %>">
+
+                                    <td></td>
+
+                                    <td>
+                                        <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                        <input type="checkbox"
+                                               name="actionCheckbox"
+                                               value="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               style="position: relative; right: -20px">
+
+                                        <% } else { %>
+                                        <input type="checkbox"
+                                               name="actionCheckbox"
+                                               value="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               style="position: relative; right: -20px"
+                                               disabled>
+                                        <% } %>
+                                    </td>
+
+                                    <td>
+                                        <% if ( reportS.status.statusString == 'closed'){ %>
+                                        <a><%= reportS.status.statusString %></a>
+                                        <% } else { %>
+                                        <a href="/reportStatus/<%= reportS.id %>">in progress...</a>
+                                        <% } %>
+                                    </td>
+
+                                    <td><%= reportS.sentDate %></td>
+                                    <td><%= reportS.sentTime %></td>
+                                    <td><%= reportS.alertGroupName %></td>
+                                    <td><%= reportS.alertName %></td>
+                                    <td>
+                                        <% if (reportS.testModeON){ %>
+                                        <a>drill</a>
+                                        <% } else { %>
+                                        <a>real</a>
+                                        <% } %>
+                                    </td>
+
+                                    <td><a href="/reports/showReportsDetails/<%= reportS.id %>"><button class="btn btn-info">show</button></a></td>
+
+
+
+
+
+                                </tr>
+                                <% } %>
+                                <% }); %>
+                                </tbody>
+                            </table>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer content -->
+        <% include ../layout/footer.ejs %>
+        <!-- /footer content -->
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
+!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+
+
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Google Analytics -->
+
+</body>
+
+</html>

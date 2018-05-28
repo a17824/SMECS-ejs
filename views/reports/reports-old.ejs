@@ -7,77 +7,25 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-
       <!-- Datatables -->
       <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
       <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
       <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
       <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
       <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
-
-      <!-- Bootstrap -->
-      <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
       <!-- iCheck -->
       <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
 
-      <!-- Custom Theme Style -->
+    <!-- Custom Theme Style -->
       <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
 
-      <script>
 
-          function selectAll() {
-              $('input:checkbox').prop('checked','checked');
-              $(this).val();
-          }
-          function deselectAll() {
-              $('input:checkbox').removeAttr('checked');
-              $(this).val();
-          }
 
-          function changeStatus(action, page) {
 
-              var searchIDsChecked = $('input[name="actionCheckbox"]:checked').map(function () {
-                  return $(this).val();
-              }).get();
 
-              console.log("selected::::" + searchIDsChecked);
-
-              //-----forms validation------------------------------------
-
-              if (searchIDsChecked.length < 1 ){
-                  alert("No alerts checked to preform action chosen. Please check a checkbox first and then choose the action desired.");
-                  return false;
-              }
-
-              //--------------------------------forms validation end-------
-
-              var route
-              if (action == 'status')
-                  route = "/reportStatus";
-              if (action == 'archive')
-                  route = "/moveToArchiveOrInbox";
-              if (action == 'delete')
-                  route = "/deleteReports";
-
-              $.post(route, {
-                  searchIDsChecked: searchIDsChecked,
-                  action: action,
-                  page: page
-
-              },function(data){
-                  if(data==='done')
-                  {
-                      alert("login success");
-                  }
-                  window.location = data.redirect
-              });
-          }
-
-      </script>
   </head>
 
   <body class="nav-md">
@@ -141,108 +89,84 @@
               <div class="x_panel">
                 <div class="x_content">
 
-                    <ul>
-                        <div align="right">
-                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'">Show archived alerts</button>
-                            <% } else { %>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'" disabled>Archived alerts</button>
-                            <% } %>
-                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showTrashReports'">Trash</button>
-                            <% } else { %>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showTrashReports'" disabled>Trash</button>
-                            <% } %>
-                        </div>
-                    </ul>
-
                     <table id="datatable-buttons" class="table ">
                         <thead>
                         <tr>
-                            <th width="10"></th>
-                            <th width="50">
-
-                                <div class="input-group-btn">
-                                    <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-xs" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
-                                    <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
-                                        <li><a onclick="changeStatus('status','/reports/showReports')">Change alert status</a></li>
-                                        <li><a onclick="changeStatus('archive','/reports/showReports')">Archive alerts selected</a></li>
-                                        <li><a href="#">Delete alerts selected</a></li>
-                                        <li class="divider"></li>
-                                        <li><a onclick="selectAll()">Select All</a></li>
-                                        <li><a onclick="deselectAll()">Deselect All</a></li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th width="60">Status</th>
-                            <th width="60">Date</th>
-                            <th width="60">Time</th>
+                            <th></th>
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Group</th>
                             <th>Alert</th>
-                            <th width="50">Real/Drill</th>
-                            <th width="50">Details</th>
-
-
+                            <th>Sent by</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Change<br>Alert Status</th>
+                            <th>Delete <input type="checkbox"
+                                              name="S"
+                                              id="S"
+                                              class="chk-all"
+                                              data-child="S"/> </th>
                         </tr>
                         </thead>
                         <tbody>
                         <% reportSent.forEach(function(reportS) { %>
-                        <% if (!reportS.archived) { %>
+
                         <% if ( reportS.status.statusString == 'open'){ %>
                         <% var color = "#efad4c"  %>
                         <% } else { %>
                         <% var color = "#FFF" %>
                         <% } %>
                         <tr bgcolor= "<%= color %>">
-
                             <td></td>
-
-                            <td>
-                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                                <input type="checkbox"
-                                       name="actionCheckbox"
-                                       value="<%= reportS.id %>"
-                                       class="icheckbox_flat-green"
-                                       style="position: relative; right: -20px">
-
-                                <% } else { %>
-                                <input type="checkbox"
-                                       name="actionCheckbox"
-                                       value="<%= reportS.id %>"
-                                       class="icheckbox_flat-green"
-                                       style="position: relative; right: -20px"
-                                       disabled>
-                                <% } %>
-                            </td>
-
-                            <td>
-                                <% if ( reportS.status.statusString == 'closed'){ %>
-                                <a><%= reportS.status.statusString %></a>
-                                <% } else { %>
-                                <a href="/reportStatus/<%= reportS.id %>">in progress...</a>
-                                <% } %>
-                            </td>
-
                             <td><%= reportS.sentDate %></td>
                             <td><%= reportS.sentTime %></td>
                             <td><%= reportS.alertGroupName %></td>
                             <td><%= reportS.alertName %></td>
-                            <td>
-                                <% if (reportS.testModeON){ %>
-                                    <a>drill</a>
+                            <td><%= reportS.sentBy %></td>
+                            <td><a href="/reports/showReportsDetails/<%= reportS.id %>"><button class="btn btn-info">show</button></a></td>
+                            <% if ( reportS.status.statusString == 'closed'){ %>
+                                <td><a href="/reportStatus/<%= reportS.id %>"><%= reportS.status.statusString %></a></td>
+
+
+                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               checked="checked"
+                                               onclick='window.location.assign("/reportStatus/<%= reportS.id %>")'>
+                                    </td>
                                 <% } else { %>
-                                    <a>real</a>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               checked="checked" disabled>
+                                    </td>
+                                <% } %>
+
+                            <% } else { %>
+                                <td><a href="/reportStatus/<%= reportS.id %>">in progress...</a></td>
+                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green"
+                                               onclick='window.location.assign("/reportStatus/<%= reportS.id %>")'>
+                                    </td>
+                                <% } else { %>
+                                    <td><input type="checkbox"
+                                               id="<%= reportS.id %>"
+                                               class="icheckbox_flat-green" disabled>
+                                    </td>
+                                <% } %>
+
+                            <% } %>
+                            <td align="center">
+                                <% if (aclDeleteReports == null || aclDeleteReports.checkBoxValue == true) {%>
+                                <a href="/reports/showReports"><button class="btn btn-danger">delete</button></a>
+                                <% } else { %>
+                                <a href="/reports/showReports"><button class="btn btn-danger" disabled>delete</button></a>
                                 <% } %>
                             </td>
-
-                            <td><a href="/reports/showReportsDetails/<%= reportS.id %>"><button class="btn btn-info">show</button></a></td>
-
-
-
-
-
                         </tr>
-                        <% } %>
                         <% }); %>
                         </tbody>
                     </table>
@@ -264,7 +188,10 @@
     <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
     <!-- Bootstrap -->
     <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
-    
+    <!-- FastClick -->
+    <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
     <!-- iCheck -->
     <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 

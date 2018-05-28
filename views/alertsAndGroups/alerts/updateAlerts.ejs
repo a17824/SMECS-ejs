@@ -209,10 +209,7 @@
                     alert("Alert NAME must be filled out");
                     return false;
                 }
-                if (alertName == "" ) {
-                    alert("Alert ID must be filled out");
-                    return false;
-                }
+
                 if (alertGroupID == null ) {
                     alert("Alert Group must be filled out");
                     return false;
@@ -351,7 +348,7 @@
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name <span class="required">*</span></label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"
@@ -363,7 +360,7 @@
 
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert sort #:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert sort #</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='sort_select' class="form-control"></select>
                                     </div>
@@ -371,7 +368,7 @@
 
                                 <% if (userAuthID == 1) {%>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='some_select' class="form-control"></select>
                                     </div>
@@ -382,7 +379,7 @@
 
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert icon: </label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert icon</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <div id="my-icon-select"></div>
                                         <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
@@ -393,7 +390,7 @@
 
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert group: </label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert group</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <% alertGroup.forEach(function(alertGroup, idx, array) { %>
                                         <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
@@ -442,7 +439,7 @@
                             <form class="form-horizontal form-label-left">
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxProc">Procedure completed:</label>
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxProc">Procedure completed</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
                                         <% if (alert.alertRequestProcedureCompleted == true) {%>
@@ -461,7 +458,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">We are safe!:</label>
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">We are safe!</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
                                         <% if (alert.alertRequestProcedureCompleted == true) {%>
@@ -480,7 +477,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Call 911:</label>
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Call 911</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
                                         <%if (alert.alertRequest911Call == false) { %>

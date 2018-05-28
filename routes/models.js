@@ -322,7 +322,13 @@ var AlertSentInfoSchema = new mongoose.Schema({
         userPushToken: String,
         userPhoto: String
     }],
-    groupSound: String
+    groupSound: String,
+    archived: { type: Boolean, default: false },
+    softDeleted: { type: String, default: null},
+    expirationDate: {
+        type: Date,
+        expires: 0
+    }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names
