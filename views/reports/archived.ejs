@@ -39,26 +39,23 @@
           }
 
           function changeStatus(action, page) {
-
               var searchIDsChecked = $('input[name="actionCheckbox"]:checked').map(function () {
                   return $(this).val();
               }).get();
 
-              console.log("selected::::" + searchIDsChecked);
-
               //-----forms validation------------------------------------
-
               if (searchIDsChecked.length < 1 ){
                   alert("No alerts checked to preform action chosen. Please check a checkbox first and then choose the action desired.");
                   return false;
               }
-
               //--------------------------------forms validation end-------
 
               var route
               if (action == 'inbox'){
-                  route = "/moveToArchiveOrInbox";
+                  route = "/moveToArchiveInboxTrash";
               }
+              if (action == 'trash')
+                  route = "/moveToArchiveInboxTrash";
 
               $.post(route, {
                   searchIDsChecked: searchIDsChecked,
@@ -126,7 +123,7 @@
                                     <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-xs" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
                                     <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
                                         <li><a onclick="changeStatus('inbox','/reports/showArchived')">Move to inbox</a></li>
-                                        <li><a href="#">Move to trash</a></li>
+                                        <li><a onclick="changeStatus('trash','/reports/showReports')">Move to trash</a></li>
                                         <li class="divider"></li>
                                         <li><a onclick="selectAll()">Select All</a></li>
                                         <li><a onclick="deselectAll()">Deselect All</a></li>

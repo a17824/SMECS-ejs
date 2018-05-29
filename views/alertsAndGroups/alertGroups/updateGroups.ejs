@@ -77,6 +77,8 @@
                 var soundTypeId = this[this.selectedIndex].value;
                 var soundID = this[this.selectedIndex].id;
 
+                console.log('soundID = ',soundID);
+
                 var soundArray = soundID.split(",").map(String);
 
                 var radioComplete = [];
@@ -416,7 +418,7 @@
                                         <div class="navi"></div>
                                         <input type="radio"
                                                style="margin-bottom: 5px"
-                                               value="<%= alertGroup.sound.soundTypeId %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>, <%= sounds[soundType][i+1] %>"
+                                               value="<%= alertGroup.sound.soundTypeId %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
                                                class="icheckbox_flat-green"
                                                name="radio" checked> <%= sounds[soundType][i] %>
 
@@ -433,7 +435,7 @@
                                         <div class="navi"></div>
                                         <input type="radio"
                                                style="margin-bottom: 5px"
-                                               value="<%= alertGroup.sound.soundTypeId %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>, <%= sounds[soundType][i+1] %>"
+                                               value="<%= alertGroup.sound.soundTypeId %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
                                                class="icheckbox_flat-green"
                                                name="radio"> <%= sounds[soundType][i] %>
                                         <div class="navi"></div>

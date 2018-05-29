@@ -109,7 +109,7 @@ module.exports.updateStatus = function(req, res) {
 /* ------------ end of SoftDeleted USERS. */
 
 /* Move Alerts to Archive. */
-module.exports.moveToArchiveOrInbox = function(req, res) {
+module.exports.moveToArchiveInboxTrash = function(req, res) {
     var statusToChange = req.body.searchIDsChecked;
     var action = req.body.action;
     var page = req.body.page;
@@ -122,14 +122,30 @@ module.exports.moveToArchiveOrInbox = function(req, res) {
 
                 if (action == 'inbox'){
                     alert.archived = false;
-                    if (page == '/reports/showTrashReports')
-                        alert.softDeleted = null;
+                    if (page == '/reports/showTrashReports'){
+                        alert.softDeletedBy = null;
+                        alert.softDeletedDate = null;
+                        alert.softDeletedTime = null;
+                        alert.expirationDate = undefined;
+                    }
                 }
                 if (action == 'archive') {
                     alert.archived = true;
-                    if (page == '/reports/showTrashReports')
-                        alert.softDeleted = null;
+                    if (page == '/reports/showTrashReports'){
+                        alert.softDeletedBy = null;
+                        alert.softDeletedDate = null;
+                        alert.softDeletedTime = null;
+                        alert.expirationDate = undefined;
+                    }
                 }
+                if (action == 'trash') {
+                    var wrapped = moment(new Date());
+                    alert.softDeletedBy = req.session.user.firstName + " " + req.session.user.lastName;
+                    alert.softDeletedDate = wrapped.format('YYYY-MM-DD');
+                    alert.softDeletedDate = wrapped.format('h:mm:ss a');
+                    alert.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
+                }
+
                 alert.save();
             });
             return res.send({redirect: page});

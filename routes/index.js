@@ -443,7 +443,7 @@ router.get('/reports/showTrashReports', auth.simpleAuth, auth.requireLogin, repo
 router.post('/reportStatus', auth.simpleAuth, auth.requireLogin, reports.updateStatus, function(req, res) {
 });
 /*  Move Alerts to Archive.  ---------------------------------------------------*/
-router.post('/moveToArchiveOrInbox', auth.simpleAuth, auth.requireLogin, reports.moveToArchiveOrInbox, function(req, res) {
+router.post('/moveToArchiveInboxTrash', auth.simpleAuth, auth.requireLogin, reports.moveToArchiveInboxTrash, function(req, res) {
 });
 
 /* SHOW ALERT REPORTS Received. */

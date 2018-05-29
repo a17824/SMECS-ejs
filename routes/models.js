@@ -324,7 +324,9 @@ var AlertSentInfoSchema = new mongoose.Schema({
     }],
     groupSound: String,
     archived: { type: Boolean, default: false },
-    softDeleted: { type: String, default: null},
+    softDeletedBy: { type: String, default: null},
+    softDeletedDate: { type: String, default: null},
+    softDeletedTime: { type: String, default: null},
     expirationDate: {
         type: Date,
         expires: 0

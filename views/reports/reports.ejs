@@ -39,29 +39,24 @@
           }
 
           function changeStatus(action, page) {
-
               var searchIDsChecked = $('input[name="actionCheckbox"]:checked').map(function () {
                   return $(this).val();
               }).get();
 
-              console.log("selected::::" + searchIDsChecked);
-
               //-----forms validation------------------------------------
-
               if (searchIDsChecked.length < 1 ){
                   alert("No alerts checked to preform action chosen. Please check a checkbox first and then choose the action desired.");
                   return false;
               }
-
               //--------------------------------forms validation end-------
 
               var route
               if (action == 'status')
                   route = "/reportStatus";
               if (action == 'archive')
-                  route = "/moveToArchiveOrInbox";
-              if (action == 'delete')
-                  route = "/deleteReports";
+                  route = "/moveToArchiveInboxTrash";
+              if (action == 'trash')
+                  route = "/moveToArchiveInboxTrash";
 
               $.post(route, {
                   searchIDsChecked: searchIDsChecked,
@@ -76,7 +71,6 @@
                   window.location = data.redirect
               });
           }
-
       </script>
   </head>
 
@@ -167,7 +161,7 @@
                                     <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
                                         <li><a onclick="changeStatus('status','/reports/showReports')">Change alert status</a></li>
                                         <li><a onclick="changeStatus('archive','/reports/showReports')">Archive alerts selected</a></li>
-                                        <li><a href="#">Delete alerts selected</a></li>
+                                        <li><a onclick="changeStatus('trash','/reports/showReports')">Trash alerts selected</a></li>
                                         <li class="divider"></li>
                                         <li><a onclick="selectAll()">Select All</a></li>
                                         <li><a onclick="deselectAll()">Deselect All</a></li>

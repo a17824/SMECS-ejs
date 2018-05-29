@@ -105,6 +105,8 @@ module.exports.update = function(req, res) {
         var arraySort = [];
         var array = [];
 
+        console.log('results[1] = ',results[1]);
+
         var streamSort = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
@@ -145,6 +147,10 @@ module.exports.updatePost = function(req, res) {
     var soundType = soundArray[1];
     var soundName = soundArray[2];
     var soundMp3 = soundArray[3];
+
+    console.log('req.body.sound = ',req.body.sound);
+    console.log('soundArray = ',soundArray);
+
 
     models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
         alertGroup.alertTypeID = req.body.alertGroupID;

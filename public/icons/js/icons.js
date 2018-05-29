@@ -79,6 +79,6 @@ module.exports.soundBuild = function(callback) {
     sound.push(animals);
     sound.push(sirens);
     sound.push(misc);
-
+console.log('sound = ',sound);
     callback(sound);
 };
