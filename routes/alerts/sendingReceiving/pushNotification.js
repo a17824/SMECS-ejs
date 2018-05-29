@@ -2,7 +2,7 @@
 var FCM = require('fcm-node');
 
                       /*****  CALL HERE NOTIFICATION API  ****
-                      *  var 'action' can be:                  *
+                      *  var 'action' can be:                *
                       *     .newAlert                        *
                       *     .updateAlert                     *
                       *     .closeAlert                      *
@@ -14,6 +14,7 @@ module.exports.alert= function(alert, action) {
 
     alert.sentTo.forEach(function (user) {
         if (user.pushToken) {
+            console.log('alert.groupSound = ' + alert.groupSound);
 
             var message = {
                 to: user.pushToken, // required fill with device token
@@ -25,6 +26,7 @@ module.exports.alert= function(alert, action) {
                 },
                 data: { //you can send only notification or only data(or include both)
                     alertID: alert._id,
+                    sound : alert.groupSound,
                     action: action
                 }
             };
