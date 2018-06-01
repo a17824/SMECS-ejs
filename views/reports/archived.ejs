@@ -120,36 +120,31 @@
                             <th width="50">
 
                                 <div class="input-group-btn">
-                                    <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-xs" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
+                                    <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-ms" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
                                     <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
                                         <li><a onclick="changeStatus('inbox','/reports/showArchived')">Move to inbox</a></li>
-                                        <li><a onclick="changeStatus('trash','/reports/showReports')">Move to trash</a></li>
+                                        <li><a onclick="changeStatus('trash','/reports/showArchived')">Move to trash</a></li>
                                         <li class="divider"></li>
                                         <li><a onclick="selectAll()">Select All</a></li>
                                         <li><a onclick="deselectAll()">Deselect All</a></li>
                                     </ul>
                                 </div>
                             </th>
-                            <th width="60">Status</th>
-                            <th width="60">Date</th>
-                            <th width="60">Time</th>
-                            <th>Group</th>
+                            <th width="60">Date<br>created</th>
+                            <th width="60">Time<br>created</th>
                             <th>Alert</th>
                             <th width="50">Real/Drill</th>
+                            <th>Created by</th>
+                            <th width="60">Date closed<br>created</th>
+                            <th width="60">Time closed<br>created</th>
                             <th width="50">Details</th>
-
-
                         </tr>
                         </thead>
                         <tbody>
                         <% reportSent.forEach(function(reportS) { %>
                         <% if (reportS.archived) { %>
-                        <% if ( reportS.status.statusString == 'open'){ %>
-                        <% var color = "#efad4c"  %>
-                        <% } else { %>
-                        <% var color = "#FFF" %>
-                        <% } %>
-                        <tr bgcolor= "<%= color %>">
+
+                        <tr>
 
                             <td></td>
 
@@ -159,51 +154,37 @@
                                        name="actionCheckbox"
                                        value="<%= reportS.id %>"
                                        class="icheckbox_flat-green"
-                                       style="position: relative; right: -20px">
+                                       style="position: relative; right: -25px">
 
                                 <% } else { %>
                                 <input type="checkbox"
                                        name="actionCheckbox"
                                        value="<%= reportS.id %>"
                                        class="icheckbox_flat-green"
-                                       style="position: relative; right: -20px"
+                                       style="position: relative; right: -25px"
                                        disabled>
-                                <% } %>
-                            </td>
-
-                            <td>
-                                <% if ( reportS.status.statusString == 'closed'){ %>
-                                <a><%= reportS.status.statusString %></a>
-                                <% } else { %>
-                                <a href="/reportStatus/<%= reportS.id %>">in progress...</a>
                                 <% } %>
                             </td>
 
                             <td><%= reportS.sentDate %></td>
                             <td><%= reportS.sentTime %></td>
-                            <td><%= reportS.alertGroupName %></td>
                             <td><%= reportS.alertName %></td>
                             <td>
                                 <% if (reportS.testModeON){ %>
-                                    <a>drill</a>
+                                <a>drill</a>
                                 <% } else { %>
-                                    <a>real</a>
+                                <a>real</a>
                                 <% } %>
                             </td>
-
+                            <td><%= reportS.sentBy %></td>
+                            <td><%= reportS.status.statusClosedDate %></td>
+                            <td><%= reportS.status.statusClosedTime %></td>
                             <td><a href="/reports/showReportsDetails/<%= reportS.id %>"><button class="btn btn-info">show</button></a></td>
-
-
-
-
-
                         </tr>
                         <% } %>
                         <% }); %>
                         </tbody>
                     </table>
-
-
 
                 </div>
               </div>

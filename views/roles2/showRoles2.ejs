@@ -104,7 +104,7 @@
                             <table id="datatable" class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Sort #</th>
+                                    <th >Sort #</th>
                                     <th>Role Name</th>
                                     <% if (userAuthID == 1) {%>
                                     <th>Role ID</th>
@@ -136,17 +136,21 @@
                                     <% } %>
                                     </td>
                                     <td>
-                                        <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
-                                        <a href="/roles2/updateRole2/<%= role2.id %>"><button>update</button></a>
+                                        <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true){%>
+                                        <% if (role2.roleID < 96 || userAuthID == 1) {%>
+                                        <a href="/roles2/updateRole2/<%= role2.id %>"><button class="btn btn-warning">update</button></a>
+                                        <% } %>
                                         <% } else { %>
-                                        <a href="/roles2/updateRole2/<%= role2.id %>"><button disabled>update</button></a>
+                                        <a href="/roles2/updateRole2/<%= role2.id %>"><button class="btn btn-warning" disabled>update</button></a>
                                         <% } %>
                                     </td>
                                     <td>
-                                        <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true) {%>
-                                        <a href="/roles2/showRoles2/<%= role2.id %>" id="roleLink"><button>delete</button></a>
+                                        <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true){%>
+                                            <% if (role2.roleID < 96 || userAuthID == 1) {%>
+                                                <a href="/roles2/showRoles2/<%= role2.id %>" id="roleLink"><button class="btn btn-danger">delete</button></a>
+                                            <% } %>
                                         <% } else { %>
-                                        <a href="/roles2/showRoles2/<%= role2.id %>" id="role2Link"><button disabled>delete</button></a>
+                                        <a href="/roles2/showRoles2/<%= role2.id %>" id="role2Link"><button class="btn btn-danger" disabled>delete</button></a>
                                         <% } %>
                                     </td>
                                 </tr>

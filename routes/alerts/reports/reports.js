@@ -100,16 +100,17 @@ module.exports.updateStatus = function(req, res) {
                 alert.save();
                 console.log('success - Alert status changed to ' + alert.status.statusString);
                 /*****  CALL HERE NOTIFICATION API  *****/
-                pushNotification.alert(alert, 'closeAlert');
-            });
-            return res.send({redirect: '/reports/showReports'});
-        }
-    })
+            pushNotification.alert(alert, 'closeAlert');
+        });
+        return res.send({redirect: '/reports/showReports'});
+    }
+})
 };
 /* ------------ end of SoftDeleted USERS. */
 
 /* Move Alerts to Archive. */
 module.exports.moveToArchiveInboxTrash = function(req, res) {
+
     var statusToChange = req.body.searchIDsChecked;
     var action = req.body.action;
     var page = req.body.page;
@@ -140,12 +141,12 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
                 }
                 if (action == 'trash') {
                     var wrapped = moment(new Date());
+                    alert.archived = false;
                     alert.softDeletedBy = req.session.user.firstName + " " + req.session.user.lastName;
                     alert.softDeletedDate = wrapped.format('YYYY-MM-DD');
-                    alert.softDeletedDate = wrapped.format('h:mm:ss a');
+                    alert.softDeletedTime = wrapped.format('h:mm:ss');
                     alert.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
                 }
-
                 alert.save();
             });
             return res.send({redirect: page});
@@ -153,6 +154,30 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
     })
 };
 /* ------------ end of SoftDeleted USERS. */
+
+
+module.exports.reportsDetails = function(req, res) {
+    async.parallel([
+        function(callback){
+            models.AlertSentInfo.findById(req.params.id).exec(callback);
+        },
+        function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
+        function(callback){aclPermissions.showPermissionsTable(req, res, callback);},   //aclPermissions showPermissionsTable
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        console.log('chegou');
+        res.render('reports/reportDetails',{
+            title: 'Report details',
+            report: results[0],
+            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
+        });
+    })
+
+};
+
 
 
 module.exports.reportsUsers = function(req, res, next) {
@@ -178,9 +203,3 @@ module.exports.reportsUsers = function(req, res, next) {
 };
 
 
-module.exports.reportsDetails = function(req, res, next) {
-    models.ReportsSent.findById(req.params.id,function(error, details) {
-        console.log(details);
-        res.render('reports/showReportsDetails', { title: 'Alert Details', details: details });
-    });
-};

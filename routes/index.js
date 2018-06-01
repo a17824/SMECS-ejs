@@ -435,9 +435,16 @@ router.get('/reports/showReports', auth.simpleAuth, auth.requireLogin, reports.r
 /* SHOW REPORTS Archived. */
 router.get('/reports/showArchived', auth.simpleAuth, auth.requireLogin, reports.reportsArchived, function(req, res, next) {
 });
-/* SHOW REPORTS Archived. */
+/* SHOW REPORTS TrashReports. */
 router.get('/reports/showTrashReports', auth.simpleAuth, auth.requireLogin, reports.reportsTrash, function(req, res, next) {
 });
+// show Reports DETAILS-------------------------------
+router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin, reports.reportsDetails, function(req, res) {
+});
+
+
+
+
 
 /* UPDATE Report STATUS  ---------------------------------------------------*/
 router.post('/reportStatus', auth.simpleAuth, auth.requireLogin, reports.updateStatus, function(req, res) {
@@ -449,9 +456,7 @@ router.post('/moveToArchiveInboxTrash', auth.simpleAuth, auth.requireLogin, repo
 /* SHOW ALERT REPORTS Received. */
 router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogin, reports.reportsUsers,function(req, res) {
 });
-// show Reports DETAILS-------------------------------
-router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin, reports.reportsDetails, function(req, res) {
-});
+
 
 /* PARENTS SELF REGISTRATION. */
 router.get('/parentsSelfRegistration/defaultForm', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.defaultForm, function(req, res, next) {
