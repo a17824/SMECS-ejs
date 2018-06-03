@@ -77,6 +77,7 @@ routerApi.post('/alertViewed', auth.auth, reports.alertViewedPost, function(req,
 routerApi.post('/alertCalled911', auth.auth, reports.alertCalled911, function(req, res) {});
 routerApi.post('/alertProcedureCompleted', auth.auth, reports.alertProcedureCompleted, function(req, res) {});
 routerApi.post('/alertWeAreSafe', auth.auth, reports.alertWeAreSafe, function(req, res) {});
+routerApi.post('/receivedAlert', auth.auth, receiveAlert.postReceivedAlert, function(req, res) {});
 
 
 

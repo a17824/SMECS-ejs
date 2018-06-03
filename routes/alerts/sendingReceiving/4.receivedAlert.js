@@ -170,7 +170,10 @@ module.exports.postReceivedAlert = function(req, res, next) {
             }else{
                 // All ALERTS
                 alert.save();
-                res.send({redirect: '/dashboard/'});
+                if (req.decoded) {
+                    res.json({success: true});
+                } else 
+                    res.send({redirect: '/dashboard/'});
             }
         }
     });
