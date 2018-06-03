@@ -7,19 +7,19 @@
 
 html , body{
 
- height:100%;
+    height:100%;
 
 }
 
 .full-width {
 
- width:100%;
+    width:100%;
 
- }
+}
 
 .full-height{
- height:100%;
- }
+    height:100%;
+}
 
 .daterangepicker .ranges li {
     color: #73879C
@@ -599,7 +599,7 @@ table.no-margin .progress {
 .col-lg-1,
 .col-xs-2,
 .col-sm-2,
-.col-md-2,
+.col-md-2half,
 .col-md-2,
 .col-lg-2,
 .col-xs-3,
@@ -743,15 +743,15 @@ a:focus {
 }
 /* sideMenu hover font color */
 .nav.side-menu>li>a:hover {
-     color: #F2F5F7 !important
+    color: #F2F5F7 !important
     /* color: #1ABB9C !important */
 }
 /* sideMenu button hover color */
 .nav.side-menu>li>a:hover,
 .nav>li>a:focus {
     text-decoration: none;
-     /* background: transparent */
-     background-color: rgba(255, 255, 255, 0.06)
+    /* background: transparent */
+    background-color: rgba(255, 255, 255, 0.06)
 }
 .nav.child_menu {
     display: none
@@ -785,7 +785,7 @@ a:focus {
     top: 0
 }
 .nav-md ul.nav.child_menu li:last-child::after {
-  bottom: 50%;
+    bottom: 50%;
 }
 /* side menu Font color*/
 .nav.side-menu>li>a,
@@ -1251,7 +1251,7 @@ table.tile_info td:first-child {
 td span {
     line-height: inherit
 }
-.sidebar-widget {
+.reports-widget {
     overflow: hidden
 }
 .error-number {
@@ -1631,15 +1631,15 @@ ul.quick-list li i {
 .dashboard-widget-content {
     padding-top: 9px
 }
-.dashboard-widget-content .sidebar-widget {
-    width: 50%;
+.dashboard-widget-content .reports-widget {
+
     display: inline-block;
     vertical-align: top;
     background: #fff;
     border: 1px solid #abd9ea;
     border-radius: 5px;
     text-align: center;
-    float: right;
+
     padding: 2px;
     margin-top: 10px
 }
@@ -1694,7 +1694,7 @@ span.right {
     position: fixed;
     width: 230px;
     background: #2A3F54;
-	z-index:999;
+    z-index:999;
 }
 .sidebar-footer a {
     padding: 7px 0 3px;
@@ -1871,7 +1871,7 @@ h4.graph_title {
     display: inline-block;
     /*font-family: FontAwesome;*/
     font-style: normal;
-   /* font-weight: normal;*/
+    /* font-weight: normal;*/
     /*font-size: 18px;*/
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
@@ -4199,7 +4199,7 @@ ul.notifications {
 
 
 @media (max-width: 767px) {
-   .dataTables_length { float:none; }
+    .dataTables_length { float:none; }
 }
 
 
@@ -4257,7 +4257,7 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 .daterangepicker.xdisplay { width:228px; }
 
 .dataTables_wrapper > .row{
-  overflow:auto !important; /*prevent datatables overflowing its container*/
+    overflow:auto !important; /*prevent datatables overflowing its container*/
 }
 
 /** bootstrap-datetimepicker **/
