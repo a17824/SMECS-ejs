@@ -4,7 +4,8 @@ var reqAsst = require('./2_3_4.reqAssistance.js');
 var models = require('./../../../models');
 
 
-module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent) {
+module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, actionNotification, updateTime) {
+
     function usersScopeToSendAlert(callback) {
         var array = [];
         utils.forEach(function (utility,idx, arr) {
@@ -39,15 +40,19 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
                     alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
                     var boolTrue = true;
                     var boolFalse = false;
-                    reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue);
-                    reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse);
-                    alert.save();
+                    reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue, actionNotification, updateTime);
+                    reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse, actionNotification, updateTime);
+                    alert.save(function (err) {
+                        if(err)
+                            console.log('err - ', err)
+
+                    })
                 }
             });
 };
 
 
-module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
+module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse, actionNotification, updateTime) {
     var arr;
     var arrOn = [];
     var wrapped = moment(new Date());
@@ -59,33 +64,47 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse) {
             });
             arrOn.push(arr);
         });
+
         arrOn.forEach(function (util) {
             for (var x = 0; x < alert.requestAssistance.length; x++) {
                 if (util[1] == alert.requestAssistance[x].utilityName) {
                     if (util[2] == 'smecsApp') {
                         alert.requestAssistance[x].reqSmecsApp.sentReqSmecsApp = boolTrueFalse;
+                        if(actionNotification == 'notify' && alert.requestAssistance[x].reqSmecsApp.stat == 'open'){
+                            if(updateTime == 'update')
+                                alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
+                        }
                         if (typeof alert.requestAssistance[x].reqSmecsApp.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqSmecsApp.stat = 'open';
                             alert.requestAssistance[x].reqSmecsApp.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            //if(alert.alertNameID !== 26)
+                            if(actionNotification == 'notify')
                                 reqAsst.sendPushNotificationReqAssSmecsApp(alert, alert.requestAssistance[x]);
                         }
                     }
+
                     if (util[2] == 'email') {
                         alert.requestAssistance[x].reqEmail.sentReqEmail = boolTrueFalse;
+                        if(actionNotification == 'notify' && alert.requestAssistance[x].reqEmail.stat == 'open'){
+                            if(updateTime == 'update')
+                                alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
+                        }
                         if (typeof alert.requestAssistance[x].reqEmail.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqEmail.stat = 'open';
                             alert.requestAssistance[x].reqEmail.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            //if(alert.alertNameID !== 26)
+                            if(actionNotification == 'notify')
                                 reqAsst.sendPushNotificationReqAssEmail(alert, alert.requestAssistance[x]);
                         }
                     }
                     if (util[2] == 'call') {
                         alert.requestAssistance[x].reqCall.sentReqCall = boolTrueFalse;
+                        if(actionNotification == 'notify' && alert.requestAssistance[x].reqCall.stat == 'open'){
+                            if(updateTime == 'update')
+                                alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
+                        }
                         if (typeof alert.requestAssistance[x].reqCall.stat == 'undefined' && boolTrueFalse == true) {
                             alert.requestAssistance[x].reqCall.stat = 'open';
                             alert.requestAssistance[x].reqCall.sentTime = wrapped.format('YYYY-MM-DD, h:mm:ss a');
-                            //if(alert.alertNameID !== 26)
+                            if(actionNotification == 'notify')
                                 reqAsst.sendPushNotificationReqAssCall(alert, alert.requestAssistance[x]);
                         }
                     }

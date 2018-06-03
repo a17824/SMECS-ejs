@@ -2,6 +2,7 @@
 var models = require('./../../models');
 var async = require("async");
 var functions = require('./../../functions');
+var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 
 
 //          FLOOR           \\
@@ -560,9 +561,34 @@ module.exports.postMultiSelection = function(req, res) {
                     if (alert.alertNameID == 26 ) {
                         alert.reqAssOn = req.body.reqAssChecked;
                         alert.reqAssOff = req.body.reqAssNotChecked;
-                    }
-                    alert.save();
 
+                        var reqAssOn,reqAssOff;
+
+                        if (req.decoded) {       // API user
+                            reqAssOn = req.body.reqAssChecked.split(',').map(String);
+                            reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
+                        } else {                 // EJS user
+                            reqAssOn = req.body.reqAssChecked;
+                            reqAssOff = req.body.reqAssNotChecked;
+                        }
+
+                        console.log('reqAssOn = ',reqAssOn);
+                        console.log('--------------------');
+                        console.log('reqAssOff = ',reqAssOff);
+                        console.log('--------------------');
+                        alert.reqAssOn = reqAssOn;
+                        alert.reqAssOff = reqAssOff;
+
+
+
+
+
+                        var arraySmecsAppToSent =[];
+                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent,'dontNotify','update');
+                    }
+                    if (alert.alertNameID !== 26 ){
+                        alert.save();
+                    }
                     if(req.decoded){ // run SMECS API
                         res.json({
                             success: true,

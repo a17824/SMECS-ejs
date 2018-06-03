@@ -161,14 +161,11 @@ module.exports.reportsDetails = function(req, res) {
         function(callback){
             models.AlertSentInfo.findById(req.params.id).exec(callback);
         },
-        function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
-        function(callback){aclPermissions.showPermissionsTable(req, res, callback);},   //aclPermissions showPermissionsTable
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        console.log('chegou');
         res.render('reports/reportDetails',{
-            title: 'Report details',
+            title: 'REPORTS SENT',
             report: results[0],
             aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,

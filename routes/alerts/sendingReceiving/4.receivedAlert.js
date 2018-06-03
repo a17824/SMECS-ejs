@@ -148,12 +148,22 @@ module.exports.postReceivedAlert = function(req, res, next) {
             if ((alert.alertNameID == 14 || alert.alertNameID == 26) && exitButton == 'false') {
                 var reqAssOn = req.body.reqAssChecked;
                 var reqAssOff = req.body.reqAssNotChecked;
+
+                // API EJS ----------
+                var userApiEjs;
+                if (req.decoded) {       // API user
+                    exitButton = 'false';
+                    reqAssOn = reqAssOn.split(',');
+                    reqAssOff = reqAssOff.split(',');
+                }
+                //-------------------
+
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
                     if(err)
                         console.log('err - ',err);
                     else{
                         var arraySmecsAppToSent =[];
-                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent);
+                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent,'notify','dontUpdate');
                         res.send({redirect: '/alerts/received/receiveAlert/' + alertToUpdate1});
                     }
                 });
