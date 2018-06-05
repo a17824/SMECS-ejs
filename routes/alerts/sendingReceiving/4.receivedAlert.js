@@ -117,8 +117,10 @@ module.exports.postReceivedAlert = function(req, res, next) {
 
     // API EJS ----------
     var userApiEjs;
-    if (req.decoded)       // API user
+    if (req.decoded) {      // API user
         userApiEjs = req.decoded.user.email;
+        exitButton = 'false';
+    }
     else
         userApiEjs = req.user.email; // EJS user
     //-------------------
