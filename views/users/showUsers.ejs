@@ -167,6 +167,8 @@
                                         <tbody>
                                         <% users.forEach(function(user) { %>
                                         <% if (user.softDeleted == null && user.internal == true) { %>
+                                        <% if (user.userPrivilegeID !== 1 || userAuthID == 1) { %> <!-- hide super users -->
+
                                         <tr>
                                             <td></td>
                                             <% if (user.photo == "" || user.photo == undefined) { %>
@@ -241,7 +243,7 @@
                                             </td>
                                         </tr>
                                         <% } %>
-
+                                        <% } %>
                                         <% }); %>
                                         </tbody>
                                     </table>

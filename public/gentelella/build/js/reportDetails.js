@@ -695,14 +695,14 @@ function init_chart_doughnut(){
             tooltipFillColor: "rgba(51, 51, 51, 0.55)",
             data: {
                 labels: [
-                    "Symbian",
-                    "Blackberry",
-                    "Other",
-                    "Android",
-                    "IOS"
+                    "Nurse",
+                    "Office Staff",
+                    "Staff",
+                    "Principal",
+                    "Teacher"
                 ],
                 datasets: [{
-                    data: [15, 20, 30, 10, 30],
+                    data: [5, 11, 16, 2, 16],
                     backgroundColor: [
                         "#BDC3C7",
                         "#9B59B6",
@@ -791,7 +791,7 @@ function init_gauge() {
 
         chart_gauge_02.maxValue = 48;
         chart_gauge_02.animationSpeed = 32;
-        chart_gauge_02.set(30);
+        chart_gauge_02.set(46);
         chart_gauge_02.setTextField(document.getElementById("gauge-text2"));
 
     }
@@ -806,9 +806,9 @@ function init_gauge() {
 
     if ($('#gauge-text3').length){
 
-        chart_gauge_03.maxValue = 30;
+        chart_gauge_03.maxValue = 46;
         chart_gauge_03.animationSpeed = 32;
-        chart_gauge_03.set(15);
+        chart_gauge_03.set(40);
         chart_gauge_03.setTextField(document.getElementById("gauge-text3"));
 
     }
@@ -823,9 +823,9 @@ function init_gauge() {
 
     if ($('#gauge-text4').length){
 
-        chart_gauge_04.maxValue = 15;
+        chart_gauge_04.maxValue = 40;
         chart_gauge_04.animationSpeed = 32;
-        chart_gauge_04.set(5);
+        chart_gauge_04.set(20);
         chart_gauge_04.setTextField(document.getElementById("gauge-text4"));
 
     }
@@ -840,7 +840,7 @@ function init_gauge() {
 
     if ($('#gauge-text4').length){
 
-        chart_gauge_05.maxValue = 15;
+        chart_gauge_05.maxValue = 40;
         chart_gauge_05.animationSpeed = 32;
         chart_gauge_05.set(15);
         chart_gauge_05.setTextField(document.getElementById("gauge-text5"));

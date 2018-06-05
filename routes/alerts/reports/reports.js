@@ -166,6 +166,7 @@ module.exports.reportsDetails = function(req, res) {
     ],function(err, results){
         res.render('reports/reportDetails',{
             title: 'REPORTS SENT',
+            userAuthID: req.user.userPrivilegeID,
             report: results[0],
             aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,

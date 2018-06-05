@@ -1226,11 +1226,17 @@ table.tile td ul li a big {
 table.tile_info {
     width: 100%
 }
+.numbersRight {
+    position: absolute;
+    right: 20px;
+}
+
 table.tile_info td {
     text-align: left;
     padding: 1px;
     font-size: 15px
 }
+
 table.tile_info td p {
     white-space: nowrap;
     overflow: hidden;
@@ -4266,3 +4272,5 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     background-color: #ffff !important;
 }
 /** /bootstrap-datetimepicker **/
+
+
