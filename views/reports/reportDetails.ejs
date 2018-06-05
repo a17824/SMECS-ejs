@@ -86,7 +86,7 @@
                             <% } %>
 
                             <% if (userAuthID == 1) {%>
-                            <div class="col-md-2half col-sm-6 col-xs-6">
+                            <div class="col-md-2half col-sm-6 col-xs-6" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -104,7 +104,7 @@
                             <% } %>
 
 
-                            <div class="<%= pageColSize %>">
+                            <div class="<%= pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -122,7 +122,7 @@
 
 
 
-                            <div class="<%= pageColSize %>">
+                            <div class="<%= pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -139,7 +139,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>">
+                            <div class="<%= pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -156,7 +156,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>">
+                            <div class="<%= pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -288,6 +288,341 @@
                     </div>
 
 
+
+
+
+
+                </div>
+
+
+                <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    <div class="x_panel tile overflow_hidden">
+                        <div class="x_title">
+                            <h2><small>Users that...</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <!-- start accordion -->
+                            <div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
+                                <div class="panel">
+                                    <a class="panel-heading" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#notReceive" aria-expanded="true" aria-controls="collapseOne">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td align="left">didn't receive alert:</td>
+                                                    <td width="20" align="center">2</td>
+                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="20" align="right">48</td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="notReceive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="panel-body">
+
+                                            <ul class="list-unstyled msg_list">
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5a7390ed14e9700f20a38d19_01016.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #e76146">no</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <li class="image">
+                                                    <img style="position: relative; left: -5px" src="/public/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #e76146">no</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <!-- end of last user, picture and name need to be manual position -->
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notView" aria-expanded="false" aria-controls="collapseTwo">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td align="left">didn't view alert:</td>
+                                                    <td width="20" align="center">6</td>
+                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="20" align="right">46</td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="notView" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+
+                                            <ul class="list-unstyled msg_list">
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5b1591783cc6e0004815bbf3_01006.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Denise Clifford</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <li class="image">
+                                                    <img style="position: relative; left: -5px" src="/public/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <!-- end of last user, picture and name need to be manual position -->
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notProcedure" aria-expanded="false" aria-controls="collapseTwo">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td align="left">didn't complete procedure:</td>
+                                                    <td width="20" align="center">20</td>
+                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="20" align="right">40</td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="notProcedure" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+
+                                            <ul class="list-unstyled msg_list">
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Kelly Mills</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <li class="image">
+                                                    <img style="position: relative; left: -5px" src="/public/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span style="position: absolute; left: 62px">&ensp;Meaghan Davis</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <!-- end of last user, picture and name need to be manual position -->
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notSafe" aria-expanded="false" aria-controls="collapseTwo">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td align="left">are not safe:</td>
+                                                    <td width="20" align="center">25</td>
+                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="20" align="right">40</td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="notSafe" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+
+                                            <ul class="list-unstyled msg_list">
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Kelly Mills</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <li class="image">
+                                                    <img style="position: relative; left: -5px" src="/public/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span style="position: absolute; left: 62px">&ensp;Meaghan Davis</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <!-- end of last user, picture and name need to be manual position -->
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ln_solid"></div>
+
+                                <div class="panel">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#completedAll" aria-expanded="false" aria-controls="collapseTwo">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td align="left">completed all steps:</td>
+                                                    <td width="20" align="center">15</td>
+                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="20" align="right">40</td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="completedAll" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+
+
+                                            <ul class="list-unstyled msg_list">
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5a7390ed14e9700f20a38d19_01016.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5b15947e3cc6e0004815bbf9_01015.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Laura Ledo</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5b1591373cc6e0004815bbf2_01005.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Janice Clark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/5b1591b13cc6e0004815bbf4_01007.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Madeline Connley</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/590776839344e21c2f0894ad_01002.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Meghan Boyle</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+
+                                                <li class="image">
+                                                    <img src="/public/photosUsers/58587741da3d90fc25acedee_01011.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <li class="image">
+                                                    <img style="position: relative; left: -5px" src="/public/photosUsers/58587741da3d90fc25acedee_01011.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span style="position: absolute; left: 62px">&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 37px;"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+                                                <!-- end of last user, picture and name need to be manual position -->
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- end of accordion -->
+
+
+                        </div>
+                    </div>
+
+
+
+
                     <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
                             <h2><small>Call 911</small><a style="font-size: 12px">&emsp;roles allowed to call</a></h2>
@@ -297,22 +632,22 @@
                         <div class="x_content">
 
                             <!-- start accordion -->
-                            <div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
+                            <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel">
-                                    <a class="panel-heading" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">
+                                    <a class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
                                                     <td width="35" align="left">Role:</td>
                                                     <td align="left">&emsp;Principal</td>
-                                                    <td width="20" align="left">0</td>
-                                                    <td width="150" align="left">users called out of</td>
+                                                    <td width="20" align="center">0</td>
+                                                    <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">1</td>
                                                 </tr>
                                             </table>
                                         </h4>
                                     </a>
-                                    <div id="collapseOne1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="panel-body">
                                             <table class="table table-striped">
                                                 <thead>
@@ -330,20 +665,20 @@
                                     </div>
                                 </div>
                                 <div class="panel">
-                                    <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo1" aria-expanded="false" aria-controls="collapseTwo">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
                                                     <td width="35" align="left" style="color: #18c09c">Role:</td>
                                                     <td align="left" style="color: #18c09c">&emsp;Staff</td>
-                                                    <td width="20" align="left" style="color: #18c09c">3</td>
-                                                    <td width="150" align="left" style="color: #18c09c">users called out of</td>
+                                                    <td width="20" align="center" style="color: #18c09c">3</td>
+                                                    <td width="140" align="center" style="color: #18c09c">users called out of</td>
                                                     <td width="20" align="right" style="color: #18c09c">16</td>
                                                 </tr>
                                             </table>
                                         </h4>
                                     </a>
-                                    <div id="collapseTwo1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                         <div class="panel-body">
                                             <table class="table table-striped">
                                                 <thead>
@@ -375,20 +710,20 @@
                                     </div>
                                 </div>
                                 <div class="panel">
-                                    <a class="panel-heading collapsed" role="tab" id="headingThree1" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree1" aria-expanded="false" aria-controls="collapseThree">
+                                    <a class="panel-heading collapsed" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
                                                     <td width="35" align="left">Role:</td>
-                                                    <td align="left">&emsp;Principal</td>
-                                                    <td width="20" align="left">0</td>
-                                                    <td width="150" align="left">users called out of</td>
+                                                    <td align="left">&emsp;Office Staff</td>
+                                                    <td width="20" align="center">0</td>
+                                                    <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">11</td>
                                                 </tr>
                                             </table>
                                         </h4>
                                     </a>
-                                    <div id="collapseThree1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                         <div class="panel-body">
                                             <table class="table table-striped">
                                                 <thead>
@@ -414,144 +749,10 @@
 
 
 
-                </div>
 
 
-                <div class="col-md-6 col-sm-6 col-xs-12">
 
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2><small>Users sent to</small></h2>
 
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <ul class="list-unstyled msg_list">
-                                <li class="image">
-                                    <img src="/public/photosUsers/5a7390ed14e9700f20a38d19_01016.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Kelly Mills</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #e76146">no</span> &ensp;
-                                    we are safe: <span style="color: #e76146">no</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/5b1591783cc6e0004815bbf3_01006.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Denise Clifford</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #e76146">no</span> &ensp;
-                                    procedure done: <span style="color: #e76146">no</span> &ensp;
-                                    we are safe: <span style="color: #e76146">no</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/5b15947e3cc6e0004815bbf9_01015.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Laura Ledo</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/5b1591373cc6e0004815bbf2_01005.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Janice Clark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/5b1591b13cc6e0004815bbf4_01007.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Madeline Connley</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/590776839344e21c2f0894ad_01002.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Meghan Boyle</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Meaghan Davis</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #e76146">no</span> &ensp;
-                                    we are safe: <span style="color: #e76146">no</span> &ensp;
-                                </span>
-                                </li>
-
-                                <li class="image">
-                                    <img src="/public/photosUsers/58587741da3d90fc25acedee_01011.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
-                                </span>
-                                </li>
-
-                                <!-- last user, picture and name need to be manual position -->
-                                <li class="image">
-                                    <img style="position: absolute; left: 16px; bottom: 16px;" src="/public/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar" />
-                                    <span><span>&emsp;&emsp;&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
-
-                                    <span class="message" style="font-size: 11px; position: absolute; left: 53px"><br>
-                                    received: <span style="color: #18c09c">yes</span> &ensp;
-                                    viewed: <span style="color: #e76146">no</span> &ensp;
-                                    procedure done: <span style="color: #e76146">no</span> &ensp;
-                                    we are safe: <span style="color: #e76146">no</span> &ensp;
-                                </span>
-                                </li>
-                                <!-- end of last user, picture and name need to be manual position -->
-
-                            </ul>
-                        </div>
-                    </div>
 
                 </div>
 

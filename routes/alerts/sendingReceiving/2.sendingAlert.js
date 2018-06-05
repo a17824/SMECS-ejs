@@ -540,62 +540,65 @@ module.exports.postMultiSelection = function(req, res) {
             alert.multiSelectionNames = req.body.checkboxesNames;
             alert.multiSelectionIDs = req.body.checkboxesIDs;
 
+            if (req.decoded) {       // API user
+                alert.multiSelectionNames = req.body.checkboxesNames.split(',').map(String);
+                alert.multiSelectionIDs = req.body.checkboxesIDs.split(',').map(String);
+            }
+
 
             //ALERT Utilities Failures,
             if (alert.alertNameID == 14 ||
                 alert.alertNameID == 26 ) {
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
-                    alert.requestAssistance = [];
-                    utils.forEach(function (util) {
-                        var request = {
-                            utilityID: util.utilityID,
-                            utilityName:  util.utilityName,
-                            contactName: util.contactName,
-                            phone: util.phone,
-                            email: util.email,
-                            smecsApp: util.smecsApp
-                        };
-                        alert.requestAssistance.push(request);
-                    });
-
-                    if (alert.alertNameID == 26 ) {
-                        alert.reqAssOn = req.body.reqAssChecked;
-                        alert.reqAssOff = req.body.reqAssNotChecked;
-
-                        var reqAssOn,reqAssOff;
-
-                        if (req.decoded) {       // API user
-                            reqAssOn = req.body.reqAssChecked.split(',').map(String);
-                            reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
-                        } else {                 // EJS user
-                            reqAssOn = req.body.reqAssChecked;
-                            reqAssOff = req.body.reqAssNotChecked;
-                        }
-
-                        console.log('reqAssOn = ',reqAssOn);
-                        console.log('--------------------');
-                        console.log('reqAssOff = ',reqAssOff);
-                        console.log('--------------------');
-                        alert.reqAssOn = reqAssOn;
-                        alert.reqAssOff = reqAssOff;
-
-
-
-
-
-                        var arraySmecsAppToSent =[];
-                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent,'dontNotify','update');
-                    }
-                    if (alert.alertNameID !== 26 ){
-                        alert.save();
-                    }
-                    if(req.decoded){ // run SMECS API
-                        res.json({
-                            success: true,
-                            redirect: 'floor'
+                    if(err){
+                        console.log('err = ', err);
+                    }else {
+                        alert.requestAssistance = [];
+                        utils.forEach(function (util) {
+                            var request = {
+                                utilityID: util.utilityID,
+                                utilityName: util.utilityName,
+                                contactName: util.contactName,
+                                phone: util.phone,
+                                email: util.email,
+                                smecsApp: util.smecsApp
+                            };
+                            alert.requestAssistance.push(request);
                         });
-                    }else{  // run SMECS EJS
-                        res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
+
+                        if (alert.alertNameID == 26) {
+                            alert.reqAssOn = req.body.reqAssChecked;
+                            alert.reqAssOff = req.body.reqAssNotChecked;
+
+                            var reqAssOn, reqAssOff;
+
+                            if (req.decoded) {       // API user
+                                reqAssOn = req.body.reqAssChecked.split(',').map(String);
+                                reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
+                            } else {                 // EJS user
+                                reqAssOn = req.body.reqAssChecked;
+                                reqAssOff = req.body.reqAssNotChecked;
+                            }
+
+
+                            alert.reqAssOn = reqAssOn;
+                            alert.reqAssOff = reqAssOff;
+
+
+                            var arraySmecsAppToSent = [];
+                            reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update');
+                        }
+                        if (alert.alertNameID !== 26) {
+                            alert.save();
+                        }
+                        if (req.decoded) { // run SMECS API
+                            res.json({
+                                success: true,
+                                redirect: 'floor'
+                            });
+                        } else {  // run SMECS EJS
+                            res.send({redirect: '/alerts/sending/floor/' + alertToUpdate1});
+                        }
                     }
                 });
 
