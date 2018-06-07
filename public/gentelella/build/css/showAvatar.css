@@ -134,11 +134,11 @@ p { margin: 1px }
 }
 
 .image img:hover {
-    -webkit-transform:scale(5); /* Safari and Chrome */
-    -moz-transform:scale(5); /* Firefox */
-    -ms-transform:scale(5); /* IE 9 */
-    -o-transform:scale(5); /* Opera */
-    transform:scale(5);
+    -webkit-transform:scale(4); /* Safari and Chrome */
+    -moz-transform:scale(4); /* Firefox */
+    -ms-transform:scale(4); /* IE 9 */
+    -o-transform:scale(4); /* Opera */
+    transform:scale(4);
     z-index: 10;
 }
 p { margin: 1px }

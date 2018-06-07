@@ -236,13 +236,18 @@
                             </td>
 
                             <td><%= reportS.sentBy %></td>
+                            <% if ( reportS.status.statusString == 'open'){ %>
+                            <td>in progress...</td>
+                            <td>in progress...</td>
+                            <% } else { %>
                             <td><%= reportS.status.statusClosedDate %></td>
                             <td><%= reportS.status.statusClosedTime %></td>
+                            <% } %>
                             <td>
                                 <% if ( reportS.status.statusString == 'closed'){ %>
                                 <a><%= reportS.status.statusString %></a>
                                 <% } else { %>
-                                <a>in progress...</a>
+                                <a>open</a>
                                 <% } %>
                             </td>
                             <td><a href="/reports/showReportsDetails/<%= reportS.id %>"><button class="btn btn-info">show</button></a></td>

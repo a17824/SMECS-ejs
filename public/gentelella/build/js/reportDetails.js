@@ -702,20 +702,20 @@ function init_chart_doughnut(){
                     "Teacher"
                 ],
                 datasets: [{
-                    data: [5, 11, 16, 2, 16],
+                    data: [1, 1, 10, 18, 20],
                     backgroundColor: [
                         "#BDC3C7",
-                        "#9B59B6",
                         "#E74C3C",
-                        "#26B99A",
-                        "#3498DB"
+                        "#9B59B6",
+                        "#3498DB",
+                        "#26B99A"
                     ],
                     hoverBackgroundColor: [
-                        "#CFD4D8",
-                        "#B370CF",
-                        "#E95E4F",
-                        "#36CAAB",
-                        "#49A9EA"
+                        "#BDC3C7",
+                        "#E74C3C",
+                        "#9B59B6",
+                        "#3498DB",
+                        "#26B99A"
                     ]
                 }]
             },

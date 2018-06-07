@@ -74,7 +74,7 @@
 
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2><small>Gauges</small></h2>
+                            <h2><small>Gauges</small><a style="font-size: 12px">&emsp;Total alerts sent: 50</a></h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -214,39 +214,41 @@
                                 </tr>
                                 <tr>
                                     <td>
+
                                         <canvas class="canvasDoughnut" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
                                     </td>
                                     <td>
                                         <table class="tile_info">
                                             <tr>
                                                 <td>
-                                                    <p><i class="fa fa-square blue"></i>Teacher </p>
+                                                    <p><i class="fa fa-square green"></i>Teacher </p>
                                                 </td>
-                                                <td class="numbersRight">16</td>
+                                                <td class="numbersRight">20</td><!-- change values @ reportDetails.js lines [691,712] -->
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <p><i class="fa fa-square green"></i>Principal </p>
+                                                    <p><i class="fa fa-square blue"></i>Staff </p>
                                                 </td>
-                                                <td class="numbersRight">2</td>
+                                                <td class="numbersRight">18</td><!-- change values @ reportDetails.js lines [691,712] -->
                                             </tr>
                                             <tr>
                                                 <td>
                                                     <p><i class="fa fa-square purple"></i>Office Staff </p>
                                                 </td>
-                                                <td class="numbersRight">11</td>
+                                                <td class="numbersRight">10</td><!-- change values @ reportDetails.js lines [691,712] -->
                                             </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square red"></i>Principal </p>
+                                                </td>
+                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+
                                             <tr>
                                                 <td>
                                                     <p><i class="fa fa-square aero"></i>Nurse </p>
                                                 </td>
-                                                <td class="numbersRight">5</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square red"></i>Staff </p>
-                                                </td>
-                                                <td class="numbersRight">16</td>
+                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
                                             </tr>
                                         </table>
                                     </td>
@@ -266,21 +268,94 @@
 
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"
                                                id="alertName"
                                                value="Red" readonly>
                                     </div>
-
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="Stranger/Trespasser in Building" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="drill" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="open" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sent by</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="Pedro Reis" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time created</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="2018-06-05 / 5:52:42 pm" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time closed</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="in progress..." readonly>
+                                    </div>
+                                </div>
+
+                                <div class="divider-dashed"></div>
+
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <textarea id="note" placeholder="n/a" disabled>stranger is in my classroom and refuses to leave</textarea>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="2018-06-05 / 5:52:42 pm" readonly>
+                                    </div>
+                                </div>
+
                             </form>
 
 
@@ -312,7 +387,7 @@
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
-                                                    <td align="left">didn't receive alert:</td>
+                                                    <td align="left" style="color: #e76146">didn't receive alert:</td>
                                                     <td width="20" align="center">2</td>
                                                     <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">48</td>
@@ -360,7 +435,7 @@
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
-                                                    <td align="left">didn't view alert:</td>
+                                                    <td align="left" style="color: #e76146">didn't view alert:</td>
                                                     <td width="20" align="center">6</td>
                                                     <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">46</td>
@@ -374,8 +449,52 @@
                                             <ul class="list-unstyled msg_list">
 
                                                 <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Beverly Sepno</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <li class="image">
                                                     <img src="/public/photosUsers/5b1591783cc6e0004815bbf3_01006.BMP" class="avatarSentUsers" alt="Avatar" />
                                                     <span><span>&ensp;Denise Clifford</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Carol Cannon</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Christine Chevrette</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Diane O'Donnell</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
 
                                                     <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
                                     received: <span style="color: #18c09c">yes</span> &ensp;
@@ -409,7 +528,7 @@
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
-                                                    <td align="left">didn't complete procedure:</td>
+                                                    <td align="left" style="color: #f4a82e">didn't complete procedure:</td>
                                                     <td width="20" align="center">20</td>
                                                     <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">40</td>
@@ -433,7 +552,30 @@
                                     we are safe: <span style="color: #e76146">no</span> &ensp;
                                 </span>
                                                 </li>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Donna Yetman</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
 
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <% for(var i=2; i<19; i++){ %>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Donna Yetman<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <% } %>
                                                 <!-- last user, picture and name need to be manual position -->
                                                 <li class="image">
                                                     <img style="position: relative; left: -5px" src="/public/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar" />
@@ -458,7 +600,7 @@
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
-                                                    <td align="left">are not safe:</td>
+                                                    <td align="left" style="color: #f4a82e">are not safe:</td>
                                                     <td width="20" align="center">25</td>
                                                     <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">40</td>
@@ -470,7 +612,27 @@
                                         <div class="panel-body">
 
                                             <ul class="list-unstyled msg_list">
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Helen Hicks<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
 
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li><li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Jayme Walsh<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
                                                 <li class="image">
                                                     <img src="/public/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar" />
                                                     <span><span>&ensp;Kelly Mills</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
@@ -482,6 +644,20 @@
                                     we are safe: <span style="color: #e76146">no</span> &ensp;
                                 </span>
                                                 </li>
+
+                                                <% for(var i=2; i<19; i++){ %>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Donna Yetman<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                                </li>
+                                                <% } %>
 
                                                 <!-- last user, picture and name need to be manual position -->
                                                 <li class="image">
@@ -510,7 +686,7 @@
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
-                                                    <td align="left">completed all steps:</td>
+                                                    <td align="left" style="color: #18c09c">completed all steps:</td>
                                                     <td width="20" align="center">15</td>
                                                     <td width="140" align="center">users called out of</td>
                                                     <td width="20" align="right">40</td>
@@ -594,6 +770,21 @@
                                     we are safe: <span style="color: #18c09c">yes</span> &ensp;
                                 </span>
                                                 </li>
+
+                                                <% for(var i=1; i<9; i++){ %>
+                                                <li class="image">
+                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <span><span>&ensp;Joanna Imbaro<%= i %></span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
+
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">yes</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">yes</span> &ensp;
+                                </span>
+                                                </li>
+                                                <% } %>
+
                                                 <!-- last user, picture and name need to be manual position -->
                                                 <li class="image">
                                                     <img style="position: relative; left: -5px" src="/public/photosUsers/58587741da3d90fc25acedee_01011.BMP" class="avatarSentUsers" alt="Avatar" />
@@ -625,7 +816,7 @@
 
                     <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
-                            <h2><small>Call 911</small><a style="font-size: 12px">&emsp;roles allowed to call</a></h2>
+                            <h2><small>Call 911</small><a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -669,8 +860,8 @@
                                         <h4 class="panel-title">
                                             <table class="" width="100%">
                                                 <tr>
-                                                    <td width="35" align="left" style="color: #18c09c">Role:</td>
-                                                    <td align="left" style="color: #18c09c">&emsp;Staff</td>
+                                                    <td width="35" align="left">Role:</td>
+                                                    <td align="left">&emsp;Staff</td>
                                                     <td width="20" align="center" style="color: #18c09c">3</td>
                                                     <td width="140" align="center" style="color: #18c09c">users called out of</td>
                                                     <td width="20" align="right" style="color: #18c09c">16</td>
@@ -683,6 +874,7 @@
                                             <table class="table table-striped">
                                                 <thead>
                                                 <tr>
+                                                    <th width="20">Photo</th>
                                                     <th>Name</th>
                                                     <th>Time</th>
                                                     <th>Duration</th>
@@ -690,16 +882,31 @@
                                                 </thead>
                                                 <tbody>
                                                 <tr>
+                                                    <td>
+                                                        <p class="image">
+                                                            <img src="/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar">
+                                                        </p>
+                                                    </td>
                                                     <td>Susan Hayes</td>
                                                     <td>9:31 am</td>
                                                     <td>10 min </td>
                                                 </tr>
                                                 <tr>
+                                                    <td>
+                                                        <p class="image">
+                                                            <img src="/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar">
+                                                        </p>
+                                                    </td>
                                                     <td>Meghan Davis</td>
                                                     <td>9:35 am</td>
                                                     <td>7 min </td>
                                                 </tr>
                                                 <tr>
+                                                    <td>
+                                                        <p class="image">
+                                                            <img src="/photosUsers/5a7390ed14e9700f20a38d19_01016.BMP" class="avatarSentUsers" alt="Avatar">
+                                                        </p>
+                                                    </td>
                                                     <td>Rosetta Mark</td>
                                                     <td>9:41 am</td>
                                                     <td>7 min </td>
