@@ -696,9 +696,9 @@ function init_chart_doughnut(){
             data: {
                 labels: [
                     "Nurse",
+                    "Principal",
                     "Office Staff",
                     "Staff",
-                    "Principal",
                     "Teacher"
                 ],
                 datasets: [{

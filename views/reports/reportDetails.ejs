@@ -74,15 +74,15 @@
 
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2><small>Gauges</small><a style="font-size: 12px">&emsp;Total alerts sent: 50</a></h2>
+                            <h2>Gauges<a style="font-size: 12px">&emsp;Total alerts sent: 50</a></h2>
 
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
 
-                            <% var pageColSize = 'col-md-3 col-sm-6 col-xs-6' %>
+                            <% var pageColSize = 'col-md-3 col-sm-3 col-xs-6' %>
                             <% if (userAuthID == 1) {%>
-                            <% pageColSize = 'col-md-2half col-sm-6 col-xs-6' %>
+                            <% pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
                             <% } %>
 
                             <% if (userAuthID == 1) {%>
@@ -143,7 +143,7 @@
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
-                                            <h4>Procedure completed</h4>
+                                            <h4>Procedure finished</h4>
                                             <canvas width="150" height="80" id="chart_gauge_04" class="" style="width: 160px; height: 100px;">20</canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text4" class="gauge-value gauge-chart pull-left"></span>
@@ -190,10 +190,10 @@
 
 
 
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-md-6 col-sm-12 col-xs-12">
                     <div class="x_panel tile fixed_height_320 overflow_hidden">
                         <div class="x_title">
-                            <h2><small>Roles sent to</small></h2>
+                            <h2>Roles sent to</h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -258,123 +258,12 @@
                     </div>
 
 
-                    <div class="x_panel tile overflow_hidden">
-                        <div class="x_title">
-                            <h2><small>Alert details</small></h2>
-
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-
-                            <form class="form-horizontal form-label-left input_mask">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="Red" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="Stranger/Trespasser in Building" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="drill" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="open" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sent by</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="Pedro Reis" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time created</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="2018-06-05 / 5:52:42 pm" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time closed</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="in progress..." readonly>
-                                    </div>
-                                </div>
-
-                                <div class="divider-dashed"></div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <textarea id="note" placeholder="n/a" disabled>stranger is in my classroom and refuses to leave</textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="alertName"
-                                               value="2018-06-05 / 5:52:42 pm" readonly>
-                                    </div>
-                                </div>
-
-                            </form>
 
 
-                        </div>
-                    </div>
-
-
-
-
-
-
-                </div>
-
-
-                <div class="col-md-6 col-sm-6 col-xs-12">
 
                     <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
-                            <h2><small>Users that...</small></h2>
+                            <h2>Users that...</h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -389,7 +278,7 @@
                                                 <tr>
                                                     <td align="left" style="color: #e76146">didn't receive alert:</td>
                                                     <td width="20" align="center">2</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="140" align="center">users out of</td>
                                                     <td width="20" align="right">48</td>
                                                 </tr>
                                             </table>
@@ -437,7 +326,7 @@
                                                 <tr>
                                                     <td align="left" style="color: #e76146">didn't view alert:</td>
                                                     <td width="20" align="center">6</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="140" align="center">users out of</td>
                                                     <td width="20" align="right">46</td>
                                                 </tr>
                                             </table>
@@ -530,7 +419,7 @@
                                                 <tr>
                                                     <td align="left" style="color: #f4a82e">didn't complete procedure:</td>
                                                     <td width="20" align="center">20</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="140" align="center">users out of</td>
                                                     <td width="20" align="right">40</td>
                                                 </tr>
                                             </table>
@@ -602,7 +491,7 @@
                                                 <tr>
                                                     <td align="left" style="color: #f4a82e">are not safe:</td>
                                                     <td width="20" align="center">25</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="140" align="center">users out of</td>
                                                     <td width="20" align="right">40</td>
                                                 </tr>
                                             </table>
@@ -688,7 +577,7 @@
                                                 <tr>
                                                     <td align="left" style="color: #18c09c">completed all steps:</td>
                                                     <td width="20" align="center">15</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="140" align="center">users out of</td>
                                                     <td width="20" align="right">40</td>
                                                 </tr>
                                             </table>
@@ -816,7 +705,7 @@
 
                     <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
-                            <h2><small>Call 911</small><a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
+                            <h2>Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
 
                             <div class="clearfix"></div>
                         </div>
@@ -832,7 +721,7 @@
                                                     <td width="35" align="left">Role:</td>
                                                     <td align="left">&emsp;Principal</td>
                                                     <td width="20" align="center">0</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="200" align="center">users called out of</td>
                                                     <td width="20" align="right">1</td>
                                                 </tr>
                                             </table>
@@ -863,7 +752,7 @@
                                                     <td width="35" align="left">Role:</td>
                                                     <td align="left">&emsp;Staff</td>
                                                     <td width="20" align="center" style="color: #18c09c">3</td>
-                                                    <td width="140" align="center" style="color: #18c09c">users called out of</td>
+                                                    <td width="200" align="center" style="color: #18c09c">users called out of</td>
                                                     <td width="20" align="right" style="color: #18c09c">16</td>
                                                 </tr>
                                             </table>
@@ -924,7 +813,7 @@
                                                     <td width="35" align="left">Role:</td>
                                                     <td align="left">&emsp;Office Staff</td>
                                                     <td width="20" align="center">0</td>
-                                                    <td width="140" align="center">users called out of</td>
+                                                    <td width="200" align="center">users called out of</td>
                                                     <td width="20" align="right">11</td>
                                                 </tr>
                                             </table>
@@ -955,6 +844,124 @@
                     </div>
 
 
+
+
+
+
+
+
+
+                </div>
+
+
+                <div class="col-md-6 col-sm-12 col-xs-12">
+
+
+
+                    <div class="x_panel tile overflow_hidden">
+                        <div class="x_title">
+                            <h2>Alert details</h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="Red" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="Stranger/Trespasser in Building" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="drill" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="open" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sent by</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="Pedro Reis" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time created</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="2018-06-05 / 5:52:42 pm" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time closed</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="in progress..." readonly>
+                                    </div>
+                                </div>
+
+                                <div class="divider-dashed"></div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea id="note"
+                                                  class="form-control"
+                                                  placeholder="n/a" readonly>stranger is in my classroom and refuses to leave.</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                        <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
+
+                                    </div>
+                                </div>
+
+                            </form>
+
+
+                        </div>
+                    </div>
 
 
 

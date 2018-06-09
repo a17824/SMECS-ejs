@@ -146,6 +146,24 @@ p { margin: 1px }
 /* end of Sent Users reportDetails.ejs Avatar */
 
 
+/* Floor reportDetails Avatar */
+.floor {
+    position: relative;
+    object-fit: cover; /* Do not scale the image */
+    object-position: 100% 100%; /* Center the image within the element */
+    height: 100%;
+    width: 100%;
+
+
+
+    /*margin-bottom:3px;*/
+}
+
+
+p { margin: 1px }
+
+/* end of Floor reportDetails.ejs Avatar */
+
 
 
 /* ICONS */
