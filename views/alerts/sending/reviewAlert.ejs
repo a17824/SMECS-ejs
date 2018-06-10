@@ -152,8 +152,8 @@
                 info.floorPhoto !== 'Multiple Locations' &&
                 info.floorPhoto !== 'user skipped floor' &&
                 info.floorPhoto !== 'Outside Building') {%>
-            <div id="div1" class="div1">
-            <img src="/floorPlans/<%= info.floorPhoto %>">
+            <div id="div1" class="div1" style="height: 600px;">
+            <img style='height: 100%; width: 100%; object-fit: contain' src="/floorPlans/<%= info.floorPhoto %>">
             </div>
         <% } %>
         <div id="div2" class="div2" >

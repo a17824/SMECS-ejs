@@ -202,6 +202,7 @@ var AlertsSchema = new mongoose.Schema({
     whoCanCall911: [String],
     alertRequestProcedureCompleted: { type: Boolean, default: true },
     alertRequestWeAreSafe: { type: Boolean, default: true },
+    alertRequestForINeedHelp: { type: Boolean, default: true },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,
@@ -252,6 +253,11 @@ var AlertSentInfoSchema = new mongoose.Schema({
             boolean: {type: Boolean, default: false},
             date: String,
             time: String
+        },
+        iNeedHelp: {
+            boolean: {type: Boolean, default: false},
+            date: String,
+            time: String
         }
     }],
     status: {
@@ -262,6 +268,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     testModeON: Boolean,
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
+    requestINeedHelp: { type: Boolean, default: false },
     request911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
     sniperCoordinateX: String,
@@ -350,6 +357,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     testModeON: Boolean,
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
+    requestINeedHelp: { type: Boolean, default: false },
     request911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
     sentRoleIDScope: [Number],

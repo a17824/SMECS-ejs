@@ -157,6 +157,7 @@
                 icon=$("#selected-text").val();
                 var alertRequestProcedureCompleted = document.getElementById("checkboxProc").checked;
                 var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
+                var alertRequestForINeedHelp = document.getElementById("checkboxNeedHelp").checked;
 
                 //-----forms validation------------------------------------
                 if (alertName == "" ) {
@@ -190,6 +191,7 @@
                     sortID: sortID,
                     alertRequestProcedureCompleted: alertRequestProcedureCompleted,
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
+                    alertRequestForINeedHelp: alertRequestForINeedHelp,
                     icon: icon,
                     sound: sound
 
@@ -237,8 +239,10 @@
     <input class="checkbox" type="checkbox" name="checkboxProc" id="checkboxProc" checked><br>
 
     <label for="busRide"><b>Request We are safe!:</b></label>
-    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" checked><br><br>
+    <input class="checkbox" type="checkbox" name="checkboxSafe" id="checkboxSafe" checked><br>
 
+    <label for="busRide"><b>Allow teacher to request help:</b></label>
+    <input class="checkbox" type="checkbox" name="checkboxNeedHelp" id="checkboxNeedHelp" checked><br><br>
 
     <label for="requestCall"><b>Request calling 911:</b></label><br>
     <input type="radio" name="request911" value="false" checked> No &emsp;

@@ -92,7 +92,13 @@
                 }else{
                     var reqWeAreSafe = document.getElementById("checkboxSafe").checked;
                 }
+                if(document.getElementById("checkboxNeedHelp") === null) {
+                    var reqNeedHelp = false;
+                }else{
+                    var reqNeedHelp = document.getElementById("checkboxNeedHelp").checked;
+                }
                 //---------end of request procedureCompleted or weAreSafe!
+
 
                 //--------------------------------forms validation end-------
 
@@ -102,7 +108,8 @@
                     alertName: alertName,
                     exitButton: true,
                     procedureCompleted: reqProcedureCompleted,
-                    weAreSafe: reqWeAreSafe
+                    weAreSafe: reqWeAreSafe,
+                    needHelp: reqNeedHelp
 
                 }, function (data) {
                     if (data === 'done') {
@@ -144,7 +151,13 @@
                     }else{
                         var reqWeAreSafe = document.getElementById("checkboxSafe").checked;
                     }
+                    if(document.getElementById("checkboxNeedHelp") === null) {
+                        var reqNeedHelp = false;
+                    }else{
+                        var reqNeedHelp = document.getElementById("checkboxNeedHelp").checked;
+                    }
                     //---------end of request procedureCompleted or weAreSafe!
+
 
                     //-----forms validation------------------------------------
                     if ((alertNameID == 14 || alertNameID == 26) && searchIDsChecked.length < 1) {
@@ -163,7 +176,8 @@
                         reqAssChecked: searchIDsChecked,
                         reqAssNotChecked: searchIDsNotChecked,
                         procedureCompleted: reqProcedureCompleted,
-                        weAreSafe: reqWeAreSafe
+                        weAreSafe: reqWeAreSafe,
+                        needHelp: reqNeedHelp
 
                     }, function (data) {
                         if (data === 'done') {
@@ -229,8 +243,8 @@
             info.floorPhoto !== 'Multiple Locations' &&
             info.floorPhoto !== 'user skipped floor' &&
             info.floorPhoto !== 'Outside Building') {%>
-    <div id="div1" class="div1">
-        <img src="/floorPlans/<%= info.floorPhoto %>">
+    <div id="div1" class="div1" style="height: 600px;">
+        <img style='height: 100%; width: 100%; object-fit: contain' src="/public/alertSentInfo/floorsPhotos/<%= info.floorPhoto %>">
     </div>
     <% } %>
     <div id="div2" class="div2" >
@@ -271,6 +285,22 @@
 <br>
 <% } %>
 
+<% if (info.requestINeedHelp == true ) {%>
+<label for="alertRequestProcedureCompleted"><b>I need help:</b></label>
+<% for (var i=0; i < info.sentTo.length; i++) { %>
+<% if (info.sentTo[i].email == userAuthEmail) { %>
+<% if (info.sentTo[i].iNeedHelp.boolean) { %>
+<input class="checkbox" type="checkbox" name="checkboxNeedHelp" id="checkboxNeedHelp" value="<%= info.sentTo[i].iNeedHelp.boolean %>" checked>
+<% }else { %>
+<input class="checkbox" type="checkbox" name="checkboxNeedHelp" id="checkboxNeedHelp" value="<%= info.sentTo[i].iNeedHelp.boolean %>">
+<% } %>
+<% } %>
+<% break %>
+<% } %>
+<br>
+<% } %>
+
+<br>
 
 <!-- Alert BUS TRANSPORTATION -->
 <% if (info.alertNameID == 12 ) {%>

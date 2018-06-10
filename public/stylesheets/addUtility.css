@@ -182,4 +182,6 @@ input[type=checkbox]:checked + label:after {
 #checkboxSafe {
     display: none;
 }
-
+#checkboxNeedHelp {
+    display: none;
+}

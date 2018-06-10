@@ -25,7 +25,7 @@ module.exports.saveFloorFile = function(req, res, tempAlert) {
             var src_location = 'public/floorPlans/';
             var dst_location = 'public/alertSentInfo/floorsPhotos/';
             var src_File_name = result.floorPlan;
-            var dst_File_name = tempAlert._id + '_' + result.floorPlan;//file_name + alert ID
+            var dst_File_name = tempAlert._id + '_' + result.floorPlan; // alert ID + file_name
 
             fs.copy(src_location + src_File_name, dst_location + dst_File_name, function (err) { // copy floor file to new directory
                 if (err) {

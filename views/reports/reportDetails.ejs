@@ -10,21 +10,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-
-
-
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/reportDetails.css" rel="stylesheet">
-
 
 
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
 
-
+    <!-- lightbox (floor zoom) -->
+    <link href="/public/lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
 
     <script>
-
 
 
 
@@ -568,6 +564,58 @@
                                     </div>
                                 </div>
 
+
+                                <div class="panel">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#needHelp" aria-expanded="false" aria-controls="collapseTwo">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td align="left" style="color: #f4a82e">need help:</td>
+                                                    <td width="20" align="center">1</td>
+                                                    <td width="140" align="center">users out of</td>
+                                                    <td width="20" align="right">46</td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="needHelp" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th width="20">Photo</th>
+                                                    <th>Name</th>
+                                                    <th>helpers</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p class="image">
+                                                            <img src="/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar">
+                                                        </p>
+                                                    </td>
+                                                    <td>Kelly Mills</td>
+
+                                                    <td>
+                                                        <p class="image">
+                                                        <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> Joanna Imabaro
+                                                        </p>
+                                                        <p class="image">
+                                                        <img src="/photosUsers/5b1595ff3cc6e0004815bbfe_01024.BMP" class="avatarParents" alt="Avatar"> Euri Twohig
+                                                        </p>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="ln_solid"></div>
 
                                 <div class="panel">
@@ -952,7 +1000,10 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
 
-                                        <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
+                                        <a href="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" data-lightbox="image-1" data-title="2nd Floor">
+                                            <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
+                                        </a>
+
 
                                     </div>
                                 </div>
@@ -1055,6 +1106,9 @@
 
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/reportDetails.js"></script>
+
+<!-- lightbox (floor zoom) -->
+<script src="/public/lightbox2-master/dist/js/lightbox.js"></script>
 
 
 </body>

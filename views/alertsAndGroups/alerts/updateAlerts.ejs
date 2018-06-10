@@ -184,6 +184,7 @@
                 icon=$("#selected-text").val();
                 var alertRequestProcedureCompleted = document.getElementById("checkboxProc").checked;
                 var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
+                var alertRequestForINeedHelp = document.getElementById("checkboxNeedHelp").checked;
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -241,6 +242,7 @@
                     sortID: sortID,
                     alertRequestProcedureCompleted: alertRequestProcedureCompleted,
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
+                    alertRequestForINeedHelp: alertRequestForINeedHelp,
                     icon: icon,
                     sound: sound
 
@@ -466,7 +468,7 @@
                                                 id="autoSchedule"
                                                 name="autoSchedule"
                                                 value="false" checked disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >off</label>&emsp;&emsp;
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >off</label>&emsp;&emsp;&nbsp;&nbsp;&nbsp;&thinsp;&thinsp;
                                         <input type="radio"
                                                class="flat"
                                                id="autoSchedule"
@@ -530,7 +532,7 @@
                                     <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">We are safe!</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
-                                        <% if (alert.alertRequestProcedureCompleted == true) {%>
+                                        <% if (alert.alertRequestWeAreSafe == true) {%>
                                         <input type="checkbox"
                                                name="checkboxSafe"
                                                id="checkboxSafe"
@@ -542,6 +544,25 @@
                                                value="<%= alert.alertRequestWeAreSafe %>">
                                         <% } %>
                                         <label for="checkboxSafe"></label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">Allow teacher to request help</label>
+                                    <div class="col-md-7 col-sm-7 col-xs-12">
+
+                                        <% if (alert.alertRequestForINeedHelp == true) {%>
+                                        <input type="checkbox"
+                                               name="checkboxNeedHelp"
+                                               id="checkboxNeedHelp"
+                                               value="<%= alert.alertRequestForINeedHelp %>" checked>
+                                        <% }else{%>
+                                        <input type="checkbox"
+                                               name="checkboxNeedHelp"
+                                               id="checkboxNeedHelp"
+                                               value="<%= alert.alertRequestForINeedHelp %>">
+                                        <% } %>
+                                        <label for="checkboxNeedHelp"></label>
                                     </div>
                                 </div>
 

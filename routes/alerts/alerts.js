@@ -104,6 +104,7 @@ module.exports.createPost = function(req, res) {
             alertRequest911Call: req.body.request911Call,
             alertRequestProcedureCompleted: req.body.alertRequestProcedureCompleted,
             alertRequestWeAreSafe: req.body.alertRequestWeAreSafe,
+            alertRequestForINeedHelp: req.body.alertRequestForINeedHelp,
             whoCanCall911: req.body.whoCanCall911,
             alertID: req.body.alertID,
             alertName: req.body.alertName,
@@ -242,6 +243,7 @@ module.exports.updatePost = function(req, res) {
             alert.sortID = req.body.sortID;
             alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
             alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
+            alert.alertRequestForINeedHelp = req.body.alertRequestForINeedHelp;
             alert.icon = req.body.icon;
             alert.mp3 = req.body.sound;
 

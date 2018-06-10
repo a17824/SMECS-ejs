@@ -285,6 +285,7 @@ module.exports.showAlertsPost = function(req, res) {
                             testModeON: req.body.testModeON,
                             requestProcedureCompleted: alert[0].alertRequestProcedureCompleted,
                             requestWeAreSafe: alert[0].alertRequestWeAreSafe,
+                            requestINeedHelp: alert[0].alertRequestForINeedHelp,
                             request911Call: alert[0].alertRequest911Call,
                             whoCanCall911: alert[0].whoCanCall911,
                             placeholderNote: placeholderNote,
@@ -313,6 +314,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.alertName = req.body.alertName;
                                     alertTemp.requestProcedureCompleted = alert[0].alertRequestProcedureCompleted;
                                     alertTemp.requestWeAreSafe = alert[0].alertRequestWeAreSafe;
+                                    alertTemp.requestINeedHelp = alert[0].alertRequestForINeedHelp;
                                     alertTemp.request911Call = alert[0].alertRequest911Call;
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.placeholderNote = placeholderNote;

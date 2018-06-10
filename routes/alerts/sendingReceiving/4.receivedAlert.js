@@ -114,21 +114,26 @@ module.exports.postReceivedAlert = function(req, res, next) {
     var exitButton = req.body.exitButton;
     var procedureCompleted = req.body.procedureCompleted;
     var weAreSafe = req.body.weAreSafe;
+    var iNeedHelp = req.body.needHelp;
 
-    // API EJS ----------
-    var userApiEjs;
-    if (req.decoded) {      // API user
-        userApiEjs = req.decoded.user.email;
-        exitButton = 'false';
-    }
-    else
-        userApiEjs = req.user.email; // EJS user
-    //-------------------
+
+
 
     models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
         if(err){
             console.log('err - changing Alert STATUS');
         }else {
+
+            // API EJS ----------
+            var userApiEjs;
+            if (req.decoded) {      // API user
+                userApiEjs = req.decoded.user.email;
+                exitButton = 'false';
+            }
+            else
+                userApiEjs = req.user.email; // EJS user
+            //-------------------
+
             // All ALERTS
             if(alert.requestProcedureCompleted){
                 alert.sentTo.forEach(function (user) {
@@ -141,7 +146,16 @@ module.exports.postReceivedAlert = function(req, res, next) {
             if(alert.requestWeAreSafe){
                 alert.sentTo.forEach(function (user) {
                     if (user.email == userApiEjs && user.weAreSafe.boolean.toString() !== weAreSafe.toString()) {
+                        console.log('22222222');
                         updateProcedureCompletedWeAreSafe(alert, user, 'weAreSafe');
+                    }
+                });
+            }
+            // All ALERTS
+            if(alert.requestINeedHelp){
+                alert.sentTo.forEach(function (user) {
+                    if (user.email == userApiEjs && user.iNeedHelp.boolean.toString() !== iNeedHelp.toString()) {
+                        updateProcedureCompletedWeAreSafe(alert, user, 'iNeedHelp');
                     }
                 });
             }

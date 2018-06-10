@@ -93,8 +93,8 @@
     <% floor.forEach(function(floor) { %>
     <% if (alert.floorName == floor.floorName ) {%>
     <input type="hidden" id="floorPhoto" value="<%= floor.floorPlan %>">
-    <div id="div1" class="div1">
-        <img src="/floorPlans/<%= floor.floorPlan %>" onclick="showP()">
+    <div id="div1" class="div1" style="height: 600px;">
+        <img style='height: 100%; width: 100%; object-fit: contain' src="/floorPlans/<%= floor.floorPlan %>" onclick="showP()">
     </div>
     <% } %>
     <% }); %>
