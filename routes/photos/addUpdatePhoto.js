@@ -222,46 +222,28 @@ module.exports.cleanOldPhotos = function (){
             models.Users.find({},function(err,users){
                 if(err) throw err;
                 users.forEach(function(user){
-                    arrayUsers.push(user._id)   ;
+                    if(user.photo !== '')
+                        arrayUsers.push(user.photo)   ;
                 });
                 callback(null, arrayUsers);
             });
         },
         function(callback){
-            var arrayPhotos = [];
             fs.readdir('./public/photosUsers/',function(err,files){
                 if(err) throw err;
-                files.forEach(function(file){
-                    var field = file.split('_')[0];
-                    arrayPhotos.push(field);
-                });
-                callback(null, arrayPhotos, files);
+                callback(null, files);
             });
         }
     ],function(err, results){
-        var arrayUsers = results[0];
-        var arrayPhotos = results[1][0];
-        var files = results[1][1];
+        var arrayUsersWithPhoto = results[0];
+        var files = results[1];
 
-        var flagExists = 0;
-        for (var i=0; i < arrayPhotos.length; i++) {
-            flagExists = 0;
-            for (var x=0; x < arrayUsers.length; x++) {
-                if (arrayPhotos[i] == arrayUsers[x]){
-                    flagExists = 1;
-                    break;
-                }
-            }
-            if (flagExists == 0){   //if enters inside this if, then its to delete the file
-                files.forEach(function(file){
-                    var field = file.split('_')[0];
-                    if(field == arrayPhotos[i]) {
-                        fs.unlinkSync('./public/photosUsers/' + file);  //delete file
-                        console.log('successfully deleted ' + file);
-                    }
-                });
-            }
-        }
+        var diff = files.filter(function(x) { return arrayUsersWithPhoto.indexOf(x) < 0 });
+
+        diff.forEach(function(fileToDelete){
+            fs.unlinkSync('./public/photosUsers/' + fileToDelete);  //delete file
+            console.log('successfully deleted ' + fileToDelete);
+        });
     });
 };
 

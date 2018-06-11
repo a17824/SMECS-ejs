@@ -120,30 +120,67 @@ p { margin: 1px }
 
 }
 
-.image {
+.imageSentUsers {
     width: 100%;
     height: 100%;
 }
 
-.image img {
-    -webkit-transition: all 1s ease; /* Safari and Chrome */
-    -moz-transition: all 1s ease; /* Firefox */
-    -ms-transition: all 1s ease; /* IE 9 */
-    -o-transition: all 1s ease; /* Opera */
-    transition: all 1s ease;
+.imageSentUsers img {
+    -webkit-transition: all 500ms ease; /* Safari and Chrome */
+    -moz-transition: all 500ms ease; /* Firefox */
+    -ms-transition: all 500ms ease; /* IE 9 */
+    -o-transition: all 500ms ease; /* Opera */
+    transition: all 500ms ease;
 }
 
-.image img:hover {
-    -webkit-transform:scale(4); /* Safari and Chrome */
-    -moz-transform:scale(4); /* Firefox */
-    -ms-transform:scale(4); /* IE 9 */
-    -o-transform:scale(4); /* Opera */
-    transform:scale(4);
+.imageSentUsers img:hover {
+    -webkit-transform:scale(3); /* Safari and Chrome */
+    -moz-transform:scale(3); /* Firefox */
+    -ms-transform:scale(3); /* IE 9 */
+    -o-transform:scale(3); /* Opera */
+    transform:scale(3);
     z-index: 10;
 }
 p { margin: 1px }
 
 /* end of Sent Users reportDetails.ejs Avatar */
+
+
+/* Sent Student reportDetails.ejs Avatar */
+.avatarSentStudents {
+    object-fit: cover; /* Do not scale the image */
+    object-position: 50% 20%; /* Center the image within the element */
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+
+
+}
+
+.imageSentStudents {
+    width: 100%;
+    height: 100%;
+}
+
+.imageSentStudents img {
+    -webkit-transition: all 500ms ease; /* Safari and Chrome */
+    -moz-transition: all 500ms ease; /* Firefox */
+    -ms-transition: all 500ms ease; /* IE 9 */
+    -o-transition: all 500ms ease; /* Opera */
+    transition: all 500ms ease;
+}
+
+.imageSentStudents img:hover {
+    -webkit-transform:scale(10); /* Safari and Chrome */
+    -moz-transform:scale(10); /* Firefox */
+    -ms-transform:scale(10); /* IE 9 */
+    -o-transform:scale(10); /* Opera */
+    transform:scale(10);
+    z-index: 10;
+}
+p { margin: 1px }
+
+/* end of Sent Student reportDetails.ejs Avatar */
 
 
 /* Floor reportDetails Avatar */

@@ -117,7 +117,7 @@
         <div class="right_col" role="main">
 
             <div class="row top_tiles">
-                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                <div class="animated flipInY col-lg-4 col-md-3 col-sm-4 col-xs-12">
                     <div class="tile-stats">
                         <div class="icon"><i class="fa fa-hourglass-end"></i></div>
                         <div class="count">5 min</div>
@@ -125,7 +125,7 @@
                         <p>Slowest user to view alerts.</p>
                     </div>
                 </div>
-                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                <div class="animated flipInY col-lg-4 col-md-3 col-sm-4 col-xs-12">
                     <div class="tile-stats">
                         <div class="icon"><i class="fa fa-hourglass-half"></i></div>
                         <div class="count">33 sec</div>
@@ -133,7 +133,7 @@
                         <p>Average users time to view alerts.</p>
                     </div>
                 </div>
-                <div class="animated flipInY col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                <div class="animated flipInY col-lg-4 col-md-3 col-sm-4 col-xs-12">
                     <div class="tile-stats">
                         <div class="icon"><i class="fa fa-hourglass-start"></i></div>
                         <div class="count">7 sec</div>
@@ -184,13 +184,11 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th width="60">Date<br>created</th>
-                            <th width="60">Time<br>created</th>
+                            <th width="60">Date<br>Time</th>
                             <th>Alert</th>
-                            <th width="50">Real/Drill</th>
-                            <th>Sent by</th>
-                            <th width="60">Date closed</th>
-                            <th width="60">Time closed</th>
+                            <th width="50">Type</th>
+
+
                             <th width="60">Status</th>
                             <th width="50">Details</th>
                         </tr>
@@ -224,8 +222,8 @@
                                        disabled>
                                 <% } %>
                             </td>
-                            <td><%= reportS.sentDate %></td>
-                            <td><%= reportS.sentTime %></td>
+                            <td><%= reportS.sentDate %><br><%= reportS.sentTime %></td>
+
                             <td><%= reportS.alertName %></td>
                             <td>
                                 <% if (reportS.testModeON){ %>
@@ -235,14 +233,7 @@
                                 <% } %>
                             </td>
 
-                            <td><%= reportS.sentBy %></td>
-                            <% if ( reportS.status.statusString == 'open'){ %>
-                            <td>in progress...</td>
-                            <td>in progress...</td>
-                            <% } else { %>
-                            <td><%= reportS.status.statusClosedDate %></td>
-                            <td><%= reportS.status.statusClosedTime %></td>
-                            <% } %>
+
                             <td>
                                 <% if ( reportS.status.statusString == 'closed'){ %>
                                 <a><%= reportS.status.statusString %></a>

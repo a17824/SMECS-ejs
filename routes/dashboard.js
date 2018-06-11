@@ -6,7 +6,7 @@ var functions = require('./functions');
 
 
 /* SHOW DASHBOARD. */
-module.exports.show = function(req, res, next) {
+ module.exports.show = function(req, res, next) {
         async.parallel([
             function(callback){
                 models.UtilityUsers.find().exec(callback);

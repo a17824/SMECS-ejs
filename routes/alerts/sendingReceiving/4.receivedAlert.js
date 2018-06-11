@@ -146,7 +146,6 @@ module.exports.postReceivedAlert = function(req, res, next) {
             if(alert.requestWeAreSafe){
                 alert.sentTo.forEach(function (user) {
                     if (user.email == userApiEjs && user.weAreSafe.boolean.toString() !== weAreSafe.toString()) {
-                        console.log('22222222');
                         updateProcedureCompletedWeAreSafe(alert, user, 'weAreSafe');
                     }
                 });

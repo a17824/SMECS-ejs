@@ -333,14 +333,17 @@
 <% } %>
 <% } %>
 
-
+<br>
 <label for="senTo"><b>Alert sent to: </b></label>
 <input type="text" id="senTo" size="1" value="30" readonly ><br>
 
 <label for="read"><b>People view/read alert: </b></label>
 <input type="text" id="read" size="1" value="20" readonly ><br>
 
-
+<% if (info.requestINeedHelp == true ) {%>
+<label for="read"><b>People that need help: </b></label>
+<input type="text" id="read" size="1" value="1" readonly ><br>
+<% } %>
 
 <br>
 

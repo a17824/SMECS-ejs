@@ -5,6 +5,7 @@ var aclPermissions = require('./../../acl/aclPermissions');
 var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
 var functions = require('../../functions');
+var MobileDetect = require('mobile-detect');
 
 
 //* SHOW REPORTS. */
@@ -19,7 +20,16 @@ module.exports.reportsAlerts = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('reports/reports',{
+
+        var page = 'reports/reports';
+
+        var md = new MobileDetect(req.headers['user-agent']);
+        if(md.is('iPad') == true)
+            page = 'reports/mobReports';
+
+        console.log('page = ', page);
+
+        res.render(page,{
             title: 'REPORTS SENT',
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
@@ -164,7 +174,14 @@ module.exports.reportsDetails = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('reports/reportDetails',{
+
+        var page = 'reports/reportDetails';
+        if(req.params.id == '5b1eb1d86e727c382cbce0a6')
+            page = 'reports/reportDetailsAllGreen';
+
+
+
+        res.render(page,{
             title: 'REPORTS SENT',
             userAuthID: req.user.userPrivilegeID,
             report: results[0],
