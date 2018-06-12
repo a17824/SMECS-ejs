@@ -559,7 +559,7 @@ function init_flot_chart(){
 
         $.plot( $("#chart_plot_02"),
             [{
-                label: "Email Sent",
+                label: "Alerts Sent",
                 data: chart_plot_02_data,
                 lines: {
                     fillColor: "rgba(150, 202, 89, 0.12)"
@@ -708,14 +708,14 @@ function init_chart_doughnut(){
                         "#E74C3C",
                         "#9B59B6",
                         "#3498DB",
-                        "#26B99A"
+                        "#f39d0c"
                     ],
                     hoverBackgroundColor: [
                         "#BDC3C7",
                         "#E74C3C",
                         "#9B59B6",
                         "#3498DB",
-                        "#26B99A"
+                        "#f39d0c"
                     ]
                 }]
             },

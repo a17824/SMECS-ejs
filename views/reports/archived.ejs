@@ -113,6 +113,22 @@
                 <div class="x_content">
 
 
+                    <ul>
+                        <div align="right">
+                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showReports'">Reports</button>
+                            <% } else { %>
+                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showReports'" disabled>Reports</button>
+                            <% } %>
+                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showTrashReports'">Trash</button>
+                            <% } else { %>
+                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showTrashReports'" disabled>Trash</button>
+                            <% } %>
+                        </div>
+                    </ul>
+
+
                     <table id="datatable-buttons" class="table ">
                         <thead>
                         <tr>

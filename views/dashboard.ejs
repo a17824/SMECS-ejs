@@ -6,8 +6,17 @@
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
+    <!-- NProgress -->
+    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+
+    <!-- JQVMap -->
+    <link href="/public/gentelella/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+
+    <!-- bootstrap-daterangepicker -->
+    <link href="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
 
 
 </head>
@@ -39,32 +48,437 @@
 
         <div class="right_col" role="main">
             <div class="">
-                <div class="page-title">
-                    <div class="title_left">
-                        <h3>Page</h3>
 
-
-
+                <!-- top tiles -->
+                <div class="row tile_count">
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-user-graduate"></i> Total Students</span>
+                        <div class="count">620</div>
+                        <span class="count_bottom"><i class="green">4% </i> From last year</span>
                     </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-users"></i> Total School Users</span>
+                        <div class="count">50</div>
+                        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last year</span>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-user-friends"></i> Total Parents</span>
+                        <div class="count green">1,200</div>
+                        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last year</span>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                        <span class="count_top"><i class="fa fa-users-cog"></i> Total External Users</span>
+                        <div class="count">15</div>
+                        <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last year</span>
+                    </div>
+
                 </div>
+                <!-- /top tiles -->
 
-                <div class="clearfix"></div>
 
+                <!-- Graph -->
                 <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-12">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2>Plain Page</h2>
+                                <h2>Alerts Summary <small>Monthly progress</small></h2>
+                                
+                                <!-- Calendar -->
+                                <div class="filter">
+                                    <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                        <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+                                    </div>
+                                </div>
+                                <!-- /Calendar -->
+                                
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
+                                <div class="col-md-9 col-sm-12 col-xs-12">
+                                    <div class="demo-container" style="height:280px">
+                                        <div id="chart_plot_02" class="demo-placeholder"></div>
+                                    </div>
+                                    <div class="tiles">
+                                        <div class="col-md-4 tile">
+                                            <span>Total Alerts</span>
+                                            <h2>137</h2>
+
+                                        </div>
+                                        <div class="col-md-4 tile">
+                                            <span>Total Drills</span>
+                                            <h2>55</h2>
+
+                                        </div>
+                                        <div class="col-md-4 tile">
+                                            <span>Total Real</span>
+                                            <h2>82</h2>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Top 5 users -->
+                                <div class="col-md-3 col-sm-12 col-xs-12">
+                                    <div>
+                                        <div class="x_title">
+                                            <h2>Top 5 users</h2>
+
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <ul class="list-unstyled top_profiles scroll-view">
+                                            <li class="media event">
+                                                <a class="pull-left border-aero profile_thumb">
+                                                    <i class="fa fa-user aero"></i>
+                                                </a>
+                                                <div class="media-body">
+                                                    <a class="title" href="#">Mary Kate</a>
+                                                    <p><strong>52 </strong> alerts sent </p>
+                                                    <p> <small>118 since 2018</small>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="media event">
+                                                <a class="pull-left border-green profile_thumb">
+                                                    <i class="fa fa-user green"></i>
+                                                </a>
+                                                <div class="media-body">
+                                                    <a class="title" href="#">Mary Kate</a>
+                                                    <p><strong>52 </strong> alerts sent </p>
+                                                    <p> <small>Teacher</small>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="media event">
+                                                <a class="pull-left border-blue profile_thumb">
+                                                    <i class="fa fa-user blue"></i>
+                                                </a>
+                                                <div class="media-body">
+                                                    <a class="title" href="#">Mary Kate</a>
+                                                    <p><strong>52 </strong> alerts sent </p>
+                                                    <p> <small>118 since 2018</small>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="media event">
+                                                <a class="pull-left border-aero profile_thumb">
+                                                    <i class="fa fa-user aero"></i>
+                                                </a>
+                                                <div class="media-body">
+                                                    <a class="title" href="#">Mary Kate</a>
+                                                    <p><strong>52 </strong> alerts sent </p>
+                                                    <p> <small>118 since 2018</small>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="media event">
+                                                <a class="pull-left border-green profile_thumb">
+                                                    <i class="fa fa-user green"></i>
+                                                </a>
+                                                <div class="media-body">
+                                                    <a class="title" href="#">Mary Kate</a>
+                                                    <p><strong>52 </strong> alerts sent </p>
+                                                    <p> <small>118 since 2018</small>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- /Top 5 users -->
 
 
-                                Add content to the page ...
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- /Graph -->
+
+
+                <!-- Top Alerts -->
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="x_panel tile fixed_height_320">
+                        <div class="x_title">
+                            <h2>Top Alerts sent</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Settings 1</a>
+                                        </li>
+                                        <li><a href="#">Settings 2</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <h4> Top used Alerts</h4>
+                            <div class="widget_summary">
+                                <div class="w_left w_25">
+                                    <span>Utility Failures</span>
+                                </div>
+                                <div class="w_center w_55">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 66%;">
+                                            <span class="sr-only">60% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_20">
+                                    <span>63</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="widget_summary">
+                                <div class="w_left w_25">
+                                    <span>Bus Transportation early/late</span>
+                                </div>
+                                <div class="w_center w_55">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
+                                            <span class="sr-only">60% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_20">
+                                    <span>12</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget_summary">
+                                <div class="w_left w_25">
+                                    <span>Weather-Related Emergencies</span>
+                                </div>
+                                <div class="w_center w_55">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
+                                            <span class="sr-only">60% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_20">
+                                    <span>9</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget_summary">
+                                <div class="w_left w_25">
+                                    <span>Fire/Explosion</span>
+                                </div>
+                                <div class="w_center w_55">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">
+                                            <span class="sr-only">60% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_20">
+                                    <span>5</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget_summary">
+                                <div class="w_left w_25">
+                                    <span>Evacuate</span>
+                                </div>
+                                <div class="w_center w_55">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
+                                            <span class="sr-only">60% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_20">
+                                    <span>3</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Top Alerts -->
+
+
+                <!-- Top Roles -->
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="x_panel tile fixed_height_320 overflow_hidden">
+                        <div class="x_title">
+                            <h2>Top Roles</h2>
+
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </ul>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <table class="" style="width:100%">
+                                <tr>
+                                    <th style="width:37%;">
+                                        <p>Top 5</p>
+                                    </th>
+                                    <th>
+                                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                            <p class="">Roles</p>
+                                        </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                            <p align="right" class="">total of alerts sent</p>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <canvas class="canvasDoughnut" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+                                    </td>
+                                    <td>
+                                        <table class="tile_info">
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square orange"></i>Teacher </p>
+                                                </td>
+                                                <td class="numbersRight">20</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square blue"></i>Staff </p>
+                                                </td>
+                                                <td class="numbersRight">18</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square purple"></i>Office Staff </p>
+                                                </td>
+                                                <td class="numbersRight">10</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square red"></i>Principal </p>
+                                                </td>
+                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square aero"></i>Nurse </p>
+                                                </td>
+                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Top Roles -->
+
+
+
+                <!-- Fastest user to view alerts. -->
+                <div class="row top_tiles">
+                    <div class="animated flipInY col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-hourglass-start"></i></div>
+                            <div class="count">7 sec</div>
+                            <h3>Jean Leahy</h3>
+                            <p>Fastest user to view alerts.</p>
+                        </div>
+                    </div>
+                    <div class="animated flipInY col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-hourglass-half"></i></div>
+                            <div class="count">33 sec</div>
+                            <h3>.</h3>
+                            <p>Average users time to view alerts.</p>
+                        </div>
+                    </div>
+                    <div class="animated flipInY col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-hourglass-end"></i></div>
+                            <div class="count">5 min</div>
+                            <h3>Helen Hicks</h3>
+                            <p>Slowest user to view alerts.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Fastest user to view alerts. -->
+
+
+
+                <!-- Map -->
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Schools location <small>geo-presentation</small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                                <li class="dropdown pull-right">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">World map</a>
+                                        </li>
+                                        <li><a href="#">Usa map</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="dashboard-widget-content">
+                                <div class="col-md-4 col-sm-4 hidden-small">
+                                    <h class="line_30">State/County</h>
+
+                                    <table class="countries_list">
+                                        <tbody>
+                                        <tr>
+                                            <td>United States</td>
+                                            <td class="fs15 fw700 text-right">33%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>France</td>
+                                            <td class="fs15 fw700 text-right">27%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Germany</td>
+                                            <td class="fs15 fw700 text-right">16%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Spain</td>
+                                            <td class="fs15 fw700 text-right">11%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Britain</td>
+                                            <td class="fs15 fw700 text-right">10%</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="usa_map" class="col-md-8 col-sm-8 col-xs-12" style="height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Map -->
+
+
+
+                <div class="clearfix"></div>
+
+
             </div>
         </div>
         <!-- /page content -->
@@ -84,8 +498,39 @@
 <!-- NProgress -->
 <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
 
+<!-- Chart.js -->
+<script src="/public/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
+<!-- jQuery Sparklines -->
+<script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+
+<!-- Skycons -->
+<script src="/public/gentelella/vendors/skycons/skycons.js"></script>
+
+<!-- Flot -->
+<script src="/public/gentelella/vendors/Flot/jquery.flot.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.pie.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.time.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.stack.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.resize.js"></script>
+<!-- Flot plugins -->
+<script src="/public/gentelella/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+<script src="/public/gentelella/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+<script src="/public/gentelella/vendors/flot.curvedlines/curvedLines.js"></script>
+<!-- DateJS -->
+<script src="/public/gentelella/vendors/DateJS/build/date.js"></script>
+
+<!-- JQVMap -->
+<script src="/public/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.usa.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+
+<!-- bootstrap-daterangepicker -->
+<script src="/public/gentelella/vendors/moment/min/moment.min.js"></script>
+<script src="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
 <!-- Custom Theme Scripts -->
-<script src="/public/gentelella/build/js/custom.min.js"></script>
+<script src="/public/gentelella/build/js/reportDetails.js"></script>
 <!-- Google Analytics -->
 
 </body>
