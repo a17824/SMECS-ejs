@@ -5,93 +5,97 @@
 
 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
     <div class="menu_section">
-      <h3>Dashboard</h3>
-      <ul class="nav side-menu">
+        <h3>Dashboard</h3>
+        <ul class="nav side-menu">
 
-          <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-          <li><a href="/dashboard"><i class="fa fa-home fa-lg"></i> Home <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+            <li><a href="/dashboard"><i class="fa fa-home fa-lg"></i> Home <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-          <li><a href="/reports/showReports"><i class="fa fa-chart-line fa-lg"></i> Reports <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+            <li><a href="/users/userStats"><i class="fa fa-chart-bar fa-lg"></i> User Statistics <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
-          <li><a href="/students/showStudents"><i class="fa fa-graduation-cap fa-lg"></i> Students <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+            <li><a href="/reports/showReports"><i class="fa fa-chart-line fa-lg"></i> Reports <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+            <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
+            <li><a href="/students/showStudents"><i class="fa fa-graduation-cap fa-lg"></i> Students <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
+
+            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
             <li><a href="/users/showUsers"><i class="fa fa-users fa-lg"></i> Users <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.roles2.checkBoxValue == true){%>
-          <li><a href="/roles2/showRoles2"><i class="fa fa-chess fa-lg"></i> Roles <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.roles2.checkBoxValue == true){%>
+            <li><a href="/roles2/showRoles2"><i class="fa fa-chess fa-lg"></i> Roles <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
-          <li><a href="/privilege/showPrivilege"><i class="fa fa-key fa-lg"></i> Privileges <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
+            <li><a href="/privilege/showPrivilege"><i class="fa fa-key fa-lg"></i> Privileges <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.alertGroups.checkBoxValue == true || aclSideMenu.alerts.checkBoxValue == true){%>
-        <li><a href="/alertGroups/showAlertGroups"><i class="fa fa-bell fa-lg"></i> Alerts & Groups <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.alertGroups.checkBoxValue == true || aclSideMenu.alerts.checkBoxValue == true){%>
+            <li><a href="/alertGroups/showAlertGroups"><i class="fa fa-bell fa-lg"></i> Alerts & Groups <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.alertsTable.checkBoxValue == true){%>
-        <li><a><i class="fa fa-share-square fa-lg"></i> Who can send alerts <span class="fa fa-chevron-down"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="/alerts/showAlertPermissionsTableReal">Real</a></li>
-            <li><a href="/alerts/showAlertPermissionsTableTest">Test</a></li>
-          </ul>
-        </li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.alertsTable.checkBoxValue == true){%>
+            <li><a><i class="fa fa-share-square fa-lg"></i> Who can send alerts <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="/alerts/showAlertPermissionsTableReal">Real</a></li>
+                    <li><a href="/alerts/showAlertPermissionsTableTest">Test</a></li>
+                </ul>
+            </li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
-        <li><a><i class="fa fa-key fa-lg"></i> Permissions <span class="fa fa-chevron-right"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="/permissionGroups/showPermissionsGroup">Permission Groups</a></li>
-            <li><a href="/permissions/showPermissions">Permissions</a></li>
-            <li><a href="/permissions/showPermissionsTable">Permissions Table</a></li>
-          </ul>
-        </li>
-          <% } else{%>
-          <% if (aclSideMenu == null || aclSideMenu.permissionsTable.checkBoxValue == true){%>
+            <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
+            <li><a><i class="fa fa-key fa-lg"></i> Permissions <span class="fa fa-chevron-right"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="/permissionGroups/showPermissionsGroup">Permission Groups</a></li>
+                    <li><a href="/permissions/showPermissions">Permissions</a></li>
+                    <li><a href="/permissions/showPermissionsTable">Permissions Table</a></li>
+                </ul>
+            </li>
+            <% } else{%>
+            <% if (aclSideMenu == null || aclSideMenu.permissionsTable.checkBoxValue == true){%>
             <li><a href="/permissions/showPermissionsTable"><i class="fa fa-sliders-h fa-lg"></i> Permissions <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
-          <% } %>
-          <% if (aclSideMenu == null || aclSideMenu.floors.checkBoxValue == true || aclSideMenu.rooms.checkBoxValue == true || aclSideMenu.utilities.checkBoxValue == true){%>
-        <li><a><i class="fa fa-building fa-lg"></i> Building <span class="fa fa-chevron-right"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="/floors/showFloors">Floors</a></li>
-            <li><a href="/options/rooms">Rooms</a></li>
-            <li><a href="/utilities/showUtilities">Utilities</a></li>
-          </ul>
-        </li>
-          <% } %>
+            <% } %>
+            <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.floors.checkBoxValue == true || aclSideMenu.rooms.checkBoxValue == true || aclSideMenu.utilities.checkBoxValue == true){%>
+            <li><a><i class="fa fa-building fa-lg"></i> Building <span class="fa fa-chevron-right"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="/floors/showFloors">Floors</a></li>
+                    <li><a href="/options/rooms">Rooms</a></li>
+                    <li><a href="/utilities/showUtilities">Utilities</a></li>
+                </ul>
+            </li>
+            <% } %>
 
-          <% if (aclSideMenu == null || aclSideMenu.medical.checkBoxValue == true){%>
-        <li><a><i class="fa fa-medkit"></i> Medical <span class="fa fa-chevron-down"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="/medical/showMedical">Medical</a></li>
-          </ul>
-        </li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.medical.checkBoxValue == true){%>
+            <li><a><i class="fa fa-medkit"></i> Medical <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="/medical/showMedical">Medical</a></li>
+                </ul>
+            </li>
+            <% } %>
 
-          <% // if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
-        <li><a><i class="fa fa-bullhorn"></i> PA <span class="fa fa-chevron-down"></span></a>
-          <ul class="nav child_menu">
-            <li><a href="/pa/showPa"> PA</a></li>
-            <li><a href="/pa/showRecorded">Recorded</a></li>
-          </ul>
-        </li>
-          <%// } %>
+            <% // if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
+            <li><a><i class="fa fa-bullhorn"></i> PA <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="/pa/showPa"> PA</a></li>
+                    <li><a href="/pa/showRecorded">Recorded</a></li>
+                </ul>
+            </li>
+            <%// } %>
 
-        <li><a><i class="fa fa-braille fa-lg"></i> Social Media Manager<span class="fa fa-chevron-right"></span></a></li>
+            <li><a><i class="fa fa-braille fa-lg"></i> Social Media Manager<span class="fa fa-chevron-right"></span></a></li>
 
-          <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
-          <li><a href="/alerts/sending/chooseGroup"><i class="fa fa-shipping-fast fa-lg"></i> Send Alert <span class="fa fa-chevron-right"></span></a></li>
-          <% } %>
+            <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
+            <li><a href="/alerts/sending/chooseGroup"><i class="fa fa-shipping-fast fa-lg"></i> Send Alert <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
-      </ul>
+        </ul>
     </div>
-  </div>
-  <!-- /sidebar menu -->
+</div>
+<!-- /sidebar menu -->

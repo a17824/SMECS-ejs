@@ -73,6 +73,10 @@ router.post('/reset/:token', reset.post, function(req, res) {
 router.get('/dashboard', auth.simpleAuth, auth.requireLogin, dashboard.show, function(req, res, next) {
 });
 
+/* SHOW User Statistics. */
+router.get('/users/userStats', auth.simpleAuth, auth.requireLogin, dashboard.userStats, function(req, res, next) {
+});
+
 /* SHOW active USERS. */
 router.get('/users/showUsers', auth.simpleAuth, auth.requireLogin, users.show, function(req, res, next) {
 });
