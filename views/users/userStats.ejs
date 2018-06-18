@@ -46,278 +46,56 @@
         <!-- page content -->
 
 
+        <!-- if iPad -->
+        <% var h2FontSize = 22 %>
+        <% var aFontSize = 12 %>
+        <% var spanFontSize = 13 %>
+        <% if(iPad){ %>
+        <% h2FontSize = 22 %>
+        <% aFontSize = 15 %>
+        <% spanFontSize = 15 %>
+        <% } %>
+        <!-- /if iPad -->
+
         <div class="right_col" role="main">
             <div class="">
 
                 <!-- top tiles -->
                 <div class="col-md-12 col-sm-12">
-                <div class="tile_count">
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
-                        <span class="count_top"><i class="fa fa-user-graduate"></i> Total Students</span>
-                        <div class="count">620</div>
-                        <span class="count_bottom"><i class="green">4% </i> From last year</span>
+                    <div class="tile_count" align="center">
+                        <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                            <span class="count_top"><i class="fa fa-user-graduate"></i> Total Students</span>
+                            <div class="count">620</div>
+                            <span class="count_bottom"><i class="green">4% </i> From last year</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                            <span class="count_top"><i class="fa fa-users"></i> Total School Users</span>
+                            <div class="count">50</div>
+                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last year</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                            <span class="count_top"><i class="fa fa-user-friends"></i> Total Parents</span>
+                            <div class="count green">1,200</div>
+                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last year</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
+                            <span class="count_top"><i class="fa fa-users-cog"></i> Total External Users</span>
+                            <div class="count">15</div>
+                            <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last year</span>
+                        </div>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
-                        <span class="count_top"><i class="fa fa-users"></i> Total School Users</span>
-                        <div class="count">50</div>
-                        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last year</span>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
-                        <span class="count_top"><i class="fa fa-user-friends"></i> Total Parents</span>
-                        <div class="count green">1,200</div>
-                        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last year</span>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count">
-                        <span class="count_top"><i class="fa fa-users-cog"></i> Total External Users</span>
-                        <div class="count">15</div>
-                        <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last year</span>
-                    </div>
-
-                </div>
                 </div>
                 <!-- /top tiles -->
 
 
-                <!-- Graph -->
-                <div class="col-md-12 col-sm-12">
-                    <br>
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>Alerts Summary <small>Monthly progress</small></h2>
-
-                            <!-- Calendar -->
-                            <div class="filter">
-                                <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                                    <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
-                                </div>
-                            </div>
-                            <!-- /Calendar -->
-
-                            <div class="clearfix"></div>
-                        </div>
-
-                        <div class="x_content">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <div class="demo-container" style="height:280px">
-                                    <div id="chart_plot_02" class="demo-placeholder"></div>
-                                </div>
-                                <div class="tiles">
-                                    <div class="col-md-4 col-sm-4 tile">
-                                        <span>Total Alerts</span>
-                                        <h2>137</h2>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 tile">
-                                        <span>Total Drills</span>
-                                        <h2>55</h2>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 tile">
-                                        <span>Total Real</span>
-                                        <h2>82</h2>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-
-                        </div>
-                    </div>
-                </div>
-                <!-- /Graph -->
-
-
-                <!-- Top Alerts -->
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="x_panel tile fixed_height_320">
-                        <div class="x_title">
-                            <h2>Top Alerts sent</h2>
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
-                                        </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <h4> Top used Alerts</h4>
-                            <div class="widget_summary">
-                                <div class="w_left w_25">
-                                    <span>Utility Failures</span>
-                                </div>
-                                <div class="w_center w_55">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 66%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_20">
-                                    <span>63</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-                            <div class="widget_summary">
-                                <div class="w_left w_25">
-                                    <span>Bus Transportation early/late</span>
-                                </div>
-                                <div class="w_center w_55">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_20">
-                                    <span>12</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget_summary">
-                                <div class="w_left w_25">
-                                    <span>Weather-Related Emergencies</span>
-                                </div>
-                                <div class="w_center w_55">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_20">
-                                    <span>9</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget_summary">
-                                <div class="w_left w_25">
-                                    <span>Fire/Explosion</span>
-                                </div>
-                                <div class="w_center w_55">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_20">
-                                    <span>5</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget_summary">
-                                <div class="w_left w_25">
-                                    <span>Evacuate</span>
-                                </div>
-                                <div class="w_center w_55">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_20">
-                                    <span>3</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!-- /Top Alerts -->
-
-
-                <!-- Top Roles -->
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="x_panel tile fixed_height_320 overflow_hidden">
-                        <div class="x_title">
-                            <h2>Top Alerts sent by roles</h2>
-
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                            </ul>
-
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <table class="" style="width:100%">
-                                <tr>
-                                    <th style="width:37%;">
-                                        <p>Top 5</p>
-                                    </th>
-                                    <th>
-                                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                                            <p class="">Roles</p>
-                                        </div>
-                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                            <p align="right" class="">total of alerts sent</p>
-                                        </div>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>
-
-                                        <canvas class="canvasDoughnut" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
-                                    </td>
-                                    <td>
-                                        <table class="tile_info">
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square orange"></i>Teacher </p>
-                                                </td>
-                                                <td class="numbersRight">20</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square blue"></i>Staff </p>
-                                                </td>
-                                                <td class="numbersRight">18</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square purple"></i>Office Staff </p>
-                                                </td>
-                                                <td class="numbersRight">10</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square red"></i>Principal </p>
-                                                </td>
-                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square aero"></i>Nurse </p>
-                                                </td>
-                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Top Roles -->
-
-
-
+                <div class="col-md-4 col-sm-4 col-xs-12">
                 <!-- Fastest user to view alerts. -->
                 <div class="top_tiles">
-                    <div class="animated flipInY col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+                    <div class="animated flipInY col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <% if(iPad){ %>
+                        <br>
+                        <% } %>
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-fighter-jet" style="position: relative; right: 5px"></i></div>
                             <div class="count">7 sec</div>
@@ -325,7 +103,10 @@
                             <p>Fastest user to view alerts.</p>
                         </div>
                     </div>
-                    <div class="animated flipInY col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="animated flipInY col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <% if(!iPad){ %>
+                        <div style="line-height:140%;"><br></div> <!-- smaller br -->
+                        <% } %>
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-car"></i></div>
                             <div class="count">33 sec</div>
@@ -333,7 +114,10 @@
                             <p>Average users time to view alerts.</p>
                         </div>
                     </div>
-                    <div class="animated flipInY col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="animated flipInY col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <% if(!iPad){ %>
+                        <div style="line-height:140%;"><br></div> <!-- smaller br -->
+                        <% } %>
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-bicycle" style="position: relative; right: 5px"></i></div>
                             <div class="count">5 min</div>
@@ -343,14 +127,37 @@
                     </div>
                 </div>
                 <!-- /Fastest user to view alerts. -->
+                </div>
 
 
-
-                <!-- Top 5 users -->
-                <div class="col-md-3 col-sm-12 col-xs-12">
-                    <div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <% if(iPad){ %>
+                    <br>
+                    <% } %>
+                <!-- Top 5 users sending alerts -->
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
-                            <h2>Top 5 users</h2>
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 213px">Top 5<a style="font-size: <%= aFontSize %>px">&emsp;slowest viewing alerts</a></h2>
+
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li class="dropdown pull-right">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">sending alerts</a>
+                                        </li>
+                                        <li><a href="#">faster viewing alerts</a>
+                                        </li>
+                                        <li><a href="#">slowest viewing alerts</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
 
                             <div class="clearfix"></div>
                         </div>
@@ -411,70 +218,489 @@
                                 </div>
                             </li>
                         </ul>
+                        <% if(iPad){ %>
+                        <br><div style="line-height:50%;"><br></div> <!-- smaller br -->
+                        <% } %>
                     </div>
                 </div>
-                <!-- /Top 5 users -->
+                <!-- /Top 5 users sending alerts -->
+
+
+                <!-- Top 5 users viewing alerts -->
+                    <!-- slowest Top 5 users viewing alerts -->
+                </div>
+
+
+                <!-- Top Roles -->
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <% if(iPad){ %>
+                    <br>
+                    <% } %>
+                    <div class="x_panel tile fixed_height_390 overflow_hidden">
+                        <div class="x_title">
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 280px">Top Alerts sent by roles</h2>
+
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <table class="" style="width:100%">
+                                <tr>
+                                    <th style="width:37%;">
+                                        <p>Top 5</p>
+                                    </th>
+                                    <th>
+                                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                            <p class="">Roles</p>
+                                        </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                            <p align="right" class="">#</p>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <canvas class="canvasDoughnut" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+                                    </td>
+                                    <td>
+                                        <table class="tile_info">
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square orange"></i>Teacher </p>
+                                                </td>
+                                                <td class="numbersRight">20</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square blue"></i>Staff </p>
+                                                </td>
+                                                <td class="numbersRight">18</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square purple"></i>Office Staff </p>
+                                                </td>
+                                                <td class="numbersRight">10</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square red"></i>Principal </p>
+                                                </td>
+                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <p><i class="fa fa-square aero"></i>Nurse </p>
+                                                </td>
+                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Top Roles -->
 
 
 
                 <!-- Map -->
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>Schools location <small>geo-presentation</small></h2>
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown pull-right">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">World map</a>
-                                        </li>
-                                        <li><a href="#">Usa map</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>Contacts Design</h3>
                         </div>
-                        <div class="x_content">
-                            <div class="dashboard-widget-content">
-                                <div class="col-md-4 col-sm-4 hidden-small">
-                                    <h class="line_30">State/County</h>
 
-                                    <table class="countries_list">
-                                        <tbody>
-                                        <tr>
-                                            <td>United States</td>
-                                            <td class="fs15 fw700 text-right">33%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>France</td>
-                                            <td class="fs15 fw700 text-right">27%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Germany</td>
-                                            <td class="fs15 fw700 text-right">16%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Spain</td>
-                                            <td class="fs15 fw700 text-right">11%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Britain</td>
-                                            <td class="fs15 fw700 text-right">10%</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                        <div class="title_right">
+                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for...">
+                                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
                                 </div>
-                                <div id="usa_map" class="col-md-8 col-sm-8 col-xs-12" style="height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="x_panel">
+                                <div class="x_content">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                            <ul class="pagination pagination-split">
+                                                <li><a href="#">A</a></li>
+                                                <li><a href="#">B</a></li>
+                                                <li><a href="#">C</a></li>
+                                                <li><a href="#">D</a></li>
+                                                <li><a href="#">E</a></li>
+                                                <li>...</li>
+                                                <li><a href="#">W</a></li>
+                                                <li><a href="#">X</a></li>
+                                                <li><a href="#">Y</a></li>
+                                                <li><a href="#">Z</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UX / Graphic Artist / Coffee Lover </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/img.jpg" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UX / Graphic Artist / Coffee Lover </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/img.jpg" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                            <div class="well profile_view">
+                                                <div class="col-sm-12">
+                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <div class="left col-xs-7">
+                                                        <h2>Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="fa fa-building"></i> Address: </li>
+                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="right col-xs-5 text-center">
+                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 bottom text-center">
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <p class="ratings">
+                                                            <a>4.0</a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 emphasis">
+                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
+                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                        <button type="button" class="btn btn-primary btn-xs">
+                                                            <i class="fa fa-user"> </i> View Profile
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Map -->
+
+
+
 
 
 

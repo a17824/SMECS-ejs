@@ -176,8 +176,10 @@ module.exports.reportsDetails = function(req, res) {
     ],function(err, results){
 
         var page = 'reports/reportDetails';
+        if(req.params.id == '5b1e96f26e727c382cbce097')
+            page = 'reports/reportDetailsSim';
         if(req.params.id == '5b1eb1d86e727c382cbce0a6')
-            page = 'reports/reportDetailsAllGreen';
+            page = 'reports/reportDetailsSimAllGreen';
 
 
 

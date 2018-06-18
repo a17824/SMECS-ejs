@@ -2709,21 +2709,21 @@ function init_morris_charts() {
         Morris.Area({
             element: 'graph_area',
             data: [
-                {period: '2014 Q1', iphone: 66, ipad: null, android: 47},
-                {period: '2014 Q2', iphone: 78, ipad: 94, android: 41},
-                {period: '2014 Q3', iphone: 12, ipad: 69, android: 01},
-                {period: '2014 Q4', iphone: 10, ipad: 10, android: 10},
-                {period: '2015 Q1', iphone: 10, ipad: 14, android: 93},
-                {period: '2015 Q2', iphone: 70, ipad: 93, android: 81},
-                {period: '2015 Q3', iphone: 20, ipad: 95, android: 88},
-                {period: '2015 Q4', iphone: 73, ipad: 67, android: 75},
-                {period: '2016 Q1', iphone: 87, ipad: 60, android: 28},
-                {period: '2016 Q2', iphone: 32, ipad: 13, android: 91}
+                {period: '2014 Q1', iphone: 2666, ipad: null, itouch: 2647},
+                {period: '2014 Q2', iphone: 2778, ipad: 2294, itouch: 2441},
+                {period: '2014 Q3', iphone: 4912, ipad: 1969, itouch: 2501},
+                {period: '2014 Q4', iphone: 3767, ipad: 3597, itouch: 5689},
+                {period: '2015 Q1', iphone: 6810, ipad: 1914, itouch: 2293},
+                {period: '2015 Q2', iphone: 5670, ipad: 4293, itouch: 1881},
+                {period: '2015 Q3', iphone: 4820, ipad: 3795, itouch: 1588},
+                {period: '2015 Q4', iphone: 15073, ipad: 5967, itouch: 5175},
+                {period: '2016 Q1', iphone: 10687, ipad: 4460, itouch: 2028},
+                {period: '2016 Q2', iphone: 8432, ipad: 5713, itouch: 1791}
             ],
             xkey: 'period',
-            ykeys: ['iphone', 'ipad', 'android'],
+            ykeys: ['iphone', 'ipad', 'itouch'],
             lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
-            labels: ['iPhone', 'iPad', 'android'],
+            labels: ['iPhone', 'iPad', 'iPod Touch'],
             pointSize: 2,
             hideHover: 'auto',
             resize: true
@@ -3337,8 +3337,8 @@ function init_echarts() {
 
         echartLine.setOption({
             title: {
-                text: 'Toatal',
-                subtext: 'alerts sent'
+                text: 'Line Graph',
+                subtext: 'Subtitle'
             },
             tooltip: {
                 trigger: 'axis'
@@ -3346,7 +3346,7 @@ function init_echarts() {
             legend: {
                 x: 220,
                 y: 40,
-                data: ['iPhone', 'android', 'iPad']
+                data: ['Intent', 'Pre-order', 'Deal']
             },
             toolbox: {
                 show: true,
@@ -3375,13 +3375,13 @@ function init_echarts() {
             xAxis: [{
                 type: 'category',
                 boundaryGap: false,
-                data: ['Set', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             }],
             yAxis: [{
                 type: 'value'
             }],
             series: [{
-                name: 'iPad',
+                name: 'Deal',
                 type: 'line',
                 smooth: true,
                 itemStyle: {
@@ -3391,9 +3391,9 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [5, 6, 11, 22, 26, 30, 20, 17, 15, 13, 7]
+                data: [10, 12, 21, 54, 260, 830, 710]
             }, {
-                name: 'android',
+                name: 'Pre-order',
                 type: 'line',
                 smooth: true,
                 itemStyle: {
@@ -3403,9 +3403,9 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [3, 8, 4, 7, 10, 12, 10, 23, 23, 11, 2]
+                data: [30, 182, 434, 791, 390, 30, 10]
             }, {
-                name: 'iPhone',
+                name: 'Intent',
                 type: 'line',
                 smooth: true,
                 itemStyle: {
@@ -3415,7 +3415,7 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [1, 3, 5, 8, 9, 11, 14, 15, 22, 14, 19]
+                data: [1320, 1132, 601, 234, 120, 90, 20]
             }]
         });
 

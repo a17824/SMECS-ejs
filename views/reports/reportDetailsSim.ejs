@@ -1,0 +1,1133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/reportDetails.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
+
+    <!-- lightbox (floor zoom) -->
+    <link href="/public/lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
+
+    <script>
+
+
+
+    </script>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+
+
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="clearfix"></div>
+                <div class="title_left">
+                    <h2 align="center"><%= report.alertName %></h2>
+
+                </div>
+                <div style="line-height:50%;"><br></div> <!-- smaller br -->
+
+
+                <!-- Gauges -->
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2 style="font-size: 22px">Gauges<a style="font-size: 12px">&emsp;Total alerts sent: 50</a></h2>
+
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </ul>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <% var pageColSize = 'col-md-3 col-sm-3 col-xs-6' %>
+                            <% if (userAuthID == 1) {%>
+                            <% pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
+                            <% } %>
+
+                            <% if (userAuthID == 1) {%>
+                            <div class="col-md-2half col-sm-6 col-xs-6" align="center">
+                                <div class="x_content">
+                                    <div class="dashboard-widget-content">
+                                        <div class="reports-widget">
+                                            <h4>Sent to</h4>
+                                            <canvas width="150" height="80" id="chart_gauge_01" class="" style="width: 160px; height: 100px;">48</canvas>
+                                            <div class="goal-wrapper">
+                                                <span id="gauge-text" class="gauge-value gauge-chart pull-left"></span>
+                                                <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
+                                                <span id="goal-text" class="goal-value pull-right">50</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+
+
+                            <div class="<%= pageColSize %>" align="center">
+                                <div class="x_content">
+                                    <div class="dashboard-widget-content">
+                                        <div class="reports-widget">
+                                            <h4>Received by</h4>
+                                            <canvas width="150" height="80" id="chart_gauge_02" class="" style="width: 160px; height: 100px;">46</canvas>
+                                            <div class="goal-wrapper">
+                                                <span id="gauge-text2" class="gauge-value gauge-chart pull-left"></span>
+                                                <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
+                                                <span id="goal-text2" class="goal-value pull-right">48</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="<%= pageColSize %>" align="center">
+                                <div class="x_content">
+                                    <div class="dashboard-widget-content">
+                                        <div class="reports-widget">
+                                            <h4>Viewed by</h4>
+                                            <canvas width="150" height="80" id="chart_gauge_03" class="" style="width: 160px; height: 100px;">40</canvas>
+                                            <div class="goal-wrapper">
+                                                <span id="gauge-text3" class="gauge-value gauge-chart pull-left"></span>
+                                                <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
+                                                <span id="goal-text3" class="goal-value pull-right">46</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="<%= pageColSize %>" align="center">
+                                <div class="x_content">
+                                    <div class="dashboard-widget-content">
+                                        <div class="reports-widget">
+                                            <h4>Procedure finished</h4>
+                                            <canvas width="150" height="80" id="chart_gauge_04" class="" style="width: 160px; height: 100px;">20</canvas>
+                                            <div class="goal-wrapper">
+                                                <span id="gauge-text4" class="gauge-value gauge-chart pull-left"></span>
+                                                <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
+                                                <span id="goal-text4" class="goal-value pull-right">40</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="<%= pageColSize %>" align="center">
+                                <div class="x_content">
+                                    <div class="dashboard-widget-content">
+                                        <div class="reports-widget">
+                                            <h4>We are safe</h4>
+                                            <canvas width="150" height="80" id="chart_gauge_05" class="" style="width: 160px; height: 100px;">15</canvas>
+                                            <div class="goal-wrapper">
+                                                <span id="gauge-text5" class="gauge-value gauge-chart pull-left"></span>
+                                                <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
+                                                <span id="goal-text5" class="goal-value pull-right">40</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <!-- /Gauges -->
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+
+                <!-- Roles sent to -->
+                <div class="x_panel tile fixed_height_320 overflow_hidden">
+                    <div class="x_title">
+                        <h2 style="font-size: 22px">Roles sent to</h2>
+
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </ul>
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table class="" style="width:100%">
+                            <tr>
+                                <th style="width:37%;">
+                                    <p>Top 5</p>
+                                </th>
+                                <th>
+                                    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                        <p class="">Roles</p>
+                                    </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                        <p align="right" class="">Number of users</p>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <canvas class="canvasDoughnut" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+                                </td>
+                                <td>
+                                    <table class="tile_info">
+                                        <tr>
+                                            <td>
+                                                <p><i class="fa fa-square green"></i>Teacher </p>
+                                            </td>
+                                            <td class="numbersRight">20</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><i class="fa fa-square blue"></i>Staff </p>
+                                            </td>
+                                            <td class="numbersRight">18</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><i class="fa fa-square purple"></i>Office Staff </p>
+                                            </td>
+                                            <td class="numbersRight">10</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><i class="fa fa-square red"></i>Principal </p>
+                                            </td>
+                                            <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <p><i class="fa fa-square aero"></i>Nurse </p>
+                                            </td>
+                                            <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- /Roles sent to -->
+
+
+
+                <!-- Users that... -->
+                <div class="x_panel tile overflow_hidden">
+                    <div class="x_title">
+                        <h2 style="font-size: 22px">Users that...</h2>
+
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+
+                            <li class="dropdown pull-right">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Sort by: default (mix)</a>
+                                    <li><a href="#">Sort by: time received</a>
+                                    <li><a href="#">Sort by: time viewed</a>
+                                    <li><a href="#">Sort by: time procedure finished</a>
+                                    <li><a href="#">Sort by: time we are safe</a>
+                                </ul>
+                            </li>
+
+
+                        </ul>
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <!-- start accordion -->
+                        <div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
+                            <div class="panel">
+                                <a class="panel-heading" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#notReceive" aria-expanded="true" aria-controls="collapseOne">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td align="left" style="color: #e76146">didn't receive alert:</td>
+                                                <td width="20" align="center">2</td>
+                                                <td width="140" align="center">users out of</td>
+                                                <td width="20" align="right">48</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="notReceive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body">
+
+                                        <ul class="list-unstyled msg_list">
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5b1594b03cc6e0004815bbfa_01016.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #e76146">no</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <!-- last user, picture and name need to be manual position -->
+                                            <li class="imageSentUsers">
+                                                <img style="position: relative; left: -5px" src="/public/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #e76146">no</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <!-- end of last user, picture and name need to be manual position -->
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notView" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td align="left" style="color: #e76146">didn't view alert:</td>
+                                                <td width="20" align="center">6</td>
+                                                <td width="140" align="center">users out of</td>
+                                                <td width="20" align="right">46</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="notView" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+
+                                        <ul class="list-unstyled msg_list">
+
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Beverly Sepno</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5b1591783cc6e0004815bbf3_01006.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Denise Clifford</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Carol Cannon</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Christine Chevrette</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:38am</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Diane O'Donnell</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:38am</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <!-- last user, picture and name need to be manual position -->
+                                            <li class="imageSentUsers">
+                                                <img style="position: relative; left: -5px" src="/public/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">1:55pm</span> &ensp;
+                                    viewed: <span style="color: #e76146">no</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <!-- end of last user, picture and name need to be manual position -->
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notProcedure" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td align="left" style="color: #f4a82e">didn't finish procedure:</td>
+                                                <td width="20" align="center">20</td>
+                                                <td width="140" align="center">users out of</td>
+                                                <td width="20" align="right">40</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="notProcedure" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+
+                                        <ul class="list-unstyled msg_list">
+
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Kelly Mills</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+20sec</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Donna Yetman</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">1:55pm</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <% for(var i=2; i<19; i++){ %>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Donna Yetman<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <% } %>
+                                            <!-- last user, picture and name need to be manual position -->
+                                            <li class="imageSentUsers">
+                                                <img style="position: relative; left: -5px" src="/public/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span style="position: absolute; left: 62px">&ensp;Meaghan Davis</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+5min</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <!-- end of last user, picture and name need to be manual position -->
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notSafe" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td align="left" style="color: #f4a82e">are not safe:</td>
+                                                <td width="20" align="center">25</td>
+                                                <td width="140" align="center">users out of</td>
+                                                <td width="20" align="right">40</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="notSafe" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+
+                                        <ul class="list-unstyled msg_list">
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Helen Hicks<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li><li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Jayme Walsh<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Kelly Mills</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:39am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <% for(var i=2; i<19; i++){ %>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Donna Yetman<%= i %></span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 35px"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+40sec</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+5min</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <% } %>
+
+                                            <!-- last user, picture and name need to be manual position -->
+                                            <li class="imageSentUsers">
+                                                <img style="position: relative; left: -5px" src="/public/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span style="position: absolute; left: 62px">&ensp;Meaghan Davis</span><span class="time" style="color: #f4a82e; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">yes</span> &ensp;
+                                    viewed: <span style="color: #18c09c">yes</span> &ensp;
+                                    procedure done: <span style="color: #e76146">no</span> &ensp;
+                                    we are safe: <span style="color: #e76146">no</span> &ensp;
+                                </span>
+                                            </li>
+                                            <!-- end of last user, picture and name need to be manual position -->
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#needHelp" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td align="left" style="color: #f4a82e">need help:</td>
+                                                <td width="20" align="center">1</td>
+                                                <td width="140" align="center">users out of</td>
+                                                <td width="20" align="right">46</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="needHelp" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th width="20">Photo</th>
+                                                <th>Name</th>
+                                                <th>Time</th>
+                                                <th>helpers + Time</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <p class="imageSentUsers">
+                                                        <img src="/photosUsers/5858785ee7cecb50312160ca_01020.BMP" class="avatarSentUsers" alt="Avatar">
+                                                    </p>
+                                                </td>
+                                                <td>Kelly Mills</td>
+                                                <td>12:05pm</td>
+                                                <td>
+                                                    <p class="image">
+                                                        <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> Joanna Imabaro +30sec
+                                                    </p>
+                                                    <p class="image">
+                                                        <img src="/photosUsers/5b1595ff3cc6e0004815bbfe_01024.BMP" class="avatarParents" alt="Avatar"> Euri Twohig +45sec
+                                                    </p>
+                                                </td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="ln_solid"></div>
+
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#completedAll" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td align="left" style="color: #18c09c">completed all steps:</td>
+                                                <td width="20" align="center">15</td>
+                                                <td width="140" align="center">users out of</td>
+                                                <td width="20" align="right">40</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="completedAll" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+
+
+                                        <ul class="list-unstyled msg_list">
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5b1594b03cc6e0004815bbfa_01016.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+3min</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5b15947e3cc6e0004815bbf9_01015.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Laura Ledo</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+3min</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5b1591373cc6e0004815bbf2_01005.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Janice Clark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/5b1591b13cc6e0004815bbf4_01007.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Madeline Connley</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/590776839344e21c2f0894ad_01002.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Meghan Boyle</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <li class="imageSentUsers">
+                                                <img src="/public/photosUsers/58587741da3d90fc25acedee_01011.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
+                                </span>
+                                            </li>
+
+                                            <% for(var i=1; i<9; i++){ %>
+                                            <li class="imageSentUsers">
+                                                <img src="/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span>&ensp;Joanna Imbaro<%= i %></span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+3min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
+                                </span>
+                                            </li>
+                                            <% } %>
+
+                                            <!-- last user, picture and name need to be manual position -->
+                                            <li class="imageSentUsers">
+                                                <img style="position: relative; left: -5px" src="/public/photosUsers/58587741da3d90fc25acedee_01011.BMP" class="avatarSentUsers" alt="Avatar" />
+                                                <span><span style="position: absolute; left: 62px">&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 37px;"><i><b>completed</b></i></span></span>
+
+                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
+                                    viewed: <span style="color: #18c09c">+3min</span> &ensp;
+                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
+                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
+                                </span>
+                                            </li>
+                                            <!-- end of last user, picture and name need to be manual position -->
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- end of accordion -->
+
+
+                    </div>
+                </div>
+                <!-- /Users that... -->
+
+
+                <!-- Call 911 -->
+                <div class="x_panel tile overflow_hidden">
+                    <div class="x_title">
+                        <h2 style="font-size: 22px">Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
+
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </ul>
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <!-- start accordion -->
+                        <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel">
+                                <a class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td width="35" align="left">Role:</td>
+                                                <td align="left">&emsp;Principal</td>
+                                                <td width="20" align="center">0</td>
+                                                <td width="200" align="center">users called out of</td>
+                                                <td width="20" align="right">1</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td width="35" align="left">Role:</td>
+                                                <td align="left">&emsp;Staff</td>
+                                                <td width="20" align="center" style="color: #18c09c">3</td>
+                                                <td width="200" align="center" style="color: #18c09c">users called out of</td>
+                                                <td width="20" align="right" style="color: #18c09c">16</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th width="20">Photo</th>
+                                                <th>Name</th>
+                                                <th>Time</th>
+                                                <th>Duration</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <p class="imageSentUsers">
+                                                        <img src="/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" class="avatarSentUsers" alt="Avatar">
+                                                    </p>
+                                                </td>
+                                                <td>Susan Hayes</td>
+                                                <td>9:31 am</td>
+                                                <td>10 min </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="imageSentUsers">
+                                                        <img src="/photosUsers/5b15954a3cc6e0004815bbfc_01022.BMP" class="avatarSentUsers" alt="Avatar">
+                                                    </p>
+                                                </td>
+                                                <td>Meghan Davis</td>
+                                                <td>9:35 am</td>
+                                                <td>7 min </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="imageSentUsers">
+                                                        <img src="/photosUsers/5b1594b03cc6e0004815bbfa_01016.BMP" class="avatarSentUsers" alt="Avatar">
+                                                    </p>
+                                                </td>
+                                                <td>Rosetta Mark</td>
+                                                <td>9:41 am</td>
+                                                <td>7 min </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td width="35" align="left">Role:</td>
+                                                <td align="left">&emsp;Office Staff</td>
+                                                <td width="20" align="center">0</td>
+                                                <td width="200" align="center">users called out of</td>
+                                                <td width="20" align="right">11</td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of accordion -->
+
+
+                    </div>
+                </div>
+                <!-- Call 911 -->
+
+
+
+
+
+
+
+
+            </div>
+
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+
+
+                <!-- Alert details -->
+                <div class="x_panel tile overflow_hidden">
+                    <div class="x_title">
+                        <h2 style="font-size: 22px">Alert details</h2>
+
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </ul>
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <form class="form-horizontal form-label-left input_mask">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="Red" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert name</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="Stranger/Trespasser in Building" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="drill" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="open" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Sent by</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="Pedro Reis" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time created</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="2018-06-05 / 5:52:42 pm" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time closed</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="alertName"
+                                           value="in progress..." readonly>
+                                </div>
+                            </div>
+
+
+                            <div class="divider-dashed"></div>
+
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Student name</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <ul class="form-control" readonly="">
+                                        <p class="imageSentStudents" style="position: relative; top: 0px">
+                                            Adam O'Donovan &ensp;<img style="position: relative; top: -4px" src="/photosStudents/5b155cf47f23e42ee0527318_111486.BMP" class="avatarSentStudents" alt="Avatar">
+                                        </p>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Current behaviour</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea id="behaviour"
+                                                  class="form-control"
+                                                  placeholder="n/a" readonly>normal</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea id="note"
+                                                  class="form-control"
+                                                  placeholder="n/a" readonly>gun is in his pants, left front pocket.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">He/she is seated</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea id="behaviour"
+                                                  class="form-control"
+                                                  placeholder="n/a" readonly>second row, first seat</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                    <a href="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" data-lightbox="image-1" data-title="2nd Floor">
+                                        <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
+                                    </a>
+
+
+                                </div>
+                            </div>
+
+                        </form>
+
+
+                    </div>
+                </div>
+                <!-- Alert details -->
+
+
+
+
+
+            </div>
+
+
+
+
+
+            <!-- this div is needed for 'footer' to stay at the bottom of the page -->
+            <div class="row">
+
+            </div>
+            <!-- ebd of this div is needed for 'footer' to stay at the bottom of the page -->
+
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <% include ../layout/footer.ejs %>
+        <!-- /footer content -->
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- Chart.js -->
+<script src="/public/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
+<!-- gauge.js -->
+<script src="/public/gentelella/vendors/gauge.js/dist/gauge.min.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="/public/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Skycons -->
+<script src="/public/gentelella/vendors/skycons/skycons.js"></script>
+<!-- Flot -->
+<script src="/public/gentelella/vendors/Flot/jquery.flot.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.pie.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.time.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.stack.js"></script>
+<script src="/public/gentelella/vendors/Flot/jquery.flot.resize.js"></script>
+<!-- Flot plugins -->
+<script src="/public/gentelella/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+<script src="/public/gentelella/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+<script src="/public/gentelella/vendors/flot.curvedlines/curvedLines.js"></script>
+<!-- DateJS -->
+<script src="/public/gentelella/vendors/DateJS/build/date.js"></script>
+<!-- JQVMap -->
+<script src="/public/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="/public/gentelella/vendors/moment/min/moment.min.js"></script>
+<script src="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/reportDetails.js"></script>
+
+<!-- lightbox (floor zoom) -->
+<script src="/public/lightbox2-master/dist/js/lightbox.js"></script>
+
+
+</body>
+
+</html>

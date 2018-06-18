@@ -774,7 +774,7 @@ function init_gauge() {
 
         chart_gauge_01.maxValue = 50;
         chart_gauge_01.animationSpeed = 32;
-        chart_gauge_01.set(48);
+        chart_gauge_01.set(50);
         chart_gauge_01.setTextField(document.getElementById("gauge-text"));
 
     }

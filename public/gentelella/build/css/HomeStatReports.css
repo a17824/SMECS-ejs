@@ -1674,9 +1674,6 @@ ul.quick-list li i {
 .widget_summary .w_right span {
     font-size: 20px
 }
-.w_10 {
-    width: 10%
-}
 .w_20 {
     width: 20%
 }
@@ -1691,9 +1688,6 @@ ul.quick-list li i {
 }
 .w_55 {
     width: 55%
-}
-.w_70 {
-    width: 70%
 }
 h5.graph_title {
     text-align: left;

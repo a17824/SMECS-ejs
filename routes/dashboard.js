@@ -41,9 +41,16 @@ module.exports.userStats = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+
+        var iPad = false;
+        var md = new MobileDetect(req.headers['user-agent']);
+        if(md.is('iPad') == true)
+            iPad = true;
+
         res.render('users/userStats',{
             userAuthEmail: req.user.email,
             users: results[0],
+            iPad: iPad,
             aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
