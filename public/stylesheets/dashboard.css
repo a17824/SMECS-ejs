@@ -1,0 +1,30 @@
+.tooltip2 {
+
+}
+.tooltip2 .tooltiptext2 {
+    visibility: hidden;
+    width: 400px;
+    height: 350px;
+
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 0px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+    top: 0%;
+    left: 100%;
+
+    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+    opacity: 0;
+    transition: opacity 100ms;
+}
+
+.tooltip2:hover .tooltiptext2 {
+    visibility: visible;
+    opacity: 0.9;
+}

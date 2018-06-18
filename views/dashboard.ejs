@@ -10,13 +10,24 @@
     <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
 
     <!-- JQVMap -->
-    <link href="/public/gentelella/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+    <link href="/public/gentelella/vendors/jqvmap/dist/jqvmapDashboard.css" rel="stylesheet"/>
 
     <!-- bootstrap-daterangepicker -->
     <link href="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
+    <link href="/public/stylesheets/dashboard.css" rel="stylesheet">
+
+
+    <script>
+
+        $(document).ready(function () {
+
+        });
+
+    </script>
+
 
 
 </head>
@@ -52,11 +63,14 @@
         <% var aFontSize = 12; %>
         <% var spanFontSize = 13; %>
         <% var viewTopBottom = 9; %>
+        <% var tooltipAlertName = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0alert name:\xa0\xa0\xa0\xa0'%>
+        <% var tooltipDateTime = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0Date & time:\xa0\xa0\xa0\xa0'%>
         <% if(iPad){ %>
         <% h2FontSize = 28; %>
         <% aFontSize = 15; %>
         <% spanFontSize = 15; %>
         <% viewTopBottom = 10; %>
+        <% tooltipAlertName = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0alert name:\xa0\xa0\xa0\xa0'%>
         <% } %>
         <!-- /if iPad -->
 
@@ -89,6 +103,9 @@
 
                 <!-- Alerts sent comparison by years -->
                 <div class="col-md-12 col-sm-12 col-xs-12">
+                    <% if(iPad){ %>
+                    <br>
+                    <% } %>
                     <div class="x_panel">
                         <div class="x_title">
                             <h2 style="font-size: <%= h2FontSize %>px">Alerts sent <a style="font-size: <%= aFontSize %>px">comparison</a></h2>
@@ -123,7 +140,7 @@
 
 
                 <!-- Alerts sent by device -->
-                <div class="col-md-8 col-sm-8 col-xs-12">
+                <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
                             <h2 style="font-size: <%= h2FontSize %>px">Alerts sent by device</h2>
@@ -147,9 +164,6 @@
                         <div class="x_content">
 
                             <div id="echart_line" style="height:350px;"></div>
-                            <% if(!iPad){ %>
-                            <br><div style="line-height:5%;"><br></div> <!-- smaller br -->
-                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -327,9 +341,6 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <% if(!iPad){ %>
-                            <br><div style="line-height:70%;"><br></div> <!-- smaller br -->
-                            <% } %>
 
                             <% if(iPad){ %>
                             <div class="widget_summary">
@@ -348,7 +359,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-
+                            <br><div style="line-height:90%;"><br></div> <!-- smaller br -->
                             <% } %>
                         </div>
                     </div>
@@ -376,19 +387,19 @@
 
 
                 <!-- Map -->
-                <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-8 col-sm-8 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2 style="font-size: <%= h2FontSize %>px">Schools location <a style="font-size: <%= aFontSize %>px">geo-presentation</a></h2>
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 400px">Other Schools <a style="font-size: <%= aFontSize %>px">Total= 76 alerts sent in 2018</a></h2>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                 </li>
                                 <li class="dropdown pull-right">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">World map</a>
-                                        </li>
                                         <li><a href="#">Usa map</a>
+                                        </li>
+                                        <li><a href="#">World map</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -399,39 +410,74 @@
                         <div class="x_content">
                             <div class="dashboard-widget-content">
                                 <div class="col-md-4 col-sm-4 hidden-small">
-                                    <h class="line_30">State/County</h>
-
+                                    <h class="line_30">MASSACHUSETTS</h>
+                                    <br>
+                                    <h class="line_30">Suffolk County</h>
                                     <table class="countries_list">
                                         <tbody>
                                         <tr>
-                                            <td>United States</td>
-                                            <td class="fs15 fw700 text-right">33%</td>
-                                        </tr>
+                                            <td class="tooltip2" onclick="">Boston
+                                                <span class="tooltiptext2">
+                                                    &ensp; - <span style="color: yellow">St John School</span>
+                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
+                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 12:33pm</div> <!-- smaller br -->
+                                                </span>
+                                            </td>
+                                            <td class="fs15 fw700 text-right tooltip2" onclick="">1 alert
+                                                <span class="tooltiptext2">
+                                                    &ensp; - <span style="color: yellow">St John School</span>
+                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
+                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 12:33pm</div> <!-- smaller br -->
+                                                </span>
                                         <tr>
-                                            <td>France</td>
-                                            <td class="fs15 fw700 text-right">27%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Germany</td>
-                                            <td class="fs15 fw700 text-right">16%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Spain</td>
-                                            <td class="fs15 fw700 text-right">11%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Britain</td>
-                                            <td class="fs15 fw700 text-right">10%</td>
+                                            <td class="tooltip2" onclick="">Chelsea
+                                                <span class="tooltiptext2">
+                                                    &ensp; - <span style="color: yellow">Chelsea High School</span>
+                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
+                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 2:15pm</div> <!-- smaller br -->
+                                                </span>
+                                            </td>
+                                            <td class="fs15 fw700 text-right tooltip2" onclick="">1 alert
+                                                <span class="tooltiptext2">
+                                                    &ensp; - <span style="color: yellow">Chelsea High School</span>
+                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
+                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 2:15pm</div> <!-- smaller br -->
+                                                </span>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <br>
+                                    <h class="line_30">Bristol County</h>
+                                    <table class="countries_list">
+                                        <tbody>
+                                        <tr>
+                                            <td class="tooltip2" onclick="">Easton
+                                                <span class="tooltiptext2">
+                                                    &ensp; - <span style="color: yellow">Easton Middle School</span>
+                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
+                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>2/23/2018 at 8:22pm</div> <!-- smaller br -->
+                                                    <br>
+                                                    &ensp; - <span style="color: yellow">Richardson Olmsted Elementary School</span>
+                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
+                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>2/23/2018 at 9:36pm</div> <!-- smaller br -->
+                                                </span>
+                                            </td>
+                                            <td class="fs15 fw700 text-right" align="bottom">2 alerts</td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
                                 </div>
-                                <div id="usa_map" class="col-md-8 col-sm-8 col-xs-12" style="height:400px;"></div>
+                                <div id="usa_map" class="col-md-8 col-sm-8 col-xs-12" style="height:350px;"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Map -->
+
+
 
 
 
@@ -483,9 +529,9 @@
 <script src="/public/gentelella/vendors/DateJS/build/date.js"></script>
 
 <!-- JQVMap -->
-<script src="/public/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/dist/jquery.vmapDashboard.js"></script>
 <script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.usa.js"></script>
+<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.usaDasboard.js"></script>
 <script src="/public/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
 
 <!-- bootstrap-daterangepicker -->
