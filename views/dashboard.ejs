@@ -63,14 +63,11 @@
         <% var aFontSize = 12; %>
         <% var spanFontSize = 13; %>
         <% var viewTopBottom = 9; %>
-        <% var tooltipAlertName = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0alert name:\xa0\xa0\xa0\xa0'%>
-        <% var tooltipDateTime = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0Date & time:\xa0\xa0\xa0\xa0'%>
         <% if(iPad){ %>
         <% h2FontSize = 28; %>
         <% aFontSize = 15; %>
         <% spanFontSize = 15; %>
         <% viewTopBottom = 10; %>
-        <% tooltipAlertName = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0alert name:\xa0\xa0\xa0\xa0'%>
         <% } %>
         <!-- /if iPad -->
 
@@ -81,19 +78,19 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="tile_count" align="center">
                         <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-envelope"></i> Total Alerts sent</span>
+                            <span class="count_top"><i class="fa fa-envelope"></i> Total Alerts sent on 2017/2018</span>
                             <div class="count">137</div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-up"></i>4% </i> From last year</span>
+                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-up"></i>14% </i> more from previous school year</span>
                         </div>
                         <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-vial"></i> Total Drills sent</span>
+                            <span class="count_top"><i class="fa fa-vial"></i> Total Drills sent on 2017/2018</span>
                             <div class="count">82</div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-up"></i>3% </i> From last year</span>
+                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-up"></i>2% </i> more from previous school year</span>
                         </div>
                         <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-bell"></i> Total Real sent</span>
+                            <span class="count_top"><i class="fa fa-bell"></i> Total Real sent on 2017/2018</span>
                             <div class="count">55</div>
-                            <span class="count_bottom"><i class="red"><i class="fa fa-sort-down"></i>12% </i> From last year</span>
+                            <span class="count_bottom"><i class="red"><i class="fa fa-sort-down"></i>4% </i> more from previous school year</span>
                         </div>
 
                     </div>
@@ -115,11 +112,11 @@
                                 <li class="dropdown pull-right">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Year 2018/2017</a>
+                                        <li><a href="#">Year 2017/2018</a>
                                         </li>
-                                        <li><a href="#">Year 2017/2016</a>
+                                        <li><a href="#">Year 2016/2017</a>
                                         </li>
-                                        <li><a href="#">Year 2016/2015</a>
+                                        <li><a href="#">Year 2015/2016</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -175,7 +172,7 @@
                 <div class="col-md-4 col-sm-4 col-xs-12">
                     <div class="x_panel tile">
                         <div class="x_title">
-                            <h2 style="font-size: <%= h2FontSize %>px">Top <%= viewTopBottom %> <a style="font-size: <%= aFontSize %>px"> alerts sent</a></h2>
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 220px">Top <%= viewTopBottom %> <a style="font-size: <%= aFontSize %>px"> alerts sent</a></h2>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                 </li>
@@ -198,45 +195,45 @@
 
                             <div class="widget_summary">
                                 <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Utility Failures</span>
+                                    <span style="font-size: <%= spanFontSize %>px">Request Repair Assistance</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 66%;">
-                                            <span class="sr-only">60% Complete</span>
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 54%;">
+                                            <span class="sr-only">54% Complete</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w_right w_10">
-                                    <span>63</span>
+                                    <span>54</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
 
                             <div class="widget_summary">
                                 <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Bus Transportation early/late</span>
+                                    <span style="font-size: <%= spanFontSize %>px">Utility Failures</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
-                                            <span class="sr-only">60% Complete</span>
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 13%;">
+                                            <span class="sr-only">13% Complete</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w_right w_10">
-                                    <span>12</span>
+                                    <span>13</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="widget_summary">
                                 <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Weather-Related Emergencies</span>
+                                    <span style="font-size: <%= spanFontSize %>px">Bus Transportation early/late</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-                                            <span class="sr-only">60% Complete</span>
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 9%;">
+                                            <span class="sr-only">9% Complete</span>
                                         </div>
                                     </div>
                                 </div>
@@ -247,28 +244,60 @@
                             </div>
                             <div class="widget_summary">
                                 <div class="w_left w_70">
+                                    <span style="font-size: <%= spanFontSize %>px">Weather-Related Emergencies</span>
+                                </div>
+                                <div class="w_center w_20">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 7%;">
+                                            <span class="sr-only">7% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_10">
+                                    <span>7</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget_summary">
+                                <div class="w_left w_70">
+                                    <span style="font-size: <%= spanFontSize %>px">Medical Emergencies</span>
+                                </div>
+                                <div class="w_center w_20">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 7%;">
+                                            <span class="sr-only">7% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_10">
+                                    <span>7</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget_summary">
+                                <div class="w_left w_70">
+                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
+                                </div>
+                                <div class="w_center w_20">
+                                    <div class="progress">
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 4%;">
+                                            <span class="sr-only">4% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w_right w_10">
+                                    <span>4</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget_summary">
+                                <div class="w_left w_70">
                                     <span style="font-size: <%= spanFontSize %>px">Fire/Explosion</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_10">
-                                    <span>5</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget_summary">
-                                <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
-                                </div>
-                                <div class="w_center w_20">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 3%;">
+                                            <span class="sr-only">3% Complete</span>
                                         </div>
                                     </div>
                                 </div>
@@ -279,65 +308,33 @@
                             </div>
                             <div class="widget_summary">
                                 <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
+                                    <span style="font-size: <%= spanFontSize %>px">Violence</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
                                         <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
+                                            <span class="sr-only">2% Complete</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w_right w_10">
-                                    <span>3</span>
+                                    <span>2</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="widget_summary">
                                 <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
+                                    <span style="font-size: <%= spanFontSize %>px">Lockdown</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">
+                                            <span class="sr-only">1% Complete</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w_right w_10">
-                                    <span>3</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget_summary">
-                                <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
-                                </div>
-                                <div class="w_center w_20">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_10">
-                                    <span>3</span>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget_summary">
-                                <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
-                                </div>
-                                <div class="w_center w_20">
-                                    <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w_right w_10">
-                                    <span>3</span>
+                                    <span>1</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -345,17 +342,17 @@
                             <% if(iPad){ %>
                             <div class="widget_summary">
                                 <div class="w_left w_70">
-                                    <span style="font-size: <%= spanFontSize %>px">Evacuate</span>
+                                    <span style="font-size: <%= spanFontSize %>px">Observing Abandoned Firearm</span>
                                 </div>
                                 <div class="w_center w_20">
                                     <div class="progress">
-                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
-                                            <span class="sr-only">60% Complete</span>
+                                        <div class="progress bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">
+                                            <span class="sr-only">1% Complete</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w_right w_10">
-                                    <span>3</span>
+                                    <span>1</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -416,33 +413,26 @@
                                     <table class="countries_list">
                                         <tbody>
                                         <tr>
-                                            <td class="tooltip2" onclick="">Boston
+                                            <td class="tooltip2" onclick="">Boston</td>
+                                            <td class="fs15 fw700 text-right tooltip2" onclick="">
+                                                <button type="button" class="btn btn-warning btn-xs" readonly="">1 alert
                                                 <span class="tooltiptext2">
-                                                    &ensp; - <span style="color: yellow">St John School</span>
-                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
-                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 12:33pm</div> <!-- smaller br -->
+                                                    <span class="schoolName">- St John School</span>
+                                                    <div class="alertName">alert name :<span class="alertNameData">panic</span></div>
+                                                    <div class="dateTime">date & time :<span class="dateTimeData">6/22/2018 at 12:33pm</span></div> <!-- smaller br -->
                                                 </span>
+                                                </button>
                                             </td>
-                                            <td class="fs15 fw700 text-right tooltip2" onclick="">1 alert
-                                                <span class="tooltiptext2">
-                                                    &ensp; - <span style="color: yellow">St John School</span>
-                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
-                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 12:33pm</div> <!-- smaller br -->
-                                                </span>
                                         <tr>
-                                            <td class="tooltip2" onclick="">Chelsea
-                                                <span class="tooltiptext2">
-                                                    &ensp; - <span style="color: yellow">Chelsea High School</span>
-                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
-                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 2:15pm</div> <!-- smaller br -->
+                                            <td class="tooltip2" onclick="">Chelsea</td>
+                                            <td class="fs15 fw700 text-right tooltip2" onclick="">
+                                                <button type="button" class="btn btn-warning btn-xs" readonly="">1 alert
+                                                    <span class="tooltiptext2">
+                                                    <span class="schoolName">- Chelsea High School</span>
+                                                    <div class="alertName">alert name :<span class="alertNameData">panic</span></div>
+                                                    <div class="dateTime">date & time :<span class="dateTimeData">6/22/2018 at 2:15pm</span></div> <!-- smaller br -->
                                                 </span>
-                                            </td>
-                                            <td class="fs15 fw700 text-right tooltip2" onclick="">1 alert
-                                                <span class="tooltiptext2">
-                                                    &ensp; - <span style="color: yellow">Chelsea High School</span>
-                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
-                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>6/22/2018 at 2:15pm</div> <!-- smaller br -->
-                                                </span>
+                                                </button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -452,19 +442,20 @@
                                     <table class="countries_list">
                                         <tbody>
                                         <tr>
-                                            <td class="tooltip2" onclick="">Easton
+                                            <td class="tooltip2" onclick="">Easton</td>
+                                            <td class="fs15 fw700 text-right tooltip2" onclick="">
+                                                <button type="button" class="btn btn-warning btn-xs" readonly="">2 alerts
                                                 <span class="tooltiptext2">
-                                                    &ensp; - <span style="color: yellow">Easton Middle School</span>
-                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
-                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>2/23/2018 at 8:22pm</div> <!-- smaller br -->
-                                                    <br>
-                                                    &ensp; - <span style="color: yellow">Richardson Olmsted Elementary School</span>
-                                                    <div style="line-height:10%;"><%= tooltipAlertName %>panic </div> <!-- smaller br -->
-                                                    <div style="line-height:200%;">&thinsp;&thinsp;<%= tooltipDateTime %>2/23/2018 at 9:36pm</div> <!-- smaller br -->
+                                                    <span class="schoolName">- Easton Middle School</span>
+                                                    <div class="alertName">alert name :<span class="alertNameData">panic</span></div>
+                                                    <div class="dateTime">date & time :<span class="dateTimeData">2/23/2018 at 8:22pm</span></div> <!-- smaller br -->
+                                                    <br><br><br>
+                                                    <span class="schoolName">- Richardson Olmsted Elementary School</span>
+                                                    <div class="alertName">alert name :<span class="alertNameData">panic</span></div>
+                                                    <div class="dateTime">date & time :<span class="dateTimeData">2/23/2018 at 9:36pm</span></div> <!-- smaller br -->
                                                 </span>
+                                                </button>
                                             </td>
-                                            <td class="fs15 fw700 text-right" align="bottom">2 alerts</td>
-
                                         </tr>
                                         </tbody>
                                     </table>

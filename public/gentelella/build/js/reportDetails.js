@@ -2790,7 +2790,7 @@ function init_echarts() {
 
     var theme = {
         color: [
-            '#34495E', '#26B99A', '#BDC3C7', '#3498DB', //Alerts sent bar colors (last year color, current color,... ,...)
+            '#34495E', '#26B99A', '#f39d0c', '#3498DB', //Alerts sent bar colors (last year color, current color,... ,...)
             '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
         ],
 
@@ -3016,7 +3016,7 @@ function init_echarts() {
                 trigger: 'axis'
             },
             legend: {
-                data: ['2018', '2017']
+                data: ['2017/2018', '2016/2017']
             },
             toolbox: {
                 show: false
@@ -3024,15 +3024,15 @@ function init_echarts() {
             calculable: false,
             xAxis: [{
                 type: 'category',
-                data: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+                data: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
             }],
             yAxis: [{
                 type: 'value'
             }],
             series: [{
-                name: '2017',
+                name: '2016/2017',
                 type: 'bar',
-                data: [4, 2, 10, 8, 8, 9, 11, 6, 5, 3, 4, 4],
+                data: [1, 6, 25, 12, 12, 14, 19, 7, 3, 11, 6, 2],
                 markPoint: {
                     data: [{
                         type: 'max',
@@ -3049,19 +3049,19 @@ function init_echarts() {
                     }]
                 }
             }, {
-                name: '2018',
+                name: '2017/2018',
                 type: 'bar',
-                data: [3, 4, 7, 11, 14, 9, 21, 4, 8, 2, 6, 3],
+                data: [3, 7, 12, 15, 31, 20, 8, 15, 7, 13, 5, 2],
                 markPoint: {
                     data: [{
                         name: 'max',
-                        value: 21,  //this value needs to be equal to 2018 max value.
-                        xAxis: 6,   //this value needs to be equal to 2018 month array number. Ex: Sep = 0, Aug = 11
-                        yAxis: 21,  //this value needs to be equal to 2018 max value.
+                        value: 31,  //this value needs to be equal to 2018 max value.
+                        xAxis: 4,   //this value needs to be equal to 2018 month array number. Ex: Sep = 0, Aug = 0
+                        yAxis: 31,  //this value needs to be equal to 2018 max value.
                     }, {
                         name: 'min',
                         value: 2,  //this value needs to be equal to 2018 min value.
-                        xAxis: 9,  //this value needs to be equal to 2018 month array number. Ex: Sep = 0, Aug = 11
+                        xAxis: 11,  //this value needs to be equal to 2018 month array number. Ex: Sep = 0, Aug = 0
                         yAxis: 2   //this value needs to be equal to 2018 min value.
                     }]
                 },
@@ -3375,7 +3375,7 @@ function init_echarts() {
             xAxis: [{
                 type: 'category',
                 boundaryGap: false,
-                data: ['Set', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+                data: ['Aug', 'Set', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
             }],
             yAxis: [{
                 type: 'value'
@@ -3391,7 +3391,7 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [5, 6, 11, 22, 26, 30, 20, 17, 15, 13, 7]
+                data: [0, 2, 2, 3, 6, 1, 5, 6, 2, 4, 1, 0]
             }, {
                 name: 'android',
                 type: 'line',
@@ -3403,7 +3403,7 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [3, 8, 4, 7, 10, 12, 10, 23, 23, 11, 2]
+                data: [2, 4, 5, 5, 7, 15, 1, 3, 5, 6, 1, 0]
             }, {
                 name: 'iPhone',
                 type: 'line',
@@ -3415,7 +3415,7 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [1, 3, 5, 8, 9, 11, 14, 15, 22, 14, 19]
+                data: [1, 1, 5, 7, 10, 4, 2, 6, 0, 3, 3, 2]
             }]
         });
 

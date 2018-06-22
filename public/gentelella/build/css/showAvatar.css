@@ -219,12 +219,22 @@ img {}
 /* end of ICONS */
 
 
-/*
-.xAvatar {
-    border-radius: 10%;
-    width: 70%;
-    height: auto;
-    border: 1px solid #ddd;
-    padding: 4px;
+
+.avatarUserStat {
+    position: relative;
+    border-radius: 100%;
+    object-fit: cover; /* Do not scale the image */
+    object-position: 50% 20%; /* Center the image within the element */
+    height: 50%;
+    width: 80%;
+
+
+
+    background: #fff;
+    margin-left: 10%;
+    z-index: 1000;
+    position: inherit;
+    margin-top: 10px;
+    border: 1px solid rgba(52, 73, 94, 0.44);
+    padding: 1px
 }
-*/
