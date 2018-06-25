@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Photo</h3>
+                    </div>
+
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="row">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <% if (title === 'Add Photo' ) {%>
+                                <h2><small>Add/update/delete photo</small></h2>
+                                <% }else {%>
+                                <h2 class="h2Size">Your registration is completed!<span class="spanSize"> You can add profile photo or just skip and finish</span></h2>
+                                <% } %>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+
+                                <!-- Smart Wizard -->
+
+                                <div id="wizard" class="form_wizard wizard_horizontal">
+                                    <ul class="wizard_steps selected">
+                                        <li>
+                                            <a href="#step-1" class="selected">
+                                                <span class="step_no selected">1</span>
+                                                <span class="step_descr selected">
+                                              Step 1<br />
+                                              <small class="selected">Choose/Delete photo</small>
+                                          </span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#step-2" class="disabled">
+                                                <span class="step_no selected">2</span>
+                                                <span class="step_descr">
+                                              Step 2<br />
+                                              <small>Crop and save photo</small>
+                                          </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div id="step-1 selected">
+
+
+                                        <% if (title === 'Add Photo' ) {%>
+
+                                        <!-- Back button -->
+                                        <a href="/users/showUsers" class="pull-right pull-bottom_Back"><button class="btn btn-primary">Back</button></a>
+
+                                        <!-- Delete button -->
+                                        <a href="/users/deletePhoto/<%= user.id %>">
+                                            <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                                            <button style="font-size: 13px" class="btn btn-danger btn-xs">Delete photo</button>
+                                            <% } else { %>
+                                            <button style="font-size: 13px" class="btn btn-danger btn-xs" disabled>Delete photo</button>
+                                            <% } %>
+                                        </a>
+                                        <% } else { %>
+                                        <a href="/loginParents" class="pull-right pull-bottom_Back"><button  class="btn btn-default">Skip photo and Finish</button></a>
+                                        <% } %>
+
+                                        <form action="/photos/choosePhoto/:id" enctype="multipart/form-data" method="post">
+
+                                            <input name="<%= user.id %>" type="hidden"/>
+
+                                            <div class="divChoose">
+                                                <% if (user.photo === '' || user.photo == undefined) {%>
+                                                <img id="blah" class="imgChoose" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
+
+                                                <% } else { %>
+                                                <% if (userType === 'Users') {%>
+                                                <img id="blah" class="imgChoose" src="/photosUsers/<%= user.photo %>" /><br><br>
+                                                <% } else { %>
+                                                <img id="blah" class="imgChoose" src="/photosStudents/<%= user.photo %>" /><br><br>
+                                                <% } %>
+                                                <% } %>
+
+                                            <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                                            <input type="file"
+                                                   onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                                                   name="upload"
+                                                   id="newPhoto"
+                                                   single="single"
+                                                   accept="image/*" required/><br>
+                                            <% } else { %>
+                                            <input type="file"
+                                                   onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                                                   name="upload"
+                                                   id="newPhoto"
+                                                   single="single"
+                                                   accept="image/*" required disabled/><br>
+                                            <% } %>
+
+
+
+
+
+                                            </div>
+
+                                            <br><br><br><br><br><br><br><br><br><br><br>
+                                            <div class="ln_solid"></div>
+                                            <span class="pull-right">
+
+
+                                                <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                                                <input type="submit" value="Next" class="btn btn-success">
+                                                <% } else { %>
+                                                <input type="submit" value="Next" class="btn btn-success" disabled>
+                                                <% } %>
+
+                                                <a href="/users/showUsers"><button  class="btn btn-default" disabled>cancel</button></a>
+
+                                            </span>
+                                        </form>
+
+
+
+
+                                    </div>
+
+
+
+
+                                </div>
+                                <!-- End SmartWizard Content -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <% include ../layout/footer.ejs %>
+        <!-- /footer content -->
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/customCropPhoto.js"></script>
+<!-- Google Analytics -->
+
+</body>
+
+</html>

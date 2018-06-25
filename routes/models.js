@@ -13,6 +13,7 @@ var UsersSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     pin: String,
     photo: String,
+    photoTemp: String,
     internal: { type: Boolean, default: false},
     parent: { type: Boolean, default: false},
     external: { type: Boolean, default: false},
@@ -79,6 +80,7 @@ module.exports.UsersAddTemp = mongoose.model("UsersAddTemp", UsersAddTempSchema)
 // DEFINE UsersAddTemp COLLECTION IN MONGOdb
 var ParentSelfRegistrationSchema = new mongoose.Schema({
     email: String,
+    userPrivilegeID: { type: Number, default: 5},
     pin: String,
     redirect: { type: String, default: 'registerParent'},
     text: String

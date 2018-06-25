@@ -343,9 +343,9 @@
     <% } %>
 
     <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (users.userPrivilegeID != 1 || userAuthID == 1)) {%>
-        <a href="/photos/addPhoto/<%= users.id %>"><button>Change</button></a>
+        <a href="/photos/choosePhoto/<%= users.id %>"><button>Change</button></a>
     <% } else { %>
-        <a href="/photos/addPhoto/<%= users.id %>"><button disabled>Change</button></a>
+        <a href="/photos/choosePhoto/<%= users.id %>"><button disabled>Change</button></a>
     <% } %>
     <br>
 <% } %>
