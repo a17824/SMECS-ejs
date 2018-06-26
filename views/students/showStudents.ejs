@@ -108,14 +108,14 @@
                           <% if (student.photo == "" || student.photo == undefined) { %>
                           <td>
                               <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                              &ensp;<a href="/photos/addPhoto/<%= student.id %>"><button class="btn btn-round btn-info">add</button></a>
+                              &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info">add</button></a>
                               <% } else { %>
-                              &ensp;<a href="/photos/addPhoto/<%= student.id %>"><button class="btn btn-round btn-info" disabled>add</button></a>
+                              &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info" disabled>add</button></a>
                               <% } %>
                           </td>
                           <% } else { %>
                           <td >
-                              <a href="/photos/addPhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
+                              <a href="/photos/choosePhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
                           </td>
                           <% } %>
                           <td><%= student.firstName %> <%= student.lastName %></td>

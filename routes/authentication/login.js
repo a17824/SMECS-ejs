@@ -55,8 +55,16 @@ router.post('/register', function(req, res) {
  */
 module.exports.getLogin = function(req, res, next) {
 
-    res.render('login', {title: 'SMECS Login', error: "", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    //res.render('login', { title: 'SMECS Login', error: ""});
+    res.render('login', {
+        title: 'SMECS Login',
+        error: "", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+};
+module.exports.getLoginParentSelfRegistration = function(req, res, next) {
+    res.render('login', {
+        title: 'SMECS Login',
+        error: "Registration completed", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
 };
 /**
  * Log a user into their account.
@@ -126,7 +134,7 @@ module.exports.postLogin = function(req, res, next) {
                             req.session.user = parentSelfRegistration;
                             res.redirect('/parentsSelfRegistration/registerParentStep1');
                         } else {
-                            res.render('login', {error: "ERROR: Incorrect email or pin.", csrfToken: req.csrfToken()});
+                            res.render('login', {error: "Incorrect email or pin", csrfToken: req.csrfToken()});
                         }
                     }
                 });
@@ -139,7 +147,7 @@ module.exports.postLogin = function(req, res, next) {
 
                 } else {
                     //res.status(400).send('Current password does not match');
-                    res.render('login', {error: "ERROR: Incorrect email or pin.", warning: '', csrfToken: req.csrfToken()}); //final error message is been written in login.ejs
+                    res.render('login', {error: "Incorrect email or pin", warning: '', csrfToken: req.csrfToken()}); //final error message is been written in login.ejs
                 }
             }
         });

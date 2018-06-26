@@ -134,9 +134,9 @@ router.get('/users/deletedUsers/:id', auth.simpleAuth, auth.requireLogin, users.
 
 
 //--ADD or UPDATE PHOTO -------------------------------------
-router.get('/photos/addPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhoto, function (req, res){
+router.get('/photos/choosePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhoto, function (req, res){
 });
-router.post('/photos/addPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhotoPost, function (req, res){
+router.post('/photos/choosePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhotoPost, function (req, res){
 });
 
 // DELETE  PHOTO------------------
@@ -144,6 +144,11 @@ router.get('/users/deletePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.
 });
 
 
+//--Crop Photo -------------------------------------
+router.get('/photos/cropPhoto/:id', auth.simpleAuth, auth.requireLogin, photos.cropPhoto, function (req, res){
+});
+router.post('/photos/cropPhoto', auth.simpleAuth, auth.requireLogin, photos.cropPhotoPost, function (req, res){
+});
 
 
 /* SHOW ALL STUDENTS. */

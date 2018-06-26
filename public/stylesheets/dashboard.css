@@ -28,3 +28,32 @@
     visibility: visible;
     opacity: 0.9;
 }
+
+.schoolName {
+    color: yellow;
+    position: relative;
+    left: 4%;
+}
+.alertName {
+    line-height: 80%;
+    position: absolute;
+    right: 65%;
+}
+.alertNameData {
+    line-height: 80%;
+    position: absolute;
+    width: 200px;
+    left: 120%;
+}
+
+.dateTime {
+    line-height: 280%;
+    position: absolute;
+    right: 65%;
+}
+.dateTimeData {
+    line-height: 280%;
+    position: absolute;
+    width: 200px;
+    left: 120%;
+}

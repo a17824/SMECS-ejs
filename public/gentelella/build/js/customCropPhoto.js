@@ -1,5 +1,4 @@
-//Alerts sent bar colors
-
+//toDataURL('image/jpeg')
 
 /**
  * Resize function without multiple trigger
@@ -562,7 +561,7 @@ function init_flot_chart(){
 
         $.plot( $("#chart_plot_02"),
             [{
-                label: "Alerts Sent",
+                label: "Email Sent",
                 data: chart_plot_02_data,
                 lines: {
                     fillColor: "rgba(150, 202, 89, 0.12)"
@@ -698,27 +697,27 @@ function init_chart_doughnut(){
             tooltipFillColor: "rgba(51, 51, 51, 0.55)",
             data: {
                 labels: [
-                    "Nurse",
-                    "Principal",
-                    "Office Staff",
-                    "Staff",
-                    "Teacher"
+                    "Symbian",
+                    "Blackberry",
+                    "Other",
+                    "Android",
+                    "IOS"
                 ],
                 datasets: [{
-                    data: [1, 1, 10, 18, 20],
+                    data: [15, 20, 30, 10, 30],
                     backgroundColor: [
                         "#BDC3C7",
-                        "#E74C3C",
                         "#9B59B6",
-                        "#3498DB",
-                        "#f39d0c"
+                        "#E74C3C",
+                        "#26B99A",
+                        "#3498DB"
                     ],
                     hoverBackgroundColor: [
-                        "#BDC3C7",
-                        "#E74C3C",
-                        "#9B59B6",
-                        "#3498DB",
-                        "#f39d0c"
+                        "#CFD4D8",
+                        "#B370CF",
+                        "#E95E4F",
+                        "#36CAAB",
+                        "#49A9EA"
                     ]
                 }]
             },
@@ -775,9 +774,9 @@ function init_gauge() {
 
     if ($('#gauge-text').length){
 
-        chart_gauge_01.maxValue = 50;
+        chart_gauge_01.maxValue = 6000;
         chart_gauge_01.animationSpeed = 32;
-        chart_gauge_01.set(48);
+        chart_gauge_01.set(3200);
         chart_gauge_01.setTextField(document.getElementById("gauge-text"));
 
     }
@@ -792,63 +791,13 @@ function init_gauge() {
 
     if ($('#gauge-text2').length){
 
-        chart_gauge_02.maxValue = 48;
+        chart_gauge_02.maxValue = 9000;
         chart_gauge_02.animationSpeed = 32;
-        chart_gauge_02.set(46);
+        chart_gauge_02.set(2400);
         chart_gauge_02.setTextField(document.getElementById("gauge-text2"));
 
     }
 
-    if ($('#chart_gauge_03').length){
-
-        var chart_gauge_03_elem = document.getElementById('chart_gauge_03');
-        var chart_gauge_03 = new Gauge(chart_gauge_03_elem).setOptions(chart_gauge_settings);
-
-    }
-
-
-    if ($('#gauge-text3').length){
-
-        chart_gauge_03.maxValue = 46;
-        chart_gauge_03.animationSpeed = 32;
-        chart_gauge_03.set(40);
-        chart_gauge_03.setTextField(document.getElementById("gauge-text3"));
-
-    }
-
-    if ($('#chart_gauge_04').length){
-
-        var chart_gauge_04_elem = document.getElementById('chart_gauge_04');
-        var chart_gauge_04 = new Gauge(chart_gauge_04_elem).setOptions(chart_gauge_settings);
-
-    }
-
-
-    if ($('#gauge-text4').length){
-
-        chart_gauge_04.maxValue = 40;
-        chart_gauge_04.animationSpeed = 32;
-        chart_gauge_04.set(20);
-        chart_gauge_04.setTextField(document.getElementById("gauge-text4"));
-
-    }
-
-    if ($('#chart_gauge_05').length){
-
-        var chart_gauge_05_elem = document.getElementById('chart_gauge_05');
-        var chart_gauge_05 = new Gauge(chart_gauge_05_elem).setOptions(chart_gauge_settings);
-
-    }
-
-
-    if ($('#gauge-text4').length){
-
-        chart_gauge_05.maxValue = 40;
-        chart_gauge_05.animationSpeed = 32;
-        chart_gauge_05.set(15);
-        chart_gauge_05.setTextField(document.getElementById("gauge-text5"));
-
-    }
 
 }
 
@@ -1183,6 +1132,7 @@ function init_cropper() {
     console.log('init_cropper');
 
     var $image = $('#image');
+
     var $download = $('#download');
     var $dataX = $('#dataX');
     var $dataY = $('#dataY');
@@ -1192,13 +1142,16 @@ function init_cropper() {
     var $dataScaleX = $('#dataScaleX');
     var $dataScaleY = $('#dataScaleY');
     var options = {
-        aspectRatio: 16 / 9,
+        aspectRatio: 1 / 1,
         preview: '.img-preview',
+        cropBoxResizable: false,
+        autoCropArea: 0,
+
         crop: function (e) {
             $dataX.val(Math.round(e.x));
             $dataY.val(Math.round(e.y));
-            $dataHeight.val(Math.round(e.height));
-            $dataWidth.val(Math.round(e.width));
+            $dataHeight.val(160);
+            $dataWidth.val(160);
             $dataRotate.val(e.rotate);
             $dataScaleX.val(e.scaleX);
             $dataScaleY.val(e.scaleY);
@@ -1323,7 +1276,8 @@ function init_cropper() {
                         $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
 
                         if (!$download.hasClass('disabled')) {
-                            $download.attr('href', result.toDataURL());
+                            $download.attr('href', result.toDataURL('image/jpeg')); //toDataURL('image/jpeg')
+
                         }
                     }
 
@@ -2709,21 +2663,21 @@ function init_morris_charts() {
         Morris.Area({
             element: 'graph_area',
             data: [
-                {period: '2014 Q1', iphone: 66, ipad: null, android: 47},
-                {period: '2014 Q2', iphone: 78, ipad: 94, android: 41},
-                {period: '2014 Q3', iphone: 12, ipad: 69, android: 01},
-                {period: '2014 Q4', iphone: 10, ipad: 10, android: 10},
-                {period: '2015 Q1', iphone: 10, ipad: 14, android: 93},
-                {period: '2015 Q2', iphone: 70, ipad: 93, android: 81},
-                {period: '2015 Q3', iphone: 20, ipad: 95, android: 88},
-                {period: '2015 Q4', iphone: 73, ipad: 67, android: 75},
-                {period: '2016 Q1', iphone: 87, ipad: 60, android: 28},
-                {period: '2016 Q2', iphone: 32, ipad: 13, android: 91}
+                {period: '2014 Q1', iphone: 2666, ipad: null, itouch: 2647},
+                {period: '2014 Q2', iphone: 2778, ipad: 2294, itouch: 2441},
+                {period: '2014 Q3', iphone: 4912, ipad: 1969, itouch: 2501},
+                {period: '2014 Q4', iphone: 3767, ipad: 3597, itouch: 5689},
+                {period: '2015 Q1', iphone: 6810, ipad: 1914, itouch: 2293},
+                {period: '2015 Q2', iphone: 5670, ipad: 4293, itouch: 1881},
+                {period: '2015 Q3', iphone: 4820, ipad: 3795, itouch: 1588},
+                {period: '2015 Q4', iphone: 15073, ipad: 5967, itouch: 5175},
+                {period: '2016 Q1', iphone: 10687, ipad: 4460, itouch: 2028},
+                {period: '2016 Q2', iphone: 8432, ipad: 5713, itouch: 1791}
             ],
             xkey: 'period',
-            ykeys: ['iphone', 'ipad', 'android'],
+            ykeys: ['iphone', 'ipad', 'itouch'],
             lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
-            labels: ['iPhone', 'iPad', 'android'],
+            labels: ['iPhone', 'iPad', 'iPod Touch'],
             pointSize: 2,
             hideHover: 'auto',
             resize: true
@@ -2790,7 +2744,7 @@ function init_echarts() {
 
     var theme = {
         color: [
-            '#34495E', '#26B99A', '#f39d0c', '#3498DB', //Alerts sent bar colors (last year color, current color,... ,...)
+            '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
             '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
         ],
 
@@ -3016,7 +2970,7 @@ function init_echarts() {
                 trigger: 'axis'
             },
             legend: {
-                data: ['2017/2018', '2016/2017']
+                data: ['sales', 'purchases']
             },
             toolbox: {
                 show: false
@@ -3024,51 +2978,51 @@ function init_echarts() {
             calculable: false,
             xAxis: [{
                 type: 'category',
-                data: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+                data: ['1?', '2?', '3?', '4?', '5?', '6?', '7?', '8?', '9?', '10?', '11?', '12?']
             }],
             yAxis: [{
                 type: 'value'
             }],
             series: [{
-                name: '2016/2017',
+                name: 'sales',
                 type: 'bar',
-                data: [1, 6, 25, 12, 12, 14, 19, 7, 3, 11, 6, 2],
+                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
                 markPoint: {
                     data: [{
                         type: 'max',
-                        name: 'max'
+                        name: '???'
                     }, {
                         type: 'min',
-                        name: 'min'
+                        name: '???'
                     }]
                 },
                 markLine: {
                     data: [{
                         type: 'average',
-                        name: 'average'
+                        name: '???'
                     }]
                 }
             }, {
-                name: '2017/2018',
+                name: 'purchases',
                 type: 'bar',
-                data: [3, 7, 12, 15, 31, 20, 8, 15, 7, 13, 5, 2],
+                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
                 markPoint: {
                     data: [{
-                        name: 'max',
-                        value: 31,  //this value needs to be equal to 2018 max value.
-                        xAxis: 4,   //this value needs to be equal to 2018 month array number. Ex: Sep = 0, Aug = 0
-                        yAxis: 31,  //this value needs to be equal to 2018 max value.
+                        name: 'sales',
+                        value: 182.2,
+                        xAxis: 7,
+                        yAxis: 183,
                     }, {
-                        name: 'min',
-                        value: 2,  //this value needs to be equal to 2018 min value.
-                        xAxis: 11,  //this value needs to be equal to 2018 month array number. Ex: Sep = 0, Aug = 0
-                        yAxis: 2   //this value needs to be equal to 2018 min value.
+                        name: 'purchases',
+                        value: 2.3,
+                        xAxis: 11,
+                        yAxis: 3
                     }]
                 },
                 markLine: {
                     data: [{
                         type: 'average',
-                        name: 'average'
+                        name: '???'
                     }]
                 }
             }]
@@ -3337,8 +3291,8 @@ function init_echarts() {
 
         echartLine.setOption({
             title: {
-                text: 'Toatal',
-                subtext: 'alerts sent'
+                text: 'Line Graph',
+                subtext: 'Subtitle'
             },
             tooltip: {
                 trigger: 'axis'
@@ -3346,7 +3300,7 @@ function init_echarts() {
             legend: {
                 x: 220,
                 y: 40,
-                data: ['iPhone', 'android', 'iPad']
+                data: ['Intent', 'Pre-order', 'Deal']
             },
             toolbox: {
                 show: true,
@@ -3375,13 +3329,13 @@ function init_echarts() {
             xAxis: [{
                 type: 'category',
                 boundaryGap: false,
-                data: ['Aug', 'Set', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             }],
             yAxis: [{
                 type: 'value'
             }],
             series: [{
-                name: 'iPad',
+                name: 'Deal',
                 type: 'line',
                 smooth: true,
                 itemStyle: {
@@ -3391,9 +3345,9 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [0, 2, 2, 3, 6, 1, 5, 6, 2, 4, 1, 0]
+                data: [10, 12, 21, 54, 260, 830, 710]
             }, {
-                name: 'android',
+                name: 'Pre-order',
                 type: 'line',
                 smooth: true,
                 itemStyle: {
@@ -3403,9 +3357,9 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [2, 4, 5, 5, 7, 15, 1, 3, 5, 6, 1, 0]
+                data: [30, 182, 434, 791, 390, 30, 10]
             }, {
-                name: 'iPhone',
+                name: 'Intent',
                 type: 'line',
                 smooth: true,
                 itemStyle: {
@@ -3415,7 +3369,7 @@ function init_echarts() {
                         }
                     }
                 },
-                data: [1, 1, 5, 7, 10, 4, 2, 6, 0, 3, 3, 2]
+                data: [1320, 1132, 601, 234, 120, 90, 20]
             }]
         });
 

@@ -14,7 +14,7 @@ var bcrypt = require('bcryptjs');
 
 module.exports.simpleAuth = function(req, res, next) {
     if (req.session && req.session.user) {
-        if (req.session.user.userPrivilegeID) {         // if it is a user from "User" database
+        if (req.session.user.userRoleID) {         // if it is a user from "User" database
             var typeUserAuth = 'Users';
         } else {                                        // if it is a user from "ParentSelfRegistration" database
             var typeUserAuth = 'ParentSelfRegistration';

@@ -136,7 +136,6 @@ module.exports.registerParentStep1Post = function(req, res) {
     roleName.push(req.body.roleName);
 
     models.UsersAddTemp.findById({'_id': userToUpdate}, function (err0, tempUser) {
-        console.log('tempUser = ',tempUser);
         if (!tempUser) {
             console.log(err0);
             console.log('TTL EXPIRED');
@@ -183,7 +182,7 @@ module.exports.registerParentStep1Post = function(req, res) {
                                 } else {
                                     console.log('"parentOf" added successfully');
                                     functions.addParentInStudentDocument(user1, studentsWithParents);
-                                    return res.send({redirect: '/photos/addPhoto/' + user1._id}) //needs to go to step2 to add photo
+                                    return res.send({redirect: '/photos/choosePhoto/' + user1._id}) //needs to go to step2 to add photo
                                 }
                             });
                         });

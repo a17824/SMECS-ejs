@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <link href="/public/gentelella/vendors/cropper/dist/cropperCropPhoto.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
+
+    <script>
+        function runMe() {
+            var base64 = $('#download').attr('href');
+            var userID=$("#userID").val();
+
+            $.post('/photos/cropPhoto', {
+                base64: base64,
+                userID: userID
+
+            },function(data){
+                if(data==='done')
+                {
+                    alert("login success");
+                }
+                window.location = data.redirect
+            });
+        }
+    </script>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Photo</h3>
+                    </div>
+
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="row">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <% if (title === 'Add Photo' ) {%>
+                                <h2><small>Add/update/delete photo</small></h2>
+                                <% }else {%>
+                                <h2><small>Add photo</small></h2>
+                                <% } %>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+
+                                <!-- Smart Wizard -->
+
+                                <div id="wizard" class="form_wizard wizard_horizontal">
+                                    <ul class="wizard_steps selected">
+                                        <li>
+                                            <% var page = '/photos/choosePhoto/' + user._id; %>
+                                            <a href='<%= page %>' class="done">
+                                                <span class="step_no selected">1</span>
+                                                <span class="step_descr selected">
+                                              Step 1<br />
+                                              <small class="selected">Choose/Delete photo</small>
+                                          </span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#step-2" class="selected">
+                                                <span class="step_no selected">2</span>
+                                                <span class="step_descr">
+                                              Step 2<br />
+                                              <small>Crop and save photo</small>
+                                          </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div id="step-1 selected">
+
+                                        <input type="hidden"
+                                               id="userID"
+                                               value="<%= user._id %>">
+
+                                        <!-- image cropping -->
+                                        <div class="container cropper">
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <div class="img-container">
+                                                        <img id="image" src="/temp/photosUsers/<%= user.photoTemp %>" alt="Picture">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+
+
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-9 docs-buttons">
+                                                    <!-- <h3 class="page-header">Toolbar:</h3> -->
+
+
+
+
+                                                    <div class="ln_solidFull"></div>
+                                                    <span class="pull-rightFull">
+                                                        <button  class="btn btn-primary" onclick="GoBackWithRefresh()">Back</button>
+                                                        <script>
+                                                            function GoBackWithRefresh() {
+                                                                if ('referrer' in document) {
+                                                                    window.location = document.referrer;
+                                                                    /* OR */
+                                                                    //location.replace(document.referrer);
+                                                                } else {
+                                                                    window.history.back();
+                                                                }
+                                                            }
+                                                        </script>
+                                                        <button type="button" class="btn btn-success" data-method="getCroppedCanvas">
+                                                            <span class="docs-tooltip" data-toggle="tooltip" title="a new window will open with cropped photo and then you can choose to save or cancel">
+                                                                Get Cropped Photo
+                                                            </span>
+                                                        </button>
+                                                        <a href="/users/showUsers"><button  class="btn btn-default">cancel</button></a>
+                                                    </span>
+
+
+                                                    <!-- Save window -->
+                                                    <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                                    <h4 class="modal-title" id="getCroppedCanvasTitle">Cropped</h4>
+                                                                </div>
+                                                                <div class="modal-body"></div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                    <a class="btn btn-primary" id="download" href="javascript:void(0);" onclick="runMe()">Save</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /Save window -->
+
+
+
+                                                </div><!-- /.docs-buttons -->
+
+
+                                            </div>
+                                        </div>
+                                        <!-- /image cropping -->
+
+
+
+
+                                    </div>
+                                </div>
+                                <!-- End SmartWizard Content -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <% include ../layout/footer.ejs %>
+        <!-- /footer content -->
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+
+<!-- jquery.inputmask -->
+<script src="/public/gentelella/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+<!-- jQuery Knob -->
+<script src="/public/gentelella/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
+<!-- Cropper -->
+<script src="/public/gentelella/vendors/cropper/dist/cropperUserPhoto.js"></script>
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/customCropPhoto.js"></script>
+
+</body>
+
+</html>

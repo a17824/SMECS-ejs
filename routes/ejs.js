@@ -6,9 +6,9 @@ var csrf = require('csurf');
 
 routerEjs.use(csrf());
 
-
 /* GET login page. */
 routerEjs.get('/login', login.getLogin, function(req, res) {});
+routerEjs.get('/loginParents', login.getLoginParentSelfRegistration, function(req, res) {});
 routerEjs.post('/login', login.postLogin, function(req, res) {});
 routerEjs.get('/logout', login.getLogout, function(req, res) {});
 
