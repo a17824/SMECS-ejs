@@ -2,7 +2,7 @@
 var models = require('./../models');
 var jwt = require('jsonwebtoken');
 var config = require('../api/config');
-
+var bcrypt = require('bcryptjs');
 
 
 /**

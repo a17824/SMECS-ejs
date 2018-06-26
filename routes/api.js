@@ -49,7 +49,7 @@ routerApi.post('/alerts/sending/multiSelection', auth.auth, sendingAlert.postMul
 
 /* Send Alert - Review ALert. -------------------------------*/
 routerApi.get('/alerts/sending/reviewAlert/:id', auth.auth, reviewAlert.reviewAlert, function(req, res, next) {});
-routerApi.post('/alerts/sending/reviewAlert', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
+routerApi.post('/alerts/sending/reviewAlert', auth.auth, auth.pin, reviewAlert.postReviewAlert, function(req, res) {});
 routerApi.post('/alerts/sending/panic/:id', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
 
 /* Receive alert ------------------------------------------*/
