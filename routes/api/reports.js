@@ -1,5 +1,4 @@
 var models = require('./../models');
-var jwt = require('jsonwebtoken');
 var moment = require('moment');
 
 /* Send all alerts. -------------------------------*/
