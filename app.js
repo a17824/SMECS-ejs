@@ -29,14 +29,14 @@ app.set('view engine', 'ejs');
 
 
 app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true})); //was FALSE by default. was TRUE for auth Template
 
-app.use(bodyParser.urlencoded({ extended: true })); //was FALSE by default. was TRUE for auth Template
 
 // middleware
 app.use(session({

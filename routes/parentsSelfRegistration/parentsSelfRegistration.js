@@ -157,7 +157,8 @@ module.exports.registerParentStep1Post = function(req, res) {
                                     _id: students[i]._id,
                                     studentID: students[i].studentID,
                                     studentFirstName: students[i].firstName,
-                                    studentLastName: students[i].lastName
+                                    studentLastName: students[i].lastName,
+                                    studentPhoto: students[i].photo
                                 };
                                 parentOfFinal.push(student);
                                 studentsWithParents.push(students[i].studentID);
