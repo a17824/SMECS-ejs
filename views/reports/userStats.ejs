@@ -136,9 +136,9 @@
                     <% } %>
                 <!-- Top 5 users sending alerts -->
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel tile overflow_hidden">
+                    <div class="x_panel tile fixed_height_414 overflow_hidden">
                         <div class="x_title">
-                            <h2 style="font-size: <%= h2FontSize %>px; width: 213px">Top 5<a style="font-size: <%= aFontSize %>px">&emsp;sending alerts</a></h2>
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 148px">Top 5<a style="font-size: <%= aFontSize %>px">&emsp;sending alerts</a></h2>
 
                             <ul class="nav navbar-right panel_toolbox">
                                 <li class="dropdown pull-right">
@@ -231,79 +231,25 @@
                 </div>
 
 
+
                 <!-- Top Roles -->
                 <div class="col-md-4 col-sm-4 col-xs-12">
-                    <% if(iPad){ %>
-                    <br>
-                    <% } %>
-                    <div class="x_panel tile fixed_height_390 overflow_hidden">
+                    <div class="x_panel fixed_height_414">
                         <div class="x_title">
-                            <h2 style="font-size: <%= h2FontSize %>px; width: 280px">Top Alerts sent by roles</h2>
-
+                            <h2 style="font-size: <%= h2FontSize %>px;">Top 4<a style="font-size: <%= aFontSize %>px">&emsp;sent by role</a></h2>
 
                             <div class="clearfix"></div>
                         </div>
-                        <div class="x_content">
-                            <table class="" style="width:100%">
-                                <tr>
-                                    <th style="width:37%;">
-                                        <p>Top 5</p>
-                                    </th>
-                                    <th>
-                                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                                            <p class="">Roles</p>
-                                        </div>
-                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                            <p align="right" class="">#</p>
-                                        </div>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>
-
-                                        <canvas class="canvasDoughnut" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
-                                    </td>
-                                    <td>
-                                        <table class="tile_info">
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square orange"></i>Teacher </p>
-                                                </td>
-                                                <td class="numbersRight">20</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square blue"></i>Staff </p>
-                                                </td>
-                                                <td class="numbersRight">18</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square purple"></i>Office Staff </p>
-                                                </td>
-                                                <td class="numbersRight">10</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square red"></i>Principal </p>
-                                                </td>
-                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <p><i class="fa fa-square aero"></i>Nurse </p>
-                                                </td>
-                                                <td class="numbersRight">1</td><!-- change values @ reportDetails.js lines [691,712] -->
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
+                        <div class="x_content2">
+                            <div id="graph_donut" style="width:100%; height:300px;"></div>
                         </div>
                     </div>
                 </div>
                 <!-- /Top Roles -->
+
+
+
+
 
 
 
@@ -728,8 +674,10 @@
 
 <!-- Chart.js -->
 <script src="/public/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
-<!-- jQuery Sparklines -->
-<script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+
+<!-- morris.js -->
+<script src="/public/gentelella/vendors/raphael/raphael.min.js"></script>
+<script src="/public/gentelella/vendors/morris.js/morris.min.js"></script>
 
 <!-- Skycons -->
 <script src="/public/gentelella/vendors/skycons/skycons.js"></script>

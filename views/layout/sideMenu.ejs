@@ -9,16 +9,18 @@
         <ul class="nav side-menu">
 
             <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-            <li><a href="/dashboard"><i class="fa fa-home fa-lg"></i> Home <span class="fa fa-chevron-right"></span></a></li>
+            <li><a href="/reports/showReports"><i class="fa fa-home fa-lg"></i> Home <span class="fa fa-chevron-right"></span></a></li>
             <% } %>
 
             <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-            <li><a href="/users/userStats"><i class="fa fa-chart-bar fa-lg"></i> User Statistics <span class="fa fa-chevron-right"></span></a></li>
+            <li><a><i class="fa fa-chart-bar fa-lg"></i> Statistics <span class="fa fa-chevron-right"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="/dashboard">Global</a></li>
+                    <li><a href="/users/userStats">Individual</a></li>
+                </ul>
+            </li>
             <% } %>
 
-            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-            <li><a href="/reports/showReports"><i class="fa fa-chart-line fa-lg"></i> Reports <span class="fa fa-chevron-right"></span></a></li>
-            <% } %>
 
             <% if (aclSideMenu == null || aclSideMenu.students.checkBoxValue == true){%>
             <li><a href="/students/showStudents"><i class="fa fa-graduation-cap fa-lg"></i> Students <span class="fa fa-chevron-right"></span></a></li>
@@ -80,16 +82,18 @@
             </li>
             <% } %>
 
-            <% // if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
+            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
             <li><a><i class="fa fa-bullhorn"></i> PA <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="/pa/showPa"> PA</a></li>
                     <li><a href="/pa/showRecorded">Recorded</a></li>
                 </ul>
             </li>
-            <%// } %>
+            <% } %>
 
+            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
             <li><a><i class="fa fa-braille fa-lg"></i> Social Media Manager<span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
 
             <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
             <li><a href="/alerts/sending/chooseGroup"><i class="fa fa-shipping-fast fa-lg"></i> Send Alert <span class="fa fa-chevron-right"></span></a></li>

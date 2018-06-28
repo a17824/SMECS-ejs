@@ -47,7 +47,7 @@ module.exports.userStats = function(req, res, next) {
         if(md.is('iPad') == true)
             iPad = true;
 
-        res.render('users/userStats',{
+        res.render('reports/userStats',{
             userAuthEmail: req.user.email,
             users: results[0],
             iPad: iPad,

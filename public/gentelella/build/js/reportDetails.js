@@ -2736,14 +2736,14 @@ function init_morris_charts() {
         Morris.Donut({
             element: 'graph_donut',
             data: [
-                {label: 'Jam', value: 25},
-                {label: 'Frosted', value: 40},
-                {label: 'Custard', value: 25},
-                {label: 'Sugar', value: 10}
+                {label: 'Staff', value: 18},
+                {label: 'Teacher', value: 20},
+                {label: 'Office Staff', value: 10},
+                {label: 'Principal', value: 1}
             ],
-            colors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
+            colors: ['#3498DB', '#f39d0c', '#9B59B6', '#E74C3C'],
             formatter: function (y) {
-                return y + "%";
+                return y + " alerts";
             },
             resize: true
         });
@@ -3009,8 +3009,8 @@ function init_echarts() {
 
         echartBar.setOption({
             title: {
-                text: 'Graph title',
-                subtext: 'Graph Sub-text'
+                text: '',
+                subtext: 'Number of alerts'
             },
             tooltip: {
                 trigger: 'axis'

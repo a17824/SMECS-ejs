@@ -51,3 +51,9 @@
         background-size: 176px 22px;
     }
 }
+
+.audioPosition {
+    position: absolute;
+    right: 0px;
+    top: -13px;
+}

@@ -542,6 +542,10 @@ body {
 .page-title .title_right .pull-right {
     margin: 10px 0
 }
+
+.fixed_height_200 {
+    height: 200px
+}
 .fixed_height_320 {
     height: 320px
 }
@@ -551,9 +555,10 @@ body {
 .fixed_height_390 {
     height: 390px
 }
-.fixed_height_200 {
-    height: 200px
+.fixed_height_414 {
+    height: 414px
 }
+
 .overflow_hidden {
     overflow: hidden
 }

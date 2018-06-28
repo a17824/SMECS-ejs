@@ -423,8 +423,8 @@
                                                class="icheckbox_flat-green"
                                                name="radio" checked> <%= sounds[soundType][i] %>
 
-                                        <div id="audio">
-                                            <audio controls controlsList="nodownload">
+                                        <div id="audio" >
+                                            <audio controls controlsList="nodownload" class="audioPosition">
                                                 <source src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3" type="audio/mpeg">
                                                 Your browser does not support the audio element.
                                             </audio>
@@ -442,7 +442,7 @@
                                         <div class="navi"></div>
 
                                         <div id="audio">
-                                            <audio controls controlsList="nodownload" id="myaudio">
+                                            <audio controls controlsList="nodownload" id="myaudio" class="audioPosition">
                                                 <source src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3" type="audio/mpeg">
                                                 Your browser does not support the audio element.
                                             </audio>

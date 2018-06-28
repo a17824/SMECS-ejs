@@ -9,11 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Meta, Refresh page every 5 minutes. -->
-    <meta http-equiv="refresh" content="300">
+    <!--  <meta http-equiv="refresh" content="300"> -->
 
-    <title>SMECS Login</title>
 
-    <!-- Bootstrap -->
+      <title>SMECS Login</title>
+
+      <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -30,6 +31,16 @@
 
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
+
+
+    <script type="text/javascript">
+        function Redirect()
+        {
+            window.location="/login";
+        }
+        setTimeout('Redirect()', 30000);
+    </script>
+
 </head>
 
 <body class="login">

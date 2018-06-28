@@ -81,6 +81,8 @@ module.exports.UsersAddTemp = mongoose.model("UsersAddTemp", UsersAddTempSchema)
 var ParentSelfRegistrationSchema = new mongoose.Schema({
     email: String,
     userPrivilegeID: { type: Number, default: 5},
+    firstName: { type: String, default: 'new'},
+    lastName: { type: String, default: 'parent'},
     pin: String,
     redirect: { type: String, default: 'registerParent'},
     text: String
