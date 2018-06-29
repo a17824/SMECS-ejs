@@ -16,7 +16,7 @@
     <link href="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/userStats.css" rel="stylesheet">
 
 
 </head>
@@ -50,10 +50,13 @@
         <% var h2FontSize = 22 %>
         <% var aFontSize = 12 %>
         <% var spanFontSize = 13 %>
+        <% var rolesChartSize = 'x_panel fixed_height_414' %>
+
         <% if(iPad){ %>
         <% h2FontSize = 22 %>
         <% aFontSize = 15 %>
         <% spanFontSize = 15 %>
+        <% rolesChartSize = 'x_panel' %>
         <% } %>
         <!-- /if iPad -->
 
@@ -136,9 +139,9 @@
                     <% } %>
                 <!-- Top 5 users sending alerts -->
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel tile fixed_height_414 overflow_hidden">
+                    <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
-                            <h2 style="font-size: <%= h2FontSize %>px; width: 148px">Top 5<a style="font-size: <%= aFontSize %>px">&emsp;sending alerts</a></h2>
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 237px">Top 5<a style="font-size: <%= aFontSize %>px">&emsp;users sending alerts</a></h2>
 
                             <ul class="nav navbar-right panel_toolbox">
                                 <li class="dropdown pull-right">
@@ -163,58 +166,53 @@
                         </div>
                         <ul class="list-unstyled top_profiles scroll-view">
                             <li class="media event">
-                                <a class="pull-left border-aero profile_thumb">
-                                    <i class="fa fa-user aero"></i>
+                                <a class="pull-left">
+                                    <img src="/photosNotAvailable/user.png" alt="..." class="border-aero profile_thumb2">
                                 </a>
                                 <div class="media-body">
-                                    <a class="title" href="#">Mary Kate</a>
-                                    <p><strong>52 </strong> alerts sent </p>
-                                    <p> <small>118 since 2018</small>
-                                    </p>
+                                    <a class="title" href="#">Diane O'Donnell</a>
+                                    <p><strong>52 </strong> total alerts sent</p>
+                                    <p class="cut-text"> <small>Top alert: <strong>Request Repair Assistance</strong></small></p>
                                 </div>
                             </li>
                             <li class="media event">
-                                <a class="pull-left border-green profile_thumb">
-                                    <i class="fa fa-user green"></i>
+                                <a class="pull-left">
+                                    <img src="/photosUsers/5b1594413cc6e0004815bbf8.BMP" alt="..." class="border-green profile_thumb2">
                                 </a>
                                 <div class="media-body">
-                                    <a class="title" href="#">Mary Kate</a>
-                                    <p><strong>52 </strong> alerts sent </p>
-                                    <p> <small>Teacher</small>
-                                    </p>
+                                    <a class="title" href="#">Jean Leahy</a>
+                                    <p><strong>47 </strong> alerts sent </p>
+                                    <p class="cut-text"> <small>Top alert: <strong>Weather-Related Emergencies</strong></small></p>
                                 </div>
                             </li>
                             <li class="media event">
-                                <a class="pull-left border-blue profile_thumb">
-                                    <i class="fa fa-user blue"></i>
+                                <a class="pull-left">
+                                    <img src="/photosUsers/58587741da3d90fc25acedee.BMP" alt="..." class="border-blue profile_thumb2">
                                 </a>
                                 <div class="media-body">
                                     <a class="title" href="#">Mary Kate</a>
-                                    <p><strong>52 </strong> alerts sent </p>
-                                    <p> <small>118 since 2018</small>
-                                    </p>
+                                    <p><strong>31 </strong> alerts sent </p>
+                                    <p class="cut-text"> <small>Top alert: <strong>Utility Failures</strong></small></p>
                                 </div>
                             </li>
                             <li class="media event">
-                                <a class="pull-left border-aero profile_thumb">
-                                    <i class="fa fa-user aero"></i>
+                                <a class="pull-left">
+                                    <img src="/photosUsers/5b1591b13cc6e0004815bbf4.BMP" alt="..." class="border-aero profile_thumb2">
                                 </a>
                                 <div class="media-body">
-                                    <a class="title" href="#">Mary Kate</a>
-                                    <p><strong>52 </strong> alerts sent </p>
-                                    <p> <small>118 since 2018</small>
-                                    </p>
+                                    <a class="title" href="#">Madeline Connley</a>
+                                    <p><strong>20 </strong> alerts sent </p>
+                                    <p class="cut-text"> <small>Top alert: <strong>Utility Failures</strong></small></p>
                                 </div>
                             </li>
                             <li class="media event">
-                                <a class="pull-left border-green profile_thumb">
-                                    <i class="fa fa-user green"></i>
+                                <a class="pull-left">
+                                    <img src="/photosNotAvailable/user.png" alt="..." class="border-green profile_thumb2">
                                 </a>
                                 <div class="media-body">
-                                    <a class="title" href="#">Mary Kate</a>
-                                    <p><strong>52 </strong> alerts sent </p>
-                                    <p> <small>118 since 2018</small>
-                                    </p>
+                                    <a class="title" href="#">Donna Yetman</a>
+                                    <p><strong>17 </strong> alerts sent </p>
+                                    <p class="cut-text"> <small>Top alert: <strong>Violence</strong></small></p>
                                 </div>
                             </li>
                         </ul>
@@ -234,7 +232,10 @@
 
                 <!-- Top Roles -->
                 <div class="col-md-4 col-sm-4 col-xs-12">
-                    <div class="x_panel fixed_height_414">
+                    <% if(iPad){ %>
+                    <br>
+                    <% } %>
+                    <div class="<%= rolesChartSize %>">
                         <div class="x_title">
                             <h2 style="font-size: <%= h2FontSize %>px;">Top 4<a style="font-size: <%= aFontSize %>px">&emsp;sent by role</a></h2>
 
@@ -257,7 +258,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="page-title">
                         <div class="title_left">
-                            <h3>Contacts Design</h3>
+                            <h3>User Statistics</h3>
                         </div>
 
                         <div class="title_right">
@@ -301,15 +302,15 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
-                                                        <p><strong>About: </strong> Web Designer / UX / Graphic Artist / Coffee Lover </p>
+                                                        <h2 style="font-size: <%= h2FontSize %>px;">Nicole Pearson</h2>
+                                                        <p><strong>About: </strong> Web Designer / UX </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="/photosUsers/5b1592593cc6e0004815bbf6_01012.BMP" alt="" class="avatarUserStat">
+                                                        <img src="/photosUsers/5b1591783cc6e0004815bbf3.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -339,7 +340,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -377,7 +378,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -415,7 +416,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -453,7 +454,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UX / Graphic Artist / Coffee Lover </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -491,7 +492,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -529,7 +530,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -567,7 +568,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
@@ -605,7 +606,7 @@
                                                 <div class="col-sm-12">
                                                     <h4 class="brief"><i>Digital Strategist</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2>Nicole Pearson</h2>
+                                                        <h3>Nicole Pearson</h3>
                                                         <p><strong>About: </strong> Web Designer / UI. </p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>

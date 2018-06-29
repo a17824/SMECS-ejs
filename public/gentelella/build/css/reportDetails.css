@@ -1837,6 +1837,16 @@ ul.top_profiles li:nth-child(odd) {
     border-radius: 50%;
     padding: 9px 12px
 }
+
+.media .profile_thumb2 {
+    border: 1px solid;
+    width: 50px;
+    height: 50px;
+    margin: 5px 10px 5px 0;
+    border-radius: 50%;
+    padding: 0px 0px
+}
+
 .media .profile_thumb i {
     font-size: 30px
 }
@@ -4297,9 +4307,11 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 /** /bootstrap-datetimepicker **/
 
 
-
-
-
+.cut-text {
+    max-width: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 
 

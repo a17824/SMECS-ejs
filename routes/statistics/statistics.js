@@ -1,12 +1,12 @@
 //Dependencies
-var models = require('./models');
+var models = require('../models');
 var async = require("async");
-var functions = require('./functions');
+var functions = require('../functions');
 var MobileDetect = require('mobile-detect');
 
 
-/* SHOW DASHBOARD. */
- module.exports.show = function(req, res, next) {
+/* SHOW Global Statistics. */
+ module.exports.globalStats = function(req, res, next) {
         async.parallel([
             function(callback){
                 models.UtilityUsers.find().exec(callback);
@@ -20,7 +20,7 @@ var MobileDetect = require('mobile-detect');
             if(md.is('iPad') == true)
                 iPad = true;
 
-            res.render('dashboard',{
+            res.render('statistics/globalStats',{
                 userAuthEmail: req.user.email,
                 utilityUsers: results[0],
                 iPad: iPad,
@@ -47,7 +47,7 @@ module.exports.userStats = function(req, res, next) {
         if(md.is('iPad') == true)
             iPad = true;
 
-        res.render('reports/userStats',{
+        res.render('statistics/userStats',{
             userAuthEmail: req.user.email,
             users: results[0],
             iPad: iPad,

@@ -13,7 +13,7 @@ var permissionsGroup = require('./permissions/permissionsGroup');
 var permissionsTable = require('./permissions/permissionsTable');
 var alertGroups = require('./alerts/alertGroups');
 var alerts = require('./alerts/alerts');
-var dashboard = require('./dashboard');
+var statistics = require('./statistics/statistics');
 var reports = require('./alerts/reports/reports');
 var photos = require('./photos/addUpdatePhoto');
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
@@ -69,12 +69,12 @@ router.post('/reset/:token', reset.post, function(req, res) {
 
 
 
-/* SHOW DASHBOARD. */
-router.get('/dashboard', auth.simpleAuth, auth.requireLogin, dashboard.show, function(req, res, next) {
+/* SHOW Global Statistics. */
+router.get('/statistics/globalStats', auth.simpleAuth, auth.requireLogin, statistics.globalStats, function(req, res, next) {
 });
 
 /* SHOW User Statistics. */
-router.get('/users/userStats', auth.simpleAuth, auth.requireLogin, dashboard.userStats, function(req, res, next) {
+router.get('/statistics/userStats', auth.simpleAuth, auth.requireLogin, statistics.userStats, function(req, res, next) {
 });
 
 /* SHOW active USERS. */
@@ -439,7 +439,7 @@ router.post('/permissions/showPermissionsTable', auth.simpleAuth, auth.requireLo
 
 
 /* SHOW REPORTS. */
-router.get('/reports/showReports', auth.simpleAuth, auth.requireLogin, reports.reportsAlerts, function(req, res, next) {
+router.get('/reports/homeReports', auth.simpleAuth, auth.requireLogin, reports.homeReports, function(req, res, next) {
 });
 /* SHOW REPORTS Archived. */
 router.get('/reports/showArchived', auth.simpleAuth, auth.requireLogin, reports.reportsArchived, function(req, res, next) {
@@ -462,10 +462,10 @@ router.post('/reportStatus', auth.simpleAuth, auth.requireLogin, reports.updateS
 router.post('/moveToArchiveInboxTrash', auth.simpleAuth, auth.requireLogin, reports.moveToArchiveInboxTrash, function(req, res) {
 });
 
-/* SHOW ALERT REPORTS Received. */
+/* SHOW ALERT REPORTS Received. */ /* to delete /*
 router.get('/reports/showReportsReceived/:id', auth.simpleAuth, auth.requireLogin, reports.reportsUsers,function(req, res) {
 });
-
+*/
 
 /* PARENTS SELF REGISTRATION. */
 router.get('/parentsSelfRegistration/defaultForm', auth.simpleAuth, auth.requireLogin, parentsSelfRegistration.defaultForm, function(req, res, next) {

@@ -9,14 +9,14 @@
         <ul class="nav side-menu">
 
             <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-            <li><a href="/reports/showReports"><i class="fa fa-home fa-lg"></i> Home <span class="fa fa-chevron-right"></span></a></li>
+            <li><a href="/reports/homeReports"><i class="fa fa-home fa-lg"></i> Home (reports)<span class="fa fa-chevron-right"></span></a></li>
             <% } %>
 
             <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
             <li><a><i class="fa fa-chart-bar fa-lg"></i> Statistics <span class="fa fa-chevron-right"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="/dashboard">Global</a></li>
-                    <li><a href="/users/userStats">Individual</a></li>
+                    <li><a href="/statistics/globalStats">Global</a></li>
+                    <li><a href="/statistics/userStats">Individual</a></li>
                 </ul>
             </li>
             <% } %>

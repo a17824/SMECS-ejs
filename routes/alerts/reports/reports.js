@@ -9,7 +9,7 @@ var MobileDetect = require('mobile-detect');
 
 
 //* SHOW REPORTS. */
-module.exports.reportsAlerts = function(req, res, next) {
+module.exports.homeReports = function(req, res, next) {
     async.parallel([
         function(callback){
             models.AlertSentInfo.find().sort({"sentDate":-1}).sort({"sentTime":-1}).exec(callback);
@@ -21,11 +21,11 @@ module.exports.reportsAlerts = function(req, res, next) {
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
 
-        var page = 'reports/reports';
+        var page = 'home-reports/home-reports';
 
         var md = new MobileDetect(req.headers['user-agent']);
         if(md.is('iPad') == true)
-            page = 'reports/mobReports';
+            page = 'home-reports/home-mobReports';
 
         console.log('page = ', page);
 
@@ -52,7 +52,7 @@ module.exports.reportsArchived = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('reports/archived',{
+        res.render('home-reports/archivedReports',{
             title: 'Reports Archived',
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
@@ -75,7 +75,7 @@ module.exports.reportsTrash = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('reports/trashReports',{
+        res.render('home-reports/trashReports',{
             title: 'Trash',
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
@@ -112,7 +112,7 @@ module.exports.updateStatus = function(req, res) {
                 /*****  CALL HERE NOTIFICATION API  *****/
             pushNotification.alert(alert, 'closeAlert');
         });
-        return res.send({redirect: '/reports/showReports'});
+        return res.send({redirect: '/reports/homeReports'});
     }
 })
 };
@@ -175,11 +175,11 @@ module.exports.reportsDetails = function(req, res) {
 
     ],function(err, results){
 
-        var page = 'reports/reportDetails';
+        var page = 'home-reports/reportDetails';
         if(req.params.id == '5b1e96f26e727c382cbce097')
-            page = 'reports/reportDetailsSim';
+            page = 'home-reports/reportDetailsSim';
         if(req.params.id == '5b1eb1d86e727c382cbce0a6')
-            page = 'reports/reportDetailsSimAllGreen';
+            page = 'home-reports/reportDetailsSimAllGreen';
 
 
 
@@ -196,7 +196,7 @@ module.exports.reportsDetails = function(req, res) {
 };
 
 
-
+/* to delete ------------------------------------------------------
 module.exports.reportsUsers = function(req, res, next) {
     async.parallel([
         function(callback){
@@ -218,5 +218,5 @@ module.exports.reportsUsers = function(req, res, next) {
         });
     })
 };
-
+*/
 

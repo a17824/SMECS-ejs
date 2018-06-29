@@ -53,7 +53,6 @@
 }
 
 .audioPosition {
-    position: absolute;
-    right: 0px;
-    top: -13px;
+   /* -webkit-margin-before: -12px;  */  /* change position for chrome browser and torch*/
+
 }

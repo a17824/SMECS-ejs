@@ -143,7 +143,7 @@ module.exports.postLogin = function(req, res, next) {
             } else {    //Users  Login
                 if (bcrypt.compareSync(req.body.pin, user.pin)) { // if user is found and password is right
                     req.session.user = user;
-                    res.redirect('/reports/showReports');
+                    res.redirect('/reports/homeReports');
 
                 } else {
                     //res.status(400).send('Current password does not match');
