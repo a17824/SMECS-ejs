@@ -18,7 +18,23 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/userStats.css" rel="stylesheet">
 
+    <script>
+/*
+        $(document).ready(function () {
+            console.log('2222');
+            document.getElementById('speed').title = 'your new title';
+        });
 
+        window.onload = function tileSpeed(){
+
+            console.log('3333333');
+            document.getElementById('speed').title = 'your new title';
+        }
+        console.log('1111');
+        //divElement.setAttribute("title", "Line one&#10;Line two");
+        //document.getElementById('speed').setAttribute('title', myFunction());
+*/
+    </script>
 </head>
 
 <body class="nav-md">
@@ -141,17 +157,17 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel tile overflow_hidden">
                         <div class="x_title">
-                            <h2 style="font-size: <%= h2FontSize %>px; width: 237px">Top 5<a style="font-size: <%= aFontSize %>px">&emsp;users sending alerts</a></h2>
+                            <h2 style="font-size: <%= h2FontSize %>px; width: 237px">Top 5 <a style="font-size: <%= aFontSize %>px"> who sent more alerts</a></h2>
 
                             <ul class="nav navbar-right panel_toolbox">
                                 <li class="dropdown pull-right">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">sending alerts</a>
+                                        <li><a href="#">Top 5 who sent more alerts</a>
                                         </li>
-                                        <li><a href="#">faster viewing alerts</a>
+                                        <li><a href="#">Top 5 faster users viewing alerts</a>
                                         </li>
-                                        <li><a href="#">slowest viewing alerts</a>
+                                        <li><a href="#">Top 5 slowest users viewing alerts</a>
                                         </li>
 
                                     </ul>
@@ -287,7 +303,23 @@
                                                 <li><a href="#">C</a></li>
                                                 <li><a href="#">D</a></li>
                                                 <li><a href="#">E</a></li>
-                                                <li>...</li>
+                                                <li><a href="#">F</a></li>
+                                                <li><a href="#">G</a></li>
+                                                <li><a href="#">H</a></li>
+                                                <li><a href="#">I</a></li>
+                                                <li><a href="#">J</a></li>
+                                                <li><a href="#">K</a></li>
+                                                <li><a href="#">L</a></li>
+                                                <li><a href="#">M</a></li>
+                                                <li><a href="#">N</a></li>
+                                                <li><a href="#">O</a></li>
+                                                <li><a href="#">P</a></li>
+                                                <li><a href="#">Q</a></li>
+                                                <li><a href="#">R</a></li>
+                                                <li><a href="#">D</a></li>
+                                                <li><a href="#">T</a></li>
+                                                <li><a href="#">U</a></li>
+                                                <li><a href="#">V</a></li>
                                                 <li><a href="#">W</a></li>
                                                 <li><a href="#">X</a></li>
                                                 <li><a href="#">Y</a></li>
@@ -297,20 +329,32 @@
 
                                         <div class="clearfix"></div>
 
+
+
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Staff</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h2 style="font-size: <%= h2FontSize %>px;">Nicole Pearson</h2>
-                                                        <p><strong>About: </strong> Web Designer / UX </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Doreen Shea</h3>
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li class="docs-tooltip" data-toggle="tooltip"
+                                                                title="Alerts sent since user is registered in SMECS">
+                                                                <strong>Sent since </strong><i><strong>2005: </strong></i>8</li>
+                                                            <li class="tooltip3" onclick="">
+
+                                                                <strong>Viewing speed: </strong><i class="fa fa-fighter-jet"></i>
+                                                                <span class="tooltiptext3">
+                                                                    <span class="schoolName">- St John School</span>
+                                                                    <div class="alertName">alert name :<span class="alertNameData">panic</span></div>
+                                                                    <div class="dateTime">date & time :<span class="dateTimeData">6/22/2018 at 12:33pm</span></div> <!-- smaller br -->
+                                                                </span>
+                                                            </li>
+                                                            <li style="width: 200%"><strong>Proc&Safe: </strong><i>9/20</i> </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="/photosUsers/5b1591783cc6e0004815bbf3.BMP" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b15959f3cc6e0004815bbfd.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -338,17 +382,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Teacher</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Helen Hicks</h3>
+                                                        <p><strong>Since: </strong> 2017</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosNotAvailable/user.png" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -376,17 +420,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Teacher</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Janice Clark</h3>
+                                                        <p><strong>Since: </strong> 1998</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b1591373cc6e0004815bbf2.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -414,17 +458,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Principal</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Jean Leahy</h3>
+                                                        <p><strong>Since: </strong> 2017</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b1594413cc6e0004815bbf8.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -452,17 +496,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Office Staff</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UX / Graphic Artist / Coffee Lover </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Laura Cloherty</h3>
+                                                        <p><strong>Since: </strong> 2001</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/img.jpg" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosNotAvailable/user.png" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -490,17 +534,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Nurse</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Lisa Igoe</h3>
+                                                        <p><strong>Since: </strong> 2016</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosNotAvailable/user.png" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -528,17 +572,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Staff</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Paula Buresh</h3>
+                                                        <p><strong>Since: </strong> 2015</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b15905f3cc6e0004815bbf1.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -566,17 +610,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Teacher</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Rosetta Mark</h3>
+                                                        <p><strong>Since: </strong> 2008</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b1594b03cc6e0004815bbfa.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -604,17 +648,17 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Digital Strategist</i></h4>
+                                                    <h4 class="brief"><i>Teacher</i></h4>
                                                     <div class="left col-xs-7">
-                                                        <h3>Nicole Pearson</h3>
-                                                        <p><strong>About: </strong> Web Designer / UI. </p>
+                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Susan Hayes</h3>
+                                                        <p><strong>Since: </strong> 1995</p>
                                                         <ul class="list-unstyled">
                                                             <li><i class="fa fa-building"></i> Address: </li>
                                                             <li><i class="fa fa-phone"></i> Phone #: </li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="images/user.png" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b1595043cc6e0004815bbfb.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
@@ -638,6 +682,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -645,8 +690,6 @@
                     </div>
                 </div>
                 <!-- User Stats -->
-
-
 
 
 

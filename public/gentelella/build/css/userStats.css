@@ -4313,7 +4313,40 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     white-space: nowrap;
 }
 
+.tooltip3 {
+    position: relative;
+    display: inline-block;
+}
 
+.tooltip3 .tooltiptext3 {
+    visibility: hidden;
+    width: 220px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip3 .tooltiptext3::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip3:hover .tooltiptext3 {
+    visibility: visible;
+}
 
 
 
