@@ -18,23 +18,6 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/userStats.css" rel="stylesheet">
 
-    <script>
-/*
-        $(document).ready(function () {
-            console.log('2222');
-            document.getElementById('speed').title = 'your new title';
-        });
-
-        window.onload = function tileSpeed(){
-
-            console.log('3333333');
-            document.getElementById('speed').title = 'your new title';
-        }
-        console.log('1111');
-        //divElement.setAttribute("title", "Line one&#10;Line two");
-        //document.getElementById('speed').setAttribute('title', myFunction());
-*/
-    </script>
 </head>
 
 <body class="nav-md">
@@ -67,12 +50,14 @@
         <% var aFontSize = 12 %>
         <% var spanFontSize = 13 %>
         <% var rolesChartSize = 'x_panel fixed_height_414' %>
+        <% var infoPosition = 'asteriskColor fa fa-info-circle tooltip3' %>
 
         <% if(iPad){ %>
         <% h2FontSize = 22 %>
         <% aFontSize = 15 %>
         <% spanFontSize = 15 %>
         <% rolesChartSize = 'x_panel' %>
+        <% infoPosition = 'asteriskColor circlePosition fa fa-info-circle tooltip3' %>
         <% } %>
         <!-- /if iPad -->
 
@@ -128,7 +113,7 @@
                         <% } %>
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-car"></i></div>
-                            <div class="count">33 sec</div>
+                            <div class="count">21 sec</div>
                             <h3>.</h3>
                             <p>Average users time to view alerts.</p>
                         </div>
@@ -272,28 +257,57 @@
 
                 <!-- User Stats -->
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="page-title">
-                        <div class="title_left">
-                            <h3>User Statistics</h3>
-                        </div>
 
-                        <div class="title_right">
-                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search for...">
-                                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="clearfix"></div>
 
                     <div class="row">
                         <div class="col-md-12">
                             <div class="x_panel">
+
+                                <div class="x_title">
+                                    <h2 style="font-size: <%= h2FontSize %>px;">User Statistics <a style="font-size: <%= aFontSize %>px">&emsp;</a></h2>
+                                    <i class="<%= infoPosition %>" onclick="">
+                                        <span class="tooltiptext3title">
+                                            <div class=""><span class="infoTitleColor"> Registered :</span><span class="infoText"> year that user was registered on SMECS</span></div><br><br>
+                                            <div class=""><span class="infoTitleColor"> Alerts Sent :</span><span class="infoText"> total alerts sent since user is registered</span></div><br><br>
+                                            <div class=""><span class="infoTitleColor">Proc&Safe :</span><span class="infoText">total of "procedures" and "we are safe" completed. Ex: 5/10. Means user completed 5 "procedures"/"we are safe" in 10 alerts received</span ></div><br><br><br>
+                                            <div class=""><span class="infoTitleColor"> Viewing speed :</span><span class="infoText"> <i class="fa fa-fighter-jet">&ensp;</i></span><span class="afterFontAwesomeSpeed">-&ensp;super fast - user takes between 0 and 6 sec to view alerts</span></div><br>
+                                            <div class=""><span class="infoText"> <i class="fa fa-car"></i></span><span class="afterFontAwesomeSpeed">-&ensp;fast - user takes between 7 and 30s sec to view alerts</span></div><br>
+                                            <div class=""><span class="infoText"> <i class="fa fa-bicycle"></i></span><span class="afterFontAwesomeSpeed">-&ensp;slow - user takes more than 31s sec to view alerts</span></div><br><br>
+                                            <div class=""><span class="infoTitleColor"> Overall :</span><span class="infoText"> tells you if user is using SMECS correctly. User gets stars if completes "procedures" and "we are safe" when alerts are received. Also, if user is fast viewing alerts when they are sent.</span></div><br><br><br>
+                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or less</span><span class="afterFontAwesomeStars">- improvement needed on topics described above</span></div><br>
+                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i></span><span class="afterFontAwesomeStars">- good user! but there is space for improvement</span></div><br>
+                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or more</span><span class="afterFontAwesomeStars">- perfect!</span></div><br><br>
+                                            <div class=""><span class="infoTitleColor"> Button Details :</span><span class="infoText"> click to see where you can improve using SMECS</span></div><br>
+                                        </span>
+                                    </i>
+
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li class="dropdown pull-right">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#">sort by user registration</a>
+                                                </li>
+                                                <li><a href="#">sort by alerts sent</a>
+                                                </li>
+                                                <li><a href="#">sort by Proc&Safe</a>
+                                                </li>
+                                                <li><a href="#">sort by viewing speed</a>
+                                                </li>
+                                                <li><a href="#">sort by user stars ascending</a>
+                                                </li>
+                                                <li><a href="#">sort by user stars descending</a>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                    <div class="clearfix"></div>
+                                </div>
+
                                 <div class="x_content">
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
@@ -334,23 +348,31 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Staff</i></h4>
-                                                    <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Doreen Shea</h3>
-                                                        <ul class="list-unstyled">
-                                                            <li class="docs-tooltip" data-toggle="tooltip"
-                                                                title="Alerts sent since user is registered in SMECS">
-                                                                <strong>Sent since </strong><i><strong>2005: </strong></i>8</li>
-                                                            <li class="tooltip3" onclick="">
+                                                    <i class="rolePullLeft">Staff</i>
+                                                    <i class="asteriskColor infoPullRight fa fa-info-circle tooltip3" onclick="">
+                                                        <span class="tooltiptext3left">
+                                                            <div class=""><span class="infoTitleColor"> Registered :</span><span class="infoText"> year that user was registered on SMECS</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Alerts Sent :</span><span class="infoText"> total alerts sent since user is registered</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor">Proc&Safe :</span><span class="infoText">total of "procedures" and "we are safe" completed. Ex: 5/10. Means user completed 5 "procedures"/"we are safe" in 10 alerts received</span ></div><br><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Viewing speed :</span><span class="infoText"> <i class="fa fa-fighter-jet">&ensp;</i></span><span class="afterFontAwesomeSpeed">-&ensp;super fast - user takes between 0 and 6 sec to view alerts</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-car"></i></span><span class="afterFontAwesomeSpeed">-&ensp;fast - user takes between 7 and 30s sec to view alerts</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-bicycle"></i></span><span class="afterFontAwesomeSpeed">-&ensp;slow - user takes more than 31s sec to view alerts</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Overall :</span><span class="infoText"> tells you if user is using SMECS correctly. User gets stars if completes "procedures" and "we are safe" when alerts are received. Also, if user is fast viewing alerts when they are sent.</span></div><br><br><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or less</span><span class="afterFontAwesomeStars">- improvement needed on topics described above</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i></span><span class="afterFontAwesomeStars">- good user! but there is space for improvement</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or more</span><span class="afterFontAwesomeStars">- perfect!</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Button Details :</span><span class="infoText"> click to see where you can improve using SMECS</span></div><br>
+                                                        </span>
+                                                    </i>
 
-                                                                <strong>Viewing speed: </strong><i class="fa fa-fighter-jet"></i>
-                                                                <span class="tooltiptext3">
-                                                                    <span class="schoolName">- St John School</span>
-                                                                    <div class="alertName">alert name :<span class="alertNameData">panic</span></div>
-                                                                    <div class="dateTime">date & time :<span class="dateTimeData">6/22/2018 at 12:33pm</span></div> <!-- smaller br -->
-                                                                </span>
-                                                            </li>
-                                                            <li style="width: 200%"><strong>Proc&Safe: </strong><i>9/20</i> </li>
+                                                    <div class="left col-xs-7">
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Doreen Shea</h4>
+
+                                                        <ul class="list-unstyled">
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 5</i></li>
+                                                            <li>Proc&Safe:<i> 19/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -360,19 +382,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -382,13 +403,31 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Teacher</i></h4>
+                                                    <i class="rolePullLeft">Teacher</i>
+                                                    <i class="asteriskColor infoPullRight fa fa-info-circle tooltip3" onclick="">
+                                                        <span class="tooltiptext3middle">
+                                                            <div class=""><span class="infoTitleColor"> Registered :</span><span class="infoText"> year that user was registered on SMECS</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Alerts Sent :</span><span class="infoText"> total alerts sent since user is registered</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor">Proc&Safe :</span><span class="infoText">total of "procedures" and "we are safe" completed. Ex: 5/10. Means user completed 5 "procedures"/"we are safe" in 10 alerts received</span ></div><br><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Viewing speed :</span><span class="infoText"> <i class="fa fa-fighter-jet">&ensp;</i></span><span class="afterFontAwesomeSpeed">-&ensp;super fast - user takes between 0 and 6 sec to view alerts</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-car"></i></span><span class="afterFontAwesomeSpeed">-&ensp;fast - user takes between 7 and 30s sec to view alerts</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-bicycle"></i></span><span class="afterFontAwesomeSpeed">-&ensp;slow - user takes more than 31s sec to view alerts</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Overall :</span><span class="infoText"> tells you if user is using SMECS correctly. User gets stars if completes "procedures" and "we are safe" when alerts are received. Also, if user is fast viewing alerts when they are sent.</span></div><br><br><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or less</span><span class="afterFontAwesomeStars">- improvement needed on topics described above</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i></span><span class="afterFontAwesomeStars">- good user! but there is space for improvement</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or more</span><span class="afterFontAwesomeStars">- perfect!</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Button Details :</span><span class="infoText"> click to see where you can improve using SMECS</span></div><br>
+                                                        </span>
+                                                    </i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Helen Hicks</h3>
-                                                        <p><strong>Since: </strong> 2017</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Helen Hicks</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 5</i></li>
+                                                            <li>Proc&Safe:<i> 15/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-car"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -398,19 +437,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starBlue"></span></a>
+                                                            <a href="#"><span class="fa fa-star starBlue"></span></a>
+                                                            <a href="#"><span class="fa fa-star starBlue"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
                                                         <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -420,13 +458,31 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Teacher</i></h4>
+                                                    <i class="rolePullLeft">Teacher</i>
+                                                    <i class="asteriskColor infoPullRight fa fa-info-circle tooltip3" onclick="">
+                                                        <span class="tooltiptext3right">
+                                                            <div class=""><span class="infoTitleColor"> Registered :</span><span class="infoText"> year that user was registered on SMECS</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Alerts Sent :</span><span class="infoText"> total alerts sent since user is registered</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor">Proc&Safe :</span><span class="infoText">total of "procedures" and "we are safe" completed. Ex: 5/10. Means user completed 5 "procedures"/"we are safe" in 10 alerts received</span ></div><br><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Viewing speed :</span><span class="infoText"> <i class="fa fa-fighter-jet">&ensp;</i></span><span class="afterFontAwesomeSpeed">-&ensp;super fast - user takes between 0 and 6 sec to view alerts</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-car"></i></span><span class="afterFontAwesomeSpeed">-&ensp;fast - user takes between 7 and 30s sec to view alerts</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-bicycle"></i></span><span class="afterFontAwesomeSpeed">-&ensp;slow - user takes more than 31s sec to view alerts</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Overall :</span><span class="infoText"> tells you if user is using SMECS correctly. User gets stars if completes "procedures" and "we are safe" when alerts are received. Also, if user is fast viewing alerts when they are sent.</span></div><br><br><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or less</span><span class="afterFontAwesomeStars">- improvement needed on topics described above</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i></span><span class="afterFontAwesomeStars">- good user! but there is space for improvement</span></div><br>
+                                                            <div class=""><span class="infoText"> <i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i><i class="fa fa-star starFont"></i> or more</span><span class="afterFontAwesomeStars">- perfect!</span></div><br><br>
+                                                            <div class=""><span class="infoTitleColor"> Button Details :</span><span class="infoText"> click to see where you can improve using SMECS</span></div><br>
+                                                        </span>
+                                                    </i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Janice Clark</h3>
-                                                        <p><strong>Since: </strong> 1998</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Janice Clark</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 5</i></li>
+                                                            <li>Proc&Safe:<i> 15/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-bicycle"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -436,19 +492,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starRed"></span></a>
+                                                            <a href="#"><span class="fa fa-star starRed"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-danger btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -458,13 +513,16 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Principal</i></h4>
+                                                    <i class="rolePullLeft">Principal</i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Jean Leahy</h3>
-                                                        <p><strong>Since: </strong> 2017</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Jean Leahy</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 30</i></li>
+                                                            <li>Proc&Safe:<i> 20/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -474,19 +532,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -496,13 +553,16 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Office Staff</i></h4>
+                                                    <i class="rolePullLeft">Office Staff</i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Laura Cloherty</h3>
-                                                        <p><strong>Since: </strong> 2001</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Laura Cloherty</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 7</i></li>
+                                                            <li>Proc&Safe:<i> 19/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -512,19 +572,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -534,13 +593,16 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Nurse</i></h4>
+                                                    <i class="rolePullLeft">Nurse</i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Lisa Igoe</h3>
-                                                        <p><strong>Since: </strong> 2016</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Lisa Igoe</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 7</i></li>
+                                                            <li>Proc&Safe:<i> 19/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -550,19 +612,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -572,13 +633,16 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Staff</i></h4>
+                                                    <i class="rolePullLeft">Staff</i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Paula Buresh</h3>
-                                                        <p><strong>Since: </strong> 2015</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Paula Buresh</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 7</i></li>
+                                                            <li>Proc&Safe:<i> 19/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -588,19 +652,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -610,13 +673,16 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Teacher</i></h4>
+                                                    <i class="rolePullLeft">Teacher</i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Rosetta Mark</h3>
-                                                        <p><strong>Since: </strong> 2008</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Rosetta Mark</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 7</i></li>
+                                                            <li>Proc&Safe:<i> 19/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
@@ -626,19 +692,18 @@
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -648,35 +713,37 @@
                                         <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
                                             <div class="well profile_view">
                                                 <div class="col-sm-12">
-                                                    <h4 class="brief"><i>Teacher</i></h4>
+                                                    <i class="rolePullLeft">Teacher</i>
+
                                                     <div class="left col-xs-7">
-                                                        <h3 style="font-size: <%= h2FontSize %>px; width: 115%">Susan Hayes</h3>
-                                                        <p><strong>Since: </strong> 1995</p>
+                                                        <h4 style="font-size: <%= h2FontSize %>px; width: 115%">Susan Hayes</h4>
+
                                                         <ul class="list-unstyled">
-                                                            <li><i class="fa fa-building"></i> Address: </li>
-                                                            <li><i class="fa fa-phone"></i> Phone #: </li>
+                                                            <li>Registered:<i> 2018</i></li>
+                                                            <li>Alerts Sent:<i> 7</i></li>
+                                                            <li>Proc&Safe:<i> 19/20</i></li>
+                                                            <li>Viewing speed: <i class="fa fa-fighter-jet"></i></li>
                                                         </ul>
                                                     </div>
                                                     <div class="right col-xs-5 text-center">
-                                                        <img src="/photosUsers/5b1595043cc6e0004815bbfb.BMP" alt="" class="img-circle img-responsive">
+                                                        <img src="/photosUsers/5b1592593cc6e0004815bbf6.BMP" alt="" class="img-circle img-responsive">
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 bottom text-center">
                                                     <div class="col-xs-12 col-sm-6 emphasis">
                                                         <p class="ratings">
-                                                            <a>4.0</a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star"></span></a>
-                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                            <a>overall: </a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="fa fa-star starGreen"></span></a>
+                                                            <a href="#"><span class="far fa-star"></span></a>
                                                         </p>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-6 emphasis">
-                                                        <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                                                            </i> <i class="fa fa-comments-o"></i> </button>
-                                                        <button type="button" class="btn btn-primary btn-xs">
-                                                            <i class="fa fa-user"> </i> View Profile
+                                                    <div class="col-xs-12 col-sm-6 viewProfile">
+
+                                                        <button type="button" class="btn btn-success btn-xs">
+                                                            <i class="fa fa-user"> </i> Details
                                                         </button>
                                                     </div>
                                                 </div>
@@ -716,38 +783,17 @@
 <!-- NProgress -->
 <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
 
-<!-- Chart.js -->
-<script src="/public/gentelella/vendors/Chart.js/dist/Chart.min.js"></script>
+
 
 <!-- morris.js -->
 <script src="/public/gentelella/vendors/raphael/raphael.min.js"></script>
 <script src="/public/gentelella/vendors/morris.js/morris.min.js"></script>
 
-<!-- Skycons -->
-<script src="/public/gentelella/vendors/skycons/skycons.js"></script>
 
-<!-- Flot -->
-<script src="/public/gentelella/vendors/Flot/jquery.flot.js"></script>
-<script src="/public/gentelella/vendors/Flot/jquery.flot.pie.js"></script>
-<script src="/public/gentelella/vendors/Flot/jquery.flot.time.js"></script>
-<script src="/public/gentelella/vendors/Flot/jquery.flot.stack.js"></script>
-<script src="/public/gentelella/vendors/Flot/jquery.flot.resize.js"></script>
-<!-- Flot plugins -->
-<script src="/public/gentelella/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-<script src="/public/gentelella/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-<script src="/public/gentelella/vendors/flot.curvedlines/curvedLines.js"></script>
-<!-- DateJS -->
-<script src="/public/gentelella/vendors/DateJS/build/date.js"></script>
 
-<!-- JQVMap -->
-<script src="/public/gentelella/vendors/jqvmap/dist/jquery.vmap.js"></script>
-<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-<script src="/public/gentelella/vendors/jqvmap/dist/maps/jquery.vmap.usa.js"></script>
-<script src="/public/gentelella/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
 
-<!-- bootstrap-daterangepicker -->
-<script src="/public/gentelella/vendors/moment/min/moment.min.js"></script>
-<script src="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+
 
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/reportDetails.js"></script>

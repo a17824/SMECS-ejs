@@ -5,6 +5,9 @@
 /* profile background color*/
 /* bottom right side background color (to fix)*/
 
+/* new */
+/* changed */
+
 html , body{
 
     height:100%;
@@ -1183,7 +1186,8 @@ legend {
 }
 .profile_details .profile_view .ratings {
     text-align: left;
-    font-size: 16px
+    font-size: 15px; /* changed */
+    width: 140%; /* new */
 }
 .profile_details .profile_view .brief {
     margin: 0;
@@ -4318,36 +4322,194 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     display: inline-block;
 }
 
-.tooltip3 .tooltiptext3 {
+.tooltip3 .tooltiptext3title {
     visibility: hidden;
-    width: 220px;
+    width: 600px;
+    height: 260px;
     background-color: black;
     color: #fff;
-    text-align: center;
+    text-align: left;
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
-    z-index: 1;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -60px;
+    z-index: 10;
+    top: -1000%;   /* position of tooltip box top/bottom */
+    left: 910%; /* position of tooltip box - left/right*/
+    margin-left: -100px;
+}
+.tooltip3 .tooltiptext3title::after {
+    content: " ";
+    position: absolute;
+    top: 52.3%; /* arrow position up/down*/
+    right: 100%; /* To the left of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
 }
 
-.tooltip3 .tooltiptext3::after {
+.tooltip3 .tooltiptext3left {
+    visibility: hidden;
+    width: 600px;
+    height: 260px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 10;
+    bottom: 150%; /* position of tooltip box top/bottom */
+    left: -1200%; /* position of tooltip box */
+    margin-left: -100px;
+}
+.tooltip3 .tooltiptext3left::after {
     content: "";
     position: absolute;
-    top: 100%;
-    left: 50%;
+    top: 100%; /* arrow position top/bottom*/
+    left: 43.7%; /* arrow position */
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
 
-.tooltip3:hover .tooltiptext3 {
+.tooltip3 .tooltiptext3middle {
+    visibility: hidden;
+    width: 600px;
+    height: 260px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 10;
+    bottom: 150%; /* position of tooltip box top/bottom */
+    right: 50%; /* position of tooltip box */
+    margin-right: -100px;
+}
+.tooltip3 .tooltiptext3middle::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* arrow position top/bottom*/
+    right: 16%; /* arrow position */
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip3 .tooltiptext3right {
+    visibility: hidden;
+    width: 600px;
+    height: 260px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 10;
+    bottom: 150%; /* position of tooltip box top/bottom */
+    right: 100%; /* position of tooltip box */
+    margin-right: -40px;
+}
+.tooltip3 .tooltiptext3right::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* arrow position top/bottom*/
+    right: 4.8%; /* arrow position */
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip3:hover .tooltiptext3title {
     visibility: visible;
+    opacity: 0.9;
+}
+.tooltip3:hover .tooltiptext3left {
+    visibility: visible;
+    opacity: 0.9;
+}
+.tooltip3:hover .tooltiptext3middle {
+    visibility: visible;
+    opacity: 0.9;
+}
+.tooltip3:hover .tooltiptext3right {
+    visibility: visible;
+    opacity: 0.9;
 }
 
 
 
+.infoTitleColor {
+    color: #eeae4a !important;
+    position: absolute;
+    right: 80%;
+}
+.infoText {
+    position: absolute;
+    left: 22%;
+    padding-right: 2%;
+}
+.afterFontAwesomeSpeed {
+    position: absolute;
+    left: 26%;
+    padding-right: 2%;
+}
+.afterFontAwesomeStars {
+    position: absolute;
+    left: 40%;
+    padding-right: 2%;
+}
 
+.procWeAreSafe {
+    position: absolute;
+    left: -4%;
+}
+
+
+.rolePullLeft {
+    position: absolute;
+    left: 3%;
+    top: -3%;
+    font-size: 16px;
+    /*margin-right: 40%;*/
+    font-weight: 300;
+    padding: 0px;
+}
+.infoPullRight {
+    position: absolute;
+    right: 3%;
+    top: -3%;
+}
+
+.asteriskColor {
+    color: #eeae4a;
+}
+.circlePosition {
+    position: absolute;
+    left: 19%;
+}
+
+.viewProfile {
+    position: absolute;
+    right: -10%;
+}
+
+.starFont {
+    font-size: 10px;
+}
+
+.starGreen {
+    color: #28b99c;
+}
+.starBlue {
+    color: #3b78af;
+}
+.starRed {
+    color: #d3574b;
+}
