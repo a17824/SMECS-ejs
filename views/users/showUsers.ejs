@@ -35,7 +35,8 @@
     <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
 
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
 
     <script type="text/javascript">
 
@@ -142,9 +143,9 @@
                             <div id="myTabContent" class="tab-content">
 
                                 <% if (redirectTab == 'showUsers') {%>
-                                <% var showUsers = 'tab-pane fade active in' %>
+                                <% var showUsers = 'tab-pane fade active in table-responsive' %>
                                 <% } else {%>
-                                <% var showUsers = 'tab-pane fade' %>
+                                <% var showUsers = 'tab-pane fade table-responsive' %>
                                 <% } %>
 
                                 <div role="tabpanel" class="<%= showUsers %>" id="tab_content1">
@@ -437,19 +438,14 @@
 <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
 <!-- Bootstrap -->
 <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
-<!-- FastClick -->
-<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
-<!-- NProgress -->
-<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
-<!-- iCheck -->
-<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
 
 <!-- Datatables -->
 <script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
 <script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>

@@ -88,77 +88,78 @@
                       <br>
 
                   </ul>
-                  <table id="datatable-buttons" class="table table-hover">
-                    <thead>
-                      <tr>
-                          <th></th>
-                        <th>Photo</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Uses Bus</th>
-                        <th>Parent</th>
-                        <th>Update</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% students.forEach(function(student) { %>
-                      <tr>
-                          <td></td>
-                          <% if (student.photo == "" || student.photo == undefined) { %>
-                          <td>
-                              <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                              &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info">add</button></a>
-                              <% } else { %>
-                              &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info" disabled>add</button></a>
-                              <% } %>
-                          </td>
-                          <% } else { %>
-                          <td >
-                              <a href="/photos/choosePhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
-                          </td>
-                          <% } %>
-                          <td><%= student.firstName %> <%= student.lastName %></td>
-                          <td><%= student.studentID %></td>
-                          <% if (student.busRide == true) { %>
-                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                          <% } else { %>
-                          <td><img  src="/miscPictures/redCross20.png"></td>
-                          <% } %>
-                          <td >
-                            <% if (student.parentOf.length > 0) { %>
-                            <% for (var x = 0; x < student.parentOf.length; x++) {%>
+                    <div class="table-responsive">
+                        <table id="datatable-buttons" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>ID</th>
+                                <th>Uses Bus</th>
+                                <th>Parent</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% students.forEach(function(student) { %>
+                            <tr>
+                                <td></td>
+                                <% if (student.photo == "" || student.photo == undefined) { %>
+                                <td>
+                                    <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info">add</button></a>
+                                    <% } else { %>
+                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info" disabled>add</button></a>
+                                    <% } %>
+                                </td>
+                                <% } else { %>
+                                <td >
+                                    <a href="/photos/choosePhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
+                                </td>
+                                <% } %>
+                                <td><%= student.firstName %> <%= student.lastName %></td>
+                                <td><%= student.studentID %></td>
+                                <% if (student.busRide == true) { %>
+                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                <% } else { %>
+                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                <% } %>
+                                <td >
+                                    <% if (student.parentOf.length > 0) { %>
+                                    <% for (var x = 0; x < student.parentOf.length; x++) {%>
 
-                              <p class="image">
-                                  <% if (student.parentOf[x].parentPhoto == '') { %>
-                                  <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                                    <p class="image">
+                                        <% if (student.parentOf[x].parentPhoto == '') { %>
+                                        <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
 
-                                  <% } else { %>
-                                  <img src="/photosUsers/<%= student.parentOf[x].parentPhoto%>" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
-                                  <% } %>
-                              </p>
-                              <% } %>
-                            <% } %>
-                          </td>
-                          <td align="center">
-                            <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                            <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning">update</button></a>
-                            <% } else { %>
-                            <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning" disabled>update</button></a>
-                            <% } %>
-                          </td>
-                          <td align="center">
-                            <% if (aclDeleteStudent == null || aclDeleteStudent.checkBoxValue == true) {%>
-                            <a href="/students/deleteStudent/<%= student.id %>"><button class="btn btn-danger">delete</button></a>
-                            <% } else { %>
-                            <a href="/students/deleteStudent/<%= student.id %>"><button class="btn btn-danger" disabled>delete</button></a>
-                            <% } %>
-                          </td>
-                      </tr>
-                      <% }); %>
-                    </tbody>
-                  </table>
-
+                                        <% } else { %>
+                                        <img src="/photosUsers/<%= student.parentOf[x].parentPhoto%>" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                                        <% } %>
+                                    </p>
+                                    <% } %>
+                                    <% } %>
+                                </td>
+                                <td align="center">
+                                    <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+                                    <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning">update</button></a>
+                                    <% } else { %>
+                                    <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                    <% } %>
+                                </td>
+                                <td align="center">
+                                    <% if (aclDeleteStudent == null || aclDeleteStudent.checkBoxValue == true) {%>
+                                    <a href="/students/deleteStudent/<%= student.id %>"><button class="btn btn-danger">delete</button></a>
+                                    <% } else { %>
+                                    <a href="/students/deleteStudent/<%= student.id %>"><button class="btn btn-danger" disabled>delete</button></a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
               </div>
             </div>
