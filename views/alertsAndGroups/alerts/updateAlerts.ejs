@@ -302,7 +302,6 @@
                 <div class="title_right">
 
                     <div class="pull-left">
-                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
                         <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
                         <button type="button"
                                 id="<%= alert.id %>"
@@ -317,7 +316,11 @@
                                 class="btn btn-success" disabled>Save
                         </button>
                         <% } %>
+
+                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Cancel</button></a>
+
                     </div>
+
 
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                         <div class="input-group">

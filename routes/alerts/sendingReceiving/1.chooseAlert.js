@@ -274,6 +274,7 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 22){placeholderNote = 'ex: .';}
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
+                    if (req.body.alertID == 29){placeholderNote = 'ex: flood.';}
 
 
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
@@ -384,7 +385,8 @@ module.exports.showAlertsPost = function(req, res) {
 
                     if (req.body.alertID == 14 ||
                         req.body.alertID == 18 ||
-                        req.body.alertID == 26 ) {
+                        req.body.alertID == 26 ||
+                        req.body.alertID == 29 ) {
 
                         redirectAPI = 'multiSelection';
                         redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;

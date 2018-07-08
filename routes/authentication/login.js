@@ -57,13 +57,15 @@ module.exports.getLogin = function(req, res, next) {
 
     res.render('login', {
         title: 'SMECS Login',
-        error: "", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        error: "",
+        csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
 };
 module.exports.getLoginParentSelfRegistration = function(req, res, next) {
     res.render('login', {
         title: 'SMECS Login',
-        error: "Registration completed", csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        error: "Registration completed",
+        csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
 };
 /**

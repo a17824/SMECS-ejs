@@ -35,15 +35,18 @@ app.use(cookieParser());
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true})); //was FALSE by default. was TRUE for auth Template
+
+//50mb size limit to upload photos
+//was FALSE by default. was TRUE for auth Template
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 // middleware
 app.use(session({
     cookieName: 'session',
     secret: 'fsdklflrnkgjhalkvnahgf65uf346',
-    duration: 30 * 60 * 1000,
-    activeDuration: 30 * 60 * 1000,
+    duration: 30 * 60 * 1000,   //time in milliseconds. in this case will expired in 30min
+    activeDuration: 30 * 60 * 1000, //if user sends another request, it will extend session another 30min
     httpOnly: true, //doesn't let javascript access cookies ever
     secure: true, // only use cookies over https
     ephemeral: true // delete this cookie when the browser is closed (nice when people use public computers)

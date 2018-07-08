@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>update school closed</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    <script>
+        $(document).ready(function(){
+            var oldSchoolClosedID = $("#oldSchoolClosedID").val();
+            var select = '';
+            var myArray = $("#inUseSchoolClosedID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldSchoolClosedID){
+                    if(i == oldSchoolClosedID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var schoolClosed_ID, causeName, causeID;
+            var oldSchoolClosedName,oldSchoolClosedID;
+            $("#<%= schoolClosed.id %>").click(function(){
+                schoolClosed_ID=$(this).attr('id');
+                oldSchoolClosedName=$("#oldSchoolClosedName").val();
+                causeName=$("#causeName").val();
+                oldSchoolClosedID=$("#oldSchoolClosedID").val();
+                causeID=$("#some_select").val();
+
+                //-----forms validation------------------------------------
+                if (causeName == "" ) {
+                    alert("Cause Name must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+                $.post("/schoolClosed/updateSchoolClosed",{
+                    schoolClosedToUpdate: schoolClosed_ID,
+                    oldSchoolClosedName: oldSchoolClosedName,
+                    causeName: causeName,
+                    oldSchoolClosedID: oldSchoolClosedID,
+                    causeID: causeID
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("School Closed Name already in use. Choose a different Name .")
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/dashboard">
+    <input type="submit" value="Home"><br>
+</form>
+<form>
+
+
+
+    <label for="causeName"><b>Cause Name:</b></label><br>
+    <input type="text" id="causeName" size="40" value="<%= schoolClosed.causeName %>"><br><br>
+
+    <input type="hidden" id="inUseSchoolClosedID" value="<%= array %>">
+
+    <% if (userAuthID == 1) {%>
+    <label for="causeID"><b>Cause ID:</b></label><br>
+    <select id='some_select'></select><br><br>
+    <% } else { %>
+    <select id='some_select' style="display:none;"></select>
+    <% } %>
+
+    <input type="hidden" id="oldSchoolClosedName" value="<%= schoolClosed.causeName %>">
+    <input type="hidden" id="oldSchoolClosedID" value="<%= schoolClosed.causeID %>"><br>
+
+    <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
+    <input type="button" id="<%= schoolClosed.id %>" value="Submit" ><br>
+    <% } else { %>
+    <input type="button" id="<%= schoolClosed.id %>" value="Submit" disabled><br>
+    <% } %>
+
+</form>
+<form action="/schoolClosed/showSchoolClosed">
+    <% if (aclShowMedical == null || aclShowMedical.checkBoxValue == true) {%>
+    <input type="submit" value="Back">
+    <% } else { %>
+    <input type="submit" value="Back" disabled>
+    <% } %>
+
+</form>
+
+</body>
+</html>

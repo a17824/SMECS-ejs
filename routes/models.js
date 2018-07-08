@@ -574,14 +574,25 @@ var UtilitiesSchema = new mongoose.Schema({
 var Utilities;
 module.exports.Utilities = mongoose.model("Utilities", UtilitiesSchema);
 
+
 // DEFINE Medical COLLECTION IN MONGOdb
 var MedicalSchema = new mongoose.Schema({
-    utilityID: Number,
+    utilityID: { type: Number, unique: true },
     utilityName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
 
 }, {collection:"Medical"}); //stops Mongoose of giving plurals to our collections names
 var Medical;
 module.exports.Medical = mongoose.model("Medical", MedicalSchema);
+
+
+// DEFINE SchoolClosed COLLECTION IN MONGOdb
+var SchoolClosedSchema = new mongoose.Schema({
+    causeID: { type: Number, unique: true },
+    causeName: { type: String, unique: true } // holiday, flue, Loss of Consciousness, 3rd
+
+}, {collection:"SchoolClosed"}); //stops Mongoose of giving plurals to our collections names
+var SchoolClosed;
+module.exports.SchoolClosed = mongoose.model("SchoolClosed", SchoolClosedSchema);
 
 
 // DEFINE PA-PreRecorded System COLLECTION IN MONGOdb

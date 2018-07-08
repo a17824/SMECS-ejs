@@ -2,7 +2,7 @@
 var models = require('./models');
 var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
-//var bulk = models.Students.collection.initializeOrderedBulkOp();
+
 
 //REDIRECT TO PREVIOUS PAGE
 module.exports.redirectPage = function(req, res, page) {
@@ -30,6 +30,7 @@ module.exports.redirectPage = function(req, res, page) {
 };
 
 module.exports.redirectTabUsers = function(req, res, tab) {
+    console.log('tab = ',req.body.tab);
     if(req.body.tab)
         tab = req.body.tab;
 

@@ -26,6 +26,7 @@ var floors = require('./alerts/options/floors');
 var rooms = require('./alerts/options/rooms');
 var utilities = require('./alerts/options/utilities');
 var medical = require('./alerts/options/medical');
+var schoolClosed = require('./alerts/options/schoolClosed');
 var pa = require('./alerts/options/pa');
 var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
@@ -366,10 +367,9 @@ router.get('/alerts/addAlerts/:id', auth.simpleAuth, auth.requireLogin, alerts.d
 
 /* SHOW ALERT PERMISSIONS TABLE. WHO CAN SEND/RECEIVE ALERTS---------------------------------------------------*/
 
-router.get('/alerts/showAlertPermissionsTableReal', auth.simpleAuth, auth.requireLogin, alertsPermissionsTable.showReal, function(req, res) {
+router.get('/alerts/showAlertPermissionsTableRealDrill', auth.simpleAuth, auth.requireLogin, alertsPermissionsTable.showRealDrill, function(req, res) {
 });
-router.get('/alerts/showAlertPermissionsTableTest', auth.simpleAuth, auth.requireLogin, alertsPermissionsTable.showTest, function(req, res) {
-});
+
 
 //saving ALERT PERMISSION Table checkBox value to AclAlerts database------------------------
 router.post('/alerts/showAlertPermissionsTable', auth.simpleAuth, auth.requireLogin, alertsPermissionsTable.savePost, function(req, res) {
@@ -584,6 +584,34 @@ router.get('/medical/deleteMedical/:id', auth.simpleAuth, auth.requireLogin, med
 /* PA show Reception Users. -------------------------------*/
 router.get('/pa/showPa', auth.simpleAuth, auth.requireLogin, pa.showReceptionUsers, function(req, res) {
 });
+
+
+/* SHOW SCHOOL CLOSED. */
+router.get('/schoolClosed/showSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.show, function(req, res, next) {
+});
+
+/* ADD SCHOOL CLOSED. -------------------------------*/
+router.get('/schoolClosed/addSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.add, function(req, res) {
+});
+router.post('/schoolClosed/addSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.addPost, function(req, res) {
+});
+
+/* UPDATE SCHOOL CLOSED. -------------------------------*/
+router.get('/schoolClosed/updateSchoolClosed/:id', auth.simpleAuth, auth.requireLogin, schoolClosed.update, function(req, res) {
+});
+router.post('/schoolClosed/updateSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.updatePost, function(req, res) {
+});
+
+/* DELETE SCHOOL CLOSED. */
+router.get('/schoolClosed/deleteSchoolClosed/:id', auth.simpleAuth, auth.requireLogin, schoolClosed.delete, function(req, res) {
+});
+
+
+/* PA show Reception Users. -------------------------------*/
+router.get('/pa/showPa', auth.simpleAuth, auth.requireLogin, pa.showReceptionUsers, function(req, res) {
+});
+
+
 //saving Reception checkBox value to Users database------------------------
 router.post('/pa/showPa', auth.simpleAuth, auth.requireLogin, pa.saveReceptionUsersPost, function(req, res) {
 });

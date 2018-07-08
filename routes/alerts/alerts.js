@@ -96,7 +96,7 @@ module.exports.createPost = function(req, res) {
 
     models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
         var alert1 = new models.Alerts({
-            alertTypeID: alertGroup[0].alertGroupID,
+            alertTypeID: req.body.alertGroupID,
             alertTypeSortID: alertGroup[0].sortID,
             alertTypeName: req.body.alertGroupName,
             alertTypeColorName: alertGroup[0].colorName,

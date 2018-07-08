@@ -490,6 +490,9 @@ module.exports.showMultiSelection = function(req, res) {
         function(callback){
             models.Medical.find().sort({"medicalName":1}).exec(callback);
         },
+        function(callback){
+            models.SchoolClosed.find().sort({"causeName":1}).exec(callback);
+        },
         function(callback) {
             if(req.decoded) { //API user
                 models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
@@ -499,6 +502,7 @@ module.exports.showMultiSelection = function(req, res) {
         }
 
     ],function(err, results){
+
         if (!results[0]) {
             functions.alertTimeExpired(req,res);
         }
@@ -510,7 +514,8 @@ module.exports.showMultiSelection = function(req, res) {
                     userAuthGroupAlerts: results[3].appSettings.groupAlertsButtons, //for Back or Exit button
                     alert: results[0],
                     utilities: results[1],
-                    medical: results[2]
+                    medical: results[2],
+                    schoolClosed: results[3]
                 });
 
             }else{  //EJS user
@@ -520,7 +525,8 @@ module.exports.showMultiSelection = function(req, res) {
                     alert: results[0],
                     utilities: results[1],
                     medical: results[2],
-                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    schoolClosed: results[3],
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -615,6 +621,17 @@ module.exports.postMultiSelection = function(req, res) {
                     });
                 }else{  // run SMECS EJS
                     res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
+                }
+            }
+            //ALERT SchoolClosed
+            if (alert.alertNameID == 29 ) {
+                if(req.decoded){ // run SMECS API
+                    res.json({
+                        success: true,
+                        redirect: 'notes'
+                    });
+                }else{  // run SMECS EJS
+                    res.send({redirect:'/alerts/sending/notes/' + alertToUpdate1});
                 }
             }
         }

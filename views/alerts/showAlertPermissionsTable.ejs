@@ -21,8 +21,10 @@
         };
 
         $(document).ready(function(){
+
             $('.chk-all').on('change', function(){
                 $('.' + $(this).data('child')).prop('checked',this.checked);
+
             });
             var searchIDsNotChecked = {};
             var typeAclAlert;
@@ -55,7 +57,7 @@
     </script>
 </head>
 <body>
-<h1><%= title %></h1>
+<h1></h1>
 
 <input type="hidden" id="typeAclAlert"  value="<%= typeAclAlert %>">
 
@@ -121,19 +123,19 @@
                    value="s<%= roles2.roleID %><%= alert.alertID %>"
                    class="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
                     <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
-                    <% aclAlerts.forEach(function(acl) { %>
+                    <% real.forEach(function(acl) { %>
                     <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
                    checked
                     <% } %>
                     <% }); %>
-                   onClick="EnableSubmit(this)" />
+                   onClick="EnableSubmit(this)" />s<%= roles2.roleID %><%= alert.alertID %>
             <% } else { %>
             <input type="checkbox"
                    name="aclAlertCheckBox"
                    value="s<%= roles2.roleID %><%= alert.alertID %>"
                    class="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
                     <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
-                    <% aclAlerts.forEach(function(acl) { %>
+                    <% real.forEach(function(acl) { %>
                     <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
                    checked
                     <% } %>
@@ -185,7 +187,7 @@
                    value="r<%= roles2.roleID %><%= alert.alertID %>"
                    class="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
                     <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
-                    <% aclAlerts.forEach(function(acl) { %>
+                    <% real.forEach(function(acl) { %>
                     <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
                    checked
                     <% } %>
@@ -197,7 +199,7 @@
                    value="r<%= roles2.roleID %><%= alert.alertID %>"
                    class="R<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
                     <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
-                    <% aclAlerts.forEach(function(acl) { %>
+                    <% real.forEach(function(acl) { %>
                     <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
                    checked
                     <% } %>

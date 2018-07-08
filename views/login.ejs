@@ -32,14 +32,25 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
 
-
+    <!-- refresh csrf token every 10min if browser is active or refresh right away if browser is hidden and is brought active  -->
     <script type="text/javascript">
         function Redirect()
         {
             window.location="/login";
         }
-        setTimeout('Redirect()', 30000);
+        setTimeout('Redirect()', 600000);
+
+        //if browser is hidden and is brought to active, refresh page
+        document.addEventListener( 'visibilitychange' , function() {
+            if (document.hidden) {
+                //console.log('bye');
+            } else {
+                //console.log('well back');
+                setTimeout('Redirect()', 1);
+            }
+        }, false );
     </script>
+    <!-- /refresh csrf token every 10min if browser is active or refresh right away if browser is hidden and is brought active  -->
 
 </head>
 
