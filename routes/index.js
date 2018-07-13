@@ -26,7 +26,7 @@ var floors = require('./alerts/options/floors');
 var rooms = require('./alerts/options/rooms');
 var utilities = require('./alerts/options/utilities');
 var medical = require('./alerts/options/medical');
-var schoolClosed = require('./alerts/options/schoolClosed');
+
 var pa = require('./alerts/options/pa');
 var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
@@ -562,23 +562,23 @@ router.get('/utilities/deleteUtilities/:id', auth.simpleAuth, auth.requireLogin,
 
 
 /* SHOW MEDICAL. */
-router.get('/medical/showMedical', auth.simpleAuth, auth.requireLogin, medical.show, function(req, res, next) {
+router.get('/medical/showMedical/:modelType', auth.simpleAuth, auth.requireLogin, medical.show, function(req, res, next) {
 });
 
 /* ADD MEDICAL. -------------------------------*/
-router.get('/medical/addMedical', auth.simpleAuth, auth.requireLogin, medical.add, function(req, res) {
+router.get('/medical/addMedical/:modelType', auth.simpleAuth, auth.requireLogin, medical.add, function(req, res) {
 });
 router.post('/medical/addMedical', auth.simpleAuth, auth.requireLogin, medical.addPost, function(req, res) {
 });
 
 /* UPDATE MEDICAL. -------------------------------*/
-router.get('/medical/updateMedical/:id', auth.simpleAuth, auth.requireLogin, medical.update, function(req, res) {
+router.get('/medical/updateMedical/:id/:modelType', auth.simpleAuth, auth.requireLogin, medical.update, function(req, res) {
 });
 router.post('/medical/updateMedical', auth.simpleAuth, auth.requireLogin, medical.updatePost, function(req, res) {
 });
 
 /* DELETE MEDICAL. */
-router.get('/medical/deleteMedical/:id', auth.simpleAuth, auth.requireLogin, medical.delete, function(req, res) {
+router.get('/medical/deleteMedical/:id/:modelType', auth.simpleAuth, auth.requireLogin, medical.delete, function(req, res) {
 });
 
 /* PA show Reception Users. -------------------------------*/
@@ -586,25 +586,6 @@ router.get('/pa/showPa', auth.simpleAuth, auth.requireLogin, pa.showReceptionUse
 });
 
 
-/* SHOW SCHOOL CLOSED. */
-router.get('/schoolClosed/showSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.show, function(req, res, next) {
-});
-
-/* ADD SCHOOL CLOSED. -------------------------------*/
-router.get('/schoolClosed/addSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.add, function(req, res) {
-});
-router.post('/schoolClosed/addSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.addPost, function(req, res) {
-});
-
-/* UPDATE SCHOOL CLOSED. -------------------------------*/
-router.get('/schoolClosed/updateSchoolClosed/:id', auth.simpleAuth, auth.requireLogin, schoolClosed.update, function(req, res) {
-});
-router.post('/schoolClosed/updateSchoolClosed', auth.simpleAuth, auth.requireLogin, schoolClosed.updatePost, function(req, res) {
-});
-
-/* DELETE SCHOOL CLOSED. */
-router.get('/schoolClosed/deleteSchoolClosed/:id', auth.simpleAuth, auth.requireLogin, schoolClosed.delete, function(req, res) {
-});
 
 
 /* PA show Reception Users. -------------------------------*/

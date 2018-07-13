@@ -55,31 +55,37 @@
           var target;
           $("#btSave").click(function(event) {
               event.preventDefault();
-              var searchIDsCheckedReal = $('input[name="aclAlertCheckBoxReal"]:checked').map(function () {
+              var searchIDsCheckedRealSend = $('input[name="aclAlertCheckBoxRealSend"]:checked').map(function () {
+                  return $(this).val();
+              }).get();
+              var searchIDsCheckedRealReceived = $('input[name="aclAlertCheckBoxRealReceived"]:checked').map(function () {
                   return $(this).val();
               }).get();
               var searchIDsNotCheckedReal = $('input[name="aclAlertCheckBoxReal"]:not(:checked)').map(function () {
                   return $(this).val();
               }).get();
-              var searchIDsCheckedDrill = $('input[name="aclAlertCheckBoxDrill"]:checked').map(function () {
+              var searchIDsCheckedDrillSend = $('input[name="aclAlertCheckBoxDrillSend"]:checked').map(function () {
                   return $(this).val();
               }).get();
-              var searchIDsNotCheckedDrill = $('input[name="aclAlertCheckBoxDrill"]:not(:checked)').map(function () {
+              var searchIDsCheckedDrillReceived = $('input[name="aclAlertCheckBoxDrillReceived"]:checked').map(function () {
                   return $(this).val();
               }).get();
-
-
+              var searchIDsNotCheckedDrillReceived = $('input[name="aclAlertCheckBoxDrillReceived"]:not(:checked)').map(function () {
+                  return $(this).val();
+              }).get();
 
 
               $.ajax({
                   url:'/alerts/showAlertPermissionsTable',
                   type:'post',
                   data:{
-                      searchIDsCheckedReal:searchIDsCheckedReal,
-                      searchIDsNotCheckedReal:searchIDsNotCheckedReal,
-                      searchIDsCheckedDrill:searchIDsCheckedDrill,
-                      searchIDsNotCheckedDrill:searchIDsNotCheckedDrill,
-                      typeAclAlert:target
+                      searchIDsCheckedRealSend: searchIDsCheckedRealSend,
+                      searchIDsCheckedRealReceived: searchIDsCheckedRealReceived,
+                      searchIDsCheckedDrillSend: searchIDsCheckedDrillSend,
+                      searchIDsCheckedDrillReceived: searchIDsCheckedDrillReceived
+                      //searchIDsNotCheckedReal:searchIDsNotCheckedReal,
+                      //searchIDsNotCheckedDrill:searchIDsNotCheckedDrill
+                      //typeAclAlert:target
                   },
                   success:function(response){
                       console.log(response);
@@ -176,7 +182,7 @@
                       <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
                         <% roles2.forEach(function(roles2) { %>
                         <% if (roles2.roleID < 96) { %>
-                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="multi"
@@ -196,7 +202,7 @@
                         <% } %>
                         <% }); %>
                     </tr>
-                    <% alert.forEach(function(alert) { %>
+                    <% alerts.forEach(function(alert) { %>
                     <% if (alert.softDeleted == false) { %>
                     <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
 
@@ -207,24 +213,22 @@
                       <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxReal"
-                               value="s<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxRealSend"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Sr<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
-                                <% real.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.sendReal.forEach(function(sr) { %>
+                                <% if ( sr.roleID == roles2.roleID && sr.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
                                onClick="EnableSubmit(this)" />
                           <% } else { %>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxReal"
-                               value="s<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxRealSend"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Sr<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
-                                <% real.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.sendReal.forEach(function(sr) { %>
+                                <% if ( sr.roleID == roles2.roleID && sr.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
@@ -265,7 +269,7 @@
                     <tr>
                       <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
                         <% roles2.forEach(function(roles2) { %>
-                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="multi"
@@ -285,7 +289,7 @@
                         <% }); %>
                     </tr>
 
-                    <% alert.forEach(function(alert) { %>
+                    <% alerts.forEach(function(alert) { %>
                     <% if (alert.softDeleted == false) { %>
                     <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
                     <tr>
@@ -294,24 +298,22 @@
                       <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxReal"
-                               value="r<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxRealReceived"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Rr<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
-                                <% real.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.receiveReal.forEach(function(rr) { %>
+                                <% if ( rr.roleID == roles2.roleID && rr.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
                                onClick="EnableSubmit(this)"/>
                           <% } else { %>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxReal"
-                               value="r<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxRealReceived"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Rr<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
-                                <% real.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.receiveReal.forEach(function(rr) { %>
+                                <% if ( rr.roleID == roles2.roleID && rr.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
@@ -352,7 +354,7 @@
                       <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
                         <% roles2.forEach(function(roles2) { %>
                         <% if (roles2.roleID < 96) { %>
-                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="multi"
@@ -372,7 +374,7 @@
                         <% } %>
                         <% }); %>
                     </tr>
-                    <% alert.forEach(function(alert) { %>
+                    <% alerts.forEach(function(alert) { %>
                     <% if (alert.softDeleted == false) { %>
                     <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
 
@@ -383,24 +385,22 @@
                       <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxDrill"
-                               value="s<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxDrillSend"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Sd<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
-                                <% drill.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.sendDrill.forEach(function(sd) { %>
+                                <% if ( sd.roleID == roles2.roleID && sd.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
                                onClick="EnableSubmit(this)" />
                           <% } else { %>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxDrill"
-                               value="s<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxDrillSend"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Sd<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 's'+roles2.roleID+''+alert.alertID %>
-                                <% drill.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.sendDrill.forEach(function(sd) { %>
+                                <% if ( sd.roleID == roles2.roleID && sd.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
@@ -441,7 +441,7 @@
                     <tr>
                       <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
                         <% roles2.forEach(function(roles2) { %>
-                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="multi"
@@ -461,7 +461,7 @@
                         <% }); %>
                     </tr>
 
-                    <% alert.forEach(function(alert) { %>
+                    <% alerts.forEach(function(alert) { %>
                     <% if (alert.softDeleted == false) { %>
                     <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
                     <tr>
@@ -470,24 +470,22 @@
                       <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxDrill"
-                               value="r<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxDrillReceived"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Rd<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
-                                <% drill.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.receiveDrill.forEach(function(rd) { %>
+                                <% if ( rd.roleID == roles2.roleID && rd.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>
                                onClick="EnableSubmit(this)"/>
                           <% } else { %>
                         <input type="checkbox"
-                               name="aclAlertCheckBoxDrill"
-                               value="r<%= roles2.roleID %><%= alert.alertID %>"
+                               name="aclAlertCheckBoxDrillReceived"
+                               value="<%= alert.alertID %>-<%= roles2.roleID %>"
                                class="Rd<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
-                                <% var checkBoxNumber = 'r'+roles2.roleID+''+alert.alertID %>
-                                <% drill.forEach(function(acl) { %>
-                                <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                <% alert.whoCanSendReceive.receiveDrill.forEach(function(rd) { %>
+                                <% if ( rd.roleID == roles2.roleID && rd.checkbox == true) { %>
                                checked
                                 <% } %>
                                 <% }); %>

@@ -19,13 +19,14 @@
             $('#some_select').html(select);
 
             var medical_ID, utilityName, utilityID;
-            var oldMedicalName,oldMedicalID;
+            var oldMedicalName,oldMedicalID,modelType;
             $("#<%= medical.id %>").click(function(){
                 medical_ID=$(this).attr('id');
                 oldMedicalName=$("#oldMedicalName").val();
                 utilityName=$("#utilityName").val();
                 oldMedicalID=$("#oldMedicalID").val();
                 utilityID=$("#some_select").val();
+                modelType=$("#modelType").val();
 
                 //-----forms validation------------------------------------
                 if (utilityName == "" ) {
@@ -39,7 +40,9 @@
                     oldMedicalName: oldMedicalName,
                     utilityName: utilityName,
                     oldMedicalID: oldMedicalID,
-                    utilityID: utilityID
+                    utilityID: utilityID,
+                    modelType: modelType
+
                 },function(data){
                     if(data==='done')
                     {
@@ -63,13 +66,14 @@
 
 
 
-    <label for="utilityName"><b>Medical Emergency Name:</b></label><br>
+    <label for="utilityName"><b>Cause Name:</b></label><br>
     <input type="text" id="utilityName" size="40" value="<%= medical.utilityName %>"><br><br>
 
     <input type="hidden" id="inUseMedicalID" value="<%= array %>">
+    <input type="hidden" id="modelType" value="<%= modelType %>">
 
     <% if (userAuthID == 1) {%>
-    <label for="utilityID"><b>Medical ID:</b></label><br>
+    <label for="utilityID"><b>Cause ID:</b></label><br>
     <select id='some_select'></select><br><br>
     <% } else { %>
     <select id='some_select' style="display:none;"></select>

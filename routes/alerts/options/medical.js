@@ -4,11 +4,16 @@ var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
 var functions = require('./../../functions');
 
-/* SHOW ALL Medical. */
+/* SHOW Medical or SchoolClosed options. */
 module.exports.show = function(req, res, next) {
+    var modelType = req.params.modelType; // Medical or SchoolClosed
+    var title = 'Medical Emergencies';
+    if(modelType == 'SchoolClosed')
+        title = 'Cause of School Closed';
+
     async.parallel([
         function(callback){
-            models.Medical.find().sort({"utilityID":1}).exec(callback);
+            models[modelType].find().sort({"utilityID":1}).exec(callback);
         },
         function(callback){aclPermissions.addMedical(req, res, callback);},   //aclPermissions addMedical
         function(callback){aclPermissions.modifyMedical(req, res, callback);},   //aclPermissions modifyMedical
@@ -18,7 +23,8 @@ module.exports.show = function(req, res, next) {
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
         res.render('medical/showMedical',{
-            title:'Medical Emergencies',
+            title: title,
+            modelType: modelType,
             userAuthID: req.user.userPrivilegeID,
             medical: results[0],
             aclAddMedical: results[1], //aclPermissions addMedical
@@ -34,9 +40,14 @@ module.exports.show = function(req, res, next) {
 
 /* ADD Medical. -------------------------------*/
 module.exports.add = function(req, res) {
+    var modelType = req.params.modelType; // Medical or SchoolClosed
+    var title = 'Add Medical Emergencies';
+    if(modelType == 'SchoolClosed')
+        title = 'Add cause for School Closed';
+
     async.parallel([
         function(callback){
-            models.Medical.find(function(error, medical) {
+            models[modelType].find(function(error, medical) {
 
             }).exec(callback);
         },
@@ -46,7 +57,7 @@ module.exports.add = function(req, res) {
 
     ],function(err, results){
         var array = [];
-        var stream = models.Medical.find().sort({"utilityID":1}).cursor();
+        var stream = models[modelType].find().sort({"utilityID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.utilityID);
         }).on('error', function (err) {
@@ -55,7 +66,8 @@ module.exports.add = function(req, res) {
             // the stream is closed
             //console.log(array);
             res.render('medical/addMedical',{
-                title:'Add Medical Emergency',
+                title: title,
+                modelType: modelType,
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 medical: results[0],
@@ -69,9 +81,9 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
-    console.log(req.body.utilityID);
-    console.log(req.body.utilityName);
-    var medical1 = new models.Medical({
+    var modelType = req.body.modelType; // Medical or SchoolClosed
+
+    var medical1 = new models[modelType]({
         utilityID: req.body.utilityID,
         utilityName: req.body.utilityName
     });
@@ -80,7 +92,7 @@ module.exports.addPost = function(req, res) {
             console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            return res.send({redirect:'/medical/showMedical'})
+            return res.send({redirect:'/medical/showMedical/' + modelType})
         }
     });
 };
@@ -88,9 +100,16 @@ module.exports.addPost = function(req, res) {
 
 /* UPDATE Medical. -------------------------------*/
 module.exports.update = function(req, res) {
+    console.log('req.params.modelType = ',req.params.modelType);
+    console.log('req.params.id = ',req.params.id);
+    var modelType = req.params.modelType; // Medical or SchoolClosed
+    var title = 'Update Medical Emergencies';
+    if(modelType == 'SchoolClosed')
+        title = 'Update cause for School Closed';
+
     async.parallel([
         function(callback){
-            models.Medical.findById(req.params.id,function(error, medical) {
+            models[modelType].findById(req.params.id,function(error, medical) {
 
             }).exec(callback);
         },
@@ -109,7 +128,8 @@ module.exports.update = function(req, res) {
             // the stream is closed
             //console.log(array);
             res.render('medical/updateMedical',{
-                title:'Update Medical Emergency',
+                title: title,
+                modelType: modelType,
                 userAuthID: req.user.userPrivilegeID,
                 array: array,
                 medical: results[0],
@@ -124,8 +144,9 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var medicalToUpdate1 = req.body.medicalToUpdate;
+    var modelType = req.body.modelType; // Medical or SchoolClosed
 
-    models.Medical.findById({'_id': medicalToUpdate1}, function(err, medical){
+    models[modelType].findById({'_id': medicalToUpdate1}, function(err, medical){
         medical.utilityID = req.body.utilityID;
         medical.utilityName = req.body.utilityName;
         medical.save(function (err) {
@@ -133,7 +154,7 @@ module.exports.updatePost = function(req, res) {
                 console.log(err);
                 return res.status(409).send('showAlert')
             }else{
-                return res.send({redirect:'/medical/showMedical'})
+                return res.send({redirect:'/medical/showMedical/' + modelType})
             }
         });
     });
@@ -144,9 +165,10 @@ module.exports.updatePost = function(req, res) {
 /* DELETE UTILITY. */
 module.exports.delete = function(req, res) {
     var medicalToDelete = req.params.id;
-        models.Medical.remove({'_id': medicalToDelete}, function(err) {
+    var modelType = req.params.modelType;
+        models[modelType].remove({'_id': medicalToDelete}, function(err) {
             //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
-            res.redirect('/medical/showMedical');
+            res.redirect('/medical/showMedical/' + modelType);
         });
 };
 /* ------------ end of DELETE UTILITY. */

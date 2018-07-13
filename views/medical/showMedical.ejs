@@ -18,12 +18,13 @@
 <body>
 <h1><%= title %></h1>
 
+<input type="hidden" id="modelType"  value="<%= modelType %>">
 
-<form action="/medical/addMedical">
+<form action="/medical/addMedical/<%= modelType %>">
     <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
-    <input type="submit" value="Add Medical">
+    <input type="submit" value="Add option">
     <% } else { %>
-    <input type="submit" value="Add Medical" disabled>
+    <input type="submit" value="Add option" disabled>
     <% } %>
 </form>
 
@@ -33,7 +34,7 @@
     </caption>
     <thead>
     <tr>
-        <th>Medical Emergency Name</th>
+        <th>Cause Name</th>
         <% if (userAuthID == 1) {%>
             <th>ID</th>
         <% } %>
@@ -50,16 +51,16 @@
         <% } %>
         <td align="center">
             <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
-            <a href="/medical/updateMedical/<%= medical.id %>"><button class="inTable">update</button></a>
+            <a href="/medical/updateMedical/<%= medical.id %>/<%= modelType %>"><button class="inTable">update</button></a>
             <% } else { %>
-            <a href="/medical/updateMedical/<%= medical.id %>"><button class="inTable" disabled>update</button></a>
+            <a href="/medical/updateMedical/<%= medical.id %>/<%= modelType %>"><button class="inTable" disabled>update</button></a>
             <% } %>
         </td>
         <td align="center">
             <% if (aclDeleteMedical == null || aclDeleteMedical.checkBoxValue == true) {%>
-            <a href="/medical/deleteMedical/<%= medical.id %>"><button class="inTable">delete</button></a>
+            <a href="/medical/deleteMedical/<%= medical.id %>/<%= modelType %>"><button class="inTable">delete</button></a>
             <% } else { %>
-            <a href="/medical/deleteMedical/<%= medical.id %>"><button class="inTable" disabled>delete</button></a>
+            <a href="/medical/deleteMedical/<%= medical.id %>/<%= modelType %>"><button class="inTable" disabled>delete</button></a>
             <% } %>
         </td>
     </tr>

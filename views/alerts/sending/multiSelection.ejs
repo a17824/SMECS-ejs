@@ -170,29 +170,20 @@
     <% typeOfDatabase = schoolClosed;  %>
     <% } %>
 
-    <% if (alert.alertNameID == 29) {%>
-    <% var id = 'utility.causeID';  %>
-    <% var name = 'utility.causeName';  %>
-    <% } else { %>
-    <% var id = 'utility.utilityID';  %>
-    <% var name = 'utility.utilityName';  %>
-    <% } %>
-
     <% typeOfDatabase.forEach(function(utility) { %>
-
         <!-- back button/refresh write checkbox selected before -->
         <% if (alert.multiSelectionNames.length >= 1) {%>
             <% var check = 0;    %>
             <% for (var i=0; i < alert.multiSelectionNames.length; i++) { %>
                 <% if (utility.utilityName == alert.multiSelectionNames[i]) { %>
-                    <input class="checkbox" type="checkbox" name="checkbox" id="<%= name %>" value="<%= id %>" checked><%= name %>
+                    <input class="checkbox" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>" checked><%= utility.utilityName %>
 
 
                     <% check = 1; %>
                 <% }  %>
             <% } %>
             <% if (check == 0) {%>
-                <input class="checkbox" type="checkbox" name="checkbox" id="<%= name %>" value="<%= id %>"><%= name %>
+                <input class="checkbox" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"><%= utility.utilityName %>
 
             <% } %>
     <!--ON/OFF switch button for back button/refresh -->

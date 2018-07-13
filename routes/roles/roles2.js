@@ -6,11 +6,11 @@ var functions = require('../functions');
 
 /* SHOW ALL ROLES2. */
 module.exports.show = function(req, res, next) {
-/*
-    models.Roles2.find(function(err, roles) {
-        res.render('roles2/showRoles2', { title: 'ROLES', roles: roles });
-    }).sort({"roleID":1});
-*/
+    /*
+        models.Roles2.find(function(err, roles) {
+            res.render('roles2/showRoles2', { title: 'ROLES', roles: roles });
+        }).sort({"roleID":1});
+    */
     async.parallel([
         function(callback){
             models.Roles2.find().sort({"sortID": 1}).exec(callback);
@@ -99,11 +99,21 @@ module.exports.addPost = function(req, res) {
             console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            var typeAclAlert = 'AclAlertsReal';
-            addAclAlerts(req, res, typeAclAlert);
-
-            typeAclAlert = 'AclAlertsTest';
-            addAclAlerts(req, res, typeAclAlert);
+            //Alerts Collection - add new role to all documents
+            var newRole = {
+                roleID: req.body.roleID,
+                roleName: req.body.roleName,
+                checkbox: false
+            };
+            models.Alerts.updateMany({}, { $push: {
+                    "whoCanSendReceive.sendReal": newRole,
+                    "whoCanSendReceive.receiveReal": newRole,
+                    "whoCanSendReceive.sendDrill": newRole,
+                    "whoCanSendReceive.receiveDrill": newRole
+                }}, function(err, alerts) {
+                console.log('alerts with new role = ',alerts);
+            });
+            //end of Alerts Collection - add new role to all documents
 
             return res.send({redirect:'/roles2/showRoles2'})
         }
@@ -111,34 +121,7 @@ module.exports.addPost = function(req, res) {
 };
 /*-------------------------end of adding role2*/
 
-function addAclAlerts(req, res, typeAclAlert){
-    models.Alerts.find({}, function(err, groups) {
-        for (var u=0; u < groups.length;u++){
-            var aclAlertSend = new models[typeAclAlert]({
-                roleGroupID: req.body.roleID,
-                roleGroupName: req.body.roleName,
-                alertID: groups[u].alertID,
-                alertName: groups[u].alertName,
-                checkBoxType: 'send',
-                checkBoxID: 's'+req.body.roleID+groups[u].alertID,
-                checkBoxName: 's'+req.body.roleName+groups[u].alertName
-            });
-            aclAlertSend.save();
-            var aclAlertReceive = new models[typeAclAlert]({
-                roleGroupID: req.body.roleID,
-                roleGroupName: req.body.roleName,
-                alertID: groups[u].alertID,
-                alertName: groups[u].alertName,
-                checkBoxType: 'receive',
-                checkBoxID: 'r'+req.body.roleID+groups[u].alertID,
-                checkBoxName: 'r'+req.body.roleName+groups[u].alertName
-            });
-            aclAlertReceive.save();
-        }
-        console.log('******************* END FUNCTION ADD ACL ALERTS = ' + typeAclAlert);
-    });
-}
-//--------end adding ACL ALERTS
+
 
 
 /* UPDATE ROLES2. -------------------------------*/
@@ -201,18 +184,13 @@ module.exports.updatePost = function(req, res) {
                 var oldRoleIdToUpdate = req.body.oldRoleID;
                 var oldRoleNameToUpdate = req.body.oldRoleName;
 
-                updateUsers(oldRoleIdToUpdate, oldRoleNameToUpdate);
-
-                var typeAclAlert = 'AclAlertsReal';
-                updateAclAlerts(oldRoleIdToUpdate, typeAclAlert);
-
-                typeAclAlert = 'AclAlertsTest';
-                updateAclAlerts(oldRoleIdToUpdate, typeAclAlert);
+                updateUsers();
+                updateWCSRAlerts();
 
                 return res.send({redirect:'/roles2/showRoles2'})
             }
             //UPDATE USERS old roleID/roleName to new roleID/Name
-            function updateUsers(oldRoleIdToUpdate){
+            function updateUsers(){
                 models.Users.find({}, function(err, users) {
                     if( err || !users) console.log("No Users found in database");
                     else users.forEach( function(user) {
@@ -220,12 +198,24 @@ module.exports.updatePost = function(req, res) {
                             if (user.userRoleID[i] == oldRoleIdToUpdate){
                                 user.userRoleID[i] = parseInt(req.body.roleID);
                                 user.markModified("userRoleID");
-                                user.save();
+                                user.save(function (err) {
+                                    if (err && (err.code === 11000 || err.code === 11001)) {
+                                        return res.status(409).send('showAlert')
+                                    } else {
+                                        console.log('user role updated');
+                                    }
+                                });
                             }
                             if (user.userRoleName[i] == oldRoleNameToUpdate){
                                 user.userRoleName[i] = req.body.roleName;
                                 user.markModified("userRoleName");
-                                user.save();
+                                user.save(function (err) {
+                                    if (err && (err.code === 11000 || err.code === 11001)) {
+                                        return res.status(409).send('showAlert')
+                                    } else {
+                                        console.log('user role updated');
+                                    }
+                                });
                             }
                         }
                     });
@@ -233,29 +223,25 @@ module.exports.updatePost = function(req, res) {
             }
             //--------end UPDATE USERS old roleID/roleName to new roleID/Name
 
-            //UPDATE ACL ALERTS--------
-            function updateAclAlerts(oldRoleIdToUpdate, typeAclAlert){
-                models[typeAclAlert].find({}, function(err, groups) {
-                    if( err || !groups) console.log("No Alerts groups found");
-                    else groups.forEach( function(group) {
-                        //console.log(group.roleName);
-                        if (group.checkBoxID == 's'+oldRoleIdToUpdate+group.alertID){
-                            group.roleGroupID = req.body.roleID;
-                            group.roleGroupName = req.body.roleName;
-                            group.checkBoxType = 'send';
-                            group.checkBoxID = 's'+req.body.roleID+group.alertID;
-                            group.checkBoxName = 's'+req.body.roleName+group.alertName;
-                            group.save();
-                        }
-                        if (group.checkBoxID == 'r'+oldRoleIdToUpdate+group.alertID){
-                            group.roleGroupID = req.body.roleID;
-                            group.roleGroupName = req.body.roleName;
-                            group.checkBoxType = 'receive';
-                            group.checkBoxID = 'r'+req.body.roleID+group.alertID;
-                            group.checkBoxName = 'r'+req.body.roleName+group.alertName;
-                            group.save();
-                        }
-                    });
+            //UPDATE WhoCanSendReceive ALERTS --------
+            function updateWCSRAlerts(){
+                //Alerts Collection - add new role to all documents
+                models.Alerts.update({
+                    "whoCanSendReceive.sendReal.roleID": oldRoleIdToUpdate
+
+                }, { "$set": {
+                        "whoCanSendReceive.sendReal.$.roleID": req.body.roleID,
+                        "whoCanSendReceive.sendReal.$.roleName": req.body.roleName,
+                        "whoCanSendReceive.sendDrill.$.roleID": req.body.roleID,
+                        "whoCanSendReceive.sendDrill.$.roleName": req.body.roleName,
+
+                        "whoCanSendReceive.receiveReal.$.roleID": req.body.roleID,
+                        "whoCanSendReceive.receiveReal.$.roleName": req.body.roleName,
+                        "whoCanSendReceive.receiveDrill.$.roleID": req.body.roleID,
+                        "whoCanSendReceive.receiveDrill.$.roleName": req.body.roleName,
+                    }
+                }, {"multi": true} , function (err, result) {
+                    console.log(result);
                 });
             }
             //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
@@ -276,21 +262,26 @@ module.exports.delete = function(req, res) {
 
             if (result) {
                 console.log(roles.roleID);
-                console.log(result);
+                //console.log(result);
                 console.log("Role NOT deleted");
                 return res.status(409).send(' ALERT! ' + roles.roleName + ' Role not deleted because there are Users using this role. Please change Users under this role to other role and then delete this role.')
             }
             else {
-                //delete ACL Permission-----
-                function deleteAclAlert(callback) {
-                    models.Roles2.findById({'_id': roleToDelete}, function(err, role){
-                        var aclAlertToDelete = role.roleID;
-                        models.AclAlertsReal.find({'roleGroupID': aclAlertToDelete}).remove().exec();
-                        models.AclAlertsTest.find({'roleGroupID': aclAlertToDelete}).remove().exec();
-                        console.log("AclAlerts deleted");
-                        callback(null);
+                //delete WhoCanSenReceive Alerts-----
+                function deleteWCSRAlert(callback) {
+                    var deleteRole = {
+                        roleID: roles.roleID,
+                        roleName: roles.roleName
+                    };
+                    models.Alerts.updateMany({}, { $pull: {
+                            "whoCanSendReceive.sendReal": deleteRole,
+                            "whoCanSendReceive.receiveReal": deleteRole,
+                            "whoCanSendReceive.sendDrill": deleteRole,
+                            "whoCanSendReceive.receiveDrill": deleteRole
+                        }}, function(err, alerts) {
+                        console.log('alerts with delete role = ',alerts);
                     });
-                }//----end delete ACL Alert
+                }//----end delete WhoCanSenReceive Alerts
 
                 //delete role from "whoCanCall911" Array (Alerts.whoCanCall911)-----
                 function deleteWhoCanCall911(callback) {
@@ -324,7 +315,7 @@ module.exports.delete = function(req, res) {
                 }
 
                 async.waterfall([
-                    deleteAclAlert,
+                    deleteWCSRAlert,
                     deleteWhoCanCall911,
                     deleteUserRole
                 ], function (error) {

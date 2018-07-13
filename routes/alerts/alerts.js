@@ -95,78 +95,51 @@ module.exports.create = function(req, res) {
 module.exports.createPost = function(req, res) {
 
     models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
-        var alert1 = new models.Alerts({
-            alertTypeID: req.body.alertGroupID,
-            alertTypeSortID: alertGroup[0].sortID,
-            alertTypeName: req.body.alertGroupName,
-            alertTypeColorName: alertGroup[0].colorName,
-            alertTypeColorValue: alertGroup[0].colorValue,
-            alertRequest911Call: req.body.request911Call,
-            alertRequestProcedureCompleted: req.body.alertRequestProcedureCompleted,
-            alertRequestWeAreSafe: req.body.alertRequestWeAreSafe,
-            alertRequestForINeedHelp: req.body.alertRequestForINeedHelp,
-            whoCanCall911: req.body.whoCanCall911,
-            alertID: req.body.alertID,
-            alertName: req.body.alertName,
-            alertSlugName: slug(req.body.alertName),
-            alertProcedure: req.body.alertProcedure,
-            sortID: req.body.sortID,
-            icon: req.body.icon,
-            mp3: req.body.sound
+        models.Roles2.find({}, function(err, roles) {
+            var rolesArray = [];
+            roles.forEach(function (role) {
+                var roleData = {
+                    roleID: role.roleID,
+                    roleName: role.roleName,
+                    checkbox: false
+                };
+                rolesArray.push(roleData);
+            });
 
+            var alert1 = new models.Alerts({
+                alertTypeID: req.body.alertGroupID,
+                alertTypeSortID: alertGroup[0].sortID,
+                alertTypeName: req.body.alertGroupName,
+                alertTypeColorName: alertGroup[0].colorName,
+                alertTypeColorValue: alertGroup[0].colorValue,
+                alertRequest911Call: req.body.request911Call,
+                alertRequestProcedureCompleted: req.body.alertRequestProcedureCompleted,
+                alertRequestWeAreSafe: req.body.alertRequestWeAreSafe,
+                alertRequestForINeedHelp: req.body.alertRequestForINeedHelp,
+                whoCanCall911: req.body.whoCanCall911,
+                alertID: req.body.alertID,
+                alertName: req.body.alertName,
+                alertSlugName: slug(req.body.alertName),
+                alertProcedure: req.body.alertProcedure,
+                sortID: req.body.sortID,
+                icon: req.body.icon,
+                mp3: req.body.sound,
+                whoCanSendReceive: {
+                    sendReal: rolesArray,
+                    receiveReal: rolesArray,
+                    sendDrill: rolesArray,
+                    receiveDrill: rolesArray
+                }
+            });
+            alert1.save(function (err) {
+                if (err && (err.code === 11000 || err.code === 11001)) {
+                    return res.status(409).send('showAlert')
+                }else{
+                    return res.send({redirect:'/alertGroups/showAlertGroups'})
+                }
+            });
         });
-        alert1.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                return res.status(409).send('showAlert')
-            }else{
-                var typeAclAlert = 'AclAlertsReal';
-                addAclAlerts(req, res, typeAclAlert);
 
-                typeAclAlert = 'AclAlertsTest';
-                addAclAlerts(req, res, typeAclAlert);
-
-                return res.send({redirect:'/alertGroups/showAlertGroups'})
-            }
-            //-------- adding ACL ALERTS
-            function addAclAlerts(req, res, typeAclAlert){
-                models.Roles2.find({}, function(err, groups) {
-                    for (var u=0; u < groups.length;u++){
-                        var aclAlertSend = new models[typeAclAlert]({
-                            roleGroupID: groups[u].roleID,
-                            roleGroupName: groups[u].roleName,
-                            alertTypeID: req.body.alertGroupID,
-                            alertTypeSortID: groups[u].sortID,
-                            alertTypeName: req.body.alertGroupName,
-                            alertTypeValue: alertGroup[0].colorValue,
-                            alertID: req.body.alertID,
-                            alertSortID: req.body.sortID,
-                            alertName: req.body.alertName,
-                            checkBoxType: 'send',
-                            checkBoxID: 's'+groups[u].roleID+req.body.alertID,
-                            checkBoxName: 's'+groups[u].roleName+req.body.alertName
-                        });
-                        aclAlertSend.save();
-                        var aclAlertReceive = new models[typeAclAlert]({
-                            roleGroupID: groups[u].roleID,
-                            roleGroupName: groups[u].roleName,
-                            alertTypeID: req.body.alertGroupID,
-                            alertTypeSortID: groups[u].sortID,
-                            alertTypeName: req.body.alertGroupName,
-                            alertTypeValue: alertGroup[0].colorValue,
-                            alertID: req.body.alertID,
-                            alertSortID: req.body.sortID,
-                            alertName: req.body.alertName,
-                            checkBoxType: 'receive',
-                            checkBoxID: 'r'+groups[u].roleID+req.body.alertID,
-                            checkBoxName: 'r'+groups[u].roleName+req.body.alertName
-                        });
-                        aclAlertReceive.save();
-                    }
-                    console.log('******************* END FUNCTION ADD ACL ALERTS = ' + typeAclAlert);
-                });
-            }
-            //--------end adding ACL ALERTS
-        });
     });
 };
 /*-------------------------end of adding Alerts*/
@@ -252,48 +225,8 @@ module.exports.updatePost = function(req, res) {
                     console.log(err);
                     return res.status(409).send('showAlert')
                 }else {
-
-                    var typeAclAlert = 'AclAlertsReal';
-                    updateAclAlerts(typeAclAlert);
-
-                    typeAclAlert = 'AclAlertsTest';
-                    updateAclAlerts(typeAclAlert);
-
                     res.send({redirect: '/alertGroups/showAlertGroups'});
                 }
-                //UPDATE ACL ALERTS--------
-                function updateAclAlerts(typeAclAlert){
-                    models[typeAclAlert].find({}, function(err, groups) {
-                        if( err || !groups) console.log("No Alerts groups found");
-                        else groups.forEach( function(group) {
-                            if (group.checkBoxID == 's'+group.roleGroupID+req.body.oldAlertID){
-                                group.alertTypeID = req.body.alertGroupID;
-                                group.alertTypeName = req.body.alertGroupName;
-                                group.alertTypeValue = alertGroup[0].colorValue;
-                                group.alertID = req.body.alertID;
-                                group.alertSortID = req.body.sortID;
-                                group.alertName = req.body.alertName;
-                                group.checkBoxType = 'send';
-                                group.checkBoxID = 's'+group.roleGroupID+req.body.alertID;
-                                group.checkBoxName = 's'+group.roleGroupName+req.body.alertName;
-                                group.save();
-                            }
-                            if (group.checkBoxID == 'r'+group.roleGroupID+req.body.oldAlertID){
-                                group.alertTypeID = req.body.alertGroupID;
-                                group.alertTypeName = req.body.alertGroupName;
-                                group.alertTypeValue = alertGroup[0].colorValue;
-                                group.alertID = req.body.alertID;
-                                group.alertSortID = req.body.sortID;
-                                group.alertName = req.body.alertName;
-                                group.checkBoxType = 'receive';
-                                group.checkBoxID = 'r'+group.roleGroupID+req.body.alertID;
-                                group.checkBoxName = 'r'+group.roleGroupName+req.body.alertName;
-                                group.save();
-                            }
-                        });
-                    });
-                }
-                //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
             });
         });
     });
@@ -348,6 +281,7 @@ module.exports.softDelete = function(req, res) {
         alert.save();
         res.redirect('/alertGroups/showAlertGroups');
 
+        /*
         //UPDATE ACL ALERTS--------
         var aclAlertsToUpdate =  alert.alertID;
         var typeAclAlert = 'AclAlertsReal';
@@ -365,6 +299,7 @@ module.exports.softDelete = function(req, res) {
             });
         }
         //--------end UPDATE ACL ALERT
+        */
     });
 
 
@@ -381,6 +316,7 @@ module.exports.restoreAlert = function(req, res) {
         alert.save();
         res.redirect('/alerts/addAlerts');
 
+        /*
         //UPDATE ACL ALERTS--------
         var aclAlertsToUpdate =  alert.alertID;
         var typeAclAlert = 'AclAlertsReal';
@@ -398,6 +334,7 @@ module.exports.restoreAlert = function(req, res) {
             });
         }
         //--------end UPDATE ACL ALERT
+        */
     })
 };/* ------------ end of SoftDeleted Alerts. */
 
@@ -405,15 +342,6 @@ module.exports.restoreAlert = function(req, res) {
 /* DELETE Alerts. */
 module.exports.delete = function(req, res) {
     var alertToDelete = req.params.id;
-    //delete ACL Alert-----
-    function deleteAclAlert(callback) {
-        models.Alerts.findById({'_id': alertToDelete}, function(err, alert){
-            var aclAlertToDelete = alert.alertID;
-            models.AclAlertsReal.find({'alertID': aclAlertToDelete}).remove().exec();
-            models.AclAlertsTest.find({'alertID': aclAlertToDelete}).remove().exec();
-            callback(null);
-        });
-    } //----end delete ACL ALERT
 
     function deleteAlert(callback) {
         models.Alerts.remove({'_id': alertToDelete}, function(err) {
@@ -424,7 +352,6 @@ module.exports.delete = function(req, res) {
     }
 
     async.waterfall([
-        deleteAclAlert,
         deleteAlert
     ], function (error) {
         if (error) {

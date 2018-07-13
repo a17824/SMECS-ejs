@@ -26,12 +26,6 @@ function showTable(req, res, typeAclAlert, title){
         function(callback){
             models.Alerts.find().sort({"sortID":1}).exec(callback);
         },
-        function(callback){                                                             //pass all checkbox database to ejs
-            models.AclAlertsReal.find().exec(callback);
-        },
-        function(callback){                                                             //pass all checkbox database to ejs
-            models.AclAlertsTest.find().exec(callback);
-        },
         function(callback){aclPermissions.showAlertsTable(req, res, callback);},   //aclPermissions showAlertsTable
         function(callback){aclPermissions.modifyAlertsTable(req, res, callback);},  //aclPermissions modifyAlertsTable
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
@@ -43,13 +37,10 @@ function showTable(req, res, typeAclAlert, title){
             roles2Count: results[0],
             roles2: results[1],
             alertGroup: results[2],
-            alert: results[3],
-            real: results[4],
-            drill: results[5],
-            //typeAclAlert: 'AclAlertsReal', // to delete with new bootstrap page
-            aclShowAlertsTable: results[6],    //aclPermissions showPermissionsTable
-            aclModifyAlertsTable: results[7],   //aclPermissions modifyAlertsTable
-            aclSideMenu: results[8],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            alerts: results[3],
+            aclShowAlertsTable: results[4],    //aclPermissions showPermissionsTable
+            aclModifyAlertsTable: results[5],   //aclPermissions modifyAlertsTable
+            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -59,71 +50,104 @@ function showTable(req, res, typeAclAlert, title){
 
 //saving ALERT PERMISSION Table checkBox value to AclAlerts database------------------------
 module.exports.savePost = function(req, res) {
-    //console.log(req.body); //Output=> like { searchID: 'Array of checked checkbox' }
-
-    var searchIDsCheckedReal = req.body.searchIDsCheckedReal;
-    var searchIDsNotCheckedReal = req.body.searchIDsNotCheckedReal;
-    var searchIDsCheckedDrill = req.body.searchIDsCheckedDrill;
-    var searchIDsNotCheckedDrill = req.body.searchIDsNotCheckedDrill;
-
-    console.log('searchIDsCheckedReal = ' + searchIDsCheckedReal);
-    console.log('searchIDsNotCheckedReal = ' + searchIDsNotCheckedReal);
-    console.log('searchIDsCheckedDrill = ' + searchIDsCheckedDrill);
-    console.log('searchIDsNotCheckedDrill = ' + searchIDsNotCheckedDrill);
 
 
-    models.AclAlertsReal.bulkWrite([
-        {
-            updateMany: {
-                filter: {
-                    checkBoxID: {$in: searchIDsCheckedReal}
-                },
-                update: {
-                    checkBoxValue: true
+    var searchIDsCheckedRealSend = req.body.searchIDsCheckedRealSend;
+    var searchIDsCheckedRealReceived = req.body.searchIDsCheckedRealReceived;
+    var searchIDsCheckedDrillSend = req.body.searchIDsCheckedDrillSend;
+    var searchIDsCheckedDrillReceived = req.body.searchIDsCheckedDrillReceived;
+
+
+    //Build array Object of all checked checkboxes -------------------
+    var arrTotal = []; //arrTotal[0] = "real send" checked checkboxes, arrTotal[1] = "real receive" checked checkboxes, ...
+    var idsType;
+    for ( var i=0 ; i < 4 ; i++ ) {
+        if( i == 0)
+            idsType = searchIDsCheckedRealSend;
+        if( i == 1)
+            idsType = searchIDsCheckedRealReceived;
+        if( i == 2)
+            idsType = searchIDsCheckedDrillSend;
+        if( i == 3)
+            idsType = searchIDsCheckedDrillReceived;
+
+        var arrAlerts = [];
+        var alertID = 0;
+        var arrRoles = [];
+        var obj;
+        var splitCheckboxArray = [];
+
+        if(idsType) { //at least one checkbox is checked
+            for (var u = 0; u < idsType.length; u++) {
+                splitCheckboxArray.push(idsType[u].split("-"));
+            }
+            ;
+
+            for (var u = 0; u < splitCheckboxArray.length; u++) {
+                alertID = splitCheckboxArray[u][0];
+                arrRoles.push(splitCheckboxArray[u][1]);
+                if (u == splitCheckboxArray.length - 1 || alertID !== splitCheckboxArray[u + 1][0]) {
+                    obj = {
+                        alertID: alertID,
+                        arrRoles: arrRoles
+                    };
+                    arrAlerts.push(obj);
+                    arrRoles = [];
                 }
             }
-        },
-        {
-            updateMany: {
-                filter: {
-                    checkBoxID: {$in: searchIDsNotCheckedReal}
-                },
-                update: {
-                    checkBoxValue: false
-                }
-            }
+
         }
-    ]).then(function(bulkWriteOpResult) {
-        //console.log(bulkWriteOpResult);
-    });
+        arrTotal.push(arrAlerts);
 
+    }
+    // end of Build array Object of all checked checkboxes ---------------
 
-    models.AclAlertsTest.bulkWrite([
-        {
-            updateMany: {
-                filter: {
-                    checkBoxID: {$in: searchIDsCheckedDrill}
-                },
-                update: {
-                    checkBoxValue: true
+    //Puts all checkboxes with value False or True
+    models.Alerts.find({}, function(err, alerts){
+        alerts.forEach(function (alert) {
+            for (var a = 0; a < 4; a++) {
+                if( a == 0){
+                    alert.whoCanSendReceive.sendReal.forEach(function (type) {
+                        writeCheckboxes(arrTotal[0], alert, type);
+                    });
+                }
+                if( a == 1){
+                    alert.whoCanSendReceive.receiveReal.forEach(function (type) {
+                        writeCheckboxes(arrTotal[1], alert, type);
+                    });
+                }
+                if( a == 2){
+                    alert.whoCanSendReceive.sendDrill.forEach(function (type) {
+                        writeCheckboxes(arrTotal[2], alert, type);
+                    });
+                }
+                if( a == 3){
+                    alert.whoCanSendReceive.receiveDrill.forEach(function (type) {
+                        writeCheckboxes(arrTotal[3], alert, type);
+                    });
                 }
             }
-        },
-        {
-            updateMany: {
-                filter: {
-                    checkBoxID: {$in: searchIDsNotCheckedDrill}
-                },
-                update: {
-                    checkBoxValue: false
-                }
-            }
-        }
-    ]).then(function(bulkWriteOpResult) {
-        //console.log(bulkWriteOpResult);
+            alert.save();
+        })
     });
+    //end of Puts all checkboxes with value False or True
 
-    //res.redirect(200, '/reports/homeReports');
 };
+
+function writeCheckboxes(lines, alert, type){
+    var flag = 0;
+    lines.forEach(function (line) {
+        for (var z = 0; z < line.arrRoles.length; z++) {
+            if (line.alertID == alert.alertID && line.arrRoles[z] == type.roleID) {
+                flag = 1;
+                break
+            }
+        }
+    });
+    if (flag == 1)
+        type.checkbox = true;
+    else
+        type.checkbox = false;
+}
 
 //-------------------------------------------end of saving ALERTS PERMISSION Table checkBox value to AclAlerts database

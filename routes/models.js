@@ -210,7 +210,29 @@ var AlertsSchema = new mongoose.Schema({
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,
-    mp3: String
+    mp3: String,
+    whoCanSendReceive: {
+        sendReal: [{
+            roleID: Number,
+            roleName: String,
+            checkbox: { type: Boolean, default: false }
+        }],
+        receiveReal: [{
+            roleID: Number,
+            roleName: String,
+            checkbox: { type: Boolean, default: false }
+        }],
+        sendDrill: [{
+            roleID: Number,
+            roleName: String,
+            checkbox: { type: Boolean, default: false }
+        }],
+        receiveDrill: [{
+            roleID: Number,
+            roleName: String,
+            checkbox: { type: Boolean, default: false }
+        }]
+    }
 
 }, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;
@@ -587,8 +609,8 @@ module.exports.Medical = mongoose.model("Medical", MedicalSchema);
 
 // DEFINE SchoolClosed COLLECTION IN MONGOdb
 var SchoolClosedSchema = new mongoose.Schema({
-    causeID: { type: Number, unique: true },
-    causeName: { type: String, unique: true } // holiday, flue, Loss of Consciousness, 3rd
+    utilityID: { type: Number, unique: true },
+    utilityName: { type: String, unique: true } // holiday, flue, Loss of Consciousness, 3rd
 
 }, {collection:"SchoolClosed"}); //stops Mongoose of giving plurals to our collections names
 var SchoolClosed;
