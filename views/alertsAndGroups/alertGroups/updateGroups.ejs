@@ -60,12 +60,21 @@
         var color;
         var colorName;
         var colorValue;
+        var textValue;
         function GetSelectedItem(el)
         {
             var e = document.getElementById(el);
+
+            console.log('e');
+            console.log(e);
+
+            console.log('e.options[e.selectedIndex]');
+            console.log(e.options[e.selectedIndex]);
+
             color = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
             colorName = e.options[e.selectedIndex].text;
             colorValue = e.options[e.selectedIndex].value;
+            textValue = e.options[this.selectedIndex].parentNode.label
         }
 
 
@@ -138,8 +147,21 @@
 
                 colorBuild(function (result) {
                     var Color = result;
+
+
+
                     for (var i = 0; i < Color.Data.length; i++) {
-                        $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName));
+                        //create a constant for element
+                        const $sel = $('#DropDownID');
+
+                        //create a variable to hold our optgroup
+                        var group = $('<optgroup/>');
+
+                        //assign label to optgroup and append to select element
+                        group.attr('label', Color.Data[i].ColorText).appendTo($sel);
+
+                        $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).text(Color.Data[i].ColorText).html(Color.Data[i].ColorName));
+
                     }
                 });
 
@@ -198,7 +220,8 @@
                 }
                 //--------------------------------forms validation end-------
 
-
+                console.log('textValue = ',textValue);
+                /*
                 $.post("/alertGroups/updateAlertGroups",{
                     alertGroupToUpdate: alertGroup1,
                     oldAlertGroupID: oldAlertGroupID,
@@ -208,6 +231,7 @@
                     sortID: sortID,
                     colorName: colorName,
                     colorValue: colorValue,
+                    textValue: textValue,
                     icon: icon,
                     sound:sound
 
@@ -220,7 +244,7 @@
                 }).error(function(error){
                     if(error.responseText == 'showAlert')
                         alert("Alert Group NAME already in use. Choose a different Name.")
-                });
+                });*/
             });
         });
     </script>
@@ -354,7 +378,9 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select name="DropDownID" id="DropDownID">
-                                            <option style="alignment: center" value="<%= alertGroup.colorValue %>" selected disabled hidden><%= alertGroup.colorName %></option>
+                                            <optgroup label="Foo">
+                                            <option style="alignment: center" value="<%= alertGroup.colorValue %>" id="red7" selected disabled hidden><%= alertGroup.colorName %></option>
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>

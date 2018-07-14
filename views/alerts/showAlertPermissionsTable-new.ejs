@@ -14,7 +14,7 @@
   <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
   <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap -->
-  <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <link href="/public/gentelella/vendors/bootstrap/dist/css/WhoCanSendAlerts.css" rel="stylesheet">
   <!-- Custom Theme Style -->
   <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
 
@@ -61,13 +61,13 @@
               var searchIDsCheckedRealReceived = $('input[name="aclAlertCheckBoxRealReceived"]:checked').map(function () {
                   return $(this).val();
               }).get();
-              var searchIDsNotCheckedReal = $('input[name="aclAlertCheckBoxReal"]:not(:checked)').map(function () {
-                  return $(this).val();
-              }).get();
               var searchIDsCheckedDrillSend = $('input[name="aclAlertCheckBoxDrillSend"]:checked').map(function () {
                   return $(this).val();
               }).get();
               var searchIDsCheckedDrillReceived = $('input[name="aclAlertCheckBoxDrillReceived"]:checked').map(function () {
+                  return $(this).val();
+              }).get();
+              var searchIDsNotCheckedReal = $('input[name="aclAlertCheckBoxReal"]:not(:checked)').map(function () {
                   return $(this).val();
               }).get();
               var searchIDsNotCheckedDrillReceived = $('input[name="aclAlertCheckBoxDrillReceived"]:not(:checked)').map(function () {
@@ -259,7 +259,13 @@
                     <tr>
                       <td>WHO CAN RECEIVE REAL ALERTS</td>
                         <% roles2.forEach(function(roles2) { %>
-                      <th id="<%= roles2.roleName %>" scope="col"><b><%= roles2.roleName %></b></th>
+                        <% var backColor = '' %>
+                        <% var text = '' %>
+                        <% if (roles2.roleID > 95) { %>
+                        <% backColor = '#f9ebd6' %>
+                        <% text = '' %>
+                        <% } %>
+                      <th id="<%= roles2.roleName %>" scope="col" style="background-color: <%= backColor %>; color: <%= text %>"><b><%= roles2.roleName %></b></th>
                         <% }); %>
                     </tr>
                     </thead>
@@ -269,7 +275,13 @@
                     <tr>
                       <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
                         <% roles2.forEach(function(roles2) { %>
-                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+                        <% var backColor = '' %>
+                        <% var text = '' %>
+                        <% if (roles2.roleID > 95) { %>
+                        <% backColor = '#f7e2c3' %>
+                        <% text = '' %>
+                        <% } %>
+                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5" style="background-color: <%= backColor %>; color: <%= text %>">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="multi"
@@ -295,7 +307,11 @@
                     <tr>
                       <th style="position: relative; padding-left: 30px" headers="users" id="receive_<%= alert.alertName %>"><%= alert.alertName %></th>
                         <% roles2.forEach(function(roles2) { %>
-                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
+                        <% var backColor = '' %>
+                        <% if (roles2.roleID > 95) { %>
+                        <% backColor = '#f9ebd6' %>
+                        <% } %>
+                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" style="background-color: <%= backColor %>">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="aclAlertCheckBoxRealReceived"
@@ -431,7 +447,13 @@
                     <tr>
                       <td>WHO CAN RECEIVE DRILL ALERTS</td>
                         <% roles2.forEach(function(roles2) { %>
-                      <th id="<%= roles2.roleName %>" scope="col"><b><%= roles2.roleName %></b></th>
+                        <% var backColor = '' %>
+                        <% var text = '' %>
+                        <% if (roles2.roleID > 95) { %>
+                        <% backColor = '#f9ebd6' %>
+                        <% text = '' %>
+                        <% } %>
+                      <th id="<%= roles2.roleName %>" scope="col" style="background-color: <%= backColor %>; color: <%= text %>"><b><%= roles2.roleName %></b></th>
                         <% }); %>
                     </tr>
                     </thead>
@@ -441,7 +463,13 @@
                     <tr>
                       <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
                         <% roles2.forEach(function(roles2) { %>
-                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
+                        <% var backColor = '' %>
+                        <% var text = '' %>
+                        <% if (roles2.roleID > 95) { %>
+                        <% backColor = '#f7e2c3' %>
+                        <% text = '' %>
+                        <% } %>
+                      <td headers="users <%= alerts.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5" style="background-color: <%= backColor %>; color: <%= text %>">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="multi"
@@ -467,7 +495,11 @@
                     <tr>
                       <th style="position: relative; padding-left: 30px" headers="users" id="receive_<%= alert.alertName %>"><%= alert.alertName %></th>
                         <% roles2.forEach(function(roles2) { %>
-                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center">
+                        <% var backColor = '' %>
+                        <% if (roles2.roleID > 95) { %>
+                        <% backColor = '#f9ebd6' %>
+                        <% } %>
+                      <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" style="background-color: <%= backColor %>">
                           <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
                         <input type="checkbox"
                                name="aclAlertCheckBoxDrillReceived"

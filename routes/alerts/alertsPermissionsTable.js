@@ -95,10 +95,8 @@ module.exports.savePost = function(req, res) {
                     arrRoles = [];
                 }
             }
-
         }
         arrTotal.push(arrAlerts);
-
     }
     // end of Build array Object of all checked checkboxes ---------------
 
@@ -127,7 +125,14 @@ module.exports.savePost = function(req, res) {
                     });
                 }
             }
-            alert.save();
+            alert.save(function (err) {
+                if (err) {
+                    console.log('err - ',err);
+                    return res.status(409).send('showAlert')
+                } else {
+
+                }
+            });
         })
     });
     //end of Puts all checkboxes with value False or True
