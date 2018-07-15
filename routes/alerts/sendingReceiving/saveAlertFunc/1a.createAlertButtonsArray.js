@@ -60,13 +60,13 @@ function getArrays(req, typeAclAlert, callback) {
                     }
                     //end of___ checks is alertID already exits. If Exits, remove duplicate
                     arrayAlert.push({
-                        'groupID': alert[i].alertTypeID,
+                        'groupID': alert[i].groupID,
                         'alertTypeSortID': alert[i].alertTypeSortID,
-                        'alertTypeName': alert[i].alertTypeName,
+                        'name': alert[i].name,
                         'alertID': alert[i].alertID,
                         'alertSortID': alert[i].alertSortID,
                         'alertName': alert[i].alertName,
-                        'alertColor': alert[i].alertTypeName,
+                        'alertColor': alert[i].name,
                         'alertColorValue': alert[i].alertTypeValue
                     });
                 }

@@ -58,13 +58,13 @@
     <script>
         var color;
         var colorName;
-        var colorValue;
+        var bgValue;
         function GetSelectedItem(el)
         {
             var e = document.getElementById(el);
             color = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
             colorName = e.options[e.selectedIndex].text;
-            colorValue = e.options[e.selectedIndex].value;
+            bgValue = e.options[e.selectedIndex].value;
         }
 
 
@@ -76,7 +76,7 @@
 
                 var soundTypeId = this[this.selectedIndex].value;
                 var soundID = this[this.selectedIndex].id;
-                console.log('soundID = ',soundID);
+
                 var soundArray = soundID.split(",").map(String);
 
                 var radioComplete = [];
@@ -101,7 +101,6 @@
                 $.widget("custom.selectmenu", $.ui.selectmenu, {
                     _renderItem: function(ul, item) {
 
-                        console.log(item);
                         var li = $("<li>"),
                             wrapper = $("<div>");
 
@@ -178,13 +177,12 @@
                     alert("Group ID must be filled out");
                     return false;
                 }
-                console.log('sound = ',sound);
+
                 if (!sound) {
                     alert("Please choose a Sound");
                     return false;
                 }
                 //--------------------------------forms validation end-------
-
 
                 $.post("/alertGroups/addAlertGroups",{
 
@@ -192,9 +190,9 @@
                     alertGroupName: alertGroupName,
                     sortID: sortID,
                     colorName: colorName,
-                    colorValue: colorValue,
+                    bgValue: bgValue,
                     icon: icon,
-                    sound:sound
+                    sound: sound
 
                 },function(data){
                     if(data==='done')
@@ -250,7 +248,6 @@
                 <div class="title_right">
 
                     <div class="pull-left">
-                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-primary">Cancel</button></a>
                         <% if (aclShowAlertGroups == null || aclShowAlertGroups.checkBoxValue == true) {%>
                         <button type="button"
                                 id="btSubmit"
@@ -268,6 +265,7 @@
                                 class="btn btn-success" disabled>Save
                         </button>
                         <% } %>
+                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Cancel</button></a>
                     </div>
 
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -329,7 +327,7 @@
                                 <% } %>
 
 
-                                <% if (alertGroup.alertTypeID !== 1) {%>
+                                <% if (alertGroup.groupID !== 1) {%>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">

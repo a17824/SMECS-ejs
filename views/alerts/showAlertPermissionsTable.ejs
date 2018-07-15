@@ -89,22 +89,22 @@
     <th id="send" class="span" colspan="<%= roles2Count + 1 %>" scope="colgroup" align="left"><b>SEND ALERTS</b></th>
     <% alertGroup.forEach(function(alertGroup) { %>
     <tr>
-        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
+        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.name %></b></th>
         <% roles2.forEach(function(roles2) { %>
         <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
             <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>
             <input type="checkbox"
                    name="multi"
-                   id="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   id="S<%= roles2.roleID %><%= alertGroup.groupID %>"
                    class="chk-all"
-                   data-child="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   data-child="S<%= roles2.roleID %><%= alertGroup.groupID %>"
                    onClick="EnableSubmit(this)"/>
             <% } else { %>
             <input type="checkbox"
                    name="multi"
-                   id="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   id="S<%= roles2.roleID %><%= alertGroup.groupID %>"
                    class="chk-all"
-                   data-child="S<%= roles2.roleID %><%= alertGroup.alertTypeID %>"
+                   data-child="S<%= roles2.roleID %><%= alertGroup.groupID %>"
                    onClick="EnableSubmit(this)" disabled/>
             <% } %>
         </td>
@@ -112,7 +112,7 @@
     </tr>
     <% alert.forEach(function(alert) { %>
     <% if (alert.softDeleted == false) { %>
-    <% if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+    <% if (alertGroup.groupID == alert.group.groupID) { %>
     <tr>
         <th align="left" headers="users" id="send_<%= alert.alertName %>"><%= alert.alertName %></th>
         <% roles2.forEach(function(roles2) { %>
@@ -152,7 +152,7 @@
     <th id="send" class="span" colspan="<%= roles2Count + 1 %>" scope="colgroup" align="left"><b>RECEIVE ALERTS</b></th>
     <% alertGroup.forEach(function(alertGroup) { %>
     <tr>
-        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.alertTypeName %></b></th>
+        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= alertGroup.name %></b></th>
         <% roles2.forEach(function(roles2) { %>
         <td headers="users <%= alert.alertName %>  <%= roles2.roleName %>" align="center" bgcolor="#f5f5f5">
             <% if ((aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true)) {%>

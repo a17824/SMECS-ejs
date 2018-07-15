@@ -5,22 +5,30 @@ function iconBuild(icons){
     }
 }
 
+module.exports.groupColorExport = function(callback) {
+    colorBuild(function (result) {
+        var color = result;
+        callback(color);
+    });
+};
+
+
 function colorBuild(callback){
     var Color = {
         Data: [
-            {RgbValue: 'df514f', ColorName: 'Red', ColorText: 'Red2'},
-            {RgbValue: 'CD69C9', ColorName: 'Orchild', ColorText: 'Red2'},
-            {RgbValue: 'FF00FF', ColorName: 'Magenta', ColorText: 'Red2'},
-            {RgbValue: '2db69c', ColorName: 'Green', ColorText: 'Red2'},
-            {RgbValue: '8FBC8F', ColorName: 'Darkseagreen', ColorText: 'Red2'},
-            {RgbValue: '76EEC6', ColorName: 'Aquamarine', ColorText: 'Red2'},
-            {RgbValue: '307bbc', ColorName: 'Blue', ColorText: 'Red2'},
-            {RgbValue: '59c0df', ColorName: 'LightBlue', ColorText: 'Red2'},
-            {RgbValue: '6A5ACD', ColorName: 'Slateblue', ColorText: 'Red2'},
-            {RgbValue: 'efad4f', ColorName: 'Orange', ColorText: 'Red2'},
-            {RgbValue: 'FFD700', ColorName: 'Gold', ColorText: 'Red2'},
-            {RgbValue: 'fdfd96 ', ColorName: 'Yellow', ColorText: 'Red2'},
-            {RgbValue: '000000', ColorName: 'Black', ColorText: 'Red2'}
+            {RgbValue: 'df514f', ColorName: 'Red', ColorText: 'FFFFFF'},
+            {RgbValue: 'CD69C9', ColorName: 'Orchild', ColorText: 'FFFFFF'},
+            {RgbValue: 'FF00FF', ColorName: 'Magenta', ColorText: 'FFFFFF'},
+            {RgbValue: '2db69c', ColorName: 'Green', ColorText: 'FFFFFF'},
+            {RgbValue: '8FBC8F', ColorName: 'Darkseagreen', ColorText: 'FFFFFF'},
+            {RgbValue: '76EEC6', ColorName: 'Aquamarine', ColorText: 'FFFFFF'},
+            {RgbValue: '307bbc', ColorName: 'Blue', ColorText: 'FFFFFF'},
+            {RgbValue: '59c0df', ColorName: 'LightBlue', ColorText: 'FFFFFF'},
+            {RgbValue: '6A5ACD', ColorName: 'Slateblue', ColorText: 'FFFFFF'},
+            {RgbValue: 'efad4f', ColorName: 'Orange', ColorText: 'FFFFFF'},
+            {RgbValue: 'FFD700', ColorName: 'Gold', ColorText: 'FFFFFF'},
+            {RgbValue: 'fdfd96 ', ColorName: 'Yellow', ColorText: '000000'},
+            {RgbValue: '000000', ColorName: 'Black', ColorText: 'FFFFFF'}
             //{RgbValue: 'FFFFFF', ColorName: 'White'},
 
 
@@ -33,7 +41,7 @@ function colorBuild(callback){
 module.exports.soundBuild = function(callback) {
     var sound = [];
 
-    var soundTypeId = [
+    var soundID = [
         1,
         2,
         3
@@ -77,7 +85,7 @@ module.exports.soundBuild = function(callback) {
 
     ];
 
-    sound.push(soundTypeId);
+    sound.push(soundID);
     sound.push(soundType);
     sound.push(animals);
     sound.push(sirens);

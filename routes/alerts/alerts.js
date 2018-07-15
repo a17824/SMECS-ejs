@@ -94,7 +94,7 @@ module.exports.create = function(req, res) {
 
 module.exports.createPost = function(req, res) {
 
-    models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
+    models.AlertsGroup.findOne({'groupID': req.body.alertGroupID}, function(err, group){
         models.Roles2.find({}, function(err, roles) {
             var rolesArray = [];
             roles.forEach(function (role) {
@@ -107,11 +107,18 @@ module.exports.createPost = function(req, res) {
             });
 
             var alert1 = new models.Alerts({
-                alertTypeID: req.body.alertGroupID,
-                alertTypeSortID: alertGroup[0].sortID,
-                alertTypeName: req.body.alertGroupName,
-                alertTypeColorName: alertGroup[0].colorName,
-                alertTypeColorValue: alertGroup[0].colorValue,
+                group: {
+                    groupID: group.groupID,
+                    sortID: group.sortID,
+                    name: group.name,
+                    mp3: group.mp3,
+                    icon: group.icon,
+                    color: {
+                        name: group.color.name,
+                        bgValue: group.color.bgValue,
+                        textValue: group.color.textValue
+                    }
+                },
                 alertRequest911Call: req.body.request911Call,
                 alertRequestProcedureCompleted: req.body.alertRequestProcedureCompleted,
                 alertRequestWeAreSafe: req.body.alertRequestWeAreSafe,
@@ -119,11 +126,10 @@ module.exports.createPost = function(req, res) {
                 whoCanCall911: req.body.whoCanCall911,
                 alertID: req.body.alertID,
                 alertName: req.body.alertName,
-                alertSlugName: slug(req.body.alertName),
                 alertProcedure: req.body.alertProcedure,
                 sortID: req.body.sortID,
                 icon: req.body.icon,
-                mp3: req.body.sound,
+
                 whoCanSendReceive: {
                     sendReal: rolesArray,
                     receiveReal: rolesArray,
@@ -204,11 +210,16 @@ module.exports.updatePost = function(req, res) {
 
     var alertToUpdate1 = req.body.alertToUpdate;
     models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
-        models.AlertsGroup.find({'alertTypeID': req.body.alertGroupID}, function(err, alertGroup){
-            alert.alertTypeID = req.body.alertGroupID;
-            alert.alertTypeName = req.body.alertGroupName;
-            alert.alertTypeColorName = alertGroup[0].colorName;
-            alert.alertTypeColorValue = alertGroup[0].colorValue;
+        models.AlertsGroup.findOne({'groupID': req.body.alertGroupID}, function(err, group){
+            alert.group.groupID = group.groupID;
+            alert.group.sortID = group.sortID;
+            alert.group.name = group.name;
+            alert.group.mp3 = group.mp3;
+            alert.group.icon = group.icon;
+            alert.group.color.name = group.color.name;
+            alert.group.color.bgValue = group.color.bgValue;
+            alert.group.color.textValue = group.color.textValue;
+
             alert.alertRequest911Call = req.body.request911Call;
             alert.whoCanCall911 = req.body.whoCanCall911;
             alert.alertName = req.body.alertName;
@@ -218,7 +229,7 @@ module.exports.updatePost = function(req, res) {
             alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
             alert.alertRequestForINeedHelp = req.body.alertRequestForINeedHelp;
             alert.icon = req.body.icon;
-            alert.mp3 = req.body.sound;
+
 
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {

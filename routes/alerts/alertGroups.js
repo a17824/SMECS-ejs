@@ -35,12 +35,12 @@ module.exports.add = function(req, res) {
 
         var stream = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
-            array.push(doc.alertTypeID);
+            array.push(doc.groupID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            console.log('arraySort = ',arraySort);
+            console.log('array = ',array);
             res.render('alertsAndGroups/alertGroups/addGroups',{
                 title:'Add Alert Group',
                 arraySort: arraySort,
@@ -58,32 +58,46 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
-    var soundArray = req.body.sound.split(",").map(String);
-    var soundTypeId = parseInt(soundArray[0]);
-    var soundType = soundArray[1];
-    var soundName = soundArray[2];
-    var soundMp3 = soundArray[3];
+    async.parallel([
+        function(callback){buildIconsColorSound.groupColorExport(function(color){callback(null, color);});}  //get Group Colors
 
-    var alertGroup1 = new models.AlertsGroup({
-        alertTypeID: req.body.alertGroupID,
-        alertTypeName: req.body.alertGroupName,
-        sortID: req.body.sortID,
-        colorName: req.body.colorName,
-        colorValue: req.body.colorValue,
-        icon: req.body.icon,
-        sound: {
-            soundTypeId: soundTypeId,
-            soundType: soundType,
-            name: soundName,
-            mp3: soundMp3
-        }
-    });
-    alertGroup1.save(function (err) {
-        if (err && (err.code === 11000 || err.code === 11001)) {
-            return res.status(409).send('showAlert')
-        }else{
-            return res.send({redirect:'/alertGroups/showAlertGroups'})
-        }
+    ],function(err, results){
+        var groupColor = results[0];
+        var textValue = 'FFFFFF';
+        getGroupTextColor(req.body.colorName, groupColor, textValue, function (result) {
+           textValue = result;
+        });
+
+        var soundArray = req.body.sound.split(",").map(String);
+        var soundID = parseInt(soundArray[0]);
+        var soundType = soundArray[1];
+        var soundName = soundArray[2];
+        var soundMp3 = soundArray[3];
+
+        var alertGroup1 = new models.AlertsGroup({
+            groupID: req.body.alertGroupID,
+            sortID: req.body.sortID,
+            name: req.body.alertGroupName,
+            icon: req.body.icon,
+            color: {
+                name: req.body.colorName,
+                bgValue: req.body.bgValue,
+                textValue: textValue
+            },
+            sound: {
+                soundID: soundID,
+                soundType: soundType,
+                name: soundName,
+                mp3: soundMp3
+            }
+        });
+        alertGroup1.save(function (err) {
+            if (err && (err.code === 11000 || err.code === 11001)) {
+                return res.status(409).send('showAlert')
+            }else{
+                return res.send({redirect:'/alertGroups/showAlertGroups'})
+            }
+        });
     });
 };
 /*-------------------------end of adding AlertGroups*/
@@ -119,7 +133,7 @@ module.exports.update = function(req, res) {
 
         var stream = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
-            array.push(doc.alertTypeID);
+            array.push(doc.groupID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
@@ -140,92 +154,72 @@ module.exports.update = function(req, res) {
     })
 };
 module.exports.updatePost = function(req, res) {
-    var alertGroupToUpdate1 = req.body.alertGroupToUpdate;
+    async.parallel([
+        function(callback){buildIconsColorSound.groupColorExport(function(color){callback(null, color);});}  //get Group Colors
 
-    var soundArray = req.body.sound.split(",").map(String);
-    var soundTypeId = parseInt(soundArray[0]);
-    var soundType = soundArray[1];
-    var soundName = soundArray[2];
-    var soundMp3 = soundArray[3];
+    ],function(err, results){
+        var groupColor = results[0];
+        var textValue = 'FFFFFF';
+        getGroupTextColor(req.body.colorName, groupColor, textValue, function (result) {
+            textValue = result;
+        });
 
-    console.log('req.body.sound = ',req.body.sound);
-    console.log('soundArray = ',soundArray);
+        var alertGroupToUpdate1 = req.body.alertGroupToUpdate;
+
+        var soundArray = req.body.sound.split(",").map(String);
+        var soundID = parseInt(soundArray[0]);
+        var soundType = soundArray[1];
+        var soundName = soundArray[2];
+        var soundMp3 = soundArray[3];
 
 
-    models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
-        alertGroup.alertTypeID = req.body.alertGroupID;
-        alertGroup.alertTypeName = req.body.alertGroupName;
-        alertGroup.sortID = req.body.sortID;
-        alertGroup.colorName = req.body.colorName;
-        alertGroup.colorValue = req.body.colorValue;
-        alertGroup.icon = req.body.icon;
-        alertGroup.sound.soundTypeId = soundTypeId;
-        alertGroup.sound.soundType = soundType;
-        alertGroup.sound.name = soundName;
-        alertGroup.sound.mp3 = soundMp3;
+        models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
+            alertGroup.groupID = req.body.groupID;
+            alertGroup.name = req.body.name;
+            alertGroup.sortID = req.body.sortID;
+            alertGroup.color.name = req.body.colorName;
+            alertGroup.color.bgValue = req.body.bgValue;
+            alertGroup.icon = req.body.icon;
+            alertGroup.sound.soundID = soundID;
+            alertGroup.sound.soundType = soundType;
+            alertGroup.sound.name = soundName;
+            alertGroup.sound.mp3 = soundMp3;
 
-        alertGroup.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }else{
-                //UPDATE Alerts Group_name & Group_id DATABASE--------
-                var alertToUpdate1 = req.body.oldAlertGroupID;
-                models.Alerts.find({}, function(err, alerts) {
-                    if( err || !alerts) console.log("No alerts to update");
-                    else alerts.forEach( function(alert) {
-                        if (alert.alertTypeID == alertToUpdate1){
-                            alert.alertTypeID = req.body.alertGroupID;
-                            alert.alertTypeSortID = req.body.sortID;
-                            alert.alertTypeName = req.body.alertGroupName;
-                            alert.alertTypeColorName = req.body.colorName;
-                            alert.alertTypeColorValue = req.body.colorValue;
-                            alert.mp3 = soundMp3;
-                            alert.save(function (err) {
-                                if (err && (err.code === 11000 || err.code === 11001)) {
-                                    console.log(err);
-                                    return res.status(409).send('showAlert')
-                                }else {
-                                    var typeAclAlert = 'AclAlertsReal';
-                                    updateAclAlerts(typeAclAlert);
-
-                                    typeAclAlert = 'AclAlertsTest';
-                                    updateAclAlerts(typeAclAlert);
-
-                                }
-                                //UPDATE ACL ALERTS--------
-                                function updateAclAlerts(typeAclAlert){
-                                    models[typeAclAlert].find({}, function(err, aclGroups) {
-                                        if( err || !aclGroups) console.log("No aclAlerts found");
-                                        else aclGroups.forEach( function(aclGroup) {
-                                            if (aclGroup.checkBoxID == 's'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID ){
-                                                aclGroup.alertTypeID = alert.alertTypeID;
-                                                aclGroup.alertTypeSortID = alert.alertTypeSortID;
-                                                aclGroup.alertTypeName = req.body.alertGroupName;
-                                                aclGroup.alertTypeValue = req.body.colorValue;
-                                                aclGroup.save();
-                                            }
-                                            if (aclGroup.checkBoxID == 'r'+aclGroup.roleGroupID+aclGroup.alertID && req.body.oldAlertGroupID == aclGroup.alertTypeID){
-                                                aclGroup.alertTypeID = alert.alertTypeID;
-                                                aclGroup.alertTypeSortID = alert.alertTypeSortID;
-                                                aclGroup.alertTypeName = req.body.alertGroupName;
-                                                aclGroup.alertTypeValue = req.body.colorValue;
-                                                aclGroup.save();
-                                            }
-                                        });
-                                    });
-                                }
-                                //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
-                            });
-                        }
+            alertGroup.save(function (err) {
+                if (err && (err.code === 11000 || err.code === 11001)) {
+                    console.log(err);
+                    return res.status(409).send('showAlert')
+                }else{
+                    //UPDATE Alerts Group_name & Group_id DATABASE--------
+                    var alertToUpdate1 = req.body.oldAlertGroupID;
+                    models.Alerts.find({}, function(err, alerts) {
+                        if( err || !alerts) console.log("No alerts to update");
+                        else alerts.forEach( function(alert) {
+                            if (alert.group.groupID == alertToUpdate1){
+                                alert.group.groupID = req.body.groupID;
+                                alert.group.sortID = req.body.sortID;
+                                alert.group.name = req.body.name;
+                                alert.group.icon = req.body.icon;
+                                alert.group.color.name = req.body.colorName;
+                                alert.group.color.bgValue = req.body.bgValue;
+                                alert.group.color.textValue = textValue;
+                                alert.group.mp3 = soundMp3;
+                                alert.save(function (err) {
+                                    if (err && (err.code === 11000 || err.code === 11001)) {
+                                        console.log(err);
+                                        return res.status(409).send('showAlert')
+                                    }else {
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
-                //--------end UPDATE Alerts Group_name & Group_id Database
-                return res.send({redirect:'/alertGroups/showAlertGroups'})
-            }
+                    //--------end UPDATE Alerts Group_name & Group_id Database
+                    return res.send({redirect:'/alertGroups/showAlertGroups'})
+                }
+            });
         });
     });
-
 };
 /*-------------------------end of update AlertGroups*/
 
@@ -233,13 +227,13 @@ module.exports.updatePost = function(req, res) {
 module.exports.delete = function(req, res) {
     var alertGroupToDelete = req.params.id;
     models.AlertsGroup.findOne({'_id': alertGroupToDelete}, function(err, alertGroup) {
-        models.Alerts.findOne({ alertTypeID: alertGroup.alertTypeID }, function (err, result) {
+        models.Alerts.findOne({ 'group.groupID': alertGroup.groupID }, function (err, result) {
             if (err) { console.log(err) };
 
             if (result) {
                 console.log("Alert Group NOT deleted");
-                //return res.status(409).send(' ALERT! ' + alertGroup.alertTypeName + ' Group not deleted because there are Alerts using this Alert Group. Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.');
-                req.flash('error_messages', ' Attention! ' + alertGroup.alertTypeName + ' Group not deleted because there are Alerts using this Alert Group. <br> Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.');
+                //return res.status(409).send(' ALERT! ' + alertGroup.name + ' Group not deleted because there are Alerts using this Alert Group. Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.');
+                req.flash('error_messages', ' Attention! ' + alertGroup.name + ' group was not deleted because there are Alerts using this Alert Group. <br> Please change the Alerts under this Alert Group to other Group and then delete this Alert Group.');
                 res.redirect('/alertGroups/showAlertGroups');
             } else {
                 models.AlertsGroup.remove({'_id': alertGroupToDelete}, function(err) {
@@ -251,3 +245,13 @@ module.exports.delete = function(req, res) {
     });
 };
 /* ---- end of DELETE AlertGroups. */
+
+function getGroupTextColor(colorName, groupColor, textValue, callback) {
+    for (var i=0; i < groupColor.Data.length; i++) {
+        if (colorName == groupColor.Data[i].ColorName ){
+            textValue = groupColor.Data[i].ColorText;
+            callback(textValue);
+            break
+        }
+    }
+}

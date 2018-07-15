@@ -399,22 +399,22 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert group</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <% alertGroup.forEach(function(alertGroup, idx, array) { %>
-                                        <%if (alertGroup.alertTypeID == alert.alertTypeID) { %>
+                                        <%if (alertGroup.groupID == alert.group.groupID) { %>
                                         <input type="radio"
                                                class="flat"
                                                style="margin-bottom: 2px"
                                                name="alertGroupID"
-                                               id="<%= alertGroup.alertTypeName %>"
-                                               value="<%= alertGroup.alertTypeID %>,<%= alertGroup.alertTypeName %>,<%= alertGroup.sound.mp3 %>" checked>
-                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
+                                               id="<%= alertGroup.name %>"
+                                               value="<%= alertGroup.groupID %>,<%= alertGroup.name %>,<%= alertGroup.sound.mp3 %>" checked>
+                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.name %></label>
                                         <% }else {%>
                                         <input type="radio"
                                                class="flat"
                                                style="margin-bottom: 2px"
                                                name="alertGroupID"
-                                               id="<%= alertGroup.alertTypeName %>"
-                                               value="<%= alertGroup.alertTypeID %>,<%= alertGroup.alertTypeName %>,<%= alertGroup.sound.mp3 %>">
-                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.alertTypeName %></label>
+                                               id="<%= alertGroup.name %>"
+                                               value="<%= alertGroup.groupID %>,<%= alertGroup.name %>,<%= alertGroup.sound.mp3 %>">
+                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.name %></label>
                                         <% } %>
                                         <% if (idx !== array.length - 1){ %> <!-- if is not the last loop do... -->
                                         <br>

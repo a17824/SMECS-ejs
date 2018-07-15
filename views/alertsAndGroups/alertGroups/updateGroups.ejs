@@ -59,22 +59,15 @@
     <script>
         var color;
         var colorName;
-        var colorValue;
-        var textValue;
+        var bgValue;
+
         function GetSelectedItem(el)
         {
             var e = document.getElementById(el);
 
-            console.log('e');
-            console.log(e);
-
-            console.log('e.options[e.selectedIndex]');
-            console.log(e.options[e.selectedIndex]);
-
             color = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
             colorName = e.options[e.selectedIndex].text;
-            colorValue = e.options[e.selectedIndex].value;
-            textValue = e.options[this.selectedIndex].parentNode.label
+            bgValue = e.options[e.selectedIndex].value;
         }
 
 
@@ -83,31 +76,21 @@
 
             //build radios depending on selected soundType
             $("#getSoundType").change(function () {
-                var soundOld = $("#soundOld").val();
+
                 var soundTypeId = this[this.selectedIndex].value;
                 var soundID = this[this.selectedIndex].id;
-
-                console.log('soundID = ',soundID);
 
                 var soundArray = soundID.split(",").map(String);
 
                 var radioComplete = [];
                 for (var i = 1; i < soundArray.length; i += 3) {
-                    if(soundArray[i] == soundOld){
-                        var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
-                            'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
-                            'name="radio" ' +
-                            'class="icheckbox_flat-green" checked/> ' + soundArray[i] + '' +
-                            '<div id="audio2"><audio controls controlsList="nodownload" style="position: relative; left: 150px; top: 10px"><source src="/public/sounds/' + soundArray[i+1] +'.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio></div></div><div class="divider-dashed"></div>');
 
+                    var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
+                        'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
+                        'name="radio" ' +
+                        'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
+                        '<div id="audio2"><audio controls controlsList="nodownload" style="position: relative; left: 150px; top: 10px"><source src="/public/sounds/' + soundArray[i+1] +'.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio></div></div><div class="divider-dashed"></div>');
 
-                    } else{
-                        var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
-                            'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
-                            'name="radio" ' +
-                            'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
-                            '<div id="audio2"><audio controls controlsList="nodownload" style="position: relative; left: 150px; top: 10px"><source src="/public/sounds/' + soundArray[i+1] +'.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio></div></div><div class="divider-dashed"></div>');
-                    }
 
                     radioComplete.push(radioBtn);
                 }
@@ -121,7 +104,7 @@
                 $.widget("custom.selectmenu", $.ui.selectmenu, {
                     _renderItem: function(ul, item) {
 
-                        console.log(item);
+
                         var li = $("<li>"),
                             wrapper = $("<div>");
 
@@ -148,26 +131,13 @@
                 colorBuild(function (result) {
                     var Color = result;
 
-
-
                     for (var i = 0; i < Color.Data.length; i++) {
-                        //create a constant for element
-                        const $sel = $('#DropDownID');
-
-                        //create a variable to hold our optgroup
-                        var group = $('<optgroup/>');
-
-                        //assign label to optgroup and append to select element
-                        group.attr('label', Color.Data[i].ColorText).appendTo($sel);
-
-                        $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).text(Color.Data[i].ColorText).html(Color.Data[i].ColorName));
-
+                        $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName));
                     }
                 });
 
             });
             //end off dropdown rectangle color
-
 
 
             var oldSortID = $("#oldSortID").val();
@@ -220,20 +190,17 @@
                 }
                 //--------------------------------forms validation end-------
 
-                console.log('textValue = ',textValue);
-                /*
                 $.post("/alertGroups/updateAlertGroups",{
                     alertGroupToUpdate: alertGroup1,
                     oldAlertGroupID: oldAlertGroupID,
-                    alertGroupID: alertGroupID,
+                    groupID: alertGroupID,
                     oldAlertGroupName: oldAlertGroupName,
-                    alertGroupName: alertGroupName,
+                    name: alertGroupName,
                     sortID: sortID,
                     colorName: colorName,
-                    colorValue: colorValue,
-                    textValue: textValue,
+                    bgValue: bgValue,
                     icon: icon,
-                    sound:sound
+                    sound: sound
 
                 },function(data){
                     if(data==='done')
@@ -244,7 +211,7 @@
                 }).error(function(error){
                     if(error.responseText == 'showAlert')
                         alert("Alert Group NAME already in use. Choose a different Name.")
-                });*/
+                });
             });
         });
     </script>
@@ -341,11 +308,11 @@
                                                class="form-control"
                                                placeholder="Parents chat"
                                                id="alertGroupName"
-                                               value="<%= alertGroup.alertTypeName %>">
+                                               value="<%= alertGroup.name %>">
 
                                         <input type="hidden"
                                                id="oldAlertGroupName"
-                                               value="<%= alertGroup.alertTypeName %>">
+                                               value="<%= alertGroup.name %>">
                                     </div>
                                 </div>
 
@@ -370,17 +337,15 @@
                                 <% } else { %>
                                 <select id='some_select' style="display:none;"></select>
                                 <% } %>
-                                <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.alertTypeID %>">
+                                <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.groupID %>">
 
 
-                                <% if (alertGroup.alertTypeID !== 1) {%>
+                                <% if (alertGroup.groupID !== 1) {%>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select name="DropDownID" id="DropDownID">
-                                            <optgroup label="Foo">
-                                            <option style="alignment: center" value="<%= alertGroup.colorValue %>" id="red7" selected disabled hidden><%= alertGroup.colorName %></option>
-                                            </optgroup>
+                                            <option style="alignment: center" value="<%= alertGroup.color.bgValue %>" id="red7" selected disabled hidden><%= alertGroup.color.name %></option>
                                         </select>
                                     </div>
                                 </div>
@@ -428,7 +393,7 @@
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select class="form-control" id="getSoundType">
                                             <% for (var i = 0; i < sounds[1].length; i++) { %>
-                                            <% if( sounds[0][i] == alertGroup.sound.soundTypeId) { %>
+                                            <% if( sounds[0][i] == alertGroup.sound.soundID) { %>
                                             <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>" selected="selected"><%= sounds[1][i] %></option>
                                             <% }else{ %>
                                             <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>"><%= sounds[1][i] %></option>
@@ -440,14 +405,14 @@
                                 <div class="clearfix"></div>
                                 <div class="divider-dashed"></div>
                                 <div id="buildRadio">
-                                    <% var soundType = alertGroup.sound.soundTypeId + 1 %>
+                                    <% var soundType = alertGroup.sound.soundID + 1 %>
                                     <% for (var i = 1; i < sounds[soundType].length; i += 3) { %>
                                     <% if( sounds[soundType][i] == alertGroup.sound.name) { %>
                                     <div class="wrapper">
                                         <div class="navi"></div>
                                         <input type="radio"
                                                style="margin-bottom: 5px"
-                                               value="<%= alertGroup.sound.soundTypeId %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
+                                               value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
                                                class="icheckbox_flat-green"
                                                name="radio" checked> <%= sounds[soundType][i] %>
 
@@ -464,7 +429,7 @@
                                         <div class="navi"></div>
                                         <input type="radio"
                                                style="margin-bottom: 5px"
-                                               value="<%= alertGroup.sound.soundTypeId %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
+                                               value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
                                                class="icheckbox_flat-green"
                                                name="radio"> <%= sounds[soundType][i] %>
                                         <div class="navi"></div>

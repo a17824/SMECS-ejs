@@ -140,7 +140,7 @@
                     }
                 }
 
-                var alertGroupIdAndSound=$("input:radio[name='alertGroupID']:checked").val();
+                var alertGroupIdAndSound=$("input:radio[name='groupID']:checked").val();
                 console.log('alertGroupIdAndSound = ',alertGroupIdAndSound);
                 if(alertGroupIdAndSound){
                     var alertGroupIdAndSoundArray = alertGroupIdAndSound.split(",").map(String);
@@ -149,7 +149,7 @@
                 }
 
                 request911Call=$("input:radio[name='request911']:checked").val();
-                alertGroupName = $("input:radio[name='alertGroupID']:checked + label").text();
+                alertGroupName = $("input:radio[name='groupID']:checked + label").text();
                 alertID=$("#some_select").val();
                 alertName=$("#alertName").val();
                 alertProcedure=$("#alertProcedure").val();
@@ -231,8 +231,8 @@
 
     <label for="alertGroup"><b>Alert Group:</b></label><br>
     <% alertGroup.forEach(function(alertGroup) { %>
-    <input type="radio" name="alertGroupID" id="<%= alertGroup.alertTypeName %>" value="<%= alertGroup.alertTypeID %>,<%= alertGroup.sound.mp3 %>">
-    <label for="alertGroupName"><%= alertGroup.alertTypeName %></label><br>
+    <input type="radio" name="groupID" id="<%= alertGroup.name %>" value="<%= alertGroup.groupID %>,<%= alertGroup.sound.mp3 %>">
+    <label for="alertGroupName"><%= alertGroup.name %></label><br>
     <% }); %><br>
 
     <label for="busRide"><b>Request Procedure completed:</b></label>

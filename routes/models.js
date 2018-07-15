@@ -171,15 +171,18 @@ module.exports.Permissions = mongoose.model("Permissions", PermissionsSchema);
 
 // DEFINE AlertsGroup COLLECTION IN MONGOdb
 var AlertsGroupSchema = new mongoose.Schema({
+    groupID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
-    alertTypeID: { type: Number, unique: true },
-    alertTypeName: { type: String, unique: true }, // Users, Alerts, Students
-    colorName: String,
-    colorValue: String,
+    name: { type: String, unique: true }, // Users, Alerts, Students
     useIcon: { type: Boolean, default: false },
     icon: String,
+    color : {
+        name: String,
+        bgValue: String,
+        textValue: String
+    },
     sound: {
-        soundTypeId: { type: Number },
+        soundID: { type: Number },
         soundType: String,
         name: String,
         mp3: String
@@ -192,15 +195,21 @@ module.exports.AlertsGroup = mongoose.model("AlertsGroup", AlertsGroupSchema);
 
 // DEFINE Alert COLLECTION IN MONGOdb
 var AlertsSchema = new mongoose.Schema({
+    group: {
+        groupID: Number,
+        sortID: Number,
+        name: String,
+        mp3: String,
+        icon: String,
+        color: {
+            name: String,
+            bgValue: String,
+            textValue: String
+        }
+    },
     sortID: { type: Number, unique: true },
-    alertTypeID: Number,
-    alertTypeSortID: Number,
-    alertTypeName: String,
-    alertTypeColorName: String,
-    alertTypeColorValue: String,
     alertID: { type: Number, unique: true },
     alertName: { type: String, unique: true }, // Lockdown, Evacuate...
-    alertSlugName: String,
     alertProcedure: String,
     alertRequest911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
@@ -210,7 +219,6 @@ var AlertsSchema = new mongoose.Schema({
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,
-    mp3: String,
     whoCanSendReceive: {
         sendReal: [{
             roleID: Number,
@@ -244,7 +252,6 @@ var AlertSentInfoSchema = new mongoose.Schema({
     alertGroupName: String,     //red, green, blue, yellow
     alertNameID: Number,
     alertName: String,          //stranger, evacuate
-    //alertSlugName: String,
     sentBy: String,
     sentDate: String,
     sentTime: String,
@@ -376,7 +383,6 @@ var AlertSentTempSchema = new mongoose.Schema({
     alertGroupName: String,
     alertNameID: Number,
     alertName: String,
-    //alertSlugName: String,
     sentBy: String,
     sentTime: String,
     notePlaceholder: String,
@@ -474,8 +480,8 @@ mongoose.model('AlertSentTemp').ensureIndexes(function(err) {
 var ReportsSentSchema = new mongoose.Schema({
     alertReportsSentID: Number,
     time: String,
-    alertTypeID: Number,
-    alertTypeName: String,
+    groupID: Number,
+    name: String,
     alertID: Number,
     alertName: String,
     sentBy: String,
@@ -490,8 +496,8 @@ module.exports.ReportsSent = mongoose.model("ReportsSent", ReportsSentSchema);
 // DEFINE ReportsReceived COLLECTION IN MONGOdb
 var ReportsReceivedSchema = new mongoose.Schema({
     alertReportsReceivedID: Number,
-    alertTypeID: Number,
-    alertTypeName: String,
+    groupID: Number,
+    name: String,
     alertID: Number,
     alertName: String,
     scope: String,      // Teachers, Staff, Parents...
@@ -516,47 +522,9 @@ var AclPermissionsSchema = new mongoose.Schema({
 var AclPermissions;
 module.exports.AclPermissions = mongoose.model("AclPermissions", AclPermissionsSchema);
 
-// DEFINE aclAlerts - WHO CAN SEND RECEIVE ALERTS
-var AclAlertsRealSchema = new mongoose.Schema({
-    roleGroupID: Number,
-    roleGroupName: String, // Principal, Office Staff, Teacher
-    alertTypeID: Number,
-    alertTypeSortID: Number,
-    alertTypeName: String, // Red, Green, Blue...
-    alertTypeValue: String,
-    alertID: Number,
-    alertSortID: Number,
-    alertName: String, // Permission to Send/Receive alerts
-    alertSoftDeleted: { type: Boolean, default: false},
-    checkBoxType: String,
-    checkBoxID: { type: String, unique: true },
-    checkBoxName: { type: String, unique: true },
-    checkBoxValue: { type: Boolean, default: false}
 
-}, {collection:"AclAlertsReal"}); //stops Mongoose of giving plurals to our collections names
-var AclAlertsReal;
-module.exports.AclAlertsReal = mongoose.model("AclAlertsReal", AclAlertsRealSchema);
 
-// DEFINE aclAlertsTest - WHO CAN SEND RECEIVE TEST ALERTS
-var AclAlertsTestSchema = new mongoose.Schema({
-    roleGroupID: Number,
-    roleGroupName: String, // Principal, Office Staff, Teacher
-    alertTypeID: Number,
-    alertTypeSortID: Number,
-    alertTypeName: String, // Red, Green, Blue...
-    alertTypeValue: String,
-    alertID: Number,
-    alertSortID: Number,
-    alertName: String, // Permission to Send/Receive alerts
-    alertSoftDeleted: { type: Boolean, default: false},
-    checkBoxType: String,
-    checkBoxID: { type: String, unique: true },
-    checkBoxName: { type: String, unique: true },
-    checkBoxValue: { type: Boolean, default: false}
 
-}, {collection:"AclAlertsTest"}); //stops Mongoose of giving plurals to our collections names
-var AclAlertsTest;
-module.exports.AclAlertsTest = mongoose.model("AclAlertsTest", AclAlertsTestSchema);
 
 // DEFINE Floors COLLECTION IN MONGOdb
 var FloorsSchema = new mongoose.Schema({

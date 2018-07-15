@@ -236,14 +236,14 @@
                                         <% alertGroup.forEach(function(alertGroup) { %>
                                         <tr>
                                             <td><%= alertGroup.sortID %></td>
-                                            <td><%= alertGroup.alertTypeName %></td>
+                                            <td><%= alertGroup.name %></td>
                                             <% if (userAuthID == 1) {%>
-                                            <td><%= alertGroup.alertTypeID %></td>
+                                            <td><%= alertGroup.groupID %></td>
                                             <% } %>
-                                            <% if (alertGroup.alertTypeID == 1) {%>
+                                            <% if (alertGroup.groupID == 1) {%>
                                             <td>N/A</td>
                                             <% } else { %>
-                                            <td><%= alertGroup.colorName %></td>
+                                            <td><%= alertGroup.color.name %></td>
                                             <% } %>
                                             <td><%= alertGroup.sound.name %></td>
                                             <td>
@@ -313,11 +313,11 @@
                                         <tbody>
                                         <% alertGroup.forEach(function(alertGroup) { %>
                                         <% alert.forEach(function(alert) { %>
-                                        <% if(alertGroup.alertTypeName == alert.alertTypeName) { %>
+                                        <% if(alertGroup.name == alert.group.name) { %>
                                         <% if (alert.softDeleted == false) { %>
                                         <tr>
                                             <td><%= alertGroup.sortID %></td>
-                                            <td><%= alert.alertTypeName %></td>
+                                            <td><%= alert.group.name %></td>
                                             <td><%= alert.sortID %></td>
                                             <td><%= alert.alertName %></td>
 

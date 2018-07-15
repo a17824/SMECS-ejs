@@ -54,7 +54,7 @@
     <% alert.forEach(function(alert) { %>
     <% if (alert.softDeleted == true) { %>
     <tr>
-        <td><%= alert.alertTypeName %></td>
+        <td><%= alert.group.name %></td>
         <td><%= alert.alertName %></td>
         <% if (userAuthID == 1) {%>
         <td><%= alert.alertID %></td>

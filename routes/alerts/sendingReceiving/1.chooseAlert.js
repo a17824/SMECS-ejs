@@ -63,8 +63,8 @@ module.exports.showGroups = function(req, res) {
                     groupReal = real[i].groupID;
                     var arrGroupObjReal = {
                         groupID: real[i].groupID,
-                        alertTypeSortID: real[i].alertTypeSortID,
-                        alertTypeName: real[i].alertTypeName,
+                        sortID: real[i].sortID,
+                        name: real[i].name,
                         alertColor: real[i].alertColor,
                         alertColorValue: real[i].alertColorValue
                     };
@@ -77,9 +77,9 @@ module.exports.showGroups = function(req, res) {
                 if(test[x].groupID !== groupTest) {
                     groupTest = test[x].groupID;
                     var arrGroupObjTest = {
-                        alertTypeSortID: test[x].alertTypeSortID,
+                        sortID: test[x].sortID,
                         groupID: test[x].groupID,
-                        alertTypeName: test[x].alertTypeName,
+                        name: test[x].name,
                         alertColor: test[x].alertColor,
                         alertColorValue: test[x].alertColorValue
                     };
@@ -112,7 +112,7 @@ module.exports.showGroups = function(req, res) {
 
 module.exports.showGroupsPost = function(req, res) {
     var alertTemp1 = new models.AlertSentTemp({
-        alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'alertTypeID' of undefined'
+        alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
         alertGroupName: req.body.alertGroupName,
         testModeON: req.body.testModeON
     });

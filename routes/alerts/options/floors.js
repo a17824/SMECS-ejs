@@ -172,7 +172,7 @@ module.exports.delete = function(req, res) {
 
             if (result) {
                 console.log("Floor NOT deleted");
-                return res.status(409).send(' ALERT! ' + alertGroup.alertTypeName + ' Floor not deleted because there are Rooms using this Floor. Please remove the Rooms using this Floor and then delete this Floor.')
+                return res.status(409).send(' ALERT! ' + alertGroup.name + ' Floor not deleted because there are Rooms using this Floor. Please remove the Rooms using this Floor and then delete this Floor.')
             }
             //end of check if there are Rooms using this Floor
 
