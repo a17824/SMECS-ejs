@@ -2,7 +2,6 @@
 var models = require('./../../models');
 var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
-var buildAlertButtonsArray = require('./saveAlertFunc/1a.createAlertButtonsArray.js');
 var functions = require('./../../functions');
 
 
@@ -35,11 +34,18 @@ module.exports.showGroups = function(req, res) {
 
 
     function showGroups2() {
+        var roleX = req.user.userRoleID; // EJS user
+        if (req.decoded)      // API user
+            roleX = req.decoded.user.userRoleID;
+
         async.parallel([
-            function(callback){
-                buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
-                    callback(null, arrayAlerts);
-                });
+            function(callback2){
+                models.Alerts.find({'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
+                }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+            },
+            function(callback2){
+                models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
+                }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
             },
             function(callback) {
                 if(req.decoded)   //API user
@@ -50,48 +56,14 @@ module.exports.showGroups = function(req, res) {
 
 
         ],function(err, results){
-
-            var real = results[0][0];
-            var test = results[0][1];
-
-
-
-            var arrayGroupsReal = [];
-            var groupReal = 99999;
-            for (var i=0; i < real.length; i++ ){
-                if(real[i].groupID !== groupReal) {
-                    groupReal = real[i].groupID;
-                    var arrGroupObjReal = {
-                        groupID: real[i].groupID,
-                        sortID: real[i].sortID,
-                        name: real[i].name,
-                        alertColor: real[i].alertColor,
-                        alertColorValue: real[i].alertColorValue
-                    };
-                    arrayGroupsReal.push(arrGroupObjReal);
-                }
-            }
-            var arrayGroupsTest = [];
-            var groupTest = 99999;
-            for (var x=0; x < test.length; x++ ){
-                if(test[x].groupID !== groupTest) {
-                    groupTest = test[x].groupID;
-                    var arrGroupObjTest = {
-                        sortID: test[x].sortID,
-                        groupID: test[x].groupID,
-                        name: test[x].name,
-                        alertColor: test[x].alertColor,
-                        alertColorValue: test[x].alertColorValue
-                    };
-                    arrayGroupsTest.push(arrGroupObjTest);
-                }
-            }
+            var arrayGroups = [];
+            buildArrayGroups(results, arrayGroups); //Build array Groups for Real and Drill Alerts
 
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
-                    aclReal: arrayGroupsReal,
-                    aclTest: arrayGroupsTest
+                    aclReal: arrayGroups[0],
+                    aclTest: arrayGroups[1]
 
                 });
 
@@ -99,9 +71,9 @@ module.exports.showGroups = function(req, res) {
                 functions.redirectTabUsers(req, res, 'showUsers');
                 res.render('alerts/sending/chooseGroup',{
                     title:'Choose Alert',
-                    aclReal: arrayGroupsReal,
-                    aclTest: arrayGroupsTest,
-                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclReal: arrayGroups[0],
+                    aclTest: arrayGroups[1],
+                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -114,6 +86,7 @@ module.exports.showGroupsPost = function(req, res) {
     var alertTemp1 = new models.AlertSentTemp({
         alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
         alertGroupName: req.body.alertGroupName,
+        groupIcon: req.body.groupIcon,
         testModeON: req.body.testModeON
     });
     alertTemp1.save();
@@ -132,11 +105,18 @@ module.exports.showGroupsPost = function(req, res) {
 
 /* Choose Alert. -------------------------------*/
 module.exports.showAlerts = function(req, res) {
+    var roleX = req.user.userRoleID; // EJS user
+    if (req.decoded)      // API user
+        roleX = req.decoded.user.userRoleID;
+
     async.parallel([
-        function(callback){
-            buildAlertButtonsArray.getRealTestAlerts(req,function(arrayAlerts) {
-                callback(null, arrayAlerts);
-            });
+        function(callback2){
+            models.Alerts.find({'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
+            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+        },
+        function(callback2){
+            models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
+            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
         },
         function(callback) {
             if(req.decoded)   //API
@@ -155,35 +135,23 @@ module.exports.showAlerts = function(req, res) {
                         functions.alertTimeExpired(req,res);
                     }
                     else {
-                        var real = results[0][0];
-                        var test = results[0][1];
+                        var arrayGroups = [];
+                        buildAlertsSameColor(results, arrayGroups, alert); //Build array Groups for Real and Drill Alerts
 
-                        var arrayAlertsReal = [];
-                        for (var x=0; x < real.length; x++ ){
-                            if(real[x].groupID == alert.alertGroupID) {
-                                arrayAlertsReal.push(real[x]);
-                            }
-                        }
-                        var arrayAlertsTest = [];
-                        for (var x=0; x < test.length; x++ ){
-                            if(test[x].groupID == alert.alertGroupID) {
-                                arrayAlertsTest.push(test[x]);
-                            }
-                        }
 
                         if(req.decoded){ //API user
                             res.json({
                                 success: true,
                                 alert: alert,
-                                aclReal: arrayAlertsReal,
-                                aclTest: arrayAlertsTest
+                                aclReal: arrayGroups[0],
+                                aclTest: arrayGroups[1]
                             });
                         }else{  //EJS user
                             res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
                                 title:'Choose Alert',
                                 alert: alert,
-                                aclReal: arrayAlertsReal,
-                                aclTest: arrayAlertsTest,
+                                aclReal: arrayGroups[0],
+                                aclTest: arrayGroups[1],
                                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo
@@ -204,8 +172,8 @@ module.exports.showAlerts = function(req, res) {
                 res.json({
                     success: true,
                     alert: alert,
-                    testModeOnArrayReal: results[0][0],
-                    testModeOnArrayTest: results[0][1]
+                    testModeOnArrayReal: results[0],
+                    testModeOnArrayTest: results[1]
 
                 });
 
@@ -214,9 +182,9 @@ module.exports.showAlerts = function(req, res) {
                 res.render('alerts/sending/chooseAlert',{
                     title:'Choose Alert',
                     alert: alert,
-                    aclReal: results[0][0],
-                    aclTest: results[0][1],
-                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclReal: results[0],
+                    aclTest: results[1],
+                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -281,6 +249,8 @@ module.exports.showAlertsPost = function(req, res) {
                         var alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,
+                            groupSound: alert[0].group.mp3,
+                            groupIcon: alert[0].group.icon,
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
                             testModeON: req.body.testModeON,
@@ -294,8 +264,8 @@ module.exports.showAlertsPost = function(req, res) {
                             placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
                             placeholderStudentWithGunSeated: placeholderStudentWithGunSeated,
                             placeholderStudentWithGunBehaviour: placeholderStudentWithGunBehaviour,
-                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo,
-                            groupSound: alert[0].mp3
+                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo
+
                         });
                         alertTemp1.save();
                         callback(null, alertTemp1);
@@ -311,6 +281,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     functions.alertTimeExpired(req,res);
                                 }
                                 else {
+                                    alertTemp.groupSound = alert[0].group.mp3;
                                     alertTemp.alertNameID = req.body.alertID;
                                     alertTemp.alertName = req.body.alertName;
                                     alertTemp.requestProcedureCompleted = alert[0].alertRequestProcedureCompleted;
@@ -319,7 +290,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.request911Call = alert[0].alertRequest911Call;
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.placeholderNote = placeholderNote;
-                                    alertTemp.groupSound = alert[0].mp3;
+
 
                                     alertTemp.save();
                                     callback(null, alertTemp);
@@ -411,3 +382,33 @@ module.exports.showAlertsPost = function(req, res) {
 
 };
 /*-------------------------end of choosing Alerts*/
+
+function buildArrayGroups(results, arrayGroups) {
+    for (var z=0; z < 2; z++ ) {
+        var arrayGroupsRealTest = [];
+        var realDrill = results[0];
+        if( z == 1)
+            realDrill = results[1];
+        var groupReal = 99999;
+        realDrill.forEach(function (alert) {
+            if (alert.group.groupID !== groupReal){
+                arrayGroupsRealTest.push(alert);
+                groupReal = alert.group.groupID;
+            }
+        });
+        arrayGroups.push(arrayGroupsRealTest);
+    }
+}
+function buildAlertsSameColor(results, arrayGroups, alertTemp) {
+    for (var z=0; z < 2; z++ ) {
+        var arrayAlertsRealTest = [];
+        var realDrill = results[0];
+        if( z == 1)
+            realDrill = results[1];
+        realDrill.forEach(function (alert) {
+            if(alert.group.groupID == alertTemp.alertGroupID)
+                arrayAlertsRealTest.push(alert);
+        });
+        arrayGroups.push(arrayAlertsRealTest);
+    }
+}

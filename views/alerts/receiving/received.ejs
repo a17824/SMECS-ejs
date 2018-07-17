@@ -654,9 +654,9 @@
 
 
 <% if (info.requestProcedureCompleted || info.requestWeAreSafe) {%>
-<button class="receiveButton" id="reqProcedureWeSafe">Exit</button>
+<button class="receiveButton" id="reqProcedureWeSafe" >Exit</button>
 <%} else { %>
-<button class="receiveButton" id="exit" onclick="location.href='/dashboard'">Exit</button>
+<button class="receiveButton" id="exit" onclick="location.href='/alerts/sending/chooseAlert'">Exit</button>
 <% } %>
 
 <% if (canRequestAssistance == true && flagDisableRequestButton == 1) {%>

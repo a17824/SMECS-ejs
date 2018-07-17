@@ -33,7 +33,7 @@ function showTable(req, res, typeAclAlert, title){
     ],function(err, results){
         functions.redirectPage(req, res, 'showAlertsAndGroups');
 
-        res.render('alerts/showAlertPermissionsTable-new',{
+        res.render('alerts/showAlertPermissionsTable',{
             roles2Count: results[0],
             roles2: results[1],
             alertGroup: results[2],

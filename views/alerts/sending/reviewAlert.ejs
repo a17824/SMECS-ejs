@@ -116,15 +116,13 @@
 <input type="hidden" id="alertNameID"  value="<%= info.alertNameID %>">
 <input type="hidden" id="alertName"  value="<%= info.alertName %>">
 
-<% var typeAclAlert = aclReal; %>
+
+
+<h1><%= info.alertName %></h1>
+
 <% if (info.testModeON == true ) {%>
 <h2 style="color: #34A7C1"> TEST MODE ON </h2>
-<% typeAclAlert = aclTest; %>
 <% } %>
-
-
-<h2><%= info.alertName %></h2>
-
 
 <!-- Alert that requires FLOOR -->
 <% if (info.alertNameID == 2 ||
@@ -434,6 +432,6 @@
     }
 </script>
 <input type="button" id="<%= info.id %>" value="Send Alert" ><br><br>
-<button class="receiveButton" id="exit" onclick="location.href='/dashboard'">Exit</button><br><br>
+<button class="receiveButton" id="exit" onclick="location.href='/alerts/sending/chooseAlert'">Exit</button><br><br>
 </body>
 </html>

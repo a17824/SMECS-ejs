@@ -1,6 +1,6 @@
 //Dependencies
 var models = require('./../../../models');
-
+var async = require("async");
 
 
 /**
@@ -10,26 +10,46 @@ var models = require('./../../../models');
  *
  */
 
-module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
-    if(alert.testModeON){
-        var typeAclAlert = 'AclAlertsTest';
-        var errorMesssageNoScope = 'In Drill mode,'
-    } else{
-        var typeAclAlert = 'AclAlertsReal';
-        var errorMesssageNoScope = 'In Real mode,'
-    }
+module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
+    if(alertTemp.testModeON)
+        var errorMesssageNoScope = 'In Drill mode,';
+     else
+        var errorMesssageNoScope = 'In Real mode,';
 
-    //retrieve all checkboxes that have an "r" and are "true" and put them in array
-    var arrayRoleID = []; //scope ID
-    var arrayRoleName = []; //scope Name
-    var stream = models[typeAclAlert].find({'alertID': alert.alertNameID, 'checkBoxID': /r/i, 'checkBoxValue': true}).cursor(); //checkboxes that have an "r" and are "true", put them in array
-    stream.on('data', function (doc) {
-        arrayRoleID.push(doc.roleGroupID); //ROLES that will receive alert
-        arrayRoleName.push(doc.roleGroupName);
-    }).on('error', function (err) {
-        // handle the error
-    }).on('close', function () {
-        // the stream is closed............end of retrieve all checkboxes that have an "s" and are "true" and put them in array
+    async.parallel([
+        function(callback2){
+            models.Alerts.findOne({ alertID: alertTemp.alertNameID
+            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+        },
+        function(callback2){
+            models.Alerts.find({ alertID: alertTemp.alertNameID, 'whoCanSendReceive.receiveDrill': {$elemMatch: {checkbox: true}}
+            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+        }
+
+
+    ],function(err, results){
+
+        var arrayRoleID = []; //scope ID
+        var arrayRoleName = []; //scope Name
+        if(alertTemp.testModeON){
+            results[0].whoCanSendReceive.sendDrill.forEach(function (role) {
+                if(role.checkbox == true){
+                    arrayRoleID.push(role.roleID); //ROLES that will receive alert
+                    arrayRoleName.push(role.roleName);
+                }
+
+            });
+        } else{
+            results[0].whoCanSendReceive.receiveReal.forEach(function (role) {
+                if(role.checkbox == true){
+                    arrayRoleID.push(role.roleID); //ROLES that will receive alert
+                    arrayRoleName.push(role.roleName);
+                }
+
+            });
+        }
+
+
         if (arrayRoleID.length < 1 || arrayRoleID == null) {
             console.log('This alert has no Roles to send this alert');
 
@@ -38,20 +58,20 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
                     if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
                         res.json({
                             success: false,
-                            message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated with it. Please, inform your school principal so he/she can add roles to this alert.',
+                            message: errorMesssageNoScope + ' ' + alertTemp.alertName + ' alert, has no roles associated with it. Please, inform your school principal so he/she can add roles to this alert.',
                             redirect: 'chooseAlert'
                         });
                     } else {    //Groups Buttons ON
                         res.json({
                             success: false,
-                            message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated with it.Please, inform your school principal so he/she can add roles to this alert.',
+                            message: errorMesssageNoScope + ' ' + alertTemp.alertName + ' alert, has no roles associated with it.Please, inform your school principal so he/she can add roles to this alert.',
                             redirect: 'home' // ou chooseGroup?
                         });
                     }
                 });
 
             }else{  // run SMECS EJS
-                req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no roles associated.<br />Please, inform your school principal so he/she can add roles to this alert.');
+                req.flash('error_messages', errorMesssageNoScope + ' ' + alertTemp.alertName + ' alert, has no roles associated.<br />Please, inform your school principal so he/she can add roles to this alert.');
                 if(req.user.appSettings.groupAlertsButtons == false)
                     res.send({redirect: '/alerts/sending/chooseAlert'});
                 else
@@ -59,6 +79,7 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
             }
 
         }
+
         else {
             models.Users.find({'userRoleID': {$in: arrayRoleID}, 'softDeleted': null}, function (error1, allUsersToSendAlert) {
                 if (error1) {
@@ -72,20 +93,20 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
                                 if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF -----------
                                     res.json({
                                         success: false,
-                                        message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated. Please, inform your school principal so he/she can associate users to roles in this alert.',
+                                        message: errorMesssageNoScope + ' ' + alertTemp.alertName + ' alert, has no users associated. Please, inform your school principal so he/she can associate users to roles in this alert.',
                                         redirect: 'chooseAlert'
                                     });
                                 } else {    //Groups Buttons ON
                                     res.json({
                                         success: false,
-                                        message: errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated. Please, inform your school principal so he/she can associate users to roles in this alert.',
+                                        message: errorMesssageNoScope + ' ' + alertTemp.alertName + ' alert, has no users associated. Please, inform your school principal so he/she can associate users to roles in this alert.',
                                         redirect: 'home' // ou chooseGroup?
                                     });
                                 }
                             });
 
                         }else{  // run SMECS EJS
-                            req.flash('error_messages', errorMesssageNoScope + ' ' + alert.alertName + ' alert, has no users associated.<br />Please, inform your school principal so he/she can associate users to roles in this alert.');
+                            req.flash('error_messages', errorMesssageNoScope + ' ' + alertTemp.alertName + ' alert, has no users associated.<br />Please, inform your school principal so he/she can associate users to roles in this alert.');
                             if(req.user.appSettings.groupAlertsButtons == false)
                                 res.send({redirect: '/alerts/sending/chooseAlert'});
                             else
@@ -95,7 +116,7 @@ module.exports.getUsersToReceiveAlert = function(req, res, alert,callback) {
 
                     }else{
                         //save to AlertSentTemp all ROLES and USERS that will receive alert
-                        models.AlertSentTemp.findById({'_id': alert._id}, function(error, alertUpdate) {
+                        models.AlertSentTemp.findById({'_id': alertTemp._id}, function(error, alertUpdate) {
                             if(error || arrayRoleID == null || arrayRoleName == null){
                                 console.log('erro da primeira vez que se escolhe um alerta');
 

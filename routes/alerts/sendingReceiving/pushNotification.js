@@ -14,7 +14,6 @@ module.exports.alert= function(alert, action) {
 
     alert.sentTo.forEach(function (user) {
         if (user.pushToken) {
-            console.log('alert.groupSound = ' + alert.groupSound);
 
             var message = {
                 to: user.pushToken, // required fill with device token

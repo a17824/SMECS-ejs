@@ -15,8 +15,6 @@ module.exports.reviewAlert = function(req, res) {
         function(callback){models.Floors.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
         function(callback){models.Alerts.find().exec(callback);},
-        function(callback){models.AclAlertsReal.find().exec(callback);},
-        function(callback){models.AclAlertsTest.find().exec(callback);},
         function(callback) {
             if(req.decoded) { //API user
                 models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
@@ -30,7 +28,6 @@ module.exports.reviewAlert = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -38,9 +35,8 @@ module.exports.reviewAlert = function(req, res) {
                     info: results[0],
                     floor: results[1],
                     utilities: results[2],
-                    results: results[3], // check if alert is softDeleted for Utilities Failure
-                    aclReal: results[4], // to check if user has permission to send Request Assistance Alert
-                    aclTest: results[5], // to check if user has permission to send Request Assistance Alert
+                    results: results[3] // check if alert is softDeleted for Utilities Failure
+
                 });
 
             }else{  // run SMECS EJS
@@ -51,9 +47,7 @@ module.exports.reviewAlert = function(req, res) {
                     floor: results[1],
                     utilities: results[2],
                     alerts: results[3], // check if alert is softDeleted for Utilities Failure
-                    aclReal: results[4], // to check if user has permission to send Request Assistance Alert
-                    aclTest: results[5], // to check if user has permission to send Request Assistance Alert
-                    aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

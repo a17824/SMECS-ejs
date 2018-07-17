@@ -94,15 +94,20 @@
     <div id='testModeOFF' name="testModeOFF">
         <% for (var i=0; i < aclReal.length; i++ ){ %>
 
-        <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].groupID %>" >
-        <%= aclReal[i].alertID %> <%= aclReal[i].sortID %><label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id="<%= aclReal[i].alertTypeName %>"><%= aclReal[i].alertName %></label><br>
+        <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].group.groupID %>" >
+        <label for="alert"
+               style="background-color: <%= aclReal[i].group.color.bgValue %>;color: <%= aclReal[i].group.color.textValue %>"
+               id="<%= aclReal[i].group.name %>"
+        ><%= aclReal[i].alertName %></label><br>
         <% } %>
     </div>
 
     <div id='testModeON' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
-        <input type="radio" name="alert" id=<%= aclTest[i].alertID %> value="<%= aclTest[i].groupID %>" >
-        <%= aclTest[i].alertID %> <%= aclTest[i].sortID %><label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id="<%= aclTest[i].alertTypeName %>"><%= aclTest[i].alertName %></label><br>
+        <input type="radio" name="alert" id=<%= aclTest[i].alertID %> value="<%= aclTest[i].group.groupID %>" >
+        <label for="alert" style="background-color: <%= aclTest[i].group.color.bgValue %>;color: <%= aclTest[i].group.color.textValue %>"
+               id="<%= aclTest[i].group.name %>"
+        ><%= aclTest[i].alertName %></label><br>
         <% } %>
     </div>
 

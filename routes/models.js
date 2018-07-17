@@ -381,8 +381,11 @@ module.exports.AlertSentInfo = mongoose.model("AlertSentInfo", AlertSentInfoSche
 var AlertSentTempSchema = new mongoose.Schema({
     alertGroupID: Number,
     alertGroupName: String,
+    groupSound: String,
+    groupIcon: String,
     alertNameID: Number,
     alertName: String,
+    alertIcon: String,
     sentBy: String,
     sentTime: String,
     notePlaceholder: String,
@@ -462,8 +465,8 @@ var AlertSentTempSchema = new mongoose.Schema({
         }
     }],
     reqAssOn: [String],
-    reqAssOff: [String],
-    groupSound: String
+    reqAssOff: [String]
+
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentTemp"}); //stops Mongoose of giving plurals to our collections names

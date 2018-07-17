@@ -19,11 +19,11 @@
             });
             var testModeON = false;
 
-            var alertGroupID, alertGroupName;
+            var alertGroupID, alertGroupName, groupIcon;
             $("#btSubmit").click(function(){
                 alertGroupID = $('input[name=alert]:checked').val();
-                alertGroupName = $("input:radio[name='alert']:checked + label").attr('id');
-
+                alertGroupName = $("input:radio[name='alert']:checked + label").text();
+                groupIcon = $("#groupIcon").val();
 
                 if ($('input[name=onoffswitch]:checked').length > 0) {
                     testModeON = true;
@@ -40,6 +40,7 @@
                 $.post("/alerts/sending/chooseGroup",{
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
+                    groupIcon: groupIcon,
                     testModeON: testModeON
 
                 },function(data){
@@ -75,24 +76,30 @@
 <% } %>
 
 <br>
-<form>
 
+
+
+<form>
     <div id='testModeOFF' name="testModeOFF">
         <% for (var i=0; i < aclReal.length; i++ ){ %>
+        <input type="hidden" id="groupIcon" value="<%= aclReal[i].group.icon %>">
 
-        <input type="radio" name="alert" id=<%= aclReal[i].groupID %> value="<%= aclReal[i].groupID %>" >
-        <label for="alert" style="color: <%= aclReal[i].alertColorValue %>" id=<%= aclReal[i].alertColor %>><%= aclReal[i].alertTypeName %></label><br>
+        <input type="radio" name="alert" id="<%= aclReal[i].group.groupID %>" value="<%= aclReal[i].group.groupID %>" >
+        <label for="alert"
+               style="background-color: <%= aclReal[i].group.color.bgValue %>;color: <%= aclReal[i].group.color.textValue %>"
+               id="<%= aclReal[i].alertColor %>"
+        ><%= aclReal[i].group.name %></label><br>
         <% } %>
     </div>
 
     <div id='testModeON' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
-        <input type="radio" name="alert" id=<%= aclTest[i].groupID %> value="<%= aclTest[i].groupID %>" >
-        <label for="alert" style="color: <%= aclTest[i].alertColorValue %>"><%= aclTest[i].alertTypeName %></label><br>
+        <input type="radio" name="alert" id="<%= aclTest[i].group.groupID %>" value="<%= aclTest[i].group.groupID %>" >
+        <label for="alert"
+               style="background-color: <%= aclTest[i].group.color.bgValue %>;color: <%= aclTest[i].group.color.textValue %>"
+        ><%= aclTest[i].group.name %></label><br>
         <% } %>
     </div>
-
-
     <br>
     <input type="button" style="width: 10em; height: 1.8em" id="btSubmit" value="Next" ><br>
 </form>

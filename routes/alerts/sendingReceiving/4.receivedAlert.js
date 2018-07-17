@@ -12,8 +12,7 @@ module.exports.receivedAlert = function(req, res) {
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
         function(callback){models.Floors.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
-        function(callback){models.AclAlertsReal.find().exec(callback);},
-        function(callback){models.AclAlertsTest.find().exec(callback);},
+
         function(callback) {
             if(req.decoded) { //API user
                 models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
@@ -38,11 +37,6 @@ module.exports.receivedAlert = function(req, res) {
                             if(results[0].alertNameID == 14 ||
                                 results[0].alertNameID == 26){
                                 if(alert.softDeleted == false){
-                                    if(results[0].testModeON){
-                                        var typeAclAlert = results[4];
-                                    }else{
-                                        var typeAclAlert = results[3];
-                                    }
 
                                     // API EJS ----------
                                     var userApiEjs;
@@ -53,18 +47,30 @@ module.exports.receivedAlert = function(req, res) {
                                     //-------------------
 
                                     //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
-                                    for (var i=0; i < typeAclAlert.length; i++) {
-                                        for (var t = 0; t < userApiEjs.length; t++) {
-                                            if (typeAclAlert[i].checkBoxID == 's' + userApiEjs[t] + 26 && typeAclAlert[i].checkBoxValue == true) {
-                                                canRequestAssistance = true;
-                                                break;
+                                    if(results[0].testModeON){
+                                        var role = alert.whoCanSendReceive.receiveDrill;
+                                        userApiEjs.forEach(function (userAuthRole) {
+                                            for (var t = 0; t < role.length; t++) {
+                                                if(userAuthRole == role[t].roleID && role[t].checkbox == true){
+                                                    canRequestAssistance = true;
+                                                    break;
+                                                }
                                             }
-                                        }
-                                        if (canRequestAssistance) {
-                                            break;
-                                        }
+                                        })
+                                    }else{
+                                        var role = alert.whoCanSendReceive.receiveReal;
+                                        userApiEjs.forEach(function (userAuthRole) {
+                                            for (var t = 0; t < role.length; t++) {
+                                                if(userAuthRole == role[t].roleID && role[t].checkbox == true){
+                                                    canRequestAssistance = true;
+                                                    break;
+                                                }
+                                            }
+                                        })
+
                                     }
                                     //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
+
                                 }
                             }
                             var enableProcedureButton = false;
@@ -187,8 +193,8 @@ module.exports.postReceivedAlert = function(req, res, next) {
                 alert.save();
                 if (req.decoded) {
                     res.json({success: true});
-                } else 
-                    res.send({redirect: '/dashboard/'});
+                } else
+                    res.send({redirect: '/alerts/sending/chooseAlert/'});
             }
         }
     });

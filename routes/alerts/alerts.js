@@ -111,7 +111,7 @@ module.exports.createPost = function(req, res) {
                     groupID: group.groupID,
                     sortID: group.sortID,
                     name: group.name,
-                    mp3: group.mp3,
+                    mp3: group.sound.mp3,
                     icon: group.icon,
                     color: {
                         name: group.color.name,
@@ -214,7 +214,7 @@ module.exports.updatePost = function(req, res) {
             alert.group.groupID = group.groupID;
             alert.group.sortID = group.sortID;
             alert.group.name = group.name;
-            alert.group.mp3 = group.mp3;
+            alert.group.mp3 = group.sound.mp3;
             alert.group.icon = group.icon;
             alert.group.color.name = group.color.name;
             alert.group.color.bgValue = group.color.bgValue;
@@ -327,25 +327,6 @@ module.exports.restoreAlert = function(req, res) {
         alert.save();
         res.redirect('/alerts/addAlerts');
 
-        /*
-        //UPDATE ACL ALERTS--------
-        var aclAlertsToUpdate =  alert.alertID;
-        var typeAclAlert = 'AclAlertsReal';
-        updateAclAlerts(aclAlertsToUpdate);
-
-        typeAclAlert = 'AclAlertsTest';
-        updateAclAlerts(aclAlertsToUpdate);
-
-        function updateAclAlerts(aclAlertsToUpdate){
-            models[typeAclAlert].find({'alertID': aclAlertsToUpdate }, function(err, groups) {
-                groups.forEach( function(group) {
-                    group.alertSoftDeleted = false;
-                    group.save();
-                });
-            });
-        }
-        //--------end UPDATE ACL ALERT
-        */
     })
 };/* ------------ end of SoftDeleted Alerts. */
 
@@ -356,9 +337,7 @@ module.exports.delete = function(req, res) {
 
     function deleteAlert(callback) {
         models.Alerts.remove({'_id': alertToDelete}, function(err) {
-            //res.send((err === null) ? { msg: 'Permission not deleted' } : { msg:'error: ' + err });
             return res.redirect('/alerts/addAlerts');
-
         });
     }
 
