@@ -31,11 +31,11 @@ module.exports.receivedAlert = function(req, res) {
             async.waterfall([
                 function (callback) {
                     var canRequestAssistance = false;
-                    models.Alerts.findOne({'alertID': results[0].alertNameID}, function(err, alert){//check if Request Assistance is softDeleted
+                    models.Alerts.findOne({'alertID': results[0].alert.alertID}, function(err, alert){//check if Request Assistance is softDeleted
                         if( err ) console.log("No Utility found");
                         else{
-                            if(results[0].alertNameID == 14 ||
-                                results[0].alertNameID == 26){
+                            if(results[0].alert.alertID == 14 ||
+                                results[0].alert.alertID == 26){
                                 if(alert.softDeleted == false){
 
                                     // API EJS ----------
@@ -74,6 +74,7 @@ module.exports.receivedAlert = function(req, res) {
                                 }
                             }
                             var enableProcedureButton = false;
+
                             if(alert.alertProcedure)
                                 enableProcedureButton = true;
 
@@ -166,7 +167,7 @@ module.exports.postReceivedAlert = function(req, res, next) {
             }
 
             // ALERT 14 REQUEST ASSISTANCE
-            if ((alert.alertNameID == 14 || alert.alertNameID == 26) && exitButton == 'false') {
+            if ((alert.alert.alertID == 14 || alert.alert.alertID == 26) && exitButton == 'false') {
                 var reqAssOn = req.body.reqAssChecked;
                 var reqAssOff = req.body.reqAssNotChecked;
 

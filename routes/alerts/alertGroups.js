@@ -179,6 +179,7 @@ module.exports.updatePost = function(req, res) {
             alertGroup.sortID = req.body.sortID;
             alertGroup.color.name = req.body.colorName;
             alertGroup.color.bgValue = req.body.bgValue;
+            alertGroup.color.textValue = textValue;
             alertGroup.icon = req.body.icon;
             alertGroup.sound.soundID = soundID;
             alertGroup.sound.soundType = soundType;

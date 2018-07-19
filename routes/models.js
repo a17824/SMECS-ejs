@@ -200,6 +200,7 @@ var AlertsSchema = new mongoose.Schema({
         sortID: Number,
         name: String,
         mp3: String,
+        useIcon: Boolean,
         icon: String,
         color: {
             name: String,
@@ -248,10 +249,21 @@ module.exports.Alerts = mongoose.model("Alerts", AlertsSchema);
 
 // DEFINE AlertSentInfo COLLECTION IN MONGOdb
 var AlertSentInfoSchema = new mongoose.Schema({
-    alertGroupID: Number,
-    alertGroupName: String,     //red, green, blue, yellow
-    alertNameID: Number,
-    alertName: String,          //stranger, evacuate
+    group: {
+        groupID: Number,
+        name: String,     //red, green, blue, yellow
+        sound: String,
+        icon: String,
+        color: {
+            bgValue: String,
+            textValue: String
+        }
+    },
+    alert: {
+        alertID: Number,
+        name: String,          //stranger, evacuate
+        icon: String
+    },
     sentBy: String,
     sentDate: String,
     sentTime: String,
@@ -362,7 +374,6 @@ var AlertSentInfoSchema = new mongoose.Schema({
         userPushToken: String,
         userPhoto: String
     }],
-    groupSound: String,
     archived: { type: Boolean, default: false },
     softDeletedBy: { type: String, default: null},
     softDeletedDate: { type: String, default: null},
@@ -383,6 +394,8 @@ var AlertSentTempSchema = new mongoose.Schema({
     alertGroupName: String,
     groupSound: String,
     groupIcon: String,
+    groupColorBk: String,
+    groupColorTx: String,
     alertNameID: Number,
     alertName: String,
     alertIcon: String,

@@ -29,7 +29,7 @@ app.set('view engine', 'ejs');
 
 
 app.use(logger('dev'));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({limit: '9mb'}));
 app.use(cookieParser());
 
 // uncomment after placing your favicon in /public

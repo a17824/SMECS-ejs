@@ -41,13 +41,24 @@ module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
 
     var alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,
+        group: {
+            groupID: tempAlert.alertGroupID,
+            name: tempAlert.alertGroupName,
+            sound: tempAlert.groupSound,
+            icon: tempAlert.groupIcon,
+            color: {
+                bgValue: tempAlert.groupColorBk,
+                textValue: tempAlert.groupColorTx
+            }
+        },
+        alert: {
+            alertID: tempAlert.alertNameID,
+            name: tempAlert.alertName,
+            icon: tempAlert.alertIcon
+        },
         sentBy: sentByApiEjs,
         sentDate: wrapped.format('YYYY-MM-DD'),
         sentTime: wrapped.format('h:mm:ss a'),
-        alertGroupID: tempAlert.alertGroupID,
-        alertGroupName: tempAlert.alertGroupName,
-        alertNameID: tempAlert.alertNameID,
-        alertName: tempAlert.alertName,
         sentRoleIDScope: tempAlert.sentRoleIDScope,
         sentRoleNameScope: tempAlert.sentRoleNameScope,
         sentTo: sentTo,
@@ -82,9 +93,7 @@ module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
         sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope,
         latitude: tempAlert.latitude,
         longitude: tempAlert.longitude,
-        mapBus: tempAlert.mapBus,
-        groupSound: tempAlert.groupSound
-
+        mapBus: tempAlert.mapBus
     });
     alert1.save();
     callback(alert1)

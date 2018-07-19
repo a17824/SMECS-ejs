@@ -1,6 +1,6 @@
 
 function iconBuild(icons){
-    for (var i=1; i <= 97; i++) {
+    for (var i=1; i <= 173; i++) {
         icons.push({'iconFilePath': '/public/icons/' + i + '.png', 'iconValue': i});
     }
 }
@@ -28,8 +28,8 @@ function colorBuild(callback){
             {RgbValue: 'efad4f', ColorName: 'Orange', ColorText: 'FFFFFF'},
             {RgbValue: 'FFD700', ColorName: 'Gold', ColorText: 'FFFFFF'},
             {RgbValue: 'fdfd96 ', ColorName: 'Yellow', ColorText: '000000'},
-            {RgbValue: '000000', ColorName: 'Black', ColorText: 'FFFFFF'}
-            //{RgbValue: 'FFFFFF', ColorName: 'White'},
+            {RgbValue: '000000', ColorName: 'Black', ColorText: 'FFFFFF'},
+            {RgbValue: 'FFFFFF', ColorName: 'White', ColorText: '000000'}
 
 
 
@@ -69,13 +69,14 @@ module.exports.soundBuild = function(callback) {
 
     var sirens = [
         'Sirens','Alien Siren','alien_siren',
-        'Sirens','Car Alarm','car_alarm',
         'Sirens','School Fire Alarm','fire_alarm',
         'Sirens','Ambulance','police',
         'Sirens','Mandatory Evacuation','gentex',
         'Sirens','Train Whistle','train_whistle',
-        'Animals','Wake Up Call','wake_up',
-        'Animals','Wake Up Call','wake_up'
+        'Sirens','Police Siren Sound','police_siren',
+        'Sirens','Fire Trucks Sirens','fire_trucks2',
+        'Sirens','Truck Reverse Beep','truck_reverse',
+
 
     ];
 

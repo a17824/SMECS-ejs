@@ -31,7 +31,7 @@ module.exports.reviewAlert = function(req, res) {
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
-                    userAuthGroupAlerts: results[6].userRoleName, //for Call911 button
+                    userAuthGroupAlerts: results[4].userRoleName, //for Call911 button
                     info: results[0],
                     floor: results[1],
                     utilities: results[2],

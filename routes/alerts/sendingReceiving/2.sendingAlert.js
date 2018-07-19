@@ -511,7 +511,7 @@ module.exports.showMultiSelection = function(req, res) {
                 res.json({
                     success: true,
                     title: results[0].alertName,
-                    userAuthGroupAlerts: results[3].appSettings.groupAlertsButtons, //for Back or Exit button
+                    userAuthGroupAlerts: results[4].appSettings.groupAlertsButtons, //for Back or Exit button
                     alert: results[0],
                     utilities: results[1],
                     medical: results[2],

@@ -34,9 +34,11 @@ module.exports.showGroups = function(req, res) {
 
 
     function showGroups2() {
-        var roleX = req.user.userRoleID; // EJS user
+        var roleX; // EJS user
         if (req.decoded)      // API user
             roleX = req.decoded.user.userRoleID;
+        else
+            roleX = req.user.userRoleID;
 
         async.parallel([
             function(callback2){
@@ -47,6 +49,7 @@ module.exports.showGroups = function(req, res) {
                 models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
                 }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
             },
+            function(callback2){models.Icons.find({}, callback2);},
             function(callback) {
                 if(req.decoded)   //API user
                     callback(null, 'API');
@@ -63,7 +66,8 @@ module.exports.showGroups = function(req, res) {
                 res.json({
                     success: true,
                     aclReal: arrayGroups[0],
-                    aclTest: arrayGroups[1]
+                    aclTest: arrayGroups[1],
+                    icons: results[2]
 
                 });
 
@@ -73,7 +77,8 @@ module.exports.showGroups = function(req, res) {
                     title:'Choose Alert',
                     aclReal: arrayGroups[0],
                     aclTest: arrayGroups[1],
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    icons: results[2],
+                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -83,31 +88,42 @@ module.exports.showGroups = function(req, res) {
 };
 
 module.exports.showGroupsPost = function(req, res) {
-    var alertTemp1 = new models.AlertSentTemp({
-        alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
-        alertGroupName: req.body.alertGroupName,
-        groupIcon: req.body.groupIcon,
-        testModeON: req.body.testModeON
-    });
-    alertTemp1.save();
+    console.log('req.body.alertGroupID = ',req.body.alertGroupID);
+    models.AlertsGroup.findOne({groupID: req.body.alertGroupID}, function (err, group) {
+        if(err)
+            console.log('err - ',err);
+        else {
+            var alertTemp1 = new models.AlertSentTemp({
+                alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
+                alertGroupName: req.body.alertGroupName,
+                groupIcon: group.icon,
+                testModeON: req.body.testModeON
+            });
+            alertTemp1.save();
 
-    if(req.decoded){ // run SMECS API
-        res.json({
-            success: true,
-            redirect: 'chooseGroupAlert',
-            _id: alertTemp1._id
-        });
-    }else{  // run SMECS EJS
-        return res.send({redirect: '/alerts/sending/chooseGroupAlert/' + alertTemp1._id})
-    }
+            if (req.decoded) { // run SMECS API
+                res.json({
+                    success: true,
+                    redirect: 'chooseGroupAlert',
+                    _id: alertTemp1._id
+                });
+            } else {  // run SMECS EJS
+                return res.send({redirect: '/alerts/sending/chooseGroupAlert/' + alertTemp1._id})
+            }
+        }
+    });
+
+
 };
 
 
 /* Choose Alert. -------------------------------*/
 module.exports.showAlerts = function(req, res) {
-    var roleX = req.user.userRoleID; // EJS user
+    var roleX; // EJS user
     if (req.decoded)      // API user
         roleX = req.decoded.user.userRoleID;
+    else
+        roleX = req.user.userRoleID;
 
     async.parallel([
         function(callback2){
@@ -118,6 +134,7 @@ module.exports.showAlerts = function(req, res) {
             models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
             }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
         },
+        function(callback2){models.Icons.find({}, callback2);},
         function(callback) {
             if(req.decoded)   //API
                 callback(null, 'API');
@@ -138,13 +155,13 @@ module.exports.showAlerts = function(req, res) {
                         var arrayGroups = [];
                         buildAlertsSameColor(results, arrayGroups, alert); //Build array Groups for Real and Drill Alerts
 
-
                         if(req.decoded){ //API user
                             res.json({
                                 success: true,
                                 alert: alert,
                                 aclReal: arrayGroups[0],
-                                aclTest: arrayGroups[1]
+                                aclTest: arrayGroups[1],
+                                icons: results[2]
                             });
                         }else{  //EJS user
                             res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
@@ -152,14 +169,12 @@ module.exports.showAlerts = function(req, res) {
                                 alert: alert,
                                 aclReal: arrayGroups[0],
                                 aclTest: arrayGroups[1],
-                                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                icons: results[2],
+                                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo
                             });
                         }
-
-
-
                     }
                 }
             })
@@ -251,6 +266,8 @@ module.exports.showAlertsPost = function(req, res) {
                             alertGroupName: req.body.alertGroupName,
                             groupSound: alert[0].group.mp3,
                             groupIcon: alert[0].group.icon,
+                            groupColorBk: alert[0].group.color.bgValue,
+                            groupColorTx: alert[0].group.color.textValue,
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
                             testModeON: req.body.testModeON,
@@ -259,6 +276,7 @@ module.exports.showAlertsPost = function(req, res) {
                             requestINeedHelp: alert[0].alertRequestForINeedHelp,
                             request911Call: alert[0].alertRequest911Call,
                             whoCanCall911: alert[0].whoCanCall911,
+                            alertIcon: alert[0].icon,
                             placeholderNote: placeholderNote,
                             placeholderMissingChildLastPlaceSeen: placeholderMissingChildLastPlaceSeen,
                             placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
@@ -281,6 +299,8 @@ module.exports.showAlertsPost = function(req, res) {
                                     functions.alertTimeExpired(req,res);
                                 }
                                 else {
+                                    alertTemp.groupColorBk = alert[0].group.color.bgValue;
+                                    alertTemp.groupColorTx = alert[0].group.color.textValue;
                                     alertTemp.groupSound = alert[0].group.mp3;
                                     alertTemp.alertNameID = req.body.alertID;
                                     alertTemp.alertName = req.body.alertName;
@@ -289,6 +309,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.requestINeedHelp = alert[0].alertRequestForINeedHelp;
                                     alertTemp.request911Call = alert[0].alertRequest911Call;
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
+                                    alertTemp.alertIcon = alert[0].icon;
                                     alertTemp.placeholderNote = placeholderNote;
 
 
