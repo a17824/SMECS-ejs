@@ -74,6 +74,7 @@ module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
         sniperCoordinateX: tempAlert.sniperCoordinateX,
         sniperCoordinateY: tempAlert.sniperCoordinateY,
         medicalInjuredParties: tempAlert.medicalInjuredParties,
+        dayClosed: tempAlert.dayClosed,
         multiSelectionNames: tempAlert.multiSelectionNames,
         multiSelectionIDs: tempAlert.multiSelectionIDs,
         studentName: tempAlert.studentName,

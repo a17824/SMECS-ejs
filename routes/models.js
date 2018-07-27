@@ -342,6 +342,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     multiSelectionIDs: [String],
     askedForAssistance: Boolean,
     medicalInjuredParties: Number,
+    dayClosed: String,
     requestAssistance: [{
         utilityID: Number,
         utilityName: String,
@@ -454,6 +455,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     multiSelectionNames: [String],          // Utilities in Failure or Medical Emergencies
     multiSelectionIDs: [String],
     medicalInjuredParties: Number,          //comboBox, listBox
+    dayClosed: String,
     requestAssistance: [{
         utilityID: Number,
         utilityName: String,

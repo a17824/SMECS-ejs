@@ -116,55 +116,49 @@ module.exports.receivedAlert = function(req, res) {
     })
 };
 
+module.exports.procSafeHelp = function(req, res, next) {
+    var alertToUpdate1 = req.body.alertToUpdate;
+    var checkboxType = req.body.checkboxType;
+
+    // API EJS ----------
+    var userApiEjs;
+
+    if (req.decoded) {      // API user
+        userApiEjs = req.decoded.user.email;
+    }
+    else{
+        userApiEjs = req.user.email; // EJS user.
+    }
+    //-------------------
+
+    models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
+        if(err){console.log('err - changing Alert STATUS');
+        }else {
+            alert.sentTo.forEach(function (user) {
+                if (user.email == userApiEjs) {
+                    updateProcedureCompletedWeAreSafe(alert, user, checkboxType);
+                    alert.save(function (err) {
+                        if (err) console.log('err - ',err);
+                        else{
+                            if (req.decoded)
+                                res.json({success: true});
+                            console.log('save success');
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
 module.exports.postReceivedAlert = function(req, res, next) {
     var alertToUpdate1 = req.body.alertToUpdate;
     var exitButton = req.body.exitButton;
-    var procedureCompleted = req.body.procedureCompleted;
-    var weAreSafe = req.body.weAreSafe;
-    var iNeedHelp = req.body.needHelp;
-
-
-
 
     models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
         if(err){
             console.log('err - changing Alert STATUS');
         }else {
-
-            // API EJS ----------
-            var userApiEjs;
-            if (req.decoded) {      // API user
-                userApiEjs = req.decoded.user.email;
-                exitButton = 'false';
-            }
-            else
-                userApiEjs = req.user.email; // EJS user
-            //-------------------
-
-            // All ALERTS
-            if(alert.requestProcedureCompleted){
-                alert.sentTo.forEach(function (user) {
-                    if (user.email == userApiEjs && user.procedureCompleted.boolean.toString() !== procedureCompleted.toString()) {
-                        updateProcedureCompletedWeAreSafe(alert, user, 'procedureCompleted');
-                    }
-                });
-            }
-            // All ALERTS
-            if(alert.requestWeAreSafe){
-                alert.sentTo.forEach(function (user) {
-                    if (user.email == userApiEjs && user.weAreSafe.boolean.toString() !== weAreSafe.toString()) {
-                        updateProcedureCompletedWeAreSafe(alert, user, 'weAreSafe');
-                    }
-                });
-            }
-            // All ALERTS
-            if(alert.requestINeedHelp){
-                alert.sentTo.forEach(function (user) {
-                    if (user.email == userApiEjs && user.iNeedHelp.boolean.toString() !== iNeedHelp.toString()) {
-                        updateProcedureCompletedWeAreSafe(alert, user, 'iNeedHelp');
-                    }
-                });
-            }
 
             // ALERT 14 REQUEST ASSISTANCE
             if ((alert.alert.alertID == 14 || alert.alert.alertID == 26) && exitButton == 'false') {
@@ -172,7 +166,6 @@ module.exports.postReceivedAlert = function(req, res, next) {
                 var reqAssOff = req.body.reqAssNotChecked;
 
                 // API EJS ----------
-                var userApiEjs;
                 if (req.decoded) {       // API user
                     exitButton = 'false';
                     reqAssOn = reqAssOn.split(',');
@@ -195,7 +188,7 @@ module.exports.postReceivedAlert = function(req, res, next) {
                 if (req.decoded) {
                     res.json({success: true});
                 } else
-                    res.send({redirect: '/alerts/sending/chooseAlert/'});
+                    res.send({redirect: '/reports/homeReports/'});
             }
         }
     });
@@ -217,7 +210,7 @@ function updateProcedureCompletedWeAreSafe(alert, user, requestType) {
 
 
     /*****  CALL HERE NOTIFICATION API  *****/
-    //if user has permission to see who completed procedure or we aresafe
+    //if user has permission to see who completed procedure or we are safe
     pushNotification.alert(alert, 'updateAlert'); //change closeAlert function? does it need new function?
 
 }

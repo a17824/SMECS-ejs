@@ -227,7 +227,7 @@ module.exports.postFloorLocation = function(req, res) {
                 alert.alertNameID == 18 ||
                 alert.alertNameID == 19 ||
                 alert.alertNameID == 23 ||
-                alert.alertNameID == 26 ) {
+                alert.alertNameID == 26  ) {
 
                 if(req.decoded){ // run SMECS API
                     res.json({
@@ -330,7 +330,8 @@ module.exports.postNotes = function(req, res) {
                     alert.alertNameID == 22 ||
                     alert.alertNameID == 23 ||
                     alert.alertNameID == 26 ||
-                    alert.alertNameID == 27 ) {
+                    alert.alertNameID == 27 ||
+                    alert.alertNameID == 29 ) {
 
                     alert.save();
                 }
@@ -625,6 +626,9 @@ module.exports.postMultiSelection = function(req, res) {
             }
             //ALERT SchoolClosed
             if (alert.alertNameID == 29 ) {
+                alert.dayClosed = req.body.medicalInjuredParties;
+                alert.save();
+
                 if(req.decoded){ // run SMECS API
                     res.json({
                         success: true,

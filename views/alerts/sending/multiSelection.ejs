@@ -150,6 +150,11 @@
     <input type="number" id="parties" name="parties" style="width:40px" min="0" value="<%= alert.medicalInjuredParties %>">&nbsp(optional)<br><br>
     <% } %>
 
+    <% if (alert.alertNameID == 29) {%>
+    <label for="situation"><b>Day school will be closed:</b> </label>
+    <input type="number" id="parties" name="parties" style="width:40px" min="0" value="<%= alert.dayClosed %>">&nbsp(optional)<br><br>
+    <% } %>
+
     <% if (alert.alertNameID == 14 ||
             alert.alertNameID == 18) {%>
     <label for="situation"><b>Situation:</b> (optional)</label><br>
@@ -287,9 +292,11 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
-<% if (!userAuthGroupAlerts && (alert.alertNameID == 14 ||
-        alert.alertNameID == 18 ||
-        alert.alertNameID == 26 )) {%>
+<% if (!userAuthGroupAlerts && (
+                alert.alertNameID == 14 ||
+                alert.alertNameID == 18 ||
+                alert.alertNameID == 26 ||
+                alert.alertNameID == 29 )) {%>
 
 <form action="/alerts/sending/chooseAlert">
     <input type="submit" value="Exit Alert" >

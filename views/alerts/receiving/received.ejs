@@ -14,20 +14,20 @@
 
 
     <!-- Alert that requires FLOOR -->
-    <% if (info.alertNameID == 2 ||
-            info.alertNameID == 4  ||
-            info.alertNameID == 5  ||
-            info.alertNameID == 6 ||
-            info.alertNameID == 7 ||
-            info.alertNameID == 9 ||
-            info.alertNameID == 10 ||
-            info.alertNameID == 11 ||
-            info.alertNameID == 14 ||
-            info.alertNameID == 15 ||
-            info.alertNameID == 18 ||
-            info.alertNameID == 19 ||
-            info.alertNameID == 23 ||
-            info.alertNameID == 26 ) {%>
+    <% if ( info.alert.alertID == 2 ||
+            info.alert.alertID == 4  ||
+            info.alert.alertID == 5  ||
+            info.alert.alertID == 6 ||
+            info.alert.alertID == 7 ||
+            info.alert.alertID == 9 ||
+            info.alert.alertID == 10 ||
+            info.alert.alertID == 11 ||
+            info.alert.alertID == 14 ||
+            info.alert.alertID == 15 ||
+            info.alert.alertID == 18 ||
+            info.alert.alertID == 19 ||
+            info.alert.alertID == 23 ||
+            info.alert.alertID == 26 ) {%>
 
     <script>
         var x, y;
@@ -54,6 +54,8 @@
         // All Alerts (less alert UTILITY FAILURE)
         $(document).ready(function() {
 
+            var alert_ID = $("#alert_ID").val();
+
             // Google map direction map
             var alert_name_ID = $("#alert_name_ID").val();
             if (alert_name_ID == 12){
@@ -74,42 +76,38 @@
             // end of Google map direction map
 
 
+            //Request procedureCompleted, weAreSafe!, or I need help
+            $('#checkboxProc').on('change',function () {
+                $.post("/alerts/received/procSafeHelp", {
+                    alertToUpdate: alert_ID,
+                    checkboxType: 'procedureCompleted'
+                }, function (data) {window.location = data.redirect});
+            });
+            $('#checkboxSafe').on('change',function () {
+                $.post("/alerts/received/procSafeHelp", {
+                    alertToUpdate: alert_ID,
+                    checkboxType: 'weAreSafe'
+                }, function (data) {window.location = data.redirect});
+            });
+            $('#checkboxNeedHelp').on('change',function () {
+                $.post("/alerts/received/procSafeHelp", {
+                    alertToUpdate: alert_ID,
+                    checkboxType: 'iNeedHelp'
+                }, function (data) {window.location = data.redirect});
+            });
+            //end of Request procedureCompleted, weAreSafe!, or I need help
 
-            var alert_ID, alertNameID, alertName;
+
+            var alertNameID, alertName;
             $("#reqProcedureWeSafe").click(function() {
-                alert_ID = $("#alert_ID").val();
                 alertNameID = $("#alertNameID").val();
                 alertName = $("#alertName").val();
-
-                //---------request procedureCompleted or weAreSafe!
-                if(document.getElementById("checkboxProc") === null){
-                    var reqProcedureCompleted = false;
-                }else{
-                    var reqProcedureCompleted = document.getElementById("checkboxProc").checked;
-                }
-                if(document.getElementById("checkboxSafe") === null) {
-                    var reqWeAreSafe = false;
-                }else{
-                    var reqWeAreSafe = document.getElementById("checkboxSafe").checked;
-                }
-                if(document.getElementById("checkboxNeedHelp") === null) {
-                    var reqNeedHelp = false;
-                }else{
-                    var reqNeedHelp = document.getElementById("checkboxNeedHelp").checked;
-                }
-                //---------end of request procedureCompleted or weAreSafe!
-
-
-                //--------------------------------forms validation end-------
 
                 $.post('/alerts/received/receivedAlert', {
                     alertToUpdate: alert_ID,
                     alertNameID: alertNameID,
                     alertName: alertName,
-                    exitButton: true,
-                    procedureCompleted: reqProcedureCompleted,
-                    weAreSafe: reqWeAreSafe,
-                    needHelp: reqNeedHelp
+                    exitButton: true
 
                 }, function (data) {
                     if (data === 'done') {
@@ -129,7 +127,6 @@
 
                 if (requestAssistance != 'back') {
 
-                    alert_ID = $("#alert_ID").val();
                     alertNameID = $("#alertNameID").val();
                     alertName = $("#alertName").val();
 
@@ -140,33 +137,13 @@
                         return $(this).val();
                     }).get();
 
-                    //---------request procedureCompleted or weAreSafe!
-                    if(document.getElementById("checkboxProc") === null){
-                        var reqProcedureCompleted = false;
-                    }else{
-                        var reqProcedureCompleted = document.getElementById("checkboxProc").checked;
-                    }
-                    if(document.getElementById("checkboxSafe") === null) {
-                        var reqWeAreSafe = false;
-                    }else{
-                        var reqWeAreSafe = document.getElementById("checkboxSafe").checked;
-                    }
-                    if(document.getElementById("checkboxNeedHelp") === null) {
-                        var reqNeedHelp = false;
-                    }else{
-                        var reqNeedHelp = document.getElementById("checkboxNeedHelp").checked;
-                    }
-                    //---------end of request procedureCompleted or weAreSafe!
-
 
                     //-----forms validation------------------------------------
                     if ((alertNameID == 14 || alertNameID == 26) && searchIDsChecked.length < 1) {
                         alert("To Request Assistance, you need to choose at least one type of contact.");
                         return false;
                     }
-
-
-                    //--------------------------------forms validation end-------
+                    //-------------------------------forms validation end-------
 
                     $.post('/alerts/received/receivedAlert', {
                         alertToUpdate: alert_ID,
@@ -174,10 +151,7 @@
                         alertName: alertName,
                         exitButton: false,
                         reqAssChecked: searchIDsChecked,
-                        reqAssNotChecked: searchIDsNotChecked,
-                        procedureCompleted: reqProcedureCompleted,
-                        weAreSafe: reqWeAreSafe,
-                        needHelp: reqNeedHelp
+                        reqAssNotChecked: searchIDsNotChecked
 
                     }, function (data) {
                         if (data === 'done') {
@@ -207,42 +181,43 @@
 <input type="hidden" id="alert_ID"  value="<%= info.id %>">
 <input type="hidden" id="busLatitude"  value="<%= info.latitude %>">
 <input type="hidden" id="busLongitude"  value="<%= info.longitude %>">
-<input type="hidden" id="alert_name_ID"  value="<%= info.alertNameID %>">
+<input type="hidden" id="alert_name_ID"  value="<%= info.alert.alertID %>">
 
 <% if (info.testModeON == true ) {%>
 <h2 style="color: #34A7C1"> TEST MODE ON </h2>
 <% } %>
 
-<h3>Group: <%= info.alertGroupName %></h3>
-<h2>Alert: <%= info.alertName %></h2>
+<h3>Group: <%= info.group.name %></h3>
+<h2>Alert: <%= info.alert.name %></h2>
 
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 2 ||
-        info.alertNameID == 4  ||
-        info.alertNameID == 5  ||
-        info.alertNameID == 6 ||
-        info.alertNameID == 7 ||
-        info.alertNameID == 9 ||
-        info.alertNameID == 10 ||
-        info.alertNameID == 11 ||
-        info.alertNameID == 14 ||
-        info.alertNameID == 15 ||
-        info.alertNameID == 18 ||
-        info.alertNameID == 19 ||
-        info.alertNameID == 23 ||
-        info.alertNameID == 26 ) {%>
+<% if (info.alert.alertID == 2 ||
+        info.alert.alertID == 4  ||
+        info.alert.alertID == 5  ||
+        info.alert.alertID == 6 ||
+        info.alert.alertID == 7 ||
+        info.alert.alertID == 9 ||
+        info.alert.alertID == 10 ||
+        info.alert.alertID == 11 ||
+        info.alert.alertID == 14 ||
+        info.alert.alertID == 15 ||
+        info.alert.alertID == 18 ||
+        info.alert.alertID == 19 ||
+        info.alert.alertID == 23 ||
+        info.alert.alertID == 26 ) {%>
 
 <input type="hidden" id="x" size="40" value="<%= info.sniperCoordinateX %>">
 <input type="hidden" id="y" size="40" value="<%= info.sniperCoordinateY %>">
 
 <form>
-    <% if (info.floorPhoto !== 'FloorPhotoNotExist' &&
+    <% if ( info.floorPhoto !== info._id + '_FloorPhotoNotExist' &&
             info.floorPhoto !== '' &&
-            info.floorPhoto !== 'Multiple floors' &&
-            info.floorPhoto !== 'Multiple Locations' &&
-            info.floorPhoto !== 'user skipped floor' &&
-            info.floorPhoto !== 'Outside Building') {%>
+            info.floorPhoto !== info._id + '_Multiple floors' &&
+            info.floorPhoto !== info._id + '_Multiple Locations' &&
+            info.floorPhoto !== info._id + '_user skipped floor' &&
+            info.floorPhoto !== info._id + '_Outside Building') {%>
+
     <div id="div1" class="div1" style="height: 600px;">
         <img style='height: 100%; width: 100%; object-fit: contain' src="/public/alertSentInfo/floorsPhotos/<%= info.floorPhoto %>">
     </div>
@@ -250,7 +225,6 @@
     <div id="div2" class="div2" >
         <img src="/floorPlans/red_sniper.png" >
     </div>
-
 </form>
 <% } %>
 
@@ -303,7 +277,7 @@
 <br>
 
 <!-- Alert BUS TRANSPORTATION -->
-<% if (info.alertNameID == 12 ) {%>
+<% if (info.alert.alertID == 12 ) {%>
 <label for="busAccidentNoInjuries"><b>No injuries:</b></label>
 <% if (info.busAccidentNoInjuries) { %>
 <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" checked disabled>
@@ -348,11 +322,11 @@
 <br>
 
 <!-- Alert that requires STUDENT -->
-<% if (info.alertNameID == 4 ||
-        info.alertNameID == 5 ||
-        info.alertNameID == 16 ||
-        info.alertNameID == 17 ||
-        info.alertNameID == 19  ) {%>
+<% if (info.alert.alertID == 4 ||
+        info.alert.alertID == 5 ||
+        info.alert.alertID == 16 ||
+        info.alert.alertID == 17 ||
+        info.alert.alertID == 19  ) {%>
 
 <label for="studentName"><b>Student name:</b></label>
 <input type="text" id="student" value="<%= info.studentName %>" readonly><br><br>
@@ -366,20 +340,20 @@
 <% } %>
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 2 ||
-        info.alertNameID == 4  ||
-        info.alertNameID == 5  ||
-        info.alertNameID == 6 ||
-        info.alertNameID == 7 ||
-        info.alertNameID == 9 ||
-        info.alertNameID == 10 ||
-        info.alertNameID == 11 ||
-        info.alertNameID == 14 ||
-        info.alertNameID == 15 ||
-        info.alertNameID == 18 ||
-        info.alertNameID == 19 ||
-        info.alertNameID == 23 ||
-        info.alertNameID == 26 ) {%>
+<% if (info.alert.alertID == 2 ||
+        info.alert.alertID == 4  ||
+        info.alert.alertID == 5  ||
+        info.alert.alertID == 6 ||
+        info.alert.alertID == 7 ||
+        info.alert.alertID == 9 ||
+        info.alert.alertID == 10 ||
+        info.alert.alertID == 11 ||
+        info.alert.alertID == 14 ||
+        info.alert.alertID == 15 ||
+        info.alert.alertID == 18 ||
+        info.alert.alertID == 19 ||
+        info.alert.alertID == 23 ||
+        info.alert.alertID == 26 ) {%>
 
 <% if (info.floorName) {%>
 <label for="floor"><b>Floor:</b></label>
@@ -388,7 +362,7 @@
 <% } %>
 
 <!-- Alert MISSING CHILD -->
-<% if (info.alertNameID == 4 ) {%>
+<% if (info.alert.alertID == 4 ) {%>
 <label for="lastTimeSeen"><b>Last time seen:</b></label>
 <input type="text" id="lastTime" size="5" value="<%= info.missingChildLastTimeSeen %>" readonly><br><br>
 
@@ -400,7 +374,7 @@
 <% } %>
 
 <!-- Alert STUDENT WITH A GUN -->
-<% if (info.alertNameID == 5) {%>
+<% if (info.alert.alertID == 5) {%>
 <label for="seat"><b>He/she is seated:</b></label><br>
 <textarea id="seat" rows="2"  cols="33" placeholder="n/a" readonly><%= info.studentWithGunSeated %></textarea><br><br>
 
@@ -409,14 +383,14 @@
 <% } %>
 
 <!-- Alert EVACUATE -->
-<% if (info.alertNameID == 7) {%>
+<% if (info.alert.alertID == 7) {%>
 <label for="whereToEvacuate"><b>Where to Evacuate::</b></label><br>
 <textarea id="whereToEvacuate" rows="2"  cols="33" placeholder="n/a" readonly><%= info.evacuateWhereTo %></textarea><br><br>
 <% } %>
 
 
 
-<% if (info.alertNameID == 27 ) {%>
+<% if (info.alert.alertID == 27 ) {%>
 <label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
 
 <label for="busRadio"><b>Bus is:</b> <%= info.busDelayedAhead %></label><br><br>
@@ -435,7 +409,7 @@
 
 
 <!-- Alert HAZARDOUS MATERIALS SPILL -->
-<% if (info.alertNameID == 6) {%>
+<% if (info.alert.alertID == 6) {%>
 <label for="note"><b>Description of type of material, odor, etc.:</b></label><br>
 <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
 <% } else {%>
@@ -447,7 +421,7 @@
 
 
 
-<% if (info.alertNameID == 12 ) {%>
+<% if (info.alert.alertID == 12 ) {%>
 <!-- Drawing google map -->
 <iframe width="600" height="450" frameborder="0" style="border:0"
         allowfullscreen></iframe>
@@ -459,19 +433,23 @@
 
 
 <!-- Alert Medical Emergencies -->
-<% if (info.alertNameID == 18 ) {%>
+<% if (info.alert.alertID == 18 ) {%>
 <label for="situation"><b>Number of injured parties:</b></label>
 <input type="text" id="parties"  size="1" value="<%= info.medicalInjuredParties %>" readonly ><br><br>
 <% } %>
 
-
+<% if (info.alert.alertID == 29 ) {%>
+<label for="situation"><b>Day school will be closed:</b></label>
+<input type="text" id="parties"  size="1" value="<%= info.dayClosed %>" readonly ><br><br>
+<% } %>
 
 
 
 <!-- Alert MultiSelection -->
-<% if (info.alertNameID == 14 ||
-        info.alertNameID == 18 ||
-        info.alertNameID == 26 ) {%>
+<% if (info.alert.alertID == 14 ||
+        info.alert.alertID == 18 ||
+        info.alert.alertID == 26 ||
+        info.alert.alertID == 29 ) {%>
 <label for="situation"><b>Situation:</b></label><br>
 
 <!-- checkBox of Multiselection -->
@@ -487,8 +465,8 @@
 
 
 <!-- REQUEST ASSISTANCE -->
-<% if (info.alertNameID == 14 ||
-        info.alertNameID == 26 ) {%>
+<% if (info.alert.alertID == 14 ||
+        info.alert.alertID == 26 ) {%>
 <% if (canRequestAssistance == true) {%>
 
 <% var arrayLabels = ["smecs app", "send email", "call"]; %>
@@ -656,13 +634,13 @@
 <% if (info.requestProcedureCompleted || info.requestWeAreSafe) {%>
 <button class="receiveButton" id="reqProcedureWeSafe" >Exit</button>
 <%} else { %>
-<button class="receiveButton" id="exit" onclick="location.href='/alerts/sending/chooseAlert'">Exit</button>
+<button class="receiveButton" id="exit" onclick="location.href='/reports/homeReports'">Exit</button>
 <% } %>
 
 <% if (canRequestAssistance == true && flagDisableRequestButton == 1) {%>
 <input type="button" id="request" value="Send Request Assistance" ><br><br>
 <%} else { %>
-<% if (info.alertNameID == 14 || info.alertNameID == 26) {%>
+<% if (info.alert.alertID == 14 || info.alert.alertID == 26) {%>
 <input type="button" id="request" value="Send Request Assistance" disabled><br><br>
 <%}%>
 <%}%>

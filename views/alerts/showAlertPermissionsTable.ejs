@@ -17,6 +17,7 @@
   <link href="/public/gentelella/vendors/bootstrap/dist/css/WhoCanSendAlerts.css" rel="stylesheet">
   <!-- Custom Theme Style -->
   <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+  <link href="/public/stylesheets/toolTips.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
@@ -132,7 +133,7 @@
           <div class="x_panel">
             <div class="x_content">
               <ul>
-                <div align="center">
+                <div align="center" style="position: fixed; left: 50%">
 
                     <% if (aclModifyAlertsTable == null || aclModifyAlertsTable.checkBoxValue == true) {%>
                   <button class="btn btn-success" name="btSave" id="btSave" disabled="true" onclick="this.disabled=true">Save</button>
@@ -146,7 +147,7 @@
                 </div>
               </ul>
 
-              <br>
+              <br><br>
               <div class="" role="tabpanel" data-example-id="togglable-tabs">
                 <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                   <li role="presentation" class="active"><a href="#tab_content1" id="AclAlertsReal" role="tab" data-toggle="tab" aria-expanded="true">REAL - Send</a>
@@ -257,7 +258,13 @@
                   <table id="" class="table table-bordered">
                     <thead>
                     <tr>
-                      <td>WHO CAN RECEIVE REAL ALERTS</td>
+                      <td>WHO CAN RECEIVE REAL ALERTS
+                        <i class="asteriskColor circlePosition fa fa-info-circle tooltipWhoCanReceive" onclick="">
+                                        <span class="tooltipTextBottom">
+                                            <div><span class="infoTitleColor"> Orange rows :</span><span class="infoText"> if checkbox is selected, alert will be sent to 3rd parties users.</span></div><br><br>
+                                        </span>
+                        </i>
+                      </td>
                         <% roles2.forEach(function(roles2) { %>
                         <% var backColor = '' %>
                         <% var text = '' %>
@@ -265,7 +272,7 @@
                         <% backColor = '#f9ebd6' %>
                         <% text = '' %>
                         <% } %>
-                      <th id="<%= roles2.roleName %>" scope="col" style="background-color: <%= backColor %>; color: <%= text %>"><b><%= roles2.roleName %></b></th>
+                      <th id="<%= roles2.roleName %>" scope="col" style="background-color: <%= backColor %>; color: <%= text %>" ><b><%= roles2.roleName %></b></th>
                         <% }); %>
                     </tr>
                     </thead>
@@ -445,7 +452,13 @@
                   <table id="" class="table table-bordered">
                     <thead>
                     <tr>
-                      <td>WHO CAN RECEIVE DRILL ALERTS</td>
+                      <td>WHO CAN RECEIVE DRILL ALERTS
+                        <i class="asteriskColor circlePosition fa fa-info-circle tooltipWhoCanReceive" onclick="">
+                                        <span class="tooltipTextBottom">
+                                            <div><span class="infoTitleColor"> Orange rows :</span><span class="infoText"> if checkbox is selected, alert will be sent to 3rd parties users.</span></div><br><br>
+                                        </span>
+                        </i>
+                      </td>
                         <% roles2.forEach(function(roles2) { %>
                         <% var backColor = '' %>
                         <% var text = '' %>

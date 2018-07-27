@@ -291,26 +291,6 @@ module.exports.softDelete = function(req, res) {
         alert.softDeleted = true;
         alert.save();
         res.redirect('/alertGroups/showAlertGroups');
-
-        /*
-        //UPDATE ACL ALERTS--------
-        var aclAlertsToUpdate =  alert.alertID;
-        var typeAclAlert = 'AclAlertsReal';
-        updateAclAlerts(aclAlertsToUpdate);
-
-        typeAclAlert = 'AclAlertsTest';
-        updateAclAlerts(aclAlertsToUpdate);
-
-        function updateAclAlerts(aclAlertsToUpdate){
-            models[typeAclAlert].find({'alertID': aclAlertsToUpdate }, function(err, groups) {
-                groups.forEach( function(group) {
-                    group.alertSoftDeleted = true;
-                    group.save();
-                });
-            });
-        }
-        //--------end UPDATE ACL ALERT
-        */
     });
 
 

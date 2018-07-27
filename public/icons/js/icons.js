@@ -56,14 +56,14 @@ module.exports.soundBuild = function(callback) {
 
     var animals = [
 
-        'Animals','Fire Truck Horn','fire_truck_air_horn',
-        'Animals','Railroad Crossing Bell','railroad',
-        'Animals','Missile Alert','bomb_siren',
-        'Animals','Crazy Brain','crazy_brain',
-        'Animals','Tornado Siren II','tornado',
-        'Animals','Wake Up Call','wake_up',
-        'Animals','Wake Up Call','wake_up',
-        'Animals','Wake Up Call','wake_up'
+        'Animals','Dog','dog',
+        'Animals','Rooster','rooster',
+        'Animals','Elephant','elephant',
+        'Animals','Chimpanzee','chimpanzee',
+        'Animals','Cat','cat',
+        'Animals','Wolf','wolf',
+        'Animals','Hawk','hawk',
+        'Animals','Frogs','frogs'
 
     ];
 
@@ -82,7 +82,13 @@ module.exports.soundBuild = function(callback) {
 
     var misc = [
         'Misc','Eas Beep','eas_beep',
-        'Misc','Sunday Church Ambiance','church'
+        'Misc','Sunday Church Ambiance','church',
+        'Misc','Car Alarm','car_alarm',
+        'Misc','Crazy Brain','crazy_brain',
+        'Misc','Railroad','railroad',
+        'Misc','Tornado','tornado',
+        'Misc','Boat','boat',
+        'Misc','Bomb Siren','bomb_siren'
 
     ];
 

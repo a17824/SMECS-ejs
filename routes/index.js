@@ -663,6 +663,7 @@ router.post('/alerts/sending/panic/:id', auth.simpleAuth, auth.requireLogin, rev
 
 /* All Alerts -------------------------------*/
 router.get('/alerts/received/receiveAlert/:id', auth.simpleAuth, auth.requireLogin, receiveAlert.receivedAlert, function(req, res, next) {});
+router.post('/alerts/received/procSafeHelp', auth.simpleAuth, auth.requireLogin, receiveAlert.procSafeHelp, function(req, res) {});
 router.post('/alerts/received/receivedAlert', auth.simpleAuth, auth.requireLogin, receiveAlert.postReceivedAlert, function(req, res) {});
 
 

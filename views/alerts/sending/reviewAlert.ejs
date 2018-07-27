@@ -325,9 +325,15 @@
 <input type="text" id="parties"  size="1" value="<%= info.medicalInjuredParties %>" readonly ><br><br>
 <% } %>
 
+<% if (info.alertNameID == 29 ) {%>
+<label for="situation"><b>Day school will be closed:</b></label>
+<input type="text" id="parties"  size="1" value="<%= info.dayClosed %>" readonly ><br><br>
+<% } %>
+
 <!-- Alert UTILITY FAILURE  && MEDICAL EMERGENCIES && REQUEST ASSISTANCE-->
 <% if (info.alertNameID == 14 ||
-        info.alertNameID == 18 ) {%>
+        info.alertNameID == 18 ||
+        info.alertNameID == 29 ) {%>
     <label for="situation"><b>Situation:</b></label><br>
 
     <!-- checkBox of utility failure -->
