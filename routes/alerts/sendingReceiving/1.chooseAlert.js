@@ -285,8 +285,20 @@ module.exports.showAlertsPost = function(req, res) {
                             placeholderEvacuateWhereTo: placeholderEvacuateWhereTo
 
                         });
-                        alertTemp1.save();
-                        callback(null, alertTemp1);
+                        alertTemp1.save(function(err, resp) {
+                            if (err) {
+                                console.log('err = ',err);
+                                if (rec.decoded)
+                                    res.json({
+                                        success: false,
+                                        message: 'Something went wrong, please try again. If this problem persists please contact SMECS tech support team.'
+                                    })
+                            } else {
+                                console.log('the tempAler1 has been saved');
+                                callback(null, alertTemp1);
+                            }
+                        });
+
 
                     }
                     else{   //Groups Buttons ON

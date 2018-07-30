@@ -155,7 +155,7 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
                     alert.softDeletedBy = req.session.user.firstName + " " + req.session.user.lastName;
                     alert.softDeletedDate = wrapped.format('YYYY-MM-DD');
                     alert.softDeletedTime = wrapped.format('h:mm:ss');
-                    alert.expirationDate = new Date(Date.now() + ( 1 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
+                    alert.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
                 }
                 alert.save();
             });
