@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Show Medical</title>
+    <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
@@ -34,7 +34,11 @@
     </caption>
     <thead>
     <tr>
+        <% if (modelType == 'EvacuateTo') {%>
+        <th>Evacute to</th>
+        <% } else { %>
         <th>Cause Name</th>
+        <% } %>
         <% if (userAuthID == 1) {%>
             <th>ID</th>
         <% } %>
@@ -69,7 +73,7 @@
 </table><br>
 
 
-<form action="/dashboard">
+<form action="/reports/homeReports">
     <input type="submit" value="Back">
 </form>
 

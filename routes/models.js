@@ -329,7 +329,6 @@ var AlertSentInfoSchema = new mongoose.Schema({
     missingChildClothesWearing: String,
     studentWithGunSeated: String,
     studentWithGunBehaviour: String,
-    evacuateWhereTo: String,
     latitude: String,           //bus accident alert gps
     longitude: String,           //bus accident alert gps
     mapBus: String,             //tp view map image in reports
@@ -443,7 +442,6 @@ var AlertSentTempSchema = new mongoose.Schema({
     missingChildClothesWearing: String,
     studentWithGunSeated: String,
     studentWithGunBehaviour: String,
-    evacuateWhereTo: String,
     latitude: String,           //bus accident alert gps
     longitude: String,           //bus accident alert gps
     mapBus: String,
@@ -601,6 +599,16 @@ var SchoolClosedSchema = new mongoose.Schema({
 }, {collection:"SchoolClosed"}); //stops Mongoose of giving plurals to our collections names
 var SchoolClosed;
 module.exports.SchoolClosed = mongoose.model("SchoolClosed", SchoolClosedSchema);
+
+
+// DEFINE EvacuteTo COLLECTION IN MONGOdb
+var EvacuateToSchema = new mongoose.Schema({
+    utilityID: { type: Number, unique: true },
+    utilityName: { type: String, unique: true } // church, Parking lot, street
+
+}, {collection:"EvacuateTo"}); //stops Mongoose of giving plurals to our collections names
+var EvacuateTo;
+module.exports.EvacuateTo = mongoose.model("EvacuateTo", EvacuateToSchema);
 
 
 // DEFINE PA-PreRecorded System COLLECTION IN MONGOdb

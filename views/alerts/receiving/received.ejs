@@ -215,7 +215,7 @@
             info.floorPhoto !== '' &&
             info.floorPhoto !== info._id + '_Multiple floors' &&
             info.floorPhoto !== info._id + '_Multiple Locations' &&
-            info.floorPhoto !== info._id + '_user skipped floor' &&
+            info.floorPhoto !== info._id + '_skipped by user' &&
             info.floorPhoto !== info._id + '_Outside Building') {%>
 
     <div id="div1" class="div1" style="height: 600px;">
@@ -356,8 +356,13 @@
         info.alert.alertID == 26 ) {%>
 
 <% if (info.floorName) {%>
-<label for="floor"><b>Floor:</b></label>
-<input type="text" id="floorLevel"  size="25" value="<%= info.floorName %>" readonly ><br><br>
+    <!-- Alert EVACUATE -->
+    <% if (info.alert.alertID == 7) {%>
+        <label for="floor"><b>Evacuate to:</b></label>
+    <% }else { %>
+        <label for="floor"><b>Floor:</b></label>
+<% } %>
+    <input type="text" id="floorLevel"  size="25" value="<%= info.floorName %>" readonly ><br><br>
 <% } %>
 <% } %>
 

@@ -10,6 +10,8 @@ module.exports.show = function(req, res, next) {
     var title = 'Medical Emergencies';
     if(modelType == 'SchoolClosed')
         title = 'Cause of School Closed';
+    if(modelType == 'EvacuateTo')
+        title = 'Evacuate to';
 
     async.parallel([
         function(callback){
@@ -44,6 +46,8 @@ module.exports.add = function(req, res) {
     var title = 'Add Medical Emergencies';
     if(modelType == 'SchoolClosed')
         title = 'Add cause for School Closed';
+    if(modelType == 'EvacuateTo')
+        title = 'Evacuate to';
 
     async.parallel([
         function(callback){
@@ -81,7 +85,7 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
-    var modelType = req.body.modelType; // Medical or SchoolClosed
+    var modelType = req.body.modelType; // Medical, SchoolClosed or EvacuateTo
 
     var medical1 = new models[modelType]({
         utilityID: req.body.utilityID,
@@ -100,12 +104,12 @@ module.exports.addPost = function(req, res) {
 
 /* UPDATE Medical. -------------------------------*/
 module.exports.update = function(req, res) {
-    console.log('req.params.modelType = ',req.params.modelType);
-    console.log('req.params.id = ',req.params.id);
-    var modelType = req.params.modelType; // Medical or SchoolClosed
+    var modelType = req.params.modelType; // Medical, SchoolClosed or EvacuateTo
     var title = 'Update Medical Emergencies';
     if(modelType == 'SchoolClosed')
         title = 'Update cause for School Closed';
+    if(modelType == 'EvacuateTo')
+        title = 'Evacuate to';
 
     async.parallel([
         function(callback){
@@ -144,7 +148,7 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var medicalToUpdate1 = req.body.medicalToUpdate;
-    var modelType = req.body.modelType; // Medical or SchoolClosed
+    var modelType = req.body.modelType; // Medical, SchoolClosed or EvacuateTo
 
     models[modelType].findById({'_id': medicalToUpdate1}, function(err, medical){
         medical.utilityID = req.body.utilityID;

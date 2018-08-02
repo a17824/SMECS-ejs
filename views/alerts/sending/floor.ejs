@@ -20,14 +20,14 @@
             }
             /*----- end of unCheck radio button ----*/
 
-            var alert_ID, floorID,floorName, floorPhoto, alertNameID, alertSlugName;
+            var alert_ID, floorID,floorName, floorPhoto, alertNameID;
             $("#<%= alert.id %>").click(function(){
                 alert_ID=$(this).attr('id');
                 floorPhoto=$("input:radio[name='floorID']:checked").val();
                 floorName = $("input:radio[name='floorID']:checked + label").text();
                 floorID = $('input[name=floorID]:checked').attr('id');
                 alertNameID=$("#alertNameID").val();
-                alertSlugName=$("#alertSlugName").val();
+
 
                 //-----forms validation------------------------------------
 
@@ -73,26 +73,28 @@
             <label for="floor"><b>Student location:</b> (optional)</label><br>
         <% }%>
         <% if (alert.alertNameID == 7) {%>
-            <label for="floor"><b>Floor(s) to evacuate:</b> (optional)</label><br>
+            <label for="floor"><b>Evacuate to:</b> (optional)</label><br>
         <% }%>
     <% } else { %>
         <label for="floor"><b>Location:</b> (optional)</label><br>
     <% }%>
     <% floor.forEach(function(floor) { %>
+    <% if (alert.alertNameID == 7) {%>
+        <% if (floor.utilityID == alert.utilityID) {%> <!-- for back button/refresh -->
+            <input type="radio" class="radio-button" name="floorID" id="<%= floor.utilityID %>"  checked><label for="floorName"><%= floor.utilityName %></label><br>
+        <% } else { %>
+            <input type="radio" class="radio-button" name="floorID" id="<%= floor.utilityID %>"><label for="floorName"><%= floor.utilityName %></label><br>
+        <% }%>
+
+    <% } else { %>
         <% if (floor.floorName == alert.floorName) {%> <!-- for back button/refresh -->
             <input type="radio" class="radio-button" name="floorID" id=<%= floor.floorID %> value="<%= floor.floorPlan %>" checked><label for="floorName"><%= floor.floorName %></label><br>
         <% } else { %>
             <input type="radio" class="radio-button" name="floorID" id=<%= floor.floorID %> value="<%= floor.floorPlan %>"><label for="floorName"><%= floor.floorName %></label><br>
-        <% }%>
+    <% }%>
+    <% }%>
     <% }); %>
 
-    <% if (alert.alertNameID == 7) {%>
-        <% if ('Any floor / All EXIT doors' == alert.floorName) {%> <!-- for back button/refresh -->
-            <input type="radio" class="radio-button" name="floorID" id="allFloors" value="allFloors" checked><label for="floorName">Any floor / All EXIT doors</label><br>
-        <% } else { %>
-            <input type="radio" class="radio-button" name="floorID" id="allFloors" value="allFloors"><label for="floorName">Any floor / All EXIT doors</label><br>
-        <% }%>
-    <% }%>
     <% if (alert.alertNameID == 14 ||
             alert.alertNameID == 26 ) {%>
         <% if ('Multiple floors' == alert.floorName) {%> <!-- for back button/refresh -->

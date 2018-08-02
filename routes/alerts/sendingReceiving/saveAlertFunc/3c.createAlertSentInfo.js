@@ -84,7 +84,6 @@ module.exports.alertSentInfo = function(req, res, tempAlert, callback) {
         missingChildClothesWearing: tempAlert.missingChildClothesWearing,
         studentWithGunSeated: tempAlert.studentWithGunSeated,
         studentWithGunBehaviour: tempAlert.studentWithGunBehaviour,
-        evacuateWhereTo: tempAlert.evacuateWhereTo,
         requestAssistance: tempAlert.requestAssistance,
         busAccidentNoInjuries : tempAlert.busAccidentNoInjuries,
         busMorningAfternoon: tempAlert.busMorningAfternoon,

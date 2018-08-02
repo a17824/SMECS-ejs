@@ -14,6 +14,9 @@ module.exports.showFloor = function(req, res) {
         function(callback){
             models.Floors.find().sort({"floorID":1}).exec(callback);
         },
+        function(callback){
+            models.EvacuateTo.find().sort({"utilityID":1}).exec(callback);
+        },
         function(callback) {
             if(req.decoded) { //API user
                 models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
@@ -27,6 +30,10 @@ module.exports.showFloor = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+            var modelToUse = results[1];   // to use Floor collection
+            if (results[0].alertNameID == 7){   // to use EvacuateTo collection
+                modelToUse = results[2];
+            }
 
             if(req.decoded){ // run SMECS API
                 res.json({
@@ -34,7 +41,7 @@ module.exports.showFloor = function(req, res) {
                     userAuthGroupAlerts: results[2].appSettings.groupAlertsButtons, //for Back or Exit button
                     title: results[0].alertName,
                     alert: results[0],
-                    floor: results[1]
+                    floor: modelToUse
                 });
 
             }else{  // run SMECS EJS
@@ -42,7 +49,7 @@ module.exports.showFloor = function(req, res) {
                     title: results[0].alertName,
                     userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,   //for Back or Exit button
                     alert: results[0],
-                    floor: results[1],
+                    floor: modelToUse,
                     aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
@@ -66,16 +73,20 @@ module.exports.postFloor = function(req, res) {
         }
         else {
             //if user skip floor question or if floor photo don't exist on database or all/none/multiple/outside floor selected
+            console.log('floorID = ',floorID);
+            console.log('floorName = ',floorName);
+            console.log('floorPhoto = ',floorPhoto);
             if ( floorID == null ||
                 floorPhoto === '' ||
                 floorID == 'allFloors' ||
                 floorID == 'multipleLocations' ||
-                floorID == 'outside' ) {
+                floorID == 'outside' ||
+                alert.alertNameID == 7 ) { // or if is Evacuate alert
 
                 //checkFloorPhotoExists---------------------
                 if (floorName == '' || !floorName){    //if user skip floor question
-                    floorPhoto = 'user skipped floor';
-                    floorName = 'user skipped floor';
+                    floorPhoto = 'skipped by user';
+                    floorName = 'skipped by user';
                     //if user goes back in browser and removes floor floor--------------
                     alert.sniperCoordinateX = undefined;
                     alert.sniperCoordinateY = undefined;
@@ -99,6 +110,11 @@ module.exports.postFloor = function(req, res) {
                     alert.sniperCoordinateY = undefined;
                 }
                 if (floorID == 'outside'){ //if Multiple Locations are selected (Violence Alert)
+                    floorPhoto = 'Outside Building';
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
+                }
+                if (alert.alertNameID == 7){ //or if is Evacuate alert
                     floorPhoto = 'Outside Building';
                     alert.sniperCoordinateX = undefined;
                     alert.sniperCoordinateY = undefined;
@@ -205,7 +221,7 @@ module.exports.postFloorLocation = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            if(alert.floorName !== 'user skipped floor'){
+            if(alert.floorName !== 'skipped by user'){
                 alert.sniperCoordinateX = req.body.coordinateX;
                 alert.sniperCoordinateY = req.body.coordinateY;
                 alert.save();
@@ -266,14 +282,7 @@ module.exports.showNotes = function(req, res) {
                 res.json({
                     success: true,
                     userAuthGroupAlerts: results[1].appSettings.groupAlertsButtons, //for Back or Exit button
-                    testModeON: results[0].testModeON,
-                    title: results[0].alertName,
-                    placeholderNote: results[0].placeholderNote,
-                    placeholderMissingChildLastPlaceSeen: results[0].placeholderMissingChildLastPlaceSeen,
-                    placeholderMissingChildClothesWearing: results[0].placeholderMissingChildClothesWearing,
-                    placeholderStudentWithGunSeated: results[0].placeholderStudentWithGunSeated,
-                    placeholderStudentWithGunBehaviour: results[0].placeholderStudentWithGunBehaviour,
-                    placeholderEvacuateWhereTo: results[0].placeholderEvacuateWhereTo
+                    alert: results[0]
                 });
 
             }else{  //EJS user
@@ -348,12 +357,7 @@ module.exports.postNotes = function(req, res) {
                     alert.studentWithGunBehaviour = req.body.studentBehaviour;
                     alert.save();
                 }
-                if (alert.alertNameID == 7 ) {
 
-                    alert.evacuateWhereTo = req.body.whereToEvacuate;
-                    allFloorsButtonHidden = false; //API user
-                    alert.save();
-                }
                 if (alert.alertNameID == 12 ) {
                     console.log(req.body.map);
                     alert.latitude = req.body.latitude;
@@ -417,6 +421,7 @@ module.exports.showStudent = function(req, res) {
                     success: true,
                     testModeON: results[0].testModeON,
                     title: results[0].alertName,
+                    alert: results[0],
                     userAuthGroupAlerts: results[2].appSettings.groupAlertsButtons, //for Back or Exit button
                     student: results[1]
                 });
@@ -547,7 +552,7 @@ module.exports.postMultiSelection = function(req, res) {
             alert.multiSelectionNames = req.body.checkboxesNames;
             alert.multiSelectionIDs = req.body.checkboxesIDs;
 
-            if (req.decoded) {       // API user
+            if (req.decoded && typeof req.body.checkboxesIDs !== 'undefined' && req.body.checkboxesIDs) {       // API user
                 alert.multiSelectionNames = req.body.checkboxesNames.split(',').map(String);
                 alert.multiSelectionIDs = req.body.checkboxesIDs.split(',').map(String);
             }

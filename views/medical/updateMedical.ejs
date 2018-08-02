@@ -66,14 +66,18 @@
 
 
 
-    <label for="utilityName"><b>Cause Name:</b></label><br>
+    <% if (modelType == 'EvacuateTo') {%>
+    <label for="utilityName"><b>Evacuate to:</b></label><br>
+    <% } else { %>
+    <label for="utilityName"><b>Name:</b></label><br>
+    <% } %>
     <input type="text" id="utilityName" size="40" value="<%= medical.utilityName %>"><br><br>
 
     <input type="hidden" id="inUseMedicalID" value="<%= array %>">
     <input type="hidden" id="modelType" value="<%= modelType %>">
 
     <% if (userAuthID == 1) {%>
-    <label for="utilityID"><b>Cause ID:</b></label><br>
+    <label for="utilityID"><b>ID:</b></label><br>
     <select id='some_select'></select><br><br>
     <% } else { %>
     <select id='some_select' style="display:none;"></select>

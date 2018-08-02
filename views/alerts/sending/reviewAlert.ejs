@@ -148,7 +148,7 @@
                 info.floorPhoto !== '' &&
                 info.floorPhoto !== 'Multiple floors' &&
                 info.floorPhoto !== 'Multiple Locations' &&
-                info.floorPhoto !== 'user skipped floor' &&
+                info.floorPhoto !== 'skipped by user' &&
                 info.floorPhoto !== 'Outside Building') {%>
             <div id="div1" class="div1" style="height: 600px;">
             <img style='height: 100%; width: 100%; object-fit: contain' src="/floorPlans/<%= info.floorPhoto %>">
@@ -219,7 +219,12 @@
         info.alertNameID == 26 ) {%>
 
     <% if (info.floorName) {%>
-        <label for="floor"><b>Floor:</b></label>
+        <!-- Alert EVACUATE -->
+        <% if (info.alertNameID == 7) {%>
+            <label for="floor"><b>Evacuate to:</b></label>
+        <% }else { %>
+            <label for="floor"><b>Floor:</b></label>
+        <% } %>
         <input type="text" id="floorLevel"  size="25" value="<%= info.floorName %>" readonly ><br><br>
     <% } %>
 <% } %>
@@ -245,11 +250,7 @@
     <textarea id="studentBehaviour" rows="2"  cols="33" placeholder="n/a" readonly><%= info.studentWithGunBehaviour %></textarea><br><br>
 <% } %>
 
-<!-- Alert EVACUATE -->
-<% if (info.alertNameID == 7) {%>
-    <label for="whereToEvacuate"><b>Where to Evacuate::</b></label><br>
-    <textarea id="whereToEvacuate" rows="2"  cols="33" placeholder="n/a" readonly><%= info.evacuateWhereTo %></textarea><br><br>
-<% } %>
+
 
 <!-- Alert BUS TRANSPORTATION -->
 <% if (info.alertNameID == 12 ) {%>
