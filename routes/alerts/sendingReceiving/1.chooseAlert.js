@@ -188,7 +188,8 @@ module.exports.showAlerts = function(req, res) {
                     success: true,
                     alert: alert,
                     testModeOnArrayReal: results[0],
-                    testModeOnArrayTest: results[1]
+                    testModeOnArrayTest: results[1],
+                    icons: results[2],
 
                 });
 
@@ -199,7 +200,8 @@ module.exports.showAlerts = function(req, res) {
                     alert: alert,
                     aclReal: results[0],
                     aclTest: results[1],
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    icons: results[2],
+                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

@@ -38,7 +38,7 @@ module.exports.showFloor = function(req, res) {
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
-                    userAuthGroupAlerts: results[2].appSettings.groupAlertsButtons, //for Back or Exit button
+                    userAuthGroupAlerts: results[3].appSettings.groupAlertsButtons, //for Back or Exit button
                     title: results[0].alertName,
                     alert: results[0],
                     floor: modelToUse

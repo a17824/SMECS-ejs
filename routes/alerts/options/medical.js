@@ -12,6 +12,8 @@ module.exports.show = function(req, res, next) {
         title = 'Cause of School Closed';
     if(modelType == 'EvacuateTo')
         title = 'Evacuate to';
+    if(modelType == 'Building')
+        title = 'Building';
 
     async.parallel([
         function(callback){
@@ -48,6 +50,8 @@ module.exports.add = function(req, res) {
         title = 'Add cause for School Closed';
     if(modelType == 'EvacuateTo')
         title = 'Evacuate to';
+    if(modelType == 'Building')
+        title = 'Building';
 
     async.parallel([
         function(callback){
@@ -110,6 +114,9 @@ module.exports.update = function(req, res) {
         title = 'Update cause for School Closed';
     if(modelType == 'EvacuateTo')
         title = 'Evacuate to';
+    if(modelType == 'Building')
+        title = 'Building';
+
 
     async.parallel([
         function(callback){
@@ -148,19 +155,26 @@ module.exports.update = function(req, res) {
 };
 module.exports.updatePost = function(req, res) {
     var medicalToUpdate1 = req.body.medicalToUpdate;
-    var modelType = req.body.modelType; // Medical, SchoolClosed or EvacuateTo
+    var modelType = req.body.modelType; // Medical, SchoolClosed, EvacuateTo, Building
 
     models[modelType].findById({'_id': medicalToUpdate1}, function(err, medical){
-        medical.utilityID = req.body.utilityID;
-        medical.utilityName = req.body.utilityName;
-        medical.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }else{
-                return res.send({redirect:'/medical/showMedical/' + modelType})
-            }
-        });
+        if(err)
+            console.log('err - ',err);
+        else {
+            medical.utilityID = req.body.utilityID;
+            medical.utilityName = req.body.utilityName;
+            medical.save(function (err) {
+                if (err && (err.code === 11000 || err.code === 11001)) {
+                    console.log(err);
+                    return res.status(409).send('showAlert')
+                } else {
+                    if (modelType == 'Building')
+                        return res.send({redirect:'/floors/showFloors'})
+                    else
+                        return res.send({redirect:'/medical/showMedical/' + modelType})
+                }
+            });
+        }
     });
 
 };
@@ -172,7 +186,10 @@ module.exports.delete = function(req, res) {
     var modelType = req.params.modelType;
         models[modelType].remove({'_id': medicalToDelete}, function(err) {
             //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
-            res.redirect('/medical/showMedical/' + modelType);
+            if (modelType == 'Building')
+                res.redirect('/floors/showFloors');
+            else
+                res.redirect('/medical/showMedical/' + modelType);
         });
 };
 /* ------------ end of DELETE UTILITY. */

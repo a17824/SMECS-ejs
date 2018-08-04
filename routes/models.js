@@ -611,6 +611,17 @@ var EvacuateTo;
 module.exports.EvacuateTo = mongoose.model("EvacuateTo", EvacuateToSchema);
 
 
+// DEFINE Building COLLECTION IN MONGOdb
+var BuildingSchema = new mongoose.Schema({
+    utilityID: { type: Number, unique: true },
+    utilityName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
+
+}, {collection:"Building"}); //stops Mongoose of giving plurals to our collections names
+var Building;
+module.exports.Building = mongoose.model("Building", BuildingSchema);
+
+
+
 // DEFINE PA-PreRecorded System COLLECTION IN MONGOdb
 var PA_RecordedSchema = new mongoose.Schema({
     active: { type: Boolean, default: true},

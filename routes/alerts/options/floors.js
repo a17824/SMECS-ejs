@@ -15,6 +15,9 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.Floors.find().sort({"floorID":1}).exec(callback);
         },
+        function(callback){
+            models.Building.find().sort({"utilityID":1}).exec(callback);
+        },
         function(callback){aclPermissions.showFloors(req, res, callback);},         //aclPermissions showFloors
         function(callback){aclPermissions.addFloor(req, res, callback);},           //aclPermissions addFloor
         function(callback){aclPermissions.modifyFloor(req, res, callback);},        //aclPermissions modifyFloor
@@ -22,18 +25,20 @@ module.exports.show = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('floors/showFloors',{
-            title:'FLOORS',
+        functions.redirectPage(req, res, 'showUsers');
+        res.render('floors/showBuildingAndFloors',{
+            title:'Building & Floors',
             userAuthID: req.user.userPrivilegeID,
             floors: results[0],
-            aclShowFloors: results[1],      //aclPermissions showFloors
-            aclAddFloor: results[2],      //aclPermissions addFloor
-            aclModifyFloor: results[3],   //aclPermissions modifyFloor
-            aclDeleteFloor: results[4],    //aclPermissions deleteFloor
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            building: results[1],
+            aclShowFloors: results[2],      //aclPermissions showFloors
+            aclAddFloor: results[3],      //aclPermissions addFloor
+            aclModifyFloor: results[4],   //aclPermissions modifyFloor
+            aclDeleteFloor: results[5],    //aclPermissions deleteFloor
+            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
+            userAuthPhoto: req.user.photo,
+            redirectTab: req.user.redirectTabUsers
         });
     })
 };
