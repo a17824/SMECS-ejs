@@ -58,6 +58,22 @@ module.exports.redirectTabAlertGroups = function(req, res, tab) {
     });
 };
 
+module.exports.redirectTabBuilding = function(req, res, tab) {
+    console.log('tab = ',req.body.tab);
+    if(req.body.tab)
+        tab = req.body.tab;
+
+    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirectTabBuildings:tab}}, {new: true}, function(err, user){
+        if(err){
+            console.log("Something wrong when updating user.redirectTabBuildings!");
+        }
+        else {
+            console.log('successfully updated user.redirectTabBuildings');
+        }
+    });
+};
+
+
 
 module.exports.useIcons = function(req, res) {
     var iconType = req.body.iconType;

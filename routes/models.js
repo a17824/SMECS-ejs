@@ -37,6 +37,7 @@ var UsersSchema = new mongoose.Schema({
     redirect: { type: String, default: 'home'},
     redirectTabUsers: { type: String, default: 'showUsers'},
     redirectTabAlertGroups: { type: String, default: 'showGroups'},
+    redirectTabBuildings: { type: String, default: 'showBuilding'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
         theme: String
@@ -539,12 +540,25 @@ var AclPermissions;
 module.exports.AclPermissions = mongoose.model("AclPermissions", AclPermissionsSchema);
 
 
+// DEFINE Building COLLECTION IN MONGOdb
+var BuildingSchema = new mongoose.Schema({
+    utilityID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
+    utilityName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
 
+}, {collection:"Building"}); //stops Mongoose of giving plurals to our collections names
+var Building;
+module.exports.Building = mongoose.model("Building", BuildingSchema);
 
 
 // DEFINE Floors COLLECTION IN MONGOdb
 var FloorsSchema = new mongoose.Schema({
+    Building: {
+        buildingID: Number,
+        name: String
+    },
     floorID: Number,
+    sortID: { type: Number, unique: true },
     floorName: { type: String, unique: true }, // Cafetaria, 1st Floor, 2nd, 3rd
     floorPlan: String
 
@@ -554,11 +568,18 @@ module.exports.Floors = mongoose.model("Floors", FloorsSchema);
 
 // DEFINE Room COLLECTION IN MONGOdb
 var RoomSchema = new mongoose.Schema({
+    Building: {
+        buildingID: Number,
+        name: String
+    },
+    Floor: {
+        floorID: Number,
+        name: String
+    },
     floorID: Number,
-    floorName: String,
+    sortID: { type: Number, unique: true },
     roomID: { type: Number, unique: true },
     roomName: String
-    //users: [String]
 
 }, {collection:"Room"}); //stops Mongoose of giving plurals to our collections names
 var Room;
@@ -584,6 +605,7 @@ module.exports.Utilities = mongoose.model("Utilities", UtilitiesSchema);
 // DEFINE Medical COLLECTION IN MONGOdb
 var MedicalSchema = new mongoose.Schema({
     utilityID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
     utilityName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
 
 }, {collection:"Medical"}); //stops Mongoose of giving plurals to our collections names
@@ -594,6 +616,7 @@ module.exports.Medical = mongoose.model("Medical", MedicalSchema);
 // DEFINE SchoolClosed COLLECTION IN MONGOdb
 var SchoolClosedSchema = new mongoose.Schema({
     utilityID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
     utilityName: { type: String, unique: true } // holiday, flue, Loss of Consciousness, 3rd
 
 }, {collection:"SchoolClosed"}); //stops Mongoose of giving plurals to our collections names
@@ -604,6 +627,7 @@ module.exports.SchoolClosed = mongoose.model("SchoolClosed", SchoolClosedSchema)
 // DEFINE EvacuteTo COLLECTION IN MONGOdb
 var EvacuateToSchema = new mongoose.Schema({
     utilityID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
     utilityName: { type: String, unique: true } // church, Parking lot, street
 
 }, {collection:"EvacuateTo"}); //stops Mongoose of giving plurals to our collections names
@@ -611,14 +635,7 @@ var EvacuateTo;
 module.exports.EvacuateTo = mongoose.model("EvacuateTo", EvacuateToSchema);
 
 
-// DEFINE Building COLLECTION IN MONGOdb
-var BuildingSchema = new mongoose.Schema({
-    utilityID: { type: Number, unique: true },
-    utilityName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
 
-}, {collection:"Building"}); //stops Mongoose of giving plurals to our collections names
-var Building;
-module.exports.Building = mongoose.model("Building", BuildingSchema);
 
 
 

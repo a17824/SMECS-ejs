@@ -26,6 +26,7 @@ module.exports.show = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectPage(req, res, 'showUsers');
+
         res.render('floors/showBuildingAndFloors',{
             title:'Building & Floors',
             userAuthID: req.user.userPrivilegeID,
@@ -38,7 +39,7 @@ module.exports.show = function(req, res, next) {
             aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,
-            redirectTab: req.user.redirectTabUsers
+            redirectTab: req.user.redirectTabBuildings
         });
     })
 };
@@ -98,34 +99,52 @@ module.exports.addPost = function(req, res) {
 
 /* UPDATE FLOOR. -------------------------------*/
 module.exports.update = function(req, res) {
+    var arraySort = [];
+    var array = [];
     async.parallel([
         function(callback){
             models.Floors.findById(req.params.id,function(error, floor) {
 
             }).exec(callback);
         },
+        function(callback) {
+            models.Building.find().sort({"sortID": 1}).exec(callback);
+        },
         function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
         function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        var array = [];
+        var streamSort = models.Floors.find().sort({"sortID":1}).cursor();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            //console.log(arraySort);
+        });
+
         var stream = models.Floors.find().sort({"floorID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.floorID);
+
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('floors/updateFloor',{
+
+            res.render('floors/updateFoor-new',{
                 title:'Update Floor',
                 userAuthID: req.user.userPrivilegeID,
+                arraySort: arraySort,
                 array: array,
                 floor: results[0],
-                aclShowFloors: results[1],      //aclPermissions showFloors
-                aclModifyFloor: results[2],      //aclPermissions modifyFloor
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                building: results[1],
+                aclShowFloors: results[2],      //aclPermissions showFloors
+                aclModifyFloor: results[3],      //aclPermissions modifyFloor
+                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

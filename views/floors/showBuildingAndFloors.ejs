@@ -29,7 +29,7 @@
                 var target = $(e.target).attr("id") // activated tab
                 //alert(target);
 
-                $.post("/redirectTabAlertGroups", {
+                $.post("/redirectTabBuildings", {
                     tab: target
 
                 }, function (data) {
@@ -111,41 +111,41 @@
                             <div class="" role="tabpanel" data-example-id="togglable-tabs">
                                 <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
 
-                                    <% if (redirectTab == 'showUsers') {%>
-                                    <% var activeUsers = 'active' %>
+                                    <% if (redirectTab == 'showBuilding') {%>
+                                    <% var activeBuilding = 'active' %>
                                     <% }else {%>
-                                    <% var activeUsers = '' %>
+                                    <% var activeBuilding = '' %>
                                     <% } %>
-                                    <% if (redirectTab == 'showParents') {%>
-                                    <% var activeParents = 'active' %>
+                                    <% if (redirectTab == 'showFloors') {%>
+                                    <% var activeFloors = 'active' %>
                                     <% }else {%>
-                                    <% var activeParents = '' %>
+                                    <% var activeFloors = '' %>
                                     <% } %>
-                                    <% if (redirectTab == 'showExternal') {%>
-                                    <% var activeExternal = 'active' %>
+                                    <% if (redirectTab == 'showRooms') {%>
+                                    <% var activeRooms = 'active' %>
                                     <% }else {%>
-                                    <% var activeExternal = '' %>
+                                    <% var activeRooms = '' %>
                                     <% } %>
 
-                                    <li role="presentation" class="<%= activeUsers %>"><a href="#tab_content1" role="tab" id="showParents" data-toggle="tab" aria-expanded="false">Buildings</a>
+                                    <li role="presentation" class="<%= activeBuilding %>"><a href="#tab_content1" role="tab" id="showBuilding" data-toggle="tab" aria-expanded="false">Buildings</a>
                                     </li>
-                                    <li role="presentation" class="<%= activeParents %>"><a href="#tab_content2" id="showUsers" role="tab" data-toggle="tab" aria-expanded="true">Floors</a>
+                                    <li role="presentation" class="<%= activeFloors %>"><a href="#tab_content2" id="showFloors" role="tab" data-toggle="tab" aria-expanded="true">Floors</a>
                                     </li>
-                                    <li role="presentation" class="<%= activeExternal %>"><a href="#tab_content3" role="tab" id="showExternal" data-toggle="tab" aria-expanded="false">Rooms</a>
+                                    <li role="presentation" class="<%= activeRooms %>"><a href="#tab_content3" role="tab" id="showRooms" data-toggle="tab" aria-expanded="false">Rooms</a>
                                     </li>
                                 </ul>
                             </div>
                             <div id="myTabContent" class="tab-content">
 
 
-                                <% if (redirectTab == 'showUsers') {%>
-                                <% var showUsers = 'tab-pane fade active in table-responsive' %>
+                                <% if (redirectTab == 'showBuilding') {%>
+                                <% var showBuilding = 'tab-pane fade active in table-responsive' %>
                                 <% } else {%>
-                                <% var showUsers = 'tab-pane fade table-responsive' %>
+                                <% var showBuilding = 'tab-pane fade table-responsive' %>
                                 <% } %>
 
 
-                                <div role="tabpanel" class="<%= showUsers %>" id="tab_content1">
+                                <div role="tabpanel" class="<%= showBuilding %>" id="tab_content1">
                                     <table id="datatable" class="table table-hover">
                                         <thead>
                                         <tr>
@@ -186,13 +186,13 @@
                                 </div>
 
 
-                                <% if (redirectTab == 'showParents') {%>
-                                <% var showParents = 'tab-pane fade active in' %>
+                                <% if (redirectTab == 'showFloors') {%>
+                                <% var showFloors = 'tab-pane fade active in' %>
                                 <% } else {%>
-                                <% var showParents = 'tab-pane fade' %>
+                                <% var showFloors = 'tab-pane fade' %>
                                 <% } %>
 
-                                <div role="tabpanel" class="<%= showParents %>" id="tab_content2">
+                                <div role="tabpanel" class="<%= showFloors %>" id="tab_content2">
                                     <table id="datatable-buttons" class="table table-hover">
                                         <thead>
                                         <tr>
@@ -267,13 +267,13 @@
 
 
 
-                                <% if (redirectTab == 'showExternal') {%>
-                                <% var showExternal = 'tab-pane fade active in' %>
+                                <% if (redirectTab == 'showRooms') {%>
+                                <% var showRooms = 'tab-pane fade active in' %>
                                 <% } else {%>
-                                <% var showExternal = 'tab-pane fade' %>
+                                <% var showRooms = 'tab-pane fade' %>
                                 <% } %>
 
-                                <div role="tabpanel" class="<%= showExternal %>" id="tab_content3">
+                                <div role="tabpanel" class="<%= showRooms %>" id="tab_content3">
                                     <table id="datatable-buttons" class="table table-hover">
                                         <thead>
                                         <tr>

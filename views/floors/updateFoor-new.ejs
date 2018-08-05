@@ -1,0 +1,294 @@
+
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/sound.css" rel="stylesheet">
+    <link rel='stylesheet' href='/public/stylesheets/addUtility.css' />
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+
+    <script>
+
+
+        $(document).ready(function(){
+            var oldSortID = $("#oldSortID").val();
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var oldFloorID = $("#oldFloorID").val();
+            var select = '';
+            var myArray = $("#inUseFloorID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldFloorID){
+                    if(i == oldFloorID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var oldFloorID = $("#oldFloorID").val();
+            var select = '';
+            var myArray = $("#inUseFloorID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldFloorID){
+                    if(i == oldFloorID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var floor_ID, floorName, floorID, floorPlan;
+            var oldFloorName,oldFloorID,sortID;
+            $("#<%= floor.id %>").click(function(){
+                floor_ID=$(this).attr('id');
+                sortID=$("#sort_select").val();
+                oldFloorName=$("#oldFloorName").val();
+                floorName=$("#floorName").val();
+                oldFloorID=$("#oldFloorID").val();
+                floorID=$("#some_select").val();
+                floorPlan=$("#floorPlan").val();
+
+                var buildingIdAndName=$("input:radio[name='buildingID']:checked").val();
+                if(buildingIdAndName){
+                    var buildingIdAndNameArray = buildingIdAndName.split(",").map(String);
+                    var buildingID = parseInt(buildingIdAndNameArray[0]);
+                    var buildingName = buildingIdAndNameArray[1];
+                }
+
+                //-----forms validation------------------------------------
+                if (floorName == "" ) {
+                    alert("FLOOR NAME must be filled out");
+                    return false;
+                }
+
+                if (buildingID == null ) {
+                    alert("Building must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/floors/updateFloor",{
+                    buildingID: buildingID,
+                    buildingName: buildingName,
+
+                    floorToUpdate: floor_ID,
+                    oldFloorName: oldFloorName,
+                    floorName: floorName,
+                    oldFloorID: oldFloorID,
+                    floorID: floorID,
+                    floorPlan: floorPlan
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Alert Name already already in use. Choose a different Name.")
+
+                });
+
+            });
+        });
+    </script>
+
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ./../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Update Floor</h3>
+                </div>
+
+
+
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="<%= floor.id %>"
+                                value="Submit"
+                                class="btn btn-success">Save
+                        </button>
+
+                        <% } else { %>
+                        <button type="button"
+                                id="<%= floor.id %>"
+                                value="Submit"
+                                class="btn btn-success" disabled>Save
+                        </button>
+                        <% } %>
+
+                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+
+            <input type="hidden" id="oldFloorID" value="<%= floor.floorID %>">
+            <input type="hidden" id="oldFloorName" value="<%= floor.floorName %>">
+            <input type="hidden" id="inUseFloorID" value="<%= array %>">
+            <input type="hidden" id="oldSortID" value="<%= floor.sortID %>">
+            <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+            <input type="hidden" id="floorPlan">
+
+
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor Name <span class="required" style="color: red">*</span></label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="<%= floor.floorName %>">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor sort #</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='sort_select' class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <% if (userAuthID == 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor ID</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <select id='some_select' style="display:none;"></select>
+                                <% } %>
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Building</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <% building.forEach(function(building, idx, array) { %>
+                                        <%if (building.utilityID == floor.Building.buildingID) { %>
+                                        <input type="radio"
+                                               class="flat"
+                                               style="margin-bottom: 2px"
+                                               name="buildingID"
+                                               id="<%= building.utilityName %>"
+                                               value="<%= building.utilityID %>,<%= building.utilityName %>" checked>
+                                        <label for="buildingName" style="font-weight:normal; position: relative; top: 2px" ><%= building.utilityName %></label>
+                                        <% }else {%>
+                                        <input type="radio"
+                                               class="flat"
+                                               style="margin-bottom: 2px"
+                                               name="buildingID"
+                                               id="<%= building.utilityName %>"
+                                               value="<%= building.utilityID %>,<%= building.utilityName %>">
+                                        <label for="buildingName" style="font-weight:normal; position: relative; top: 2px" ><%= building.utilityName %></label>
+                                        <% } %>
+                                        <% if (idx !== array.length - 1){ %> <!-- if is not the last loop do... -->
+                                        <br>
+                                        <% } %>
+                                        <% }); %>
+                                    </div>
+
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <% include ./../layout/footer.ejs %>
+        <!-- /footer content -->
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
+
+</body>
+
+</html>

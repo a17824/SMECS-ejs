@@ -15,6 +15,6 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about', groups: [ 'about' ] }
 	];
 
-	config.removeButtons = 'Source,Save,NewPage,Templates,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Subscript,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Anchor,Flash,Table,Smiley,PageBreak,Iframe,ShowBlocks,About,Preview,Print,PasteText,Strike,Image,SpecialChar';
-	
+	config.removeButtons = 'Source,Save,NewPage,Templates,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Subscript,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Anchor,Flash,Table,Smiley,PageBreak,Iframe,ShowBlocks,About,Preview,PasteText,Strike,Image,SpecialChar';
+	config.extraPlugins = 'print';
 };

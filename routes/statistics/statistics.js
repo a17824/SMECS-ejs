@@ -14,6 +14,8 @@ var MobileDetect = require('mobile-detect');
             function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
         ],function(err, results){
+            functions.redirectTabUsers(req, res, 'showUsers');
+            functions.redirectTabBuilding(req, res, 'showBuilding');
 
             var iPad = false;
             var md = new MobileDetect(req.headers['user-agent']);
@@ -41,6 +43,8 @@ module.exports.userStats = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTabUsers(req, res, 'showUsers');
+        functions.redirectTabBuilding(req, res, 'showBuilding');
 
         var iPad = false;
         var md = new MobileDetect(req.headers['user-agent']);

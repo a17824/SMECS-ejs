@@ -31,6 +31,8 @@ module.exports.show = function(req, res, next) {
         }
         else {
             functions.redirectPage(req, res, 'showUsers');
+            functions.redirectTabBuilding(req, res, 'showBuilding');
+
             res.render('users/showUsers',{
                 title:'USERS',
                 users: results[0],
