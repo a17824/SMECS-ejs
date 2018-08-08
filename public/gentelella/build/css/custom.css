@@ -361,6 +361,7 @@ body .container.body .right_col {
     background: #F7F7F7
 }
 .nav-md .container.body .right_col {
+    height: 115%;
     padding: 10px 20px 0;
     margin-left: 230px
 }

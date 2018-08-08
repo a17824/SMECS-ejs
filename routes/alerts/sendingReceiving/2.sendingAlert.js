@@ -323,6 +323,7 @@ module.exports.postNotes = function(req, res) {
                 if (alert.alertNameID == 2 ||
                     alert.alertNameID == 3 ||
                     alert.alertNameID == 6 ||
+                    alert.alertNameID == 7 ||
                     alert.alertNameID == 8 ||
                     alert.alertNameID == 9 ||
                     alert.alertNameID == 10 ||

@@ -10,7 +10,9 @@ module.exports.receivedAlert = function(req, res) {
 
     async.parallel([
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
+        function(callback){models.Building.find().exec(callback);},
         function(callback){models.Floors.find().exec(callback);},
+        function(callback){models.Room.find().exec(callback);},
         function(callback){models.Utilities.find().exec(callback);},
 
         function(callback) {
@@ -90,8 +92,10 @@ module.exports.receivedAlert = function(req, res) {
                         userAuthRoleName: req.decoded.user.userRoleName,
                         userAuthEmail: req.decoded.user.email,
                         alertInfo: results[0],
-                        floor: results[1],
-                        utilities: results[2],
+                        building: results[1],
+                        floor: results[2],
+                        room: results[3],
+                        utilities: results[4],
                         canRequestAssistance: canRequestAssistance,
                         enableProcedureButton: enableProcedureButton
                     });
@@ -102,11 +106,11 @@ module.exports.receivedAlert = function(req, res) {
                         userAuthRoleName: req.user.userRoleName,
                         userAuthEmail: req.user.email,
                         info: results[0],
-                        floor: results[1],
-                        utilities: results[2],
+                        floor: results[2],
+                        utilities: results[4],
                         canRequestAssistance: canRequestAssistance,
                         enableProcedureButton: enableProcedureButton,
-                        aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo
                     });
