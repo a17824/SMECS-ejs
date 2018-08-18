@@ -30,6 +30,7 @@
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <script>
         $(document).ready(function() {
@@ -90,7 +91,7 @@
                     <div class="x_panel">
                         <div class="x_content">
                             <ul>
-                                <div align="left">
+                                <div align="center">
                                     <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/roles2/addRole2'">Add Role</button>
                                     <% } else { %>
@@ -101,10 +102,10 @@
                             </ul>
 
                             <div class="table-responsive">
-                            <table id="datatable" class="table table-hover">
+                            <table id="datatable-buttons" class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th >Sort #</th>
+                                    <th>Sort #</th>
                                     <th>Role Name</th>
                                     <% if (userAuthID == 1) {%>
                                     <th>Role ID</th>
@@ -163,9 +164,7 @@
                 </div>
             </div>
         </div>
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
+
     </div>
 </div>
 
@@ -188,7 +187,11 @@
 <!-- Google Analytics -->
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>
 
 

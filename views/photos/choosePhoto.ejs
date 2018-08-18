@@ -9,6 +9,7 @@
 
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
 </head>
 
@@ -92,9 +93,19 @@
                                         <% if (title === 'Add Photo' ) {%>
 
                                         <!-- Back button -->
-                                        <a href="/users/showUsers" class="pull-right pull-bottom_Back"><button class="btn btn-primary">Back</button></a>
+                                        <div class="centered-text">
+                                            <% if(iPad){ %>
+                                            <div class="moveLittleRight2">
+                                                <a href="/users/showUsers" class="pull-bottom_Back"><button class="btn btn-primary">Back</button></a>
+                                            </div>
+                                            <% }else { %>
+                                            <div class="moveLittleRight3">
+                                                <a href="/users/showUsers" class="pull-bottom_Back"><button class="btn btn-primary">Back</button></a>
+                                            </div>
+                                            <% } %>
+                                        </div>
 
-                                        <!-- Delete button -->
+                                        <div class="centered-text">
                                         <a href="/users/deletePhoto/<%= user.id %>">
                                             <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
                                             <button style="font-size: 13px" class="btn btn-danger btn-xs">I don't want a photo</button>
@@ -103,14 +114,18 @@
                                             <% } %>
                                         </a>
                                         <% } else { %>
+                                            <div class="centered-text">
+                                            <div class="moveLittleRight4">
                                         <a href="/loginParents" class="pull-right pull-bottom_Back"><button  class="btn btn-default">Skip photo and Finish</button></a>
+                                            </div>
+                                            </div>
                                         <% } %>
 
                                         <form action="/photos/choosePhoto/:id" enctype="multipart/form-data" method="post">
 
                                             <input name="<%= user.id %>" type="hidden"/>
 
-                                            <div class="divChoose">
+                                            <div class="divChoose center-block">
                                                 <% if (user.photo === '' || user.photo == undefined) {%>
                                                 <img id="blah" class="imgChoose" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
 
@@ -144,10 +159,10 @@
 
                                             </div>
 
-                                            <br><br><br><br><br><br><br><br><br><br><br>
+                                            <br><br><br><br><br><br><br><br>
                                             <div class="ln_solid"></div>
-                                            <span class="pull-right">
-
+                                            <div class="centered-text">
+                                                <div class="moveLittleRight">
 
                                                 <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
                                                 <input type="submit" value="Next" class="btn btn-success">
@@ -157,12 +172,13 @@
 
                                                 <a href="/users/showUsers"><button  class="btn btn-default" disabled>cancel</button></a>
 
-                                            </span>
+                                                </div>
+                                            </div>
                                         </form>
 
 
 
-
+                                        </div>
                                     </div>
 
 
@@ -181,9 +197,6 @@
 
         <!-- /page content -->
 
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
     </div>
 </div>
 
@@ -200,5 +213,9 @@
 <!-- Google Analytics -->
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

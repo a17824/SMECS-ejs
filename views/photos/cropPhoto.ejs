@@ -10,6 +10,7 @@
 
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <script>
         function runMe() {
@@ -117,9 +118,15 @@
                                         <div class="container cropper">
                                             <div class="row">
                                                 <div class="col-md-9">
-                                                    <div class="img-container">
+                                                    <% if(iPad){ %>
+                                                    <div class="img-container center-crop">
                                                         <img id="image" src="/temp/photosUsers/<%= user.photoTemp %>" alt="Picture">
                                                     </div>
+                                                    <% }else { %>
+                                                    <div class="img-container center-crop2">
+                                                        <img id="image" src="/temp/photosUsers/<%= user.photoTemp %>" alt="Picture">
+                                                    </div>
+                                                    <% } %>
                                                 </div>
                                                 <div class="col-md-3">
 
@@ -127,15 +134,15 @@
 
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-9 docs-buttons">
+
+
+
+                                                <div class="docs-buttons">
                                                     <!-- <h3 class="page-header">Toolbar:</h3> -->
 
-
-
-
-                                                    <div class="ln_solidFull"></div>
-                                                    <span class="pull-rightFull">
+                                                    <div class="ln_solid"></div>
+                                                    <div class="centered-text">
+                                                        <div class="moveLittleRight">
                                                         <button  class="btn btn-primary" onclick="GoBackWithRefresh()">Back</button>
                                                         <script>
                                                             function GoBackWithRefresh() {
@@ -149,12 +156,17 @@
                                                             }
                                                         </script>
                                                         <button type="button" class="btn btn-success" data-method="getCroppedCanvas">
+                                                            <% if(iPad){ %>
+                                                                Get Cropped Photo
+                                                            <% }else { %>
                                                             <span class="docs-tooltip" data-toggle="tooltip" title="a new window will open with cropped photo and then you can choose to save or cancel">
                                                                 Get Cropped Photo
                                                             </span>
+                                                            <% } %>
                                                         </button>
                                                         <a href="/users/showUsers"><button  class="btn btn-default">cancel</button></a>
-                                                    </span>
+                                                        </div>
+                                                    </div>
 
 
                                                     <!-- Save window -->
@@ -176,11 +188,8 @@
                                                     <!-- /Save window -->
 
 
-
                                                 </div><!-- /.docs-buttons -->
 
-
-                                            </div>
                                         </div>
                                         <!-- /image cropping -->
 
@@ -201,9 +210,6 @@
 
         <!-- /page content -->
 
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
     </div>
 </div>
 
@@ -228,5 +234,9 @@
 <script src="/public/gentelella/build/js/customCropPhoto.js"></script>
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

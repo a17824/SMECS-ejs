@@ -16,7 +16,8 @@
     <!-- Datatables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
     <!-- Custom Theme Style -->
-    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/customAddUser.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <title>add user</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
@@ -137,37 +138,33 @@
 
                                 <input type="hidden" id="userTempID"  value="<%= user._id %>">
 
-                                <b>User Role:</b>
+                                <b>User Role(s):</b>
+                                <div class="moveForward">
                                 <% roles2.forEach(function(role2) { %>
                                 <div class="checkbox">
                                     <label for="roleName"><input class="checkbox" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
                                 </div>
                                 <% }); %><br>
+                                </div>
 
-                            <form>
-                                <button class="btn btn-default" onclick="goBack()">Back</button>
-                                <script>
-                                    function goBack() {
-                                        window.history.back();
-                                    }
-                                </script>
-                                <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                                <input type="button" id="next" value="Next" ><br>
-                                <% } else { %>
-                                <input type="button" id="next" value="Next" disabled><br>
-                                <% } %>
-                            </form>
-                            <form action="/users/showUsers">
-                                <input type="submit" value="Cancel">
-                            </form>
+
+                                <div class="ln_solid"></div>
+                                <div class="centered-text">
+
+                                    <a href="/users/showUsers"><button  class="btn btn-default">cancel</button></a>
+
+                                    <% if (typeof aclAddUsers == 'undefined' || aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+                                    <input type="button" id="next" value="next" class="btn btn-success">
+                                    <% } else { %>
+                                    <input type="button" id="next" value="next" class="btn btn-success" disabled>
+                                    <% } %>
+                                </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
 
     </div>
 </div>
@@ -191,4 +188,9 @@
 <!-- Google Analytics -->
 
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

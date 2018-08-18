@@ -62,8 +62,7 @@ module.exports.soundBuild = function(callback) {
         'Animals','Chimpanzee','chimpanzee',
         'Animals','Cat','cat',
         'Animals','Wolf','wolf',
-        'Animals','Hawk','hawk',
-        'Animals','Frogs','frogs'
+        'Animals','Hawk','hawk'
 
     ];
 
@@ -74,9 +73,7 @@ module.exports.soundBuild = function(callback) {
         'Sirens','Mandatory Evacuation','gentex',
         'Sirens','Train Whistle','train_whistle',
         'Sirens','Police Siren Sound','police_siren',
-        'Sirens','Fire Trucks Sirens','fire_trucks2',
-        'Sirens','Truck Reverse Beep','truck_reverse',
-
+        'Sirens','Fire Trucks Sirens','fire_trucks2'
 
     ];
 
@@ -87,8 +84,7 @@ module.exports.soundBuild = function(callback) {
         'Misc','Crazy Brain','crazy_brain',
         'Misc','Railroad','railroad',
         'Misc','Tornado','tornado',
-        'Misc','Boat','boat',
-        'Misc','Bomb Siren','bomb_siren'
+        'Misc','Boat','boat'
 
     ];
 

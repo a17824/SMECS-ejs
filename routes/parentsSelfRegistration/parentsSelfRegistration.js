@@ -4,6 +4,7 @@ var models = require('../models');
 var aclPermissions = require('../acl/aclPermissions');
 var functions = require('./../functions');
 var bcrypt = require('bcryptjs');
+var MobileDetect = require('mobile-detect');
 
 /* defaultForm parentsSelfRegistration. */
 module.exports.defaultForm = function(req, res, next) {
@@ -94,6 +95,12 @@ module.exports.registerParentStep1 = function(req, res, next) {
             function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
         ],function(err, results){
+
+            var iPad = false;
+            var md = new MobileDetect(req.headers['user-agent']);
+            if(md.is('iPad') == true)
+                iPad = true;
+
             models.UsersAddTemp.findById(userID, function (err, user) {
                 if (!user) {
                     console.log(err);
@@ -106,6 +113,7 @@ module.exports.registerParentStep1 = function(req, res, next) {
                         title: 'Parent registration Step1',
                         users: user,
                         userTempID: userID,
+                        iPad: iPad,
                         students: results[0],
                         roleID: results[1].roleID,
                         roleName: results[1].roleName,

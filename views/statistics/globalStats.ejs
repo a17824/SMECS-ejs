@@ -18,6 +18,7 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
     <link href="/public/stylesheets/globalStats.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
 
     <script>
@@ -479,9 +480,6 @@
         </div>
         <!-- /page content -->
 
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
     </div>
 </div>
 
@@ -538,5 +536,9 @@
 <!-- Google Analytics -->
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

@@ -179,6 +179,10 @@
 <p style="color: red"><%= error_messages %></p>
 <% } %>
 
+<% if (iPad) { %>
+<label for="userCredentials"><b>Please, use a Computer to register. Thank you!</b></label><br>
+<% }else { %>
+
 <input type="hidden" id="userTempID"  value="<%= userTempID %>">
 <input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
 <input type="hidden" id="roleID"  value="<%= roleID %>">
@@ -247,6 +251,7 @@
 
     <input type="button" id="next" value="Next" ><br>
 
+    <% } %>
 
 </form>
 <form action="/login">

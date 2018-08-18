@@ -17,6 +17,7 @@
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
@@ -82,17 +83,23 @@
                                 <div align="center">
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/floors/addFloorPLan/<%= floors.id %>'">Add Floor</button>
-                                    <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/floors/addFloorPLan/<%= floors.id %>'" disabled>Add Floor</button>
-                                    <% } %>
-
-
-                                    <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/medical/addMedical/Building'">Add Building</button>
                                     <% } else { %>
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/medical/addMedical/Building'" disabled>Add Building</button>
                                     <% } %>
+
+                                    <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'">Add Floor</button>
+                                    <% } else { %>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'" disabled>Add Floor</button>
+                                    <% } %>
+
+                                    <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href=''">Add Room</button>
+                                    <% } else { %>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href=''" disabled>Add Room</button>
+                                    <% } %>
+
 
                                 </div>
                             </ul>
@@ -357,9 +364,7 @@
             </div>
 
         </div>
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
+
     </div>
 
 </div>
@@ -391,5 +396,9 @@
 
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

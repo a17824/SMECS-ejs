@@ -6460,6 +6460,8 @@ button.close {
 }
 .clearfix:before,
 .clearfix:after,
+.clearfix2:before,
+.clearfix2:after,
 .dl-horizontal dd:before,
 .dl-horizontal dd:after,
 .container:before,
@@ -6494,6 +6496,7 @@ button.close {
   content: " ";
 }
 .clearfix:after,
+.clearfix2:after,
 .dl-horizontal dd:after,
 .container:after,
 .container-fluid:after,
@@ -6519,7 +6522,6 @@ button.close {
 .pull-right {
   float: right !important;
 }
-
 .pull-left {
   float: left !important;
 }

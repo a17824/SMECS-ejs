@@ -18,6 +18,7 @@
   <!-- Custom Theme Style -->
   <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
   <link href="/public/stylesheets/toolTips.css" rel="stylesheet">
+  <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
@@ -557,9 +558,7 @@
       </div>
 
     </div>
-    <!-- footer content -->
-      <% include ../layout/footer.ejs %>
-    <!-- /footer content -->
+
   </div>
 
 </div>
@@ -591,5 +590,9 @@
 
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

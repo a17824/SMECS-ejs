@@ -18,7 +18,7 @@
       <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
       <!-- Bootstrap -->
-      <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+      <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrapHomeReports.css" rel="stylesheet">
 
       <!-- iCheck -->
       <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
@@ -26,7 +26,8 @@
 
       <!-- Custom Theme Style -->
       <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
-      <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+      <link href="/public/gentelella/build/css/customHomeReports.css" rel="stylesheet">
+      <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
       <script>
 
@@ -154,9 +155,9 @@
                                     <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-ms" style="border-radius: 5%" type="button" aria-expanded="false" disabled>Action <span class="caret"></span></button>
                                     <% } %>
                                     <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
-                                        <li><a onclick="changeStatus('status','/reports/showReports')">Change alert status</a></li>
-                                        <li><a onclick="changeStatus('archive','/reports/showReports')">Archive alerts selected</a></li>
-                                        <li><a onclick="changeStatus('trash','/reports/showReports')">Trash alerts selected</a></li>
+                                        <li><a onclick="changeStatus('status','/reports/homeReports')">Change alert status</a></li>
+                                        <li><a onclick="changeStatus('archive','/reports/homeReports')">Archive alerts selected</a></li>
+                                        <li><a onclick="changeStatus('trash','/reports/homeReports')">Trash alerts selected</a></li>
                                         <li class="divider"></li>
                                         <li><a onclick="selectAll()">Select All</a></li>
                                         <li><a onclick="deselectAll()">Deselect All</a></li>
@@ -207,7 +208,7 @@
                             </td>
                             <td><%= reportS.sentDate %><br><%= reportS.sentTime %></td>
 
-                            <td><%= reportS.alertName %></td>
+                            <td><%= reportS.alert.name %></td>
                             <td>
                                 <% if (reportS.testModeON){ %>
                                 <a style="color: <%= color %>;">drill</a>
@@ -238,9 +239,7 @@
             </div>
           </div>
         </div>
-          <!-- footer content -->
-          <% include ../layout/footer.ejs %>
-          <!-- /footer content -->
+
       </div>
     </div>
 
@@ -278,5 +277,9 @@
     <!-- Google Analytics -->
 
   </body>
-
+  <!-- footer content -->
+  <footer class="adjustPos">
+      <% include ../layout/footer.ejs %>
+  </footer>
+  <!-- /footer content -->
 </html>

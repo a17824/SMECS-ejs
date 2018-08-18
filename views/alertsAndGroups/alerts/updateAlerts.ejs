@@ -9,6 +9,7 @@
     <link href="/public/gentelella/build/css/sound.css" rel="stylesheet">
     <link rel='stylesheet' href='/public/stylesheets/addUtility.css' />
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <!-- color dropdown menu -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
@@ -647,9 +648,7 @@
 
         <!-- /page content -->
 
-        <!-- footer content -->
-        <% include ./../../layout/footer.ejs %>
-        <!-- /footer content -->
+
     </div>
 </div>
 
@@ -667,5 +666,9 @@
 <!-- Google Analytics -->
 
 </body>
-
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

@@ -3,10 +3,11 @@
 /* side-menu active horizontal color */
 /* sideMenu background color */
 /* profile background color*/
-/* bottom right side background color (to fix)*/
-/* wizard step color done */
-/* wizard step color not done yet */
-/* wizard step color selected */
+/* bottom right side background color (0st)*/
+/* bottom right side background color (1st)*/
+/* bottom right side background color (2nd to fix)*/
+/* change bottom color after footer: default: #2A3F54, sameAsFooter: #fff , sameAsRight_col: #F7F7F7 */
+/* right_col background color */
 
 html , body{
 
@@ -347,8 +348,9 @@ html , body{
         position: static
     }
 }
+/* bottom right side background color (0st)*/
 .nav-md .container.body .col-md-3.left_col {
-    min-height: 100%;
+    min-height: 100%; /* increasing also makes a scroll bar*/
     width: 230px;
     padding: 0;
     position: absolute;
@@ -360,10 +362,15 @@ html , body{
     height: 100%;
     position: fixed
 }
+
+/* right_col background color */
 body .container.body .right_col {
     background: #F7F7F7
 }
+
+/* bottom right side background color (1st)*/
 .nav-md .container.body .right_col {
+    /* height: 93.4%; */ /* bottom right side background color - increase if percentage if side menu options grow (by default this line didn't exist)*/
     padding: 10px 20px 0;
     margin-left: 230px
 }
@@ -501,10 +508,10 @@ body .container.body .right_col {
 .top_nav .nav .open>a:hover {
     background: #D9DEE4
 }
-/* bottom right side background color (to fix)*/
+/* bottom right side background color (2nd to fix)*/
 body {
     color: #73879C;
-    background: #2A3F54;
+    background: #2A3F54; /* change bottom color after footer: default: #2A3F54, sameAsFooter: #fff , sameAsRight_col: #F7F7F7 */
     font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
     font-size: 13px;
     font-weight: 400;
@@ -540,6 +547,9 @@ body {
 
 }
 .page-title .title_right .pull-right {
+    margin: 10px 0
+}
+.page-title .title_right .pull-center {
     margin: 10px 0
 }
 .fixed_height_320 {
@@ -2182,7 +2192,6 @@ button,
     height: 1px;
     margin: 20px 0
 }
-
 span.section {
     display: block;
     width: 100%;
@@ -3720,17 +3729,17 @@ fieldset {
 .cropper .img-container,
 .cropper .img-preview {
     background-color: #f7f7f7;
-    width: 70%;
+    width: 100%;
     text-align: center
 }
 .cropper .img-container {
     min-height: 200px;
-    max-height: 316px;
+    max-height: 516px;
     margin-bottom: 20px
 }
 @media (min-width: 768px) {
     .cropper .img-container {
-        min-height: 316px
+        min-height: 516px
     }
 }
 .cropper .img-container>img {
@@ -3886,7 +3895,7 @@ fieldset {
     z-index: 4;
     left: 0
 }
-.wizard_horizontal ul.wizard_steps li a.disabled .step_no { /* wizard step color not done yet */
+.wizard_horizontal ul.wizard_steps li a.disabled .step_no {
     background: #ccc
 }
 .wizard_horizontal ul.wizard_steps li a .step_no {
@@ -3901,12 +3910,12 @@ fieldset {
     position: relative;
     z-index: 5
 }
-.wizard_horizontal ul.wizard_steps li a.selected:before, /* wizard step color selected */
+.wizard_horizontal ul.wizard_steps li a.selected:before,
 .step_no {
     background: #34495E;
     color: #fff
 }
-.wizard_horizontal ul.wizard_steps li a.done:before, /* wizard step color done */
+.wizard_horizontal ul.wizard_steps li a.done:before,
 .wizard_horizontal ul.wizard_steps li a.done .step_no {
     background: #1ABB9C;
     color: #fff
@@ -4271,80 +4280,11 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 /** /bootstrap-datetimepicker **/
 
 
-
-.divChoose {
-    position:relative;
-    top: 1px;
-
-    max-width: 160px;
-    max-height: 100px
+/* move roles forward*/
+.moveForward {
+    margin-left: 70px;
 }
-.imgChoose {
-    position:relative;
-    object-fit: contain;
-    height: 100%;
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px
-}
-.pull-bottom_Back {
-    position:absolute;
-    bottom: 1.2%
-    /*right: 53.8%;*/
-}
-
-.ln_solidFull {
-    width: 134%;
-    border-top: 1px solid #e5e5e5;
-    color: #ffffff;
-    background-color: #ffffff;
-    height: 1px;
-    margin: 20px 0
-}
-
-.pull-rightFull {
-    float: right;
-
-    margin-right: -34%;
-}
-
-.h2Size {
-    font-size: 20px;
-}
-.spanSize {
-    font-size: 16px;
-}
-
 /* center buttons*/
 .centered-text {
     text-align:center
-}
-
-/* center buttons with 'Back' static button*/
-.moveLittleRight {
-    margin-left: 8%;
-}
-/* iPad 'Back' static button*/
-.moveLittleRight2 {
-    margin-left: -21.4%;
-}
-/* PC 'Back' static button*/
-.moveLittleRight3 {
-    margin-left: -15.9%;
-}
-/* PC 'Skip photo and Finish' static button*/
-.moveLittleRight4 {
-    margin-left: -34.2%;
-}
-
-/* iPad Center Crop*/
-.center-crop {
-    display: block;
-    margin-left: 24.5%
-}
-/* PC Center Crop*/
-.center-crop2 {
-    display: block;
-    margin-left: 34.5%
 }

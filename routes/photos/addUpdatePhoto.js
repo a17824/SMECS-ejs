@@ -6,6 +6,7 @@ var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
 var path = require('path'); //to get file extension
+var MobileDetect = require('mobile-detect');
 
 //--ADD or UPDATE user photo -------------------------------------
 module.exports.addUpdatePhoto = function (req, res){
@@ -32,15 +33,17 @@ module.exports.addUpdatePhoto = function (req, res){
             //var aclType = results[0];
         }
 
-        console.log('title = ',title);
-        console.log('userType = ',userType);
-        console.log('aclSideMenu = ',results[0]);
+        var iPad = false;
+        var md = new MobileDetect(req.headers['user-agent']);
+        if(md.is('iPad') == true)
+            iPad = true;
 
         models[userType].findById(req.params.id, function (err, user) {
             res.render('photos/choosePhoto',{
                 title: title,
                 user: user,
                 userType: userType,
+                iPad: iPad,
                 aclModifyUsers: aclType, //aclPermissions modifyUsers
                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
@@ -214,11 +217,17 @@ module.exports.cropPhoto = function (req, res){
             var aclType = results[0];
         }
 
+        var iPad = false;
+        var md = new MobileDetect(req.headers['user-agent']);
+        if(md.is('iPad') == true)
+            iPad = true;
+
         models[userType].findById(req.params.id, function (err, user) {
             res.render('photos/cropPhoto',{
                 title: title,
                 user: user,
                 userType: userType,
+                iPad: iPad,
                 aclModifyUsers: aclType, //aclPermissions modifyUsers
                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
