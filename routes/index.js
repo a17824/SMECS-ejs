@@ -502,9 +502,6 @@ router.post('/floors/updateFloor', auth.simpleAuth, auth.requireLogin, floors.up
 router.get('/floors/deleteFloor/:id', auth.simpleAuth, auth.requireLogin, floors.delete, function(req, res) {
 });
 
-// show FLOOR PLAN-------------------------------
-router.get('/floors/showFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.showFloorPlan, function(req, res) {
-});
 
 //--ADD or CHANGE FLOOR PLAN -------------------------------------
 router.get('/floors/addFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.addUpdateFloorPlan, function (req, res){

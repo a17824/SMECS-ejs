@@ -4279,6 +4279,13 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     max-width: 160px;
     max-height: 100px
 }
+.divChooseBigger {
+    position:relative;
+    top: 1px;
+
+    max-width: 360px;
+    max-height: 200px
+}
 .imgChoose {
     position:relative;
     object-fit: contain;
@@ -4292,6 +4299,12 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     position:absolute;
     bottom: 1.2%
     /*right: 53.8%;*/
+}
+
+.pull-bottom_Back2 {
+    position:absolute;
+    bottom: 1.4%;
+    right: 49.8%
 }
 
 .ln_solidFull {

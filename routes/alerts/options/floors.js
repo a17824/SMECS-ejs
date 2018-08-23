@@ -7,6 +7,7 @@ var models = require('./../../models');
 var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
 var functions = require('./../../functions');
+var MobileDetect = require('mobile-detect');
 
 
 /* SHOW FLOORS. */
@@ -135,7 +136,7 @@ module.exports.update = function(req, res) {
             // the stream is closed
             //console.log(array);
 
-            res.render('floors/updateFoor-new',{
+            res.render('floors/updateFloor',{
                 title:'Update Floor',
                 userAuthID: req.user.userPrivilegeID,
                 arraySort: arraySort,
@@ -222,29 +223,7 @@ module.exports.delete = function(req, res) {
 };
 /* ------------ end of DELETE FLOOR. */
 
-// show FLOOR PLAN-------------------------------
-module.exports.showFloorPlan = function(req, res) {
-    async.parallel([
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
-    ],function(err, results) {
-        if (!results[0]) {
-            console.log('err = ',err);
-        }
-        else {
-            models.Floors.findById(req.params.id, function (error, floor) {
-                res.render('floors/showFloorPlan', {
-                    title: 'Floor Plan',
-                    floor: floor,
-                    aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                    userAuthPhoto: req.user.photo
-                });
-            });
-        }
-    });
-};
-// -----------------------------end show FloorPlan
 
 //--ADD or CHANGE FloorPlan -------------------------------------
 module.exports.addUpdateFloorPlan = function (req, res){
@@ -256,10 +235,17 @@ module.exports.addUpdateFloorPlan = function (req, res){
             console.log('err = ',err);
         }
         else {
+
+            var iPad = false;
+            var md = new MobileDetect(req.headers['user-agent']);
+            if(md.is('iPad') == true)
+                iPad = true;
+
             models.Floors.findById(req.params.id,function(error, floor) {
                 res.render('floors/addFloorPlan', {
                     title: 'ADD FLOOR PLAN',
                     floor: floor,
+                    iPad: iPad,
                     aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo

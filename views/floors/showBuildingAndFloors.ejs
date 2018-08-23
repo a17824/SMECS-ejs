@@ -3,21 +3,34 @@
 <head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
     <!-- Datatables -->
     <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
     <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+
+    <!-- lightbox (floor zoom) -->
+    <link href="/public/lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
@@ -233,9 +246,11 @@
                                             <% } else { %>
                                             <td align="center">
                                                 <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
-                                                <a href="/floors/showFloorPlan/<%= floors.id %>"><button class="btn btn-info">show</button></a>
+                                                <a href="/public/floorPlans/<%= floors.floorPlan %>" data-lightbox="image-1" data-title="<%= floors.floorName %>">
+                                                    <button class="btn btn-info">show</button>
+                                                </a>
                                                 <% } else { %>
-                                                <a href="/floors/showFloorPlan/<%= floors.id %>"><button class="btn btn-info" disabled>show</button></a>
+                                                <button class="btn btn-info" disabled>show</button>
                                                 <% } %>
                                                 <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
                                                 <a href="/floors/addFloorPlan/<%= floors.id %>"><button class="btn btn-warning">change</button></a>
@@ -394,6 +409,8 @@
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.js"></script>
 
+<!-- lightbox (floor zoom) -->
+<script src="/public/lightbox2-master/dist/js/lightbox.js"></script>
 
 </body>
 <!-- footer content -->

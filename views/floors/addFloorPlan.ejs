@@ -1,19 +1,134 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>add floorPlan</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
 </head>
-<body>
-<h1><%= title %></h1>
 
-<form action="/floors/addFloorPlan/:id" enctype="multipart/form-data" method="post">
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Floor Plan</h3>
+                    </div>
+
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="row">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2><small>Add/change floor plan</small></h2>
+                                <div class="clearfix"></div>
+                            </div>
 
 
 
-    <input name="<%= floor.id %>" type="hidden"/>
-    <input single="single" name="upload" type="file" accept="image/x-png,image/gif,image/jpeg" required/><br><br>
-    <input type="submit" value="Upload" />
-</form>
+                            <div class="x_content">
+
+                                <!-- Back button -->
+                                <div class="centered-text">
+                                    <% if(iPad){ %>
+                                    <div class="moveLittleRight2">
+                                        <a href="/floors/showFloors" class="pull-bottom_Back"><button class="btn btn-default">Cancel</button></a>
+                                    </div>
+                                    <% }else { %>
+                                    <div class="moveLittleRight3">
+                                        <a href="/floors/showFloors" class="pull-bottom_Back2"><button class="btn btn-default">Cancel</button></a>
+                                    </div>
+                                    <% } %>
+                                </div>
+
+                                        <form action="/floors/addFloorPlan/:id" enctype="multipart/form-data" method="post">
+                                            <input name="<%= floor.id %>" type="hidden"/>
+                                            <div class="divChooseBigger center-block">
+                                                <% if (floor.floorPlan === '' || floor.floorPlan == undefined) {%>
+                                                <img id="blah" class="imgChoose" src="/photosNotAvailable/floorPlan-notAvailableWeb.jpg" alt="your image" /><br><br>
+                                                <% } else { %>
+                                                <img id="blah" class="imgChoose" src="/floorPlans/<%= floor.floorPlan %>" /><br><br>
+                                                <% } %>
+                                            <input type="file"
+                                                   onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                                                   name="upload"
+                                                   id="newPhoto"
+                                                   single="single"
+                                                   accept="image/*" required/><br>
+                                            </div>
+
+                                            <br><br><br><br><br><br><br><br><br>
+                                            <div class="ln_solid"></div>
+                                            <div class="centered-text">
+                                                <div class="moveLittleRight">
+                                                    <input type="submit" value="Save" class="btn btn-success">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /page content -->
+
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/customCropPhoto.js"></script>
+<!-- Google Analytics -->
+
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>
