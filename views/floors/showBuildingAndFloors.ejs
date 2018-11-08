@@ -96,21 +96,21 @@
                                 <div align="center">
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/medical/addMedical/Building'">Add Building</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/Building'">Add Building</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/medical/addMedical/Building'" disabled>Add Building</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/Building'" disabled>Add Building</button>
                                     <% } %>
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'">Add Floor</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'">Add Floor</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'" disabled>Add Floor</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'" disabled>Add Floor</button>
                                     <% } %>
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href=''">Add Room</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href=''">Add Room</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href=''" disabled>Add Room</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add Room</button>
                                     <% } %>
 
 

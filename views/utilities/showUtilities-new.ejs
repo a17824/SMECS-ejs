@@ -71,18 +71,18 @@
 
             <div class="clearfix"></div>
 
-            <input type="hidden" id="modelType"  value="<%= modelType %>">
-
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_content">
 
                                 <div align="center">
-                                    <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical'">Add option</button>
+                                    <% if (aclAddUtilities == null || aclAddUtilities.checkBoxValue == true) {%>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/utilities/addUtilities'">Add Utility</button>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/utilities/showUtilitiesUsers'">Show Utility Users</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical'" disabled>Add option</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/utilities/addUtilities'" disabled>Add Utility</button>
+                                    <button class="btn btn-primary" id="exit" onclick="location.href='/utilities/showUtilitiesUsers'" disabled>Show Utility Users</button>
                                     <% } %>
                                 </div>
 
@@ -92,37 +92,57 @@
                             <table id="datatable-buttons" class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <% if (modelType == 'EvacuateTo') {%>
-                                    <th>Evacute to</th>
-                                    <% } else { %>
-                                    <th><%= title %></th>
-                                    <% } %>
+                                    <th>#</th>
+                                    <th>Utility Name</th>
                                     <% if (userAuthID == 1) {%>
                                     <th>ID</th>
                                     <% } %>
+                                    <th>Contact Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>SMECS app</th>
+                                    <th>SMECS user</th>
+                                    <th>Default Contact</th>
                                     <th>Update</th>
                                     <th>Delete</th>
                                 </tr>
                                 <tbody>
-                                <% medical.forEach(function(medical) { %>
+                                <% utility.forEach(function(utility) { %>
                                 <tr>
-                                    <td><%= medical.utilityName %></td>
+                                    <td><%= utility.sortID %></td>
+                                    <td><%= utility.utilityName %></td>
                                     <% if (userAuthID == 1) {%>
-                                    <td><%= medical.utilityID %></td>
+                                    <td><%= utility.utilityID %></td>
+                                    <% } %>
+                                    <td><%= utility.contactName %></td>
+                                    <td><%= utility.phone %></td>
+                                    <td><%= utility.email %></td>
+                                    <% if (utility.smecsApp) {%>
+                                    <td>Yes</td>
+                                    <% } else { %>
+                                    <td>No</td>
+                                    <% } %>
+
+                                    <td><%= utility.defaultContact %></td>
+
+                                    <% if (utility.smecsUsers.length < 1 ) {%>
+                                    <td></td>
+                                    <% } else { %>
+                                    <td><a href="/utilities/users/<%= utility.id %>"><button class="btn btn-info"><%= utility.smecsUsers.length %> users</button></a></td>
                                     <% } %>
 
                                     <td>
-                                        <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
-                                        <a href="/medical/updateMedical/<%= medical.id %>/<%= modelType %>"><button class="btn btn-warning">update</button></a>
+                                        <% if (aclModifyUtilities == null || aclModifyUtilities.checkBoxValue == true) {%>
+                                        <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="btn btn-warning">update</button></a>
                                         <% } else { %>
-                                        <a href="/medical/updateMedical/<%= medical.id %>/<%= modelType %>"><button class="btn btn-warning" disabled>update</button></a>
+                                        <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="btn btn-warning" disabled>update</button></a>
                                         <% } %>
                                     </td>
                                     <td>
-                                        <% if (aclDeleteMedical == null || aclDeleteMedical.checkBoxValue == true) {%>
-                                        <a href="/medical/deleteMedical/<%= medical.id %>/<%= modelType %>"><button class="btn btn-danger">delete</button></a>
+                                        <% if (aclDeleteUtilities == null || aclDeleteUtilities.checkBoxValue == true) {%>
+                                        <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="btn btn-danger">delete</button></a>
                                         <% } else { %>
-                                        <a href="/medical/deleteMedical/<%= medical.id %>/<%= modelType %>"><button class="btn btn-danger" disabled>delete</button></a>
+                                        <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="btn btn-danger" disabled>delete</button></a>
                                         <% } %>
                                     </td>
                                 </tr>

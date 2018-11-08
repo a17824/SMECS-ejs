@@ -97,9 +97,9 @@
                             <ul>
                                 <div align="center">
                                     <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/addUser/step1'">Add User</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/users/addUser/step1'">Add User</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/addUser/step1'" disabled>Add User</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/users/addUser/step1'" disabled>Add User</button>
                                     <% } %>
                                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'">Parent Self Registration</button>
@@ -107,9 +107,9 @@
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'" disabled>Parent Self Registration</button>
                                     <% } %>
                                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/deletedUsers'">Trash</button>
+                                    <button class="btn btn-danger" id="exit" onclick="location.href='/users/deletedUsers'">Trash</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/users/deletedUsers'" disabled>Trash</button>
+                                    <button class="btn btn-danger" id="exit" onclick="location.href='/users/deletedUsers'" disabled>Trash</button>
                                     <% } %>
                                 </div>
                             </ul>
@@ -177,9 +177,9 @@
                                             <% if (user.photo == "" || user.photo == undefined) { %>
                                             <td >
                                                 <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-info">add</button></a>
+                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-success">add</button></a>
                                                 <% } else { %>
-                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-info" disabled>add</button></a>
+                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-success" disabled>add</button></a>
                                                 <% } %>
                                             </td>
                                             <% } else { %>
@@ -286,9 +286,9 @@
                                             <% if (user.photo == "" || user.photo == undefined) { %>
                                             <td align="center">
                                                 <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-info">add</button></a>
+                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-success">add</button></a>
                                                 <% } else { %>
-                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-info" disabled>add</button></a>
+                                                <a href="/photos/choosePhoto/<%= user.id %>"><button class="btn btn-success" disabled>add</button></a>
                                                 <% } %>
                                             </td>
                                             <% } else { %>

@@ -69,21 +69,21 @@
                   <ul>
                       <div align="center">
                       <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
-                        <button class="btn btn-primary" id="exit" onclick="location.href='/students/addStudent'">Add Student</button>
+                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addStudent'">Add Student</button>
                         <% } else { %>
-                        <button class="btn btn-primary" id="exit" onclick="location.href='/students/addStudent'" disabled>Add Student</button>
+                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addStudent'" disabled>Add Student</button>
                       <% } %>
 
                       <% if (aclAddMultiStudent == null || aclAddMultiStudent.checkBoxValue == true) {%>
-                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiStudents'">Add Multiple Students</button>
+                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiStudents'">Add Multiple Students</button>
                       <% } else { %>
-                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiStudents'" disabled>Add Multiple Students</button>
+                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiStudents'" disabled>Add Multiple Students</button>
                       <% } %>
 
                       <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiImage'">Add Multiple Students Photos</button>
+                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiImage'">Add Multiple Students Photos</button>
                       <% } else { %>
-                      <button class="btn btn-primary" id="exit" onclick="location.href='/students/addMultiImage'" disabled>Add Multiple Students Photos</button>
+                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiImage'" disabled>Add Multiple Students Photos</button>
                       <% } %>
                       </div>
                       <br>
@@ -110,9 +110,9 @@
                                 <% if (student.photo == "" || student.photo == undefined) { %>
                                 <td>
                                     <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info">add</button></a>
+                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-success">add</button></a>
                                     <% } else { %>
-                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-info" disabled>add</button></a>
+                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-success" disabled>add</button></a>
                                     <% } %>
                                 </td>
                                 <% } else { %>

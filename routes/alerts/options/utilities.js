@@ -20,7 +20,7 @@ module.exports.show = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('utilities/showUtilities',{
+        res.render('utilities/showUtilities-new',{
             title:'Utilities Failures',
             userAuthID: req.user.userPrivilegeID,
             utility: results[0],

@@ -4510,6 +4510,9 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 .starBlue {
     color: #3b78af;
 }
+.starLightBlue {
+    color: #5fc4e2;
+}
 .starRed {
     color: #d3574b;
 }
