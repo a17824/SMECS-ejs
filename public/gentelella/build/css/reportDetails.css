@@ -4313,6 +4313,13 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     white-space: nowrap;
 }
 
+div.editable {
+    width: 300px;
+    height: 200px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
 
 
 

@@ -56,7 +56,7 @@
             <div class="">
                 <div class="clearfix"></div>
                 <div class="title_left">
-                    <h2 align="center"><%= report.alertName %></h2>
+                    <h2 align="center"><%= report.alert.name %></h2>
 
                 </div>
                 <div style="line-height:50%;"><br></div> <!-- smaller br -->
@@ -937,7 +937,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="Stranger/Trespasser in Building" readonly>
+                                           value="Student with a Gun" readonly>
                                 </div>
                             </div>
 
@@ -1018,9 +1018,13 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
                                 <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <div contentEditable="false">
+                                        <%= report.note %>
+                                    </div>
                                         <textarea id="note"
                                                   class="form-control"
-                                                  placeholder="n/a" readonly>gun is in his pants, left front pocket.</textarea>
+                                                  placeholder="n/a" readonly><%= report.note %>
+                                        </textarea>
                                 </div>
                             </div>
 

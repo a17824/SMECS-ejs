@@ -183,7 +183,6 @@ module.exports.reportsDetails = function(req, res) {
             page = 'home-reports/reportDetailsSimAllGreen';
 
 
-
         res.render(page,{
             title: 'REPORTS SENT',
             userAuthID: req.user.userPrivilegeID,
