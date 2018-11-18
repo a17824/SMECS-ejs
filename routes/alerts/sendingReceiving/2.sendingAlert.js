@@ -3,6 +3,8 @@ var models = require('./../../models');
 var async = require("async");
 var functions = require('./../../functions');
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
+var alertSentInfo = require('./saveAlertFunc/3c.alertSentInfo.js');
+var pushNotification = require('./pushNotification.js');
 
 
 //          FLOOR           \\
@@ -471,6 +473,12 @@ module.exports.postStudent = function(req, res) {
                 alert.studentPhoto = studentPhoto;
                 alert.save();
 
+                if (alert.alertNameID == 4) {
+                    alertSentInfo.create(req, res, alert,function (result,err) {  //create AlertSentInfo
+                        /*****  CALL HERE NOTIFICATION API  *****/
+                        pushNotification.alert(result, 'newAlert');
+                    });
+                }
                 if(req.decoded){ // run SMECS API
                     res.json({
                         success: true,

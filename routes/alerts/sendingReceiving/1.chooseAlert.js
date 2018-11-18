@@ -3,7 +3,8 @@ var models = require('./../../models');
 var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var functions = require('./../../functions');
-var alertSentInfo = require('./saveAlertFunc/3c.createAlertSentInfo.js');
+var student = require('./saveAlertFunc/3b.student.js');
+var alertSentInfo = require('./saveAlertFunc/3c.alertSentInfo.js');
 var pushNotification = require('./pushNotification.js');
 
 
@@ -365,10 +366,8 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 26) {
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
                             /*****  CALL HERE NOTIFICATION API  *****/
                             pushNotification.alert(result, 'newAlert');
-
                         });
 
                         redirectAPI = 'floor';
@@ -388,11 +387,24 @@ module.exports.showAlertsPost = function(req, res) {
                         redirectEJS = '/alerts/sending/notes/' + alertTemp1._id;
                     }
 
-                    if (req.body.alertID == 4 ||
-                        req.body.alertID == 5 ||
+                    if (req.body.alertID == 4 ) {
+
+                        redirectAPI = 'student';
+                        redirectEJS = '/alerts/sending/student/' + alertTemp1._id;
+                    }
+
+                    if (req.body.alertID == 5 ||
                         req.body.alertID == 16 ||
                         req.body.alertID == 17 ||
                         req.body.alertID == 19 ) {
+
+                        //alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
+                        //alertTemp1.save();
+                        //student.saveStudentFile(req, res, alertTemp1);
+                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+                            /*****  CALL HERE NOTIFICATION API  *****/
+                            pushNotification.alert(result, 'newAlert');
+                        });
 
                         redirectAPI = 'student';
                         redirectEJS = '/alerts/sending/student/' + alertTemp1._id;
@@ -402,6 +414,11 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 18 ||
                         req.body.alertID == 26 ||
                         req.body.alertID == 29 ) {
+
+                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+                            /*****  CALL HERE NOTIFICATION API  *****/
+                            pushNotification.alert(result, 'newAlert');
+                        });
 
                         redirectAPI = 'multiSelection';
                         redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;

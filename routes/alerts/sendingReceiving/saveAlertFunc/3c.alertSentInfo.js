@@ -97,8 +97,79 @@ module.exports.create = function(req, res, tempAlert, callback) {
     });
     alert1.save();
     callback(alert1)
+};
 
 
+
+module.exports.update = function(req, res, tempAlert, callback) {
+    var wrapped = moment(new Date());
+
+    var sentTo = [];
+    tempAlert.sentTo.forEach(function (user) {
+        var sentToArr = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            pushToken: user.pushToken
+        };
+        sentTo.push(sentToArr);
+    });
+    var studentPhoto = undefined;
+    if (tempAlert.alertNameID == 4 ||
+        tempAlert.alertNameID == 5 ||
+        tempAlert.alertNameID == 16 ||
+        tempAlert.alertNameID == 17 ||
+        tempAlert.alertNameID == 19) {
+
+        studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
+    }
+
+    var sentByApiEjs;
+    if (req.decoded)        // API user
+        sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
+    else
+        sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
+
+
+    models.AlertSentInfo.findById({'_id': tempAlert._id}, function (err, alert) {
+        if (!alert) {
+            console.log('SOMETHING WENT WRONG UPDATING AlertSentInfo');
+        }
+        else {
+            alert.sentBy = sentByApiEjs;
+            alert.sentRoleIDScope = tempAlert.sentRoleIDScope;
+            alert.sentRoleNameScope = tempAlert.sentRoleNameScope;
+            //sentTo: sentTo, // needs new var model ex: sentUpdateTo
+            alert.note = tempAlert.note;
+            alert.floorName = tempAlert.floorName;
+            alert.floorPhoto = tempAlert._id + '_' + tempAlert.floorPhoto;
+            alert.sniperCoordinateX = tempAlert.sniperCoordinateX;
+            alert.sniperCoordinateY = tempAlert.sniperCoordinateY;
+            alert.medicalInjuredParties = tempAlert.medicalInjuredParties;
+            alert.dayClosed = tempAlert.dayClosed;
+            alert.multiSelectionNames = tempAlert.multiSelectionNames;
+            alert.multiSelectionIDs = tempAlert.multiSelectionIDs;
+            alert.studentName = tempAlert.studentName;
+            alert.studentPhoto = studentPhoto;
+            alert.missingChildLastTimeSeen = tempAlert.missingChildLastTimeSeen;
+            alert.missingChildLastPlaceSeen = tempAlert.missingChildLastPlaceSeen;
+            alert.missingChildClothesWearing = tempAlert.missingChildClothesWearing;
+            alert.studentWithGunSeated = tempAlert.studentWithGunSeated;
+            alert.studentWithGunBehaviour = tempAlert.studentWithGunBehaviour;
+            alert.requestAssistance = tempAlert.requestAssistance;
+            alert.busAccidentNoInjuries = tempAlert.busAccidentNoInjuries;
+            alert.busMorningAfternoon = tempAlert.busMorningAfternoon;
+            alert.busDelayedAhead = tempAlert.busDelayedAhead;
+            alert.busTimeChanged = tempAlert.busTimeChanged;
+            alert.busTimeChangedEmail = tempAlert.busTimeChangedEmail;
+            alert.sentSmecsAppUsersScope = tempAlert.sentSmecsAppUsersScope;
+            alert.latitude = tempAlert.latitude;
+            alert.longitude = tempAlert.longitude;
+            alert.mapBus = tempAlert.mapBus;
+        }
+        alert.save();
+        callback(alert)
+    });
 };
 
 

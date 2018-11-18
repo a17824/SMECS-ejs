@@ -20,7 +20,7 @@ module.exports.saveStudentFile = function(req, res, tempAlert) {
             console.log("No Student Photo found");
         }
         else {
-            if (result.studentPhoto == '' || result.studentPhoto == 'photoNotAvailable.bmp'){
+            if (result.studentPhoto == '' || result.studentPhoto == 'photoNotAvailable.bmp' || tempAlert.studentPhoto == 'photoNotAvailable.bmp'){
                 var src_location = 'public/photosNotAvailable/';
                 var dst_location = 'public/alertSentInfo/studentsPhotos/';
                 var src_File_name = 'photoNotAvailable.bmp';
@@ -47,6 +47,20 @@ module.exports.saveStudentFile = function(req, res, tempAlert) {
                         console.log("success! saved " + src_File_name);
                     }
                 });
+                /*
+                console.log('111111111');
+                console.log(tempAlert.studentPhoto);
+                if (tempAlert.studentPhoto == tempAlert._id + '_' + 'photoNotAvailable.bmp') { //delete old photo if exists
+                    fs.access(path, function(err) {
+                        if (!err) {
+                            fs.unlinkSync('./public/photosStudents/' + tempAlert.studentPhoto);
+                            console.log('successfully deleted ' + tempAlert.studentPhoto);
+                        } else {
+                            console.log('file not found: ' + tempAlert.studentPhoto);
+                        }
+                    });
+                }// ------------end delete photo before delete user
+                */
             }
         }
     });
