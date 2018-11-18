@@ -3,7 +3,8 @@ var models = require('./../../models');
 var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var functions = require('./../../functions');
-
+var alertSentInfo = require('./saveAlertFunc/3c.createAlertSentInfo.js');
+var pushNotification = require('./pushNotification.js');
 
 
 
@@ -342,6 +343,7 @@ module.exports.showAlertsPost = function(req, res) {
             if(err){
                 console.log('err = ', err);
             }else {
+
                 var alertTemp1 = result;
                 if(alertTemp1.sentRoleIDScope < 1){
                     console.log('No scopes or users to send this alert');
@@ -361,6 +363,13 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 15 ||
                         req.body.alertID == 23 ||
                         req.body.alertID == 26) {
+
+                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+
+                            /*****  CALL HERE NOTIFICATION API  *****/
+                            pushNotification.alert(result, 'newAlert');
+
+                        });
 
                         redirectAPI = 'floor';
                         redirectEJS = '/alerts/sending/floor/' + alertTemp1._id;

@@ -2,7 +2,7 @@
 var models = require('./../../models');
 var async = require("async");
 var floor = require('./saveAlertFunc/3a.savefloorFile.js');
-var create = require('./saveAlertFunc/3c.createAlertSentInfo.js');
+var alertSentInfo = require('./saveAlertFunc/3c.createAlertSentInfo.js');
 var student = require('./saveAlertFunc/3b.student.js');
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var pushNotification = require('./pushNotification.js');
@@ -129,7 +129,7 @@ module.exports.postReviewAlert = function(req, res, next) {
 
     ], function (err, tempAlert) {
 
-        create.alertSentInfo(req, res, tempAlert,function (result,err) {  //create AlertSentInfo
+        alertSentInfo.update(req, res, tempAlert,function (result,err) {  //create AlertSentInfo
 
             /*****  CALL HERE NOTIFICATION API  *****/
             pushNotification.alert(result, 'newAlert');
