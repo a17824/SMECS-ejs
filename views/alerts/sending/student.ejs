@@ -53,11 +53,10 @@
             });
             /*********** end of Name and Picture of missing student **************/
 
-            var alert_ID, alertNameID, alertSlugName, student;
+            var alert_ID, alertNameID, student;
             $("#<%= alert.id %>").click(function(){
                 alert_ID=$(this).attr('id');
                 alertNameID=$("#alertNameID").val();
-                alertSlugName=$("#alertSlugName").val();
                 student=$("#dataList").val();
 
                 //-----forms validation------------------------------------
@@ -110,7 +109,6 @@
 <% } %>
 
 <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
-<input type="hidden" id="alertSlugName" value="<%= alert.alertSlugName %>">
 <input type="hidden" id="studentPhoto"  value="<%= alert.studentPhoto %>"> <!-- for back button/refresh -->
 
 <form>
@@ -126,7 +124,8 @@
         <option data-value="<%= student.photo %>" value="<%= student.firstName %> <%= student.lastName %>"></option>
         <% }); %>
     </datalist><br><br>
-    <% if (alert.studentPhoto) { %>
+
+    <% if (alert.studentPhoto && alert.studentPhoto != 'photoNotAvailable.bmp') { %>
     <img id="studentImage" src="/photosStudents/<%= alert._id %><%= alert.studentPhoto %>"><br><br>
     <%  } else { %>
     <img id="studentImage" src="/photosNotAvailable/photoNotAvailable.BMP"><br><br>

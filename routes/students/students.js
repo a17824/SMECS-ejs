@@ -342,7 +342,7 @@ module.exports.delete = function(req, res) {
         var newStudent = "";
         var photo = student.photo;
         var path = './public/photosStudents/' + photo;
-        console.log(photo);
+
         if (photo != newStudent) { //delete old photo if exists
 
             fs.access(path, function(err) {

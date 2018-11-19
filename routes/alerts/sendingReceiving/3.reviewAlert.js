@@ -98,7 +98,7 @@ module.exports.postReviewAlert = function(req, res, next) {
                     tempAlert.alertNameID == 17 ||
                     tempAlert.alertNameID == 19) {
 
-                    student.saveStudentFile(req, res, tempAlert);
+                    student.updateStudentFile(req, res, tempAlert);
                 }
                 callback(null, tempAlert);
             });

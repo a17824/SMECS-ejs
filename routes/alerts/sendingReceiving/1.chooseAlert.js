@@ -398,9 +398,9 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 17 ||
                         req.body.alertID == 19 ) {
 
-                        //alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
-                        //alertTemp1.save();
-                        //student.saveStudentFile(req, res, alertTemp1);
+                        alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
+                        alertTemp1.save();
+                        student.saveStudentFile(req, res, alertTemp1);
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
                             /*****  CALL HERE NOTIFICATION API  *****/
                             pushNotification.alert(result, 'newAlert');

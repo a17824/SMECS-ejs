@@ -3,6 +3,7 @@ var models = require('./../../models');
 var async = require("async");
 var functions = require('./../../functions');
 var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
+var student = require('./saveAlertFunc/3b.student.js');
 var alertSentInfo = require('./saveAlertFunc/3c.alertSentInfo.js');
 var pushNotification = require('./pushNotification.js');
 
@@ -474,6 +475,7 @@ module.exports.postStudent = function(req, res) {
                 alert.save();
 
                 if (alert.alertNameID == 4) {
+                    student.saveStudentFile(req, res, alert);
                     alertSentInfo.create(req, res, alert,function (result,err) {  //create AlertSentInfo
                         /*****  CALL HERE NOTIFICATION API  *****/
                         pushNotification.alert(result, 'newAlert');
