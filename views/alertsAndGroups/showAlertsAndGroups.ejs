@@ -299,6 +299,8 @@
                                                 Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts"/>
                                                 <% } %>
                                             </th>
+                                            <th>Auto drills</th>
+                                            <th>Send email</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>Alert ID</th>
                                             <% } %>
@@ -332,6 +334,18 @@
 
                                             <% if (userAuthID == 1) {%>
                                             <td><%= alert.alertID %></td>
+                                            <% } %>
+
+                                            <% if (alert.alertAutoDrill == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertRequestSendEmail == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
                                             <% } %>
 
                                             <% if (alert.alertRequestProcedureCompleted == true) { %>

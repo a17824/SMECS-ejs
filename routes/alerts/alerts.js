@@ -228,6 +228,7 @@ module.exports.updatePost = function(req, res) {
             alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
             alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
             alert.alertRequestForINeedHelp = req.body.alertRequestForINeedHelp;
+            alert.alertRequestSendEmail = req.body.alertRequestSendEmail;
             alert.icon = req.body.icon;
 
 

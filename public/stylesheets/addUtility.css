@@ -185,3 +185,6 @@ input[type=checkbox]:checked + label:after {
 #checkboxNeedHelp {
     display: none;
 }
+#checkboxSendEmail {
+    display: none;
+}

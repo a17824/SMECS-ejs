@@ -218,6 +218,8 @@ var AlertsSchema = new mongoose.Schema({
     alertRequestProcedureCompleted: { type: Boolean, default: true },
     alertRequestWeAreSafe: { type: Boolean, default: true },
     alertRequestForINeedHelp: { type: Boolean, default: true },
+    alertRequestSendEmail: { type: Boolean, default: false },
+    alertAutoDrill: { type: Boolean, default: false },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,

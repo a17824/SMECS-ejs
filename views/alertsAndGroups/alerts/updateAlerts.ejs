@@ -186,6 +186,7 @@
                 var alertRequestProcedureCompleted = document.getElementById("checkboxProc").checked;
                 var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
                 var alertRequestForINeedHelp = document.getElementById("checkboxNeedHelp").checked;
+                var alertRequestSendEmail = document.getElementById("checkboxSendEmail").checked;
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -244,6 +245,7 @@
                     alertRequestProcedureCompleted: alertRequestProcedureCompleted,
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
                     alertRequestForINeedHelp: alertRequestForINeedHelp,
+                    alertRequestSendEmail: alertRequestSendEmail,
                     icon: icon,
                     sound: sound
 
@@ -463,7 +465,7 @@
 
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Automatic sending</label>
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Automatic send drills</label>
                                     <div class="col-md-8 col-sm-8 col-xs-12">
 
                                         <input
@@ -569,6 +571,27 @@
                                         <label for="checkboxNeedHelp"></label>
                                     </div>
                                 </div>
+
+                                <% if (alert.alertID != 26) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">Send also an email</label>
+                                    <div class="col-md-7 col-sm-7 col-xs-12">
+
+                                        <% if (alert.alertRequestSendEmail == true) {%>
+                                            <input type="checkbox"
+                                                   name="checkboxSendEmail"
+                                                   id="checkboxSendEmail"
+                                                   value="<%= alert.alertRequestSendEmail %>" checked>
+                                        <% }else{%>
+                                            <input type="checkbox"
+                                                   name="checkboxSendEmail"
+                                                   id="checkboxSendEmail"
+                                                   value="<%= alert.alertRequestSendEmail %>">
+                                        <% } %>
+                                        <label for="checkboxSendEmail"></label>
+                                    </div>
+                                </div>
+                                <% } %>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Call 911</label>
