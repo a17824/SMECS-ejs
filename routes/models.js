@@ -544,9 +544,9 @@ module.exports.AclPermissions = mongoose.model("AclPermissions", AclPermissionsS
 
 // DEFINE Building COLLECTION IN MONGOdb
 var BuildingSchema = new mongoose.Schema({
-    utilityID: { type: Number, unique: true },
+    buildingID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
-    utilityName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
+    buildingName: { type: String, unique: true } // Asthma, Diabetic, Loss of Consciousness, 3rd
 
 }, {collection:"Building"}); //stops Mongoose of giving plurals to our collections names
 var Building;
@@ -557,9 +557,10 @@ module.exports.Building = mongoose.model("Building", BuildingSchema);
 var FloorsSchema = new mongoose.Schema({
     Building: {
         buildingID: Number,
+        sortID: Number,
         name: String
     },
-    floorID: Number,
+    floorID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
     floorName: { type: String, unique: true }, // Cafetaria, 1st Floor, 2nd, 3rd
     floorPlan: String
@@ -578,9 +579,8 @@ var RoomSchema = new mongoose.Schema({
         floorID: Number,
         name: String
     },
-    floorID: Number,
-    sortID: { type: Number, unique: true },
     roomID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
     roomName: String
 
 }, {collection:"Room"}); //stops Mongoose of giving plurals to our collections names

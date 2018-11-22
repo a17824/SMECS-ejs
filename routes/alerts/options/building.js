@@ -10,13 +10,50 @@ var functions = require('./../../functions');
 var MobileDetect = require('mobile-detect');
 
 
+/* SHOW BUILDING FLOORS ROOMS. */
+module.exports.show = function(req, res, next) {
+    async.parallel([
+        function(callback){
+            models.Building.find().sort({"sortID":1}).exec(callback);
+        },
+        function(callback){
+            models.Floors.find().sort({"sortID":1}).exec(callback);
+        },
+        function(callback){
+            models.Room.find().sort({"sortID":1}).exec(callback);
+        },
+        function(callback){aclPermissions.showFloors(req, res, callback);},         //aclPermissions showFloors
+        function(callback){aclPermissions.addFloor(req, res, callback);},           //aclPermissions addFloor
+        function(callback){aclPermissions.modifyFloor(req, res, callback);},        //aclPermissions modifyFloor
+        function(callback){aclPermissions.deleteFloor(req, res, callback);},         //aclPermissions deleteFloor
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
+    ],function(err, results){
+        functions.redirectPage(req, res, 'showUsers');
 
-/* ADD Floor. -------------------------------*/
+        res.render('BuildingFloorsRooms/showBuildingAndFloors',{
+            title:'Building & Floors',
+            userAuthID: req.user.userPrivilegeID,
+            building: results[0],
+            floors: results[1],
+            floors: results[2],
+            aclShowFloors: results[3],      //aclPermissions showFloors
+            aclAddFloor: results[4],      //aclPermissions addFloor
+            aclModifyFloor: results[5],   //aclPermissions modifyFloor
+            aclDeleteFloor: results[6],    //aclPermissions deleteFloor
+            aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo,
+            redirectTab: req.user.redirectTabBuildings
+        });
+    })
+};
+
+/* ADD Building. -------------------------------*/
 module.exports.add = function(req, res) {
     async.parallel([
         function(callback){
-            models.Floors.find(function(error, floor) {
+            models.Building.find(function(error, floor) {
 
             }).exec(callback);
         },
@@ -24,66 +61,10 @@ module.exports.add = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        var arraySort = [];
         var array = [];
-        var stream = models.Floors.find().sort({"floorID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.floorID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('BuildingFloorsRooms/addFloor',{
-                title:'Add Floor',
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                floor: results[0],
-                aclAddFloor: results[1],      //aclPermissions addFloor
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        })
-    })
-};
-module.exports.addPost = function(req, res) {
-    //console.log(req.body.roleID);
-    var floor1 = new models.Floors({
-        floorID: req.body.floorID,
-        floorName: req.body.floorName,
-        floorPlan: req.body.floorPlan
-    });
-    floor1.save(function (err) {
-        if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("err - ",err);
-            return res.status(409).send('showAlert')
-        }else{
-            return res.send({redirect:'/floors/showFloors'})
-        }
-    });
-};
-/* -------------------------------end of ADD FLOOR. */
 
-
-/* UPDATE FLOOR. -------------------------------*/
-module.exports.update = function(req, res) {
-    var arraySort = [];
-    var array = [];
-    async.parallel([
-        function(callback){
-            models.Floors.findById(req.params.id,function(error, floor) {
-
-            }).exec(callback);
-        },
-        function(callback) {
-            models.Building.find().sort({"sortID": 1}).exec(callback);
-        },
-        function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
-        function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
-
-    ],function(err, results){
-        var streamSort = models.Floors.find().sort({"sortID":1}).cursor();
+        var streamSort = models.Building.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -93,26 +74,90 @@ module.exports.update = function(req, res) {
             //console.log(arraySort);
         });
 
-        var stream = models.Floors.find().sort({"floorID":1}).cursor();
+        var stream = models.Building.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
-            array.push(doc.floorID);
+            array.push(doc.buildingID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+
+            res.render('BuildingFloorsRooms/Building/addBuilding',{
+                title:'Add Building',
+                arraySort: arraySort,
+                array: array,
+                userAuthID: req.user.userPrivilegeID,
+                building: results[0],
+                aclAddFloor: results[1],      //aclPermissions addFloor
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+        })
+    })
+};
+module.exports.addPost = function(req, res) {
+
+    var building1 = new models.Building({
+        buildingID: req.body.buildingID,
+        sortID: req.body.sortID,
+        buildingName: req.body.buildingName
+
+    });
+    building1.save(function (err) {
+        if (err && (err.code === 11000 || err.code === 11001)) {
+            console.log("err - ",err);
+            return res.status(409).send('showAlert')
+        }else{
+            return res.send({redirect:'/buildingFloorRoom/show'})
+        }
+    });
+};
+/* -------------------------------end of ADD Building. */
+
+
+/* UPDATE Building. -------------------------------*/
+module.exports.update = function(req, res) {
+    var arraySort = [];
+    var array = [];
+    async.parallel([
+        function(callback) {
+            models.Building.findById(req.params.id,function(error, building) {
+            }).exec(callback);
+        },
+
+        function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
+        function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        var streamSort = models.Building.find().sort({"sortID":1}).cursor();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+        });
+
+        var stream = models.Building.find().sort({"sortID":1}).cursor();
+        stream.on('data', function (doc) {
+            array.push(doc.buildingID);
 
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            //console.log(array);
 
-            res.render('floors/updateFloor',{
-                title:'Update Floor',
+            res.render('BuildingFloorsRooms/Building/updateBuilding',{
+                title:'Update Building',
                 userAuthID: req.user.userPrivilegeID,
                 arraySort: arraySort,
                 array: array,
-                floor: results[0],
-                building: results[1],
-                aclShowFloors: results[2],      //aclPermissions showFloors
-                aclModifyFloor: results[3],      //aclPermissions modifyFloor
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                building: results[0],
+                aclShowFloors: results[1],      //aclPermissions showFloors
+                aclModifyFloor: results[2],      //aclPermissions modifyFloor
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -120,33 +165,40 @@ module.exports.update = function(req, res) {
     })
 };
 module.exports.updatePost = function(req, res) {
-    var floorToUpdate1 = req.body.floorToUpdate;
-    //console.log(req.body.userRoleID);
-    models.Floors.findById({'_id': floorToUpdate1}, function(err, floor){
-        floor.floorID = req.body.floorID;
-        floor.floorName = req.body.floorName;
-        floor.floorPlan = req.body.floorPlan;
-        floor.save(function (err) {
+    var buildingToUpdate1 = req.body.buildingToUpdate1;
+console.log('buildingToUpdate1 = ',buildingToUpdate1);
+
+    models.Building.findById({'_id': buildingToUpdate1}, function(err, building){
+        building.buildingID = req.body.buildingID;
+        building.buildingName = req.body.buildingName;
+        building.sortID = req.body.sortID;
+
+        building.save(function (err) {
             if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log("err - ",err);
+                console.log(err);
                 return res.status(409).send('showAlert')
             }else{
-                //UPDATE Room floorName & floorID DATABASE--------
-                var floorToUpdate1 = req.body.oldFloorID;
-                models.Room.find({}, function(err, rooms) {
-                    if( err || !rooms) console.log("No Permission rooms found");
-                    else rooms.forEach( function(room) {
-                        if (room.floorID == floorToUpdate1){
-                            room.floorID = req.body.floorID;
-                            room.floorName = req.body.floorName;
-                            room.save();
-                            console.log("saved");
+                //UPDATE Floors Building_name & Building_id DATABASE--------
+                var floorToUpdate1 = req.body.oldBuildingID;
+                models.Floors.find({}, function(err, floors) {
+                    if( err || !floors) console.log("No Floors to update");
+                    else floors.forEach( function(floor) {
+                        if (floor.Building.buildingID == floorToUpdate1){
+                            floor.Building.buildingID = req.body.buildingID;
+                            floor.Building.sortID = req.body.sortID;
+                            floor.Building.name = req.body.buildingName;
+                            floor.save(function (err) {
+                                if (err && (err.code === 11000 || err.code === 11001)) {
+                                    console.log(err);
+                                    return res.status(409).send('showAlert')
+                                }else {
+                                }
+                            });
                         }
                     });
                 });
-                //end of UPDATE Room floorName & floorID DATABASE--------
-
-                return res.send({redirect:'/floors/showFloors'})
+                //--------end UPDATE Alerts Group_name & Group_id Database
+                return res.send({redirect:'/buildingFloorRoom/show'})
             }
         });
     });
@@ -164,7 +216,7 @@ module.exports.delete = function(req, res) {
 
             if (result) {
                 console.log("Floor NOT deleted");
-                return res.status(409).send(' ALERT! ' + alertGroup.name + ' Floor not deleted because there are Rooms using this Floor. Please remove the Rooms using this Floor and then delete this Floor.')
+                return res.status(409).send(' ALERT! ' + building.name + ' Floor not deleted because there are Rooms using this Floor. Please remove the Rooms using this Floor and then delete this Floor.')
             }
             //end of check if there are Rooms using this Floor
 

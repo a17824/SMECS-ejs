@@ -107,8 +107,8 @@ module.exports.update = function(req, res) {
     async.parallel([
         function(callback){
             models.AlertsGroup.findById(req.params.id,function(error, alertGroup) {
-
             }).exec(callback);
+
         },
         function(callback){buildIconsColorSound.soundBuild(function(sound){callback(null, sound);});},  //sounds
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
@@ -118,8 +118,6 @@ module.exports.update = function(req, res) {
     ],function(err, results){
         var arraySort = [];
         var array = [];
-
-        console.log('results[1] = ',results[1]);
 
         var streamSort = models.AlertsGroup.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
@@ -138,6 +136,7 @@ module.exports.update = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
+
             res.render('alertsAndGroups/alertGroups/updateGroups',{
                 title:'Update Alert Group',
                 userAuthID: req.user.userPrivilegeID,

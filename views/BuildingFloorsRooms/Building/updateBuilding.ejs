@@ -1,0 +1,241 @@
+
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    
+
+    <script>
+        $(document).ready(function(){
+            
+            var oldSortID = $("#oldSortID").val();
+            console.log('oldSortID');
+            console.log(oldSortID);
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var oldAlertGroupID = $("#oldAlertGroupID").val();
+            var select = '';
+            var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldAlertGroupID){
+                    if(i == oldAlertGroupID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var alertGroup1,oldAlertGroupID,alertGroupID,alertGroupName,sortID;
+            $("#<%= building.id %>").click(function(){
+                alertGroup1=$(this).attr('id');
+                oldAlertGroupID=$("#oldAlertGroupID").val();
+                alertGroupID=$("#some_select").val();
+                alertGroupName=$("#alertGroupName").val();
+                sortID=$("#sort_select").val();
+                
+
+                //-----forms validation------------------------------------
+                if (alertGroupName == "" ) {
+                    alert("Building Name must be filled out");
+                    return false;
+                }
+                if (alertGroupID == "" ) {
+                    alert("Building ID must be filled out");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/building/update",{
+                    buildingToUpdate1: alertGroup1,
+                    oldBuildingID: oldAlertGroupID,
+                    buildingID: alertGroupID,
+                    buildingName: alertGroupName,
+                    sortID: sortID
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Building NAME already in use. Choose a different Name.")
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ./../../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+
+                <div class="title_left">
+                    <h3>Update Group</h3>
+                </div>
+
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="<%= building.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success">Save
+                        </button>
+                        <% } else { %>
+                        <button type="button"
+                                id="<%= building.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success" disabled>Save
+                        </button>
+                        <% } %>
+
+                        <a href="/buildingFloorRoom/show"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="clearfix"></div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building name:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="Building 2"
+                                               id="alertGroupName"
+                                               value="<%= building.buildingName %>">
+
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="hidden" id="oldSortID" value="<%= building.sortID %>">
+                                        <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+                                        <select id='sort_select' class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <% if (userAuthID == 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building ID:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <select id='some_select' style="display:none;"></select>
+                                <% } %>
+                                <input type="hidden" id="oldAlertGroupID" value="<%= building.buildingID %>">
+
+
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /page content -->
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>

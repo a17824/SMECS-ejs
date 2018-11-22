@@ -22,6 +22,7 @@ var auth = require('./authentication/auth');
 var email = require('./authentication/email');
 var reset = require('./authentication/reset');
 
+var building = require('./alerts/options/building');
 var floors = require('./alerts/options/floors');
 var rooms = require('./alerts/options/rooms');
 var utilities = require('./alerts/options/utilities');
@@ -482,12 +483,24 @@ router.post('/parentsSelfRegistration/registerParentStep1', auth.simpleAuth, aut
 //});
 
 
-/* SHOW FLOORS. */
-router.get('/floors/showFloors', auth.simpleAuth, auth.requireLogin, floors.show, function(req, res, next) {
+/* SHOW BUILDING FLOORS ROOM. */
+router.get('/buildingFloorRoom/show', auth.simpleAuth, auth.requireLogin, building.show, function(req, res, next) {
+});
+
+/* ADD Building. -------------------------------*/
+router.get('/building/add', auth.simpleAuth, auth.requireLogin, building.add, function(req, res) {
+});
+router.post('/building/add', auth.simpleAuth, auth.requireLogin, building.addPost, function(req, res) {
+});
+
+/* UPDATE Building. -------------------------------*/
+router.get('/building/update/:id', auth.simpleAuth, auth.requireLogin, building.update, function(req, res) {
+});
+router.post('/building/update/', auth.simpleAuth, auth.requireLogin, building.updatePost, function(req, res) {
 });
 
 /* ADD FLOOR. -------------------------------*/
-router.get('/floors/addFloor', auth.simpleAuth, auth.requireLogin, floors.add, function(req, res) {
+router.get('/buildingFloorRoom/add/:modelType', auth.simpleAuth, auth.requireLogin, floors.add, function(req, res) {
 });
 router.post('/floors/addFloor', auth.simpleAuth, auth.requireLogin, floors.addPost, function(req, res) {
 });

@@ -96,21 +96,21 @@
                                 <div align="center">
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/Building'">Add Building</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/building/add'">Add Building</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/Building'" disabled>Add Building</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/building/add'" disabled>Add Building</button>
                                     <% } %>
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'">Add Floor</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/buildingFloorRoom/add/Floors'">Add Floor</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/floors/addFloor/<%= floors.id %>'" disabled>Add Floor</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/buildingFloorRoom/add/Floors'" disabled>Add Floor</button>
                                     <% } %>
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href=''">Add Room</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/buildingFloorRoom/add/Room'">Add Room</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add Room</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/buildingFloorRoom/add/Room'" disabled>Add Room</button>
                                     <% } %>
 
 
@@ -181,15 +181,15 @@
                                         <% building.forEach(function(building) { %>
                                         <tr>
 
-                                            <td><%= building.utilityName %></td>
+                                            <td><%= building.buildingName %></td>
                                             <% if (userAuthID == 1) {%>
-                                            <td><%= building.utilityID %></td>
+                                            <td><%= building.buildingID %></td>
                                             <% } %>
                                             <td align="center">
                                                 <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
-                                                <a href="/medical/updateMedical/<%= building.id %>/Building"><button class="btn btn-warning">update</button></a>
+                                                <a href="/building/update/<%= building.id %>"><button class="btn btn-warning">update</button></a>
                                                 <% } else { %>
-                                                <a href="/medical/updateMedical/<%= building.id %>/Building"><button class="btn btn-warning" disabled>update</button></a>
+                                                <a href="/building/update/<%= building.id %>"><button class="btn btn-warning" disabled>update</button></a>
                                                 <% } %>
                                             </td>
                                             <td align="center">

@@ -50,8 +50,6 @@ module.exports.add = function(req, res) {
         title = 'Add cause for School Closed';
     if(modelType == 'EvacuateTo')
         title = 'Evacuate to';
-    if(modelType == 'Building')
-        title = 'Building';
 
     async.parallel([
         function(callback){
