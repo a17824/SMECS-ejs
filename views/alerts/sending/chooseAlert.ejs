@@ -8,6 +8,19 @@
         // end of Reload whole page if page is cached
         $(document).ready(function(){
 
+            // get gps location of bus
+            //if(alertID.value == 12) {
+                var destLatitude = '';
+                var destLongitude = '';
+                navigator.geolocation.getCurrentPosition(function (location) {
+                    destLatitude = location.coords.latitude;
+                    destLongitude = location.coords.longitude;
+                });
+            //}
+            var mapBus = "https://maps.googleapis.com/maps/api/staticmap?center=" + destLatitude + "," + destLongitude + "&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C" + destLatitude + "," + destLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw"
+
+            // end of  get gps location of bus
+
             $('input[name=onoffswitch]').change(function(){
                 if($('#myonoffswitch').is(':checked')) {
                     $('#testModeOFF').css('display', "none");
@@ -51,7 +64,10 @@
                     alertGroupName: alertGroupName,
                     alertID: alertID,
                     alertName: alertName,
-                    testModeON: testModeON
+                    testModeON: testModeON,
+                    latitude: destLatitude,
+                    longitude: destLongitude,
+                    mapBus: mapBus
 
                 },function(data){
                     if(data==='done')

@@ -350,8 +350,14 @@ module.exports.showAlertsPost = function(req, res) {
                     console.log('No scopes or users to send this alert');
                 }else {
                     if (req.body.alertID == 1 ) {
+
+                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+                            /*****  CALL HERE NOTIFICATION API  *****/
+                            pushNotification.alert(result, 'newAlert');
+                        });
+
                         redirectAPI = 'panic';
-                        redirectEJS = '/alerts/sending/panic/' + alertTemp1._id;
+                        redirectEJS = '/alerts/received/receiveAlert/' + alertTemp1._id;
 
                     }
 
@@ -376,12 +382,18 @@ module.exports.showAlertsPost = function(req, res) {
 
                     if (req.body.alertID == 3 ||
                         req.body.alertID == 8 ||
-                        req.body.alertID == 12 ||
                         req.body.alertID == 13 ||
                         req.body.alertID == 20 ||
                         req.body.alertID == 21 ||
                         req.body.alertID == 22 ||
                         req.body.alertID == 27 ) {
+
+
+
+                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+                            /*****  CALL HERE NOTIFICATION API  *****/
+                            pushNotification.alert(result, 'newAlert');
+                        });
 
                         redirectAPI = 'notes';
                         redirectEJS = '/alerts/sending/notes/' + alertTemp1._id;
@@ -408,6 +420,22 @@ module.exports.showAlertsPost = function(req, res) {
 
                         redirectAPI = 'student';
                         redirectEJS = '/alerts/sending/student/' + alertTemp1._id;
+                    }
+
+                    if (req.body.alertID == 12 ){
+
+                        alertTemp1.latitude = req.body.latitude;
+                        alertTemp1.longitude = req.body.longitude;
+                        alertTemp1.mapBus = req.body.mapBus;
+                        alertTemp1.save();
+
+                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+                            /*****  CALL HERE NOTIFICATION API  *****/
+                            pushNotification.alert(result, 'newAlert');
+                        });
+
+                        redirectAPI = 'notes';
+                        redirectEJS = '/alerts/sending/notes/' + alertTemp1._id;
                     }
 
                     if (req.body.alertID == 14 ||

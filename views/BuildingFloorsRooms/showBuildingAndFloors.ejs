@@ -102,9 +102,9 @@
                                     <% } %>
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/buildingFloorRoom/add/Floors'">Add Floor</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/floor/add'">Add Floor</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/buildingFloorRoom/add/Floors'" disabled>Add Floor</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/floor/add'" disabled>Add Floor</button>
                                     <% } %>
 
                                     <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
@@ -194,9 +194,9 @@
                                             </td>
                                             <td align="center">
                                                 <% if (aclDeleteFloor == null || aclDeleteFloor.checkBoxValue == true) {%>
-                                                <a href="/medical/deleteMedical/<%= building.id %>/Building"><button class="btn btn-danger">delete</button></a>
+                                                <a href="/buildingFloorRoom/show/<%= building.id %>"><button class="btn btn-danger">delete</button></a>
                                                 <% } else { %>
-                                                <a href="/medical/deleteMedical/<%= building.id %>/Building"><button class="btn btn-danger" disabled>delete</button></a>
+                                                <a href="/buildingFloorRoom/show/<%= building.id %>"><button class="btn btn-danger" disabled>delete</button></a>
                                                 <% } %>
                                             </td>
                                         </tr>
@@ -216,7 +216,7 @@
                                     <table id="datatable-buttons" class="table table-hover">
                                         <thead>
                                         <tr>
-
+                                            <th align="center">Building Name</th>
                                             <th align="center">Floor Name</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>ID</th>
@@ -229,7 +229,7 @@
                                         <tbody>
                                         <% floors.forEach(function(floors) { %>
                                         <tr>
-
+                                            <td><%= floors.Building.name %></td>
                                             <td><%= floors.floorName %></td>
                                             <% if (userAuthID == 1) {%>
                                             <td><%= floors.floorID %></td>

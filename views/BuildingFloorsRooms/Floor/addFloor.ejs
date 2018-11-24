@@ -43,15 +43,17 @@
             $('#some_select').html(select);
 
 
-            var alertGroupID,alertGroupName,sortID;
+            var alertGroupID,floorName,sortID;
             $("#btSubmit").click(function(){
                 alertGroupID=$("#some_select").val();
-                alertGroupName=$("#alertGroupName").val();
+                floorName=$("#floorName").val();
                 sortID=$("#sort_select").val();
+                var building_select = $("#building_select option").filter(":selected").val();
+                console.log('building_select = ',building_select);
 
                 //-----forms validation------------------------------------
-                if (alertGroupName == "" ) {
-                    alert("Building Name must be filled out");
+                if (floorName == "" ) {
+                    alert("Floor Name must be filled out");
                     return false;
                 }
                 if (alertGroupID == "" ) {
@@ -60,11 +62,12 @@
                 }
                 //--------------------------------forms validation end-------
 
-                $.post("/building/add",{
+                $.post("/floor/add",{
 
-                    buildingID: alertGroupID,
-                    buildingName: alertGroupName,
-                    sortID: sortID
+                    floorID: alertGroupID,
+                    floorName: floorName,
+                    sortID: sortID,
+                    building: building_select
 
                 },function(data){
                     if(data==='done')
@@ -167,12 +170,12 @@
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building name:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor name:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Main Building"
-                                               id="alertGroupName">
+                                               placeholder="1st Floor"
+                                               id="floorName">
                                     </div>
                                 </div>
 
@@ -197,6 +200,18 @@
                                 <% } else { %>
                                     <select id='some_select' style="display:none;"></select>
                                 <% } %>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='building_select' class="form-control">
+                                        <option disabled selected value> -- select a Building from dropdown list -- </option>
+                                        <% buildings.forEach(function(building) { %>
+                                            <option value="<%= building.buildingID %>_|_<%= building.sortID %>_|_<%= building.buildingName %>" ><%= building.buildingName %></option>
+                                        <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
 
 
                             </form>

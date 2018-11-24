@@ -36,7 +36,7 @@ module.exports.show = function(req, res, next) {
             userAuthID: req.user.userPrivilegeID,
             building: results[0],
             floors: results[1],
-            floors: results[2],
+            rooms: results[2],
             aclShowFloors: results[3],      //aclPermissions showFloors
             aclAddFloor: results[4],      //aclPermissions addFloor
             aclModifyFloor: results[5],   //aclPermissions modifyFloor
@@ -71,7 +71,6 @@ module.exports.add = function(req, res) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
-            //console.log(arraySort);
         });
 
         var stream = models.Building.find().sort({"sortID":1}).cursor();
@@ -178,7 +177,7 @@ console.log('buildingToUpdate1 = ',buildingToUpdate1);
                 console.log(err);
                 return res.status(409).send('showAlert')
             }else{
-                //UPDATE Floors Building_name & Building_id DATABASE--------
+                //UPDATE Floors Building_name & Building_id & Building_sort DATABASE--------
                 var floorToUpdate1 = req.body.oldBuildingID;
                 models.Floors.find({}, function(err, floors) {
                     if( err || !floors) console.log("No Floors to update");
@@ -206,21 +205,24 @@ console.log('buildingToUpdate1 = ',buildingToUpdate1);
 };
 /*---------------------------------------------------------------end of update floors*/
 
-/* DELETE FLOOR. */
+/* DELETE Building. */
 module.exports.delete = function(req, res) {
-    var floorToDelete = req.params.id;
-    models.Floors.findById({'_id': floorToDelete}, function(err, floor) {
-        //check if there are Rooms using this Floor
-        models.Room.findOne({ floorID: floor.floorID }, function (err, result) {
+    var buildingToDelete = req.params.id;
+    models.Building.findById({'_id': buildingToDelete}, function(err, building) {
+        //check if there are Floors using this Building
+        models.Floors.findOne({ 'Building.buildingID': building.buildingID }, function (err, result) {
             if (err) { console.log(err) };
 
             if (result) {
-                console.log("Floor NOT deleted");
-                return res.status(409).send(' ALERT! ' + building.name + ' Floor not deleted because there are Rooms using this Floor. Please remove the Rooms using this Floor and then delete this Floor.')
+                console.log("Building NOT deleted");
+                //return res.status(409).send(' ALERT! ' + building.name + ' building not deleted because there are Floors using this Building. Please remove the Floors using this Building and then delete this Building.')
+                req.flash('error_messages', ' Attention! ' + building.buildingName + ' building was not deleted because there are Floors using this Building. <br> Please remove Floors under this Building and then delete this Building.');
+                res.redirect('/buildingFloorRoom/show');
             }
             //end of check if there are Rooms using this Floor
 
             else {
+                /*
                 // delete photo before delete floor----------------
                 var newFloor = "";
                 var floorPlan = floor.floorPlan;
@@ -230,10 +232,10 @@ module.exports.delete = function(req, res) {
                     console.log('successfully deleted ' + floorPlan);
                 }
                 // ------------end delete floorPlan before delete floor
-
-                models.Floors.remove({'_id': floorToDelete}, function(err) {
+                */
+                models.Building.remove({'_id': buildingToDelete}, function(err) {
                     //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
-                    res.redirect('/floors/showFloors');
+                    res.redirect('/buildingFloorRoom/show');
                 });
 
             }

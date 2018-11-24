@@ -8,6 +8,7 @@ var email = require('./authentication/email');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
+var updates = require('./alerts/sendingReceiving/5.updates.js');
 var reports = require('./api/reports.js');
 var appOptions = require('./api/appOptions');
 
@@ -82,5 +83,8 @@ routerApi.post('/receivedAlert', auth.auth, receiveAlert.postReceivedAlert, func
 /* Get app options -----------------------------------*/
 routerApi.get('/appSettings', auth.auth, appOptions.appSettingsGet, function(req, res) {});
 routerApi.post('/appSettings', auth.auth, appOptions.appSettingsPost, function(req, res) {});
+
+/* Post update notes ------------------------------------*/
+routerApi.post('/updateNotes', auth.auth, updates.postUpdateNotes, function(req, res) {});
 
 module.exports = routerApi;

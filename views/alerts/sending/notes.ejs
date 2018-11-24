@@ -93,7 +93,7 @@
             missingPopulate('#timeSelect');
             }
             /********** end of Last Time seen missing student ************/
-
+            /*
             // get gps location of bus
             if(alertID.value == 12) {
                 var destLatitude = '';
@@ -104,7 +104,7 @@
                 });
             }
             // end of  get gps location of bus
-
+            */
             $("#<%= alert.id %>").click(function(){
                 var alert_ID=$(this).attr('id');
                 var alertNameID=$("#alertNameID").val();
@@ -182,7 +182,7 @@
                 //-----forms validation------------------------------------
 
 
-                var mapBus = "https://maps.googleapis.com/maps/api/staticmap?center=" + destLatitude + "," + destLongitude + "&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C" + destLatitude + "," + destLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw"
+                //var mapBus = "https://maps.googleapis.com/maps/api/staticmap?center=" + destLatitude + "," + destLongitude + "&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C" + destLatitude + "," + destLongitude + "&key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw"
 
                 //--------------------------------forms validation end-------
                 $.ajax({
@@ -202,10 +202,10 @@
                         seat: seat,
                         studentBehaviour: studentBehaviour,
                         whereToEvacuate: whereToEvacuate,
-                        busAccidentNoInjuries: busAccidentNoInjuries,
-                        latitude: destLatitude,
-                        longitude: destLongitude,
-                        mapBus: mapBus
+                        busAccidentNoInjuries: busAccidentNoInjuries
+                        //latitude: destLatitude,
+                        //longitude: destLongitude,
+                        //mapBus: mapBus
                     },
                     dataType: 'json',
                     success: function(data) {

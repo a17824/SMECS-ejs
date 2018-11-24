@@ -16,16 +16,28 @@ var MobileDetect = require('mobile-detect');
 module.exports.add = function(req, res) {
     async.parallel([
         function(callback){
-            models.Floors.find(function(error, floor) {
-
-            }).exec(callback);
+            models.Floors.find(function(error, floor) {}).exec(callback);
+        },
+        function(callback){
+            models.Building.find(function(error, building) {}).exec(callback);
         },
         function(callback){aclPermissions.addFloor(req, res, callback);},  //aclPermissions addFloor
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        var arraySort = [];
         var array = [];
-        var stream = models.Floors.find().sort({"floorID":1}).cursor();
+
+        var streamSort = models.Floors.find().sort({"sortID":1}).cursor();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+        });
+
+        var stream = models.Floors.find().sort({"sortID":1}).cursor();
         stream.on('data', function (doc) {
             array.push(doc.floorID);
         }).on('error', function (err) {
@@ -33,13 +45,15 @@ module.exports.add = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('BuildingFloorsRooms/addFloor',{
+            res.render('BuildingFloorsRooms/Floor/addFloor',{
                 title:'Add Floor',
+                arraySort: arraySort,
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 floor: results[0],
-                aclAddFloor: results[1],      //aclPermissions addFloor
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                buildings: results[1],
+                aclAddFloor: results[2],      //aclPermissions addFloor
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -47,8 +61,17 @@ module.exports.add = function(req, res) {
     })
 };
 module.exports.addPost = function(req, res) {
-    //console.log(req.body.roleID);
+    var arraySplit = req.body.building.split("_|_");
+    var buildingID = parseInt(arraySplit[0]);
+    var buildingSortID = parseInt(arraySplit[1]);
+    var buildingName = arraySplit[2];
+
     var floor1 = new models.Floors({
+        Building: {
+            buildingID: buildingID,
+            sortID: buildingSortID,
+            name: buildingName
+        },
         floorID: req.body.floorID,
         floorName: req.body.floorName,
         floorPlan: req.body.floorPlan
@@ -58,9 +81,10 @@ module.exports.addPost = function(req, res) {
             console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            return res.send({redirect:'/floors/showFloors'})
+            return res.send({redirect:'/buildingFloorRoom/show'})
         }
     });
+
 };
 /* -------------------------------end of ADD FLOOR. */
 
