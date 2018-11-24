@@ -94,6 +94,8 @@
         }
         //end of Request calling 911
 
+
+
         $(document).ready(function(){
             var oldSortID = $("#oldSortID").val();
             var select_sort = '';
@@ -112,7 +114,7 @@
             var oldAlertID = $("#oldAlertID").val();
             var select = '';
             var myArray = $("#inUseAlertID").val().split(",").map(Number);
-            for (i=1;i<=99;i++){
+            for (var i=1;i<=99;i++){
                 if(myArray.indexOf(i) == -1 || i == oldAlertID){
                     if(i == oldAlertID){
                         select += '<option val=' + i + ' selected="selected">' + i + '</option>';
@@ -122,6 +124,32 @@
                 }
             }
             $('#some_select').html(select);
+
+
+            //build step functions depending on selected step
+            $("#step").change(function () {
+
+                var soundTypeId = this[this.selectedIndex].value;
+                var soundID = this[this.selectedIndex].id;
+
+                var soundArray = soundID.split(",").map(String);
+
+                var radioComplete = [];
+                for (var i = 1; i < soundArray.length; i += 3) {
+
+                    var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
+                        'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
+                        'name="radio" ' +
+                        'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
+                        '<div id="audio2"><audio controls controlsList="nodownload" style="position: relative; left: 150px; top: 10px"><source src="/public/sounds/' + soundArray[i+1] +'.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio></div></div><div class="divider-dashed"></div>');
+
+
+                    radioComplete.push(radioBtn);
+                }
+                $("#buildRadio").html(radioComplete);
+            });
+            //end of build step functions depending on selected step
+
 
 
             function radioOff() {
@@ -161,6 +189,7 @@
                 $('#smecsUserDiv').show(); //to remove display: none
                 radioOn();
             })
+
 
 
             var id,alertName,alertID,alertProcedure, request911Call, sortID, icon;
@@ -344,6 +373,7 @@
             <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
 
 
+
             <div class="row">
                 <div class="col-md-6 col-xs-12">
                     <div class="x_panel">
@@ -375,15 +405,43 @@
                                 </div>
 
                                 <% if (userAuthID == 1) {%>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select id='some_select' class="form-control"></select>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <select id='some_select' class="form-control"></select>
+                                        </div>
                                     </div>
-                                </div>
-                                <% } else { %>
-                                <select id='some_select' style="display:none;"></select>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Step:</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <select id='step' class="form-control">
+
+                                                <% for (var i = 0; i <alert.alertRoad.length; i++) { %>
+                                                    <option id="<%= alert.alertRoad[i].callFunction %>" value="<%= alert.alertRoad[i].step %>"><%= alert.alertRoad[i].step %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="buildFunction">
+                                        <% for (var i = 0; i <alert.alertRoad.length; i++) { %>
+                                            <% if( alert.alertRoad[0].callFunction ) { %>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Function <%= i+1 %></label>
+                                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               id="myText"
+                                                               value="colors">
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        <% } %>
+                                    </div>
+
+
                                 <% } %>
+
 
 
                                 <div class="form-group">

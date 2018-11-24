@@ -244,7 +244,19 @@ var AlertsSchema = new mongoose.Schema({
             roleName: String,
             checkbox: { type: Boolean, default: false }
         }]
-    }
+    },/*
+    alertRoad: [{
+        callFunction: [{
+            name: String
+        }],
+        redirectTo: String
+    }]*/
+    alertRoad: [{
+        step: Number,
+        callFunction: Array,
+        redirectAPI: String,
+        redirectEJS: String
+    }]
 
 }, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;

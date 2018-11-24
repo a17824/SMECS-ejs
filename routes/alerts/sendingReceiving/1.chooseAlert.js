@@ -299,7 +299,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     })
                             } else {
                                 console.log('the tempAler1 has been saved');
-                                callback(null, alertTemp1);
+                                callback(null, alertTemp1, alert);
                             }
                         });
 
@@ -330,7 +330,8 @@ module.exports.showAlertsPost = function(req, res) {
 
 
                                     alertTemp.save();
-                                    callback(null, alertTemp);
+
+                                    callback(null, alertTemp, alert);
                                 }
                             }
                         })
@@ -339,7 +340,7 @@ module.exports.showAlertsPost = function(req, res) {
                 }
             });
         }
-    ], function (err, alertTemp1) {
+    ], function (err, alertTemp1, alert) {
         whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) {
             if(err){
                 console.log('err = ', err);
@@ -349,10 +350,33 @@ module.exports.showAlertsPost = function(req, res) {
                 if(alertTemp1.sentRoleIDScope < 1){
                     console.log('No scopes or users to send this alert');
                 }else {
+                    //console.log('alert[0].alertRoad = ',alert[0].alertRoad);
+                    alert[0].alertRoad.forEach(function (road) {
+                        if(road.step == 1) {
+                            for (var i=0; i < road.callFunction.length; i++) {
+                                console.log('road.callFunction[i] = ',road.callFunction[i]);
+                                if(road.callFunction[i] == 'studentStep1')
+                                    studentStep1(req, res, alertTemp1);
+                                if(road.callFunction[i] == 'createAlert')
+                                    createAlert(req, res, alertTemp1);
+                            }
+                            redirectAPI = road.redirectAPI;
+                            redirectEJS = road.redirectEJS + alertTemp1._id;
+                        }
+                    });
+
+
+
+                  /*
+
+
+
+
+
                     if (req.body.alertID == 1 ) {
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-                            /*****  CALL HERE NOTIFICATION API  *****/
+
                             pushNotification.alert(result, 'newAlert');
                         });
 
@@ -372,7 +396,7 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 26) {
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-                            /*****  CALL HERE NOTIFICATION API  *****/
+
                             pushNotification.alert(result, 'newAlert');
                         });
 
@@ -391,7 +415,7 @@ module.exports.showAlertsPost = function(req, res) {
 
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-                            /*****  CALL HERE NOTIFICATION API  *****/
+
                             pushNotification.alert(result, 'newAlert');
                         });
 
@@ -414,7 +438,7 @@ module.exports.showAlertsPost = function(req, res) {
                         alertTemp1.save();
                         student.saveStudentFile(req, res, alertTemp1);
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-                            /*****  CALL HERE NOTIFICATION API  *****/
+
                             pushNotification.alert(result, 'newAlert');
                         });
 
@@ -430,7 +454,7 @@ module.exports.showAlertsPost = function(req, res) {
                         alertTemp1.save();
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-                            /*****  CALL HERE NOTIFICATION API  *****/
+
                             pushNotification.alert(result, 'newAlert');
                         });
 
@@ -444,14 +468,14 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 29 ) {
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-                            /*****  CALL HERE NOTIFICATION API  *****/
+
                             pushNotification.alert(result, 'newAlert');
                         });
 
                         redirectAPI = 'multiSelection';
                         redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;
                     }
-
+*/
                     if(req.decoded){ // run SMECS API
                         res.json({
                             success: true,
@@ -500,4 +524,16 @@ function buildAlertsSameColor(results, arrayGroups, alertTemp) {
         });
         arrayGroups.push(arrayAlertsRealTest);
     }
+}
+
+function studentStep1(req, res, alertTemp1) {
+    alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
+    alertTemp1.save();
+    student.saveStudentFile(req, res, alertTemp1);
+}
+function createAlert(req, res, alertTemp1) {
+    alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+        /*****  CALL HERE NOTIFICATION API  *****/
+        pushNotification.alert(result, 'newAlert');
+    });
 }

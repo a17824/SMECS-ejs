@@ -290,6 +290,9 @@
                                         <tr>
                                             <th>Group #</th>
                                             <th>Alert Group</th>
+                                            <% if (userAuthID == 1) {%>
+                                                <th>Alert ID</th>
+                                            <% } %>
                                             <th>Alert #</th>
                                             <th>Alert Name</th>
                                             <th>
@@ -301,9 +304,6 @@
                                             </th>
                                             <th>Auto drills</th>
                                             <th>Send email</th>
-                                            <% if (userAuthID == 1) {%>
-                                            <th>Alert ID</th>
-                                            <% } %>
                                             <th>Request<br>Procedure<br>Completed</th>
                                             <th>Request<br>We Are Safe</th>
                                             <th>Allow teacher<br>request help</th>
@@ -321,6 +321,9 @@
                                         <tr>
                                             <td><%= alertGroup.sortID %></td>
                                             <td><%= alert.group.name %></td>
+                                            <% if (userAuthID == 1) {%>
+                                                <td><%= alert.alertID %></td>
+                                            <% } %>
                                             <td><%= alert.sortID %></td>
                                             <td><%= alert.alertName %></td>
 
@@ -332,9 +335,7 @@
                                                 <% } %>
                                             </td>
 
-                                            <% if (userAuthID == 1) {%>
-                                            <td><%= alert.alertID %></td>
-                                            <% } %>
+
 
                                             <% if (alert.alertAutoDrill == true) { %>
                                                 <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
