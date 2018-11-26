@@ -310,6 +310,9 @@
                                             <th>Request<br>911 Call</th>
                                             <th>Procedure</th>
                                             <th>Update</th>
+                                            <% if (userAuthID == 1) {%>
+                                                <th>Alert Road</th>
+                                            <% } %>
                                             <th>Remove</th>
                                         </tr>
                                         </thead>
@@ -391,6 +394,11 @@
                                                 <a href="/alerts/updateAlerts/<%= alert.id %>"><button class="btn btn-warning" disabled>update</button></a>
                                                 <% } %>
                                             </td>
+                                            <% if (userAuthID == 1) {%>
+                                            <td>
+                                                <a href="/alerts/showRoad/<%= alert.id %>"><button class="btn btn-warning">change</button></a>
+                                            </td>
+                                            <% } %>
                                             <td>
                                                 <% if (aclDeleteAlert == null || aclDeleteAlert.checkBoxValue == true) {%>
                                                 <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger">remove</button></a>

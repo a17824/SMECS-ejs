@@ -354,7 +354,6 @@ module.exports.showAlertsPost = function(req, res) {
                     alert[0].alertRoad.forEach(function (road) {
                         if(road.step == 1) {
                             for (var i=0; i < road.callFunction.length; i++) {
-                                console.log('road.callFunction[i] = ',road.callFunction[i]);
                                 if(road.callFunction[i] == 'studentStep1')
                                     studentStep1(req, res, alertTemp1);
                                 if(road.callFunction[i] == 'createAlert')

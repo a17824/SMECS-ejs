@@ -246,6 +246,7 @@ var AlertsSchema = new mongoose.Schema({
         }]
     },/*
     alertRoad: [{
+        step: Number,
         callFunction: [{
             name: String
         }],
@@ -261,6 +262,16 @@ var AlertsSchema = new mongoose.Schema({
 }, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;
 module.exports.Alerts = mongoose.model("Alerts", AlertsSchema);
+
+// DEFINE AlertRoadFunctions COLLECTION IN MONGOdb
+var AlertRoadFunctionsSchema = new mongoose.Schema({
+    sortID: { type: Number, unique: true },
+    functionID: { type: Number, unique: true },
+    functionName: { type: String, unique: true }
+
+}, {collection:"AlertRoadFunctions"}); //stops Mongoose of giving plurals to our collections names
+var AlertRoadFunctions;
+module.exports.AlertRoadFunctions = mongoose.model("AlertRoadFunctions", AlertRoadFunctionsSchema);
 
 // DEFINE AlertSentInfo COLLECTION IN MONGOdb
 var AlertSentInfoSchema = new mongoose.Schema({

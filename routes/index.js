@@ -13,6 +13,7 @@ var permissionsGroup = require('./permissions/permissionsGroup');
 var permissionsTable = require('./permissions/permissionsTable');
 var alertGroups = require('./alerts/alertGroups');
 var alerts = require('./alerts/alerts');
+var alertRoad = require('./alerts/alertsRoad');
 var statistics = require('./statistics/statistics');
 var reports = require('./alerts/reports/reports');
 var photos = require('./photos/addUpdatePhoto');
@@ -340,6 +341,8 @@ router.get('/alerts/updateAlerts/:id', auth.simpleAuth, auth.requireLogin, alert
 router.post('/alerts/updateAlerts', auth.simpleAuth, auth.requireLogin, alerts.updatePost, function(req, res) {
 });
 
+
+
 /* PROCEDURE Alerts. -------------------------------*/
 router.get('/alerts/procedure/:id', auth.simpleAuth, auth.requireLogin, alerts.procedure, function(req, res) {
 });
@@ -364,6 +367,31 @@ router.get('/alerts/addAlerts/:id', auth.simpleAuth, auth.requireLogin, alerts.d
 });
 
 
+
+/* SHOW Alert Road. */
+router.get('/alerts/showRoad/:id', auth.simpleAuth, auth.requireLogin, alertRoad.show, function(req, res, next) {
+});
+/* Change Alert Road. -------------------------------*/
+router.get('/alerts/changeRoad/:id', auth.simpleAuth, auth.requireLogin, alertRoad.changeRoad, function(req, res) {
+});
+router.post('/alerts/changeRoad', auth.simpleAuth, auth.requireLogin, alertRoad.changeRoadPost, function(req, res) {
+});
+/* DELETE Alerts. */
+router.get('/alerts/deleteRoad/:id', auth.simpleAuth, auth.requireLogin, alertRoad.deleteRoad, function(req, res) {
+});
+
+
+
+/* CREATE AlertRoadFunctions. -------------------------------*/
+router.get('/AlertRoadFunctions/:id', auth.simpleAuth, auth.requireLogin, alertRoad.createFunctions, function(req, res) {
+});
+router.post('/AlertRoadFunctions', auth.simpleAuth, auth.requireLogin, alertRoad.createFunctionsPost, function(req, res) {
+});
+/* UPDATE AlertRoadFunctions. -------------------------------*/
+router.get('/AlertRoadFunctions/update/:alert_id/:function_id', auth.simpleAuth, auth.requireLogin, alertRoad.updateFunctions, function(req, res) {
+});
+router.post('/AlertRoadFunctions/update', auth.simpleAuth, auth.requireLogin, alertRoad.updateFunctionsPost, function(req, res) {
+});
 
 
 /* SHOW ALERT PERMISSIONS TABLE. WHO CAN SEND/RECEIVE ALERTS---------------------------------------------------*/
