@@ -267,7 +267,8 @@ module.exports.Alerts = mongoose.model("Alerts", AlertsSchema);
 var AlertRoadFunctionsSchema = new mongoose.Schema({
     sortID: { type: Number, unique: true },
     functionID: { type: Number, unique: true },
-    functionName: { type: String, unique: true }
+    functionName: { type: String, unique: true },
+    alertsWithThisFunction: Array
 
 }, {collection:"AlertRoadFunctions"}); //stops Mongoose of giving plurals to our collections names
 var AlertRoadFunctions;
@@ -429,6 +430,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     sentTime: String,
     notePlaceholder: String,
     testModeON: Boolean,
+    demoModeON: Boolean,
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
     requestINeedHelp: { type: Boolean, default: false },

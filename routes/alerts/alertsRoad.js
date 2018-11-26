@@ -1,115 +1,7 @@
 //Dependencies
 var models = require('./../models');
 var async = require("async");
-var aclPermissions = require('./../acl/aclPermissions');
-var slug = require('slug');
 var functions = require('./../functions');
-
-
-
-
-
-
-
-/* UPDATE Road Functions. -------------------------------*/
-module.exports.update = function(req, res) {
-    var arraySort = [];
-    var array = [];
-    async.parallel([
-        function(callback){
-            models.Alerts.findById(req.params.id).exec(callback);
-        },
-        function(callback) {
-            models.AlertsGroup.find().sort({"sortID": 1}).exec(callback);
-        },
-        function(callback){
-            models.Roles2.find().sort({"roleID":1}).exec(callback);
-        },
-        function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
-
-    ],function(err, results){
-
-        var streamSort = models.Alerts.find().sort({"sortID":1}).cursor();
-        streamSort.on('data', function (doc) {
-            arraySort.push(doc.sortID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(arraySort);
-        });
-
-        var stream = models.Alerts.find().sort({"alertID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.alertID);
-
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('alertsAndGroups/alerts/updateAlerts', {
-                title: 'Update Alert',
-                arraySort: arraySort,
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                alert: results[0],
-                alertGroup: results[1],
-                roles: results[2],
-                aclModifyAlertGroup: results[3],      //aclPermissions modifyAlertGroup
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        });
-    })
-};
-module.exports.updateRoadFunctionsPost = function(req, res) {
-
-    var alertToUpdate1 = req.body.alertToUpdate;
-    models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
-        models.AlertsGroup.findOne({'groupID': req.body.alertGroupID}, function(err, group){
-            alert.group.groupID = group.groupID;
-            alert.group.sortID = group.sortID;
-            alert.group.name = group.name;
-            alert.group.mp3 = group.sound.mp3;
-            alert.group.icon = group.icon;
-            alert.group.color.name = group.color.name;
-            alert.group.color.bgValue = group.color.bgValue;
-            alert.group.color.textValue = group.color.textValue;
-
-            alert.alertRequest911Call = req.body.request911Call;
-            alert.whoCanCall911 = req.body.whoCanCall911;
-            alert.alertName = req.body.alertName;
-            alert.alertID = req.body.alertID;
-            alert.sortID = req.body.sortID;
-            alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
-            alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
-            alert.alertRequestForINeedHelp = req.body.alertRequestForINeedHelp;
-            alert.alertRequestSendEmail = req.body.alertRequestSendEmail;
-            alert.icon = req.body.icon;
-
-
-            alert.save(function (err) {
-                if (err && (err.code === 11000 || err.code === 11001)) {
-                    console.log(err);
-                    return res.status(409).send('showAlert')
-                }else {
-                    res.send({redirect: '/alertGroups/showAlertGroups'});
-                }
-            });
-        });
-    });
-};
-/*-------------------------end of update Alerts*/
-
-
-
-
-
-
-
 
 
 /* Show Alert Road. -------------------------------*/
@@ -121,6 +13,9 @@ module.exports.show = function(req, res) {
         function(callback){
             models.AlertRoadFunctions.find().sort({"sortID":1}).exec(callback);
         },
+        function(callback){
+            models.Alerts.find().sort({"sortID":1}).exec(callback); ////to find all alerts that use a specific function
+        },
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
@@ -128,7 +23,8 @@ module.exports.show = function(req, res) {
             title: 'Alert Road',
             alert: results[0],
             AlertRoadFunctions: results[1],
-            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            alerts: results[2], //to find all alerts that use a specific function
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -353,144 +249,53 @@ module.exports.updateFunctionsPost = function(req, res) {
         });
     });
 };
-/*-------------------------end of update AlertGroups*/
+/*-------------------------end of update AlertRoadFunctions*/
 
 
+/* DELETE AlertGroups. */
+module.exports.deleteFunction = function(req, res) {
+    console.log('req.params.function_id = ',req.params.function_id);
+    var functionToDeleteID = req.params.function_id;
+/*
+    models.AlertRoadFunctions.findOne({'_id': functionToDeleteID}, function(err, functionToDelete) {
+        if( err || !functionToDelete) console.log("No AlertRoadFunctions to delete");
+        else {
+            console.log("-------------functionToDelete---------");
+            console.log(functionToDelete);
 
+            //UPDATE Alerts Function name DATABASE--------
+            models.Alerts.find({}, function(err, alerts) {
+                if( err || !alerts) console.log("No alerts to update");
+                else {
+                    alerts.forEach(function (alert) {
+                        alert.alertRoad.forEach(function (road) {
+                            if (road.callFunction.includes(functionToDelete.functionName)) {
+                                var index = road.callFunction.indexOf(functionToDelete.functionName);
+                                road.callFunction.splice(index, 1);
+                                alert.save();
+                            }
+                        });
+                    });
+                }
 
+            });
+            //--------end UPDATE Alerts Function name Database
 
+            models.AlertRoadFunctions.remove({'_id': functionToDeleteID}, function(err) {
+                //res.send((err === null) ? { msg: 'Role not deleted' } : { msg:'error: ' + err });
+                return res.redirect('/alerts/showRoad/' + req.params.alert_id);
 
+            });
 
-
-/* PROCEDURE Alerts. -------------------------------*/
-module.exports.procedure = function(req, res) {
-    async.parallel([
-        function(callback){
-            models.Alerts.findById(req.params.id).exec(callback);
-        },
-        function(callback){aclPermissions.modifyProcedure(req, res, callback);},   //aclPermissions modifyProcedure
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
-
-    ],function(err, results){
-
-        res.render('alertsAndGroups/alerts/procedure', {
-            userAuthID: req.user.userPrivilegeID,
-            userAuthRedirect: req.user.redirect,
-            alert: results[0],
-            aclModifyProcedure: results[1], //aclPermissions modifyProcedure
-            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
-    })
-
-};
-
-module.exports.procedurePost = function(req, res) {
-    var alertToUpdate1 = req.body.alertToUpdate;
-    models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
-        alert.alertProcedure = req.body.alertProcedure;
-        alert.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }
-        });
-    });
-};
-/*-------------------------end of PROCEDURE Alerts*/
-
-
-/* SoftDeleted Alerts. */
-module.exports.softDelete = function(req, res) {
-    var alertToSoftDelete = req.params.id;
-
-    models.Alerts.findById({'_id': alertToSoftDelete}, function(err, alert){
-        alert.softDeleted = true;
-        alert.save();
-        res.redirect('/alertGroups/showAlertGroups');
-    });
-
-
-
-};
-/* ------------ end of SoftDeleted Alerts. */
-
-/* Restore SoftDeleted Alerts. */
-module.exports.restoreAlert = function(req, res) {
-    var alertToRestore = req.params.id;
-
-    models.Alerts.findById({'_id': alertToRestore}, function(err, alert){
-        alert.softDeleted = false;
-        alert.save();
-        res.redirect('/alerts/addAlerts');
-
-    })
-};/* ------------ end of SoftDeleted Alerts. */
-
-
-/* DELETE Alerts. */
-module.exports.delete = function(req, res) {
-    var alertToDelete = req.params.id;
-
-    function deleteAlert(callback) {
-        models.Alerts.remove({'_id': alertToDelete}, function(err) {
-            return res.redirect('/alerts/addAlerts');
-        });
-    }
-
-    async.waterfall([
-        deleteAlert
-    ], function (error) {
-        if (error) {
-            //handle readFile error or processFile error here
         }
-    });
-};
-/* ----- end of DELETE Alerts. */
 
-/* SHOW/UPDATE/DELETE 911 USER ROLES. */
-module.exports.show911UserRoles = function(req, res, next) {
-    async.parallel([
-        function(callback){
-            models.Alerts.findById(req.params.id).exec(callback);
-        },
-        function(callback){
-            models.Roles2.find().exec(callback);
-        },
-        function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
-        function(callback){aclPermissions.showUsers(req, res, callback);},          //aclPermissions showUsers
-        function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
-        function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
-        function(callback){aclPermissions.deleteUsers(req, res, callback);},        //aclPermissions deleteUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
-    ],function(err, results){
-        res.render('alertsAndGroups/alerts/crud911Users',{
-            title: results[0].alertName,
-            utility: results[0],
-            allUtilUsers: results[1],
-            userAuthID: req.user.userPrivilegeID,
-            aclShowDeletedUsers: results[2], //aclPermissions showDeletedUsers
-            aclShowUsers: results[3], //aclPermissions showUsers
-            aclAddUsers: results[4], //aclPermissions addUsers
-            aclModifyUsers: results[5],  //aclPermissions modifyUsers
-            aclDeleteUsers: results[6],  //aclPermissions deleteUsers
-            aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
-    })
-};
-module.exports.update911UserRolesPost = function(req, res) {
-    var utilityToUpdate1 = req.body.utilityToUpdate;
-    models.Alerts.findById({'_id': utilityToUpdate1}, function(err, utility){
-        utility.whoCanCall911 = req.body.whoCanCall911;
-        if (utility.whoCanCall911 === undefined || utility.whoCanCall911.length < 1){ //put radio button off if array is empty
-            utility.alertRequest911Call = 'false';
-        }
-        utility.save();
-        return res.send({redirect:'/alertGroups/showAlertGroups'})
     });
+*/
 };
-/*-------------------------end of SHOW/UPDATE/DELETE 911 USER ROLES*/
+/* ---- end of DELETE AlertGroups. */
+
+
+
+
+

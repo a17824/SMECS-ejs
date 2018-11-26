@@ -392,6 +392,10 @@ router.get('/AlertRoadFunctions/update/:alert_id/:function_id', auth.simpleAuth,
 });
 router.post('/AlertRoadFunctions/update', auth.simpleAuth, auth.requireLogin, alertRoad.updateFunctionsPost, function(req, res) {
 });
+/* DELETE AlertRoadFunctions. */
+router.get('/AlertRoadFunctions/delete/:alert_id/:function_id', auth.simpleAuth, auth.requireLogin, alertRoad.deleteFunction, function(req, res) {
+});
+
 
 
 /* SHOW ALERT PERMISSIONS TABLE. WHO CAN SEND/RECEIVE ALERTS---------------------------------------------------*/

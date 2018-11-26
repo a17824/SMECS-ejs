@@ -6,28 +6,33 @@
     <script>
         $(document).ready(function(){
 
-            $('input[name=onoffswitch]').change(function(){
-                if($('#myonoffswitch').is(':checked')) {
-                    $('#testModeOFF').css('display', "none");
-                    $('#testModeON').css('display', "unset");
-                    $('input[name=alert]:checked').attr('checked',false) //uncheck checkbox from OFF radios
+            $('input[name=radios]').click(function () {
+
+                if (this.id == "real") {
+                    $("#realDiv").show('slow');
+                    $("#drillDiv").hide('slow');
+                    $("#demoDiv").hide('slow');
                 }
-                else{
-                    $('#testModeON').css('display', "none");
-                    $('#testModeOFF').css('display', "unset");
+                if (this.id == "drill") {
+                    $("#realDiv").hide('slow');
+                    $("#drillDiv").show('slow');
+                    $("#demoDiv").hide('slow');
+                }
+                if (this.id == "demo") {
+                    $("#realDiv").hide('slow');
+                    $("#drillDiv").hide('slow');
+                    $("#demoDiv").show('slow');
                 }
             });
-            var testModeON = false;
 
-            var alertGroupID, alertGroupName, groupIcon;
+
+            var alertGroupID, alertGroupName, groupIcon, alertMode;
             $("#btSubmit").click(function(){
                 alertGroupID = $('input[name=alert]:checked').val();
                 alertGroupName = $("input:radio[name='alert']:checked + label").text();
                 groupIcon = $("#groupIcon").val();
+                alertMode = $('input[name=radios]:checked').val(); //real, drill, or demo
 
-                if ($('input[name=onoffswitch]:checked').length > 0) {
-                    testModeON = true;
-                }
 
                 //-----forms validation------------------------------------
 
@@ -41,7 +46,7 @@
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
                     groupIcon: groupIcon,
-                    testModeON: testModeON
+                    alertMode: alertMode
 
                 },function(data){
                     if(data==='done')
@@ -66,12 +71,13 @@
 
 
 <% if ( aclTest.length >=1 ) { %>
-<div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
+<div class="btn-group" data-toggle="buttons">
+    <label class="">
+        <input type="radio" name="radios" id="real" value="real" checked/>Real</label>
+    <label class="">
+        <input type="radio" name="radios" id="drill" value="drill"/>Drill</label>
+    <label class="">
+        <input type="radio" name="radios" id="demo" value="demo"/>Demo</label>
 </div>
 <% } %>
 
@@ -80,7 +86,7 @@
 
 
 <form>
-    <div id='testModeOFF' name="testModeOFF">
+    <div id='realDiv' name="testModeOFF">
         <% for (var i=0; i < aclReal.length; i++ ){ %>
         <input type="hidden" id="groupIcon" value="<%= aclReal[i].group.icon %>">
 
@@ -92,12 +98,21 @@
         <% } %>
     </div>
 
-    <div id='testModeON' name="testModeON" style='display:none'>
+    <div id='drillDiv' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
         <input type="radio" name="alert" id="<%= aclTest[i].group.groupID %>" value="<%= aclTest[i].group.groupID %>" >
         <label for="alert"
                style="background-color: <%= aclTest[i].group.color.bgValue %>;color: <%= aclTest[i].group.color.textValue %>"
         ><%= aclTest[i].group.name %></label><br>
+        <% } %>
+    </div>
+
+    <div id='demoDiv' name="testModeDEMO" style='display:none'>
+        <% for (var i=0; i < aclDemo.length; i++ ){ %>
+            <input type="radio" name="alert" id="<%= aclDemo[i].group.groupID %>" value="<%= aclDemo[i].group.groupID %>" >
+            <label for="alert"
+                   style="background-color: <%= aclDemo[i].group.color.bgValue %>;color: <%= aclDemo[i].group.color.textValue %>"
+            ><%= aclDemo[i].group.name %></label><br>
         <% } %>
     </div>
     <br>

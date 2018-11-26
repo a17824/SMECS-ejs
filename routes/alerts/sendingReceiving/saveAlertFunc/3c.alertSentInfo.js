@@ -140,7 +140,25 @@ module.exports.update = function(req, res, tempAlert, callback) {
             alert.sentRoleIDScope = tempAlert.sentRoleIDScope;
             alert.sentRoleNameScope = tempAlert.sentRoleNameScope;
             //sentTo: sentTo, // needs new var model ex: sentUpdateTo
-            alert.note = tempAlert.note;
+
+            // NOTES CHAT \\
+            var htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
+
+            if (req.decoded)        // API user
+                if(alert.note)
+                    alert.note += '<br><br class="lineSpaceBR">' + htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+                else{
+                    alert.note = tempAlert.note;
+                }
+            else {
+
+                if(alert.note)
+                    alert.note += '<br><br class="lineSpaceBR">' + tempAlert.note;
+                else
+                    alert.note = tempAlert.note;
+            }
+            // end of NOTES CHAT
+
             alert.floorName = tempAlert.floorName;
             alert.floorPhoto = tempAlert._id + '_' + tempAlert.floorPhoto;
             alert.sniperCoordinateX = tempAlert.sniperCoordinateX;

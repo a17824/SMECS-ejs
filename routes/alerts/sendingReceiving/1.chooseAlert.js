@@ -45,11 +45,14 @@ module.exports.showGroups = function(req, res) {
         async.parallel([
             function(callback2){
                 models.Alerts.find({'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
-                }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+                }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //real mode
             },
             function(callback2){
                 models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
-                }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+                }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //drill mode
+            },
+            function(callback2){
+                models.Alerts.find({}, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();   //demo mode
             },
             function(callback2){models.Icons.find({}, callback2);},
             function(callback) {
@@ -69,7 +72,8 @@ module.exports.showGroups = function(req, res) {
                     success: true,
                     aclReal: arrayGroups[0],
                     aclTest: arrayGroups[1],
-                    icons: results[2]
+                    aclDemo: arrayGroups[2],
+                    icons: results[3]
 
                 });
 
@@ -79,8 +83,9 @@ module.exports.showGroups = function(req, res) {
                     title:'Choose Alert',
                     aclReal: arrayGroups[0],
                     aclTest: arrayGroups[1],
-                    icons: results[2],
-                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclDemo: arrayGroups[2],
+                    icons: results[3],
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -95,11 +100,26 @@ module.exports.showGroupsPost = function(req, res) {
         if(err)
             console.log('err - ',err);
         else {
+            console.log('======testModeON-======--');
+            console.log('testModeON = ',req.body.testModeON);
+            console.log('radios = ',req.body.alertMode);
+            //var alertMode = req.body.alertMode;
+            var testModeON = false;
+            var demoModeON = false;
+
+            if(req.body.alertMode == 'drill'){
+                testModeON = true;
+            }
+            if(req.body.alertMode == 'demo'){
+                demoModeON = true;
+            }
+
             var alertTemp1 = new models.AlertSentTemp({
                 alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
                 alertGroupName: req.body.alertGroupName,
                 groupIcon: group.icon,
-                testModeON: req.body.testModeON
+                testModeON: req.body.testModeON,
+                demoModeON: req.body.testModeON
             });
             alertTemp1.save();
 
@@ -130,11 +150,14 @@ module.exports.showAlerts = function(req, res) {
     async.parallel([
         function(callback2){
             models.Alerts.find({'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
-            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //real mode
         },
         function(callback2){
             models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
-            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();
+            }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //drill mode
+        },
+        function(callback2){
+            models.Alerts.find({}, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();   //demo mode
         },
         function(callback2){models.Icons.find({}, callback2);},
         function(callback) {
@@ -163,7 +186,8 @@ module.exports.showAlerts = function(req, res) {
                                 alert: alert,
                                 aclReal: arrayGroups[0],
                                 aclTest: arrayGroups[1],
-                                icons: results[2]
+                                aclDemo: arrayGroups[2],
+                                icons: results[3]
                             });
                         }else{  //EJS user
                             res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
@@ -171,8 +195,9 @@ module.exports.showAlerts = function(req, res) {
                                 alert: alert,
                                 aclReal: arrayGroups[0],
                                 aclTest: arrayGroups[1],
-                                icons: results[2],
-                                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                aclDemo: arrayGroups[2],
+                                icons: results[3],
+                                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo
                             });
@@ -191,7 +216,8 @@ module.exports.showAlerts = function(req, res) {
                     alert: alert,
                     testModeOnArrayReal: results[0],
                     testModeOnArrayTest: results[1],
-                    icons: results[2],
+                    testModeOnArrayDemo: results[2],
+                    icons: results[3],
 
                 });
 
@@ -202,8 +228,9 @@ module.exports.showAlerts = function(req, res) {
                     alert: alert,
                     aclReal: results[0],
                     aclTest: results[1],
-                    icons: results[2],
-                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclDemo: results[2],
+                    icons: results[3],
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -350,6 +377,7 @@ module.exports.showAlertsPost = function(req, res) {
                 if(alertTemp1.sentRoleIDScope < 1){
                     console.log('No scopes or users to send this alert');
                 }else {
+
                     //console.log('alert[0].alertRoad = ',alert[0].alertRoad);
                     alert[0].alertRoad.forEach(function (road) {
                         if(road.step == 1) {
@@ -366,11 +394,11 @@ module.exports.showAlertsPost = function(req, res) {
 
 
 
-                  /*
 
 
 
 
+                    /*
 
                     if (req.body.alertID == 1 ) {
 
@@ -474,7 +502,7 @@ module.exports.showAlertsPost = function(req, res) {
                         redirectAPI = 'multiSelection';
                         redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;
                     }
-*/
+
                     if(req.decoded){ // run SMECS API
                         res.json({
                             success: true,
@@ -487,6 +515,9 @@ module.exports.showAlertsPost = function(req, res) {
                         else
                             return res.send({redirect: redirectEJS})
                     }
+
+
+                    */
                 }
             }
         });
@@ -496,11 +527,13 @@ module.exports.showAlertsPost = function(req, res) {
 /*-------------------------end of choosing Alerts*/
 
 function buildArrayGroups(results, arrayGroups) {
-    for (var z=0; z < 2; z++ ) {
+    for (var z=0; z < 3; z++ ) {
         var arrayGroupsRealTest = [];
         var realDrill = results[0];
-        if( z == 1)
+        if( z == 1) //drill mode
             realDrill = results[1];
+        if( z == 2) //demo mode
+            realDrill = results[2];
         var groupReal = 99999;
         realDrill.forEach(function (alert) {
             if (alert.group.groupID !== groupReal){
@@ -512,11 +545,13 @@ function buildArrayGroups(results, arrayGroups) {
     }
 }
 function buildAlertsSameColor(results, arrayGroups, alertTemp) {
-    for (var z=0; z < 2; z++ ) {
+    for (var z=0; z < 3; z++ ) {
         var arrayAlertsRealTest = [];
         var realDrill = results[0];
-        if( z == 1)
+        if( z == 1) //drill mode
             realDrill = results[1];
+        if( z == 2) //demo mode
+            realDrill = results[2];
         realDrill.forEach(function (alert) {
             if(alert.group.groupID == alertTemp.alertGroupID)
                 arrayAlertsRealTest.push(alert);
@@ -531,8 +566,11 @@ function studentStep1(req, res, alertTemp1) {
     student.saveStudentFile(req, res, alertTemp1);
 }
 function createAlert(req, res, alertTemp1) {
+
+    if(!alertTemp1.demoModeON) {
     alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
         /*****  CALL HERE NOTIFICATION API  *****/
         pushNotification.alert(result, 'newAlert');
     });
+    }
 }

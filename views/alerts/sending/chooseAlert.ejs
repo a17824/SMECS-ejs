@@ -21,23 +21,24 @@
 
             // end of  get gps location of bus
 
-            $('input[name=onoffswitch]').change(function(){
-                if($('#myonoffswitch').is(':checked')) {
-                    $('#testModeOFF').css('display', "none");
-                    $('#testModeON').css('display', "unset");
+            $('input[name=radios]').click(function () {
+
+                if (this.id == "real") {
+                    $("#realDiv").show('slow');
+                    $("#drillDiv").hide('slow');
+                    $("#demoDiv").hide('slow');
                 }
-                else{
-                    $('#testModeON').css('display', "none");
-                    $('#testModeOFF').css('display', "unset");
+                if (this.id == "drill") {
+                    $("#realDiv").hide('slow');
+                    $("#drillDiv").show('slow');
+                    $("#demoDiv").hide('slow');
+                }
+                if (this.id == "demo") {
+                    $("#realDiv").hide('slow');
+                    $("#drillDiv").hide('slow');
+                    $("#demoDiv").show('slow');
                 }
             });
-            var testModeONGroups = $("#testMode").val();
-            if(testModeONGroups == 'true'){
-                $('#myonoffswitch').attr('checked', true)
-                $('#testModeOFF').css('display', "none");
-                $('#testModeON').css('display', "unset");
-            }
-
 
             var alert_ID, alertID, alertGroupID, alertGroupName, alertName;
             var testModeON = false;
@@ -95,19 +96,20 @@
 
 <!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
 <% if ( aclTest.length >=1 && alert.id == 0) { %>
-<div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
-</div>
+    <div class="btn-group" data-toggle="buttons">
+        <label class="">
+            <input type="radio" name="radios" id="real" checked/>Real</label>
+        <label class="">
+            <input type="radio" name="radios" id="drill" />Drill</label>
+        <label class="">
+            <input type="radio" name="radios" id="demo" />Demo</label>
+    </div>
 <% } %>
 
 <br>
 <form>
 
-    <div id='testModeOFF' name="testModeOFF">
+    <div id='realDiv' name="testModeOFF">
         <% for (var i=0; i < aclReal.length; i++ ){ %>
 
         <input type="radio" name="alert" id=<%= aclReal[i].alertID %> value="<%= aclReal[i].group.groupID %>" >
@@ -118,7 +120,7 @@
         <% } %>
     </div>
 
-    <div id='testModeON' name="testModeON" style='display:none'>
+    <div id='drillDiv' name="testModeON" style='display:none'>
         <% for (var i=0; i < aclTest.length; i++ ){ %>
         <input type="radio" name="alert" id=<%= aclTest[i].alertID %> value="<%= aclTest[i].group.groupID %>" >
         <label for="alert" style="background-color: <%= aclTest[i].group.color.bgValue %>;color: <%= aclTest[i].group.color.textValue %>"
@@ -127,6 +129,14 @@
         <% } %>
     </div>
 
+    <div id='demoDiv' name="testModeON" style='display:none'>
+        <% for (var i=0; i < aclDemo.length; i++ ){ %>
+            <input type="radio" name="alert" id=<%= aclDemo[i].alertID %> value="<%= aclDemo[i].group.groupID %>" >
+            <label for="alert" style="background-color: <%= aclDemo[i].group.color.bgValue %>;color: <%= aclDemo[i].group.color.textValue %>"
+                   id="<%= aclDemo[i].group.name %>"
+            ><%= aclDemo[i].alertName %></label><br>
+        <% } %>
+    </div>
 
     <br>
     <input type="button" style="width: 10em; height: 1.8em" id="btSubmit" value="Next" ><br>

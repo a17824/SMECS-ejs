@@ -33,6 +33,37 @@
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
 
+    <script>
+
+        function confirmAlert() {
+            var r = confirm("Press a button!");
+            if (r == true) {
+                document.getElementById("del").innerHTML = txt;
+            }
+        }
+        $(document).ready(function(){
+            $("#del").click(function(){
+                var r = confirm("Press a button!");
+                if (r == true) {
+                    $.post("/AlertRoadFunctions/delete/<%= alert._id %>/<%= functions._id %>",{
+                        alertToUpdate: id,
+                        alertGroupName: alertGroupName
+
+                    },function(data){
+                        if(data==='done')
+                        {
+                            alert("login success");
+                        }
+                        window.location = data.redirect
+                    }).error(function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Alert Name already already in use. Choose a different Name.")
+
+                    });
+                }
+            });
+        });
+    </script>
 
 </head>
 
@@ -150,6 +181,7 @@
                                         <th>sort</th>
                                         <th>ID</th>
                                         <th>Name</th>
+                                        <th>Alerts with this function</th>
                                         <th>Update</th>
                                         <th>Delete</th>
                                     </tr>
@@ -160,10 +192,24 @@
                                             <td><%= functions.functionID %></td>
                                             <td><%= functions.functionName %></td>
                                             <td>
+                                                <% if (functions.alertsWithThisFunction) { %>
+                                                    <% for (var x = 0; x < functions.alertsWithThisFunction.length; x++) {%>
+                                                        <% alerts.forEach(function(al) { %>
+                                                            <% if (al.alertID == functions.alertsWithThisFunction[x]) { %>
+                                                                . <%= al.alertName %><br>
+                                                            <% } %>
+                                                        <% }); %>
+
+                                                    <% } %>
+                                                <% } else { %>
+                                                    <img  src="/miscPictures/redCross20.png">
+                                                <% } %>
+                                            </td>
+                                            <td>
                                                 <a href="/AlertRoadFunctions/update/<%= alert._id %>/<%= functions._id %>"><button class="btn btn-warning">update</button></a>
                                             </td>
                                             <td>
-                                                <a href="/alerts/deleteRoad/update/<%= alert._id %>/<%= functions._id %>"><button class="btn btn-danger">delete</button></a>
+                                                <a href="/AlertRoadFunctions/delete/<%= alert._id %>/<%= functions._id %>" onclick="confirmAlert()"><button id="del" class="btn btn-danger">delete</button></a>
                                             </td>
                                         </tr>
                                     <% }); %>

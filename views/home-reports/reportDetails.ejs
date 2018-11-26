@@ -20,10 +20,14 @@
     <!-- lightbox (floor zoom) -->
     <link href="/public/lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
     <script>
-
-
-
+        $(document).ready(function(){
+            var richNote = $("#richNote").val();
+            //var note = document.getElementById('richNote').value;
+            richDiv.innerHTML = richNote
+        });
     </script>
 </head>
 
@@ -1015,12 +1019,16 @@
                                 </div>
                             </div>
 
+                            <input type="hidden" id="richNote" value="<%= report.note %>">
+                            <!-- /* showReportDetails - box for NOTES */ file: ...vendors\boots..\dist\css\reportDetails.css -->
+                            <!-- /* line space for NOTES */ file: ...build\css\reportDetails.css -->
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
                                 <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <textarea id="note"
-                                                  class="form-control"
-                                                  placeholder="n/a" readonly>gun is in his pants, left front pocket.</textarea>
+                                    <div type="text"
+                                         class="form-control"
+                                         id="richDiv">
+                                    </div>
                                 </div>
                             </div>
 

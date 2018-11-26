@@ -6,6 +6,7 @@ var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var student = require('./saveAlertFunc/3b.student.js');
 var alertSentInfo = require('./saveAlertFunc/3c.alertSentInfo.js');
 var pushNotification = require('./pushNotification.js');
+var moment = require('moment');
 
 
 //          FLOOR           \\
@@ -315,7 +316,20 @@ module.exports.postNotes = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            alert.note = req.body.note;
+            var wrapped = moment(new Date());
+            var htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
+            var htmlTime = '</span></strong><span style="font-size:11px">';
+            var htmlNote = '</span></div><span style="color:#333333">&nbsp;';
+            var newNote = req.body.note;
+
+            console.log('newNote = ',newNote);
+
+            if(req.decoded){ // run SMECS API
+                alert.note = htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+            }else{  // run SMECS EJS
+                alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+            }
+            console.log('alert.note = ',alert.note);
 
             if (alert.alertNameID == 26 ) {
                 alert.save();
