@@ -34,35 +34,13 @@
 
 
     <script>
-
-        function confirmAlert() {
-            var r = confirm("Press a button!");
-            if (r == true) {
-                document.getElementById("del").innerHTML = txt;
-            }
-        }
-        $(document).ready(function(){
-            $("#del").click(function(){
-                var r = confirm("Press a button!");
-                if (r == true) {
-                    $.post("/AlertRoadFunctions/delete/<%= alert._id %>/<%= functions._id %>",{
-                        alertToUpdate: id,
-                        alertGroupName: alertGroupName
-
-                    },function(data){
-                        if(data==='done')
-                        {
-                            alert("login success");
-                        }
-                        window.location = data.redirect
-                    }).error(function(error){
-                        if(error.responseText == 'showAlert')
-                            alert("Alert Name already already in use. Choose a different Name.")
-
-                    });
-                }
-            });
-        });
+        //DELETE Confirmation
+        function YNconfirm() {
+            if (confirm('ATTENTION: This FUNCTION or Redirection will be deleted from all alerts. Are you sure?'))
+                return true;
+            else
+                return false;
+        };
     </script>
 
 </head>
@@ -196,7 +174,7 @@
                                                     <% for (var x = 0; x < functions.alertsWithThisFunction.length; x++) {%>
                                                         <% alerts.forEach(function(al) { %>
                                                             <% if (al.alertID == functions.alertsWithThisFunction[x]) { %>
-                                                                . <%= al.alertName %><br>
+                                                                <strong>.</strong> <%= al.alertName %><br>
                                                             <% } %>
                                                         <% }); %>
 
@@ -209,7 +187,7 @@
                                                 <a href="/AlertRoadFunctions/update/<%= alert._id %>/<%= functions._id %>"><button class="btn btn-warning">update</button></a>
                                             </td>
                                             <td>
-                                                <a href="/AlertRoadFunctions/delete/<%= alert._id %>/<%= functions._id %>" onclick="confirmAlert()"><button id="del" class="btn btn-danger">delete</button></a>
+                                                <a href="/AlertRoadFunctions/delete/<%= alert._id %>/<%= functions._id %>" onclick="return(YNconfirm());"><button id="del" class="btn btn-danger">delete</button></a>
                                             </td>
                                         </tr>
                                     <% }); %>
@@ -222,6 +200,74 @@
             </div>
 
 
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Redirections</h3>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+
+                            <div align="center">
+                                <button class="btn btn-success" id="exit" onclick="location.href='/AlertRoadRedirection/<%= alert._id %>'">Create Redirection</button>
+                            </div>
+
+
+                            <div class="table-responsive">
+                                <table id="datatable-buttons" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>sort</th>
+                                        <th>ID</th>
+                                        <th>Redirect API</th>
+                                        <th>Redirect EJS</th>
+                                        <th>Alerts with this Redirect</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <tbody>
+                                    <% AlertRoadRedirection.forEach(function(functions) { %>
+                                        <tr>
+                                            <td><%= functions.sortID %></td>
+                                            <td><%= functions.redirectID %></td>
+                                            <td><%= functions.redirectAPI %></td>
+                                            <td><%= functions.redirectEJS %></td>
+                                            <td>
+                                                <% if (functions.alertsWithThisRedirect) { %>
+                                                    <% for (var x = 0; x < functions.alertsWithThisRedirect.length; x++) {%>
+                                                        <% alerts.forEach(function(al) { %>
+                                                            <% if (al.alertID == functions.alertsWithThisRedirect[x]) { %>
+                                                                <strong>.</strong> <%= al.alertName %><br>
+                                                            <% } %>
+                                                        <% }); %>
+
+                                                    <% } %>
+                                                <% } else { %>
+                                                    <img  src="/miscPictures/redCross20.png">
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <a href="/AlertRoadRedirection/update/<%= alert._id %>/<%= functions._id %>"><button class="btn btn-warning">update</button></a>
+                                            </td>
+                                            <td>
+                                                <a href="/AlertRoadRedirection/delete/<%= alert._id %>/<%= functions._id %>" onclick="return(YNconfirm());"><button id="del" class="btn btn-danger">delete</button></a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
 
     </div>

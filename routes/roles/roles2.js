@@ -263,10 +263,10 @@ module.exports.delete = function(req, res) {
             if (err) { console.log(err) };
 
             if (result) {
-                console.log(roles.roleID);
-                //console.log(result);
                 console.log("Role NOT deleted");
-                return res.status(409).send(' ALERT! ' + roles.roleName + ' Role not deleted because there are Users using this role. Please change Users under this role to other role and then delete this role.')
+                //return res.status(409).send(' ALERT! ' + roles.roleName + ' Role not deleted because there are Users using this role. Please change Users under this role to other role and then delete this role.')
+                req.flash('error_messages', ' Attention! ' + roles.roleName + ' Role not deleted because there are Users using this role.. <br> Please change Users under this role to other role and then delete this role.');
+                res.redirect('/roles2/showRoles2');
             }
             else {
                 //delete WhoCanSenReceive Alerts-----

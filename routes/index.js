@@ -397,6 +397,21 @@ router.get('/AlertRoadFunctions/delete/:alert_id/:function_id', auth.simpleAuth,
 });
 
 
+/* CREATE AlertRoadRedirection. -------------------------------*/
+router.get('/AlertRoadRedirection/:id', auth.simpleAuth, auth.requireLogin, alertRoad.createRedirection, function(req, res) {
+});
+router.post('/AlertRoadRedirection', auth.simpleAuth, auth.requireLogin, alertRoad.createRedirectionPost, function(req, res) {
+});
+/* UPDATE AlertRoadRedirection. -------------------------------*/
+router.get('/AlertRoadRedirection/update/:alert_id/:function_id', auth.simpleAuth, auth.requireLogin, alertRoad.updateRedirection, function(req, res) {
+});
+router.post('/AlertRoadRedirection/update', auth.simpleAuth, auth.requireLogin, alertRoad.updateRedirectionPost, function(req, res) {
+});
+/* DELETE AlertRoadRedirection. */
+router.get('/AlertRoadRedirection/delete/:alert_id/:function_id', auth.simpleAuth, auth.requireLogin, alertRoad.deleteRedirection, function(req, res) {
+});
+
+
 
 /* SHOW ALERT PERMISSIONS TABLE. WHO CAN SEND/RECEIVE ALERTS---------------------------------------------------*/
 

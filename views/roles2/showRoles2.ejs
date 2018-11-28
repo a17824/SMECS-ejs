@@ -101,6 +101,18 @@
                                 <br>
                             </ul>
 
+                            <ul>
+                                <div align="center" style="size: 100px">
+                                    <% if ( error_messages.length >= 1) { %>
+                                        <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                            <strong><%- error_messages %></strong>
+                                        </div>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+
                             <div class="table-responsive">
                             <table id="datatable-buttons" class="table table-hover">
                                 <thead>

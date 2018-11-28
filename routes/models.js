@@ -244,14 +244,7 @@ var AlertsSchema = new mongoose.Schema({
             roleName: String,
             checkbox: { type: Boolean, default: false }
         }]
-    },/*
-    alertRoad: [{
-        step: Number,
-        callFunction: [{
-            name: String
-        }],
-        redirectTo: String
-    }]*/
+    },
     alertRoad: [{
         step: Number,
         callFunction: Array,
@@ -271,8 +264,18 @@ var AlertRoadFunctionsSchema = new mongoose.Schema({
     alertsWithThisFunction: Array
 
 }, {collection:"AlertRoadFunctions"}); //stops Mongoose of giving plurals to our collections names
-var AlertRoadFunctions;
 module.exports.AlertRoadFunctions = mongoose.model("AlertRoadFunctions", AlertRoadFunctionsSchema);
+
+// DEFINE AlertRoadRedirection COLLECTION IN MONGOdb
+var AlertRoadRedirectionSchema = new mongoose.Schema({
+    sortID: { type: Number, unique: true },
+    redirectID: { type: Number, unique: true },
+    redirectAPI: { type: String, unique: true },
+    redirectEJS: { type: String, unique: true },
+    alertsWithThisRedirect: Array
+
+}, {collection:"AlertRoadRedirection"}); //stops Mongoose of giving plurals to our collections names
+module.exports.AlertRoadRedirection = mongoose.model("AlertRoadRedirection", AlertRoadRedirectionSchema);
 
 // DEFINE AlertSentInfo COLLECTION IN MONGOdb
 var AlertSentInfoSchema = new mongoose.Schema({

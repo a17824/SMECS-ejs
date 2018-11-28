@@ -155,11 +155,10 @@
                                         <tr>
                                             <th></th>
                                             <th>Photo</th>
-                                            <th>Name</th>
+                                            <th>Name / Email</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>SMECS<br>Settings</th>
                                             <% } %>
-                                            <th>Email</th>
                                             <th>SMECS<br>Installed</th>
                                             <th>Role</th>
                                             <th>Privilege</th>
@@ -187,13 +186,15 @@
                                                 <a href="/photos/choosePhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>"  class="avatarUsers"></a>
                                             </td>
                                             <% } %>
-                                            <td><%= user.firstName %> <%= user.lastName %></td>
+                                            <td><%= user.firstName %> <%= user.lastName %><br>
+                                                <%= user.email %>
+                                            </td>
                                             <% if (userAuthID == 1) {%>
                                             <td>
                                                 <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
                                             </td>
                                             <% } %>
-                                            <td><%= user.email %></td>
+
                                             <td>
                                                 <% if (user.pushToken) { %>
                                                 <img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons">
@@ -207,27 +208,27 @@
                                                     <% if(useRolesIcons == true) { %>
                                                     <% for (var i = 0; i < roles.length; i++) {%>
                                                         <% if (roles[i].roleName == user.userRoleName[x]) {%>
-                                                            <img src="/icons/<%= roles[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userRoleName[x] %><br>
+                                                            <img src="/icons/<%= roles[i].icon %>.png" class="avatarIcons" alt="Avatar" title="<%= user.userRoleName[x] %>"><br>
                                                             <% break%>
                                                         <% } %>
                                                     <% } %>
                                                     <% }else {%>
-                                                    <%= user.userRoleName[x] %><br>
+                                                            <strong>.</strong> <%= user.userRoleName[x] %><br>
                                                     <% } %>
                                                 <% } %>
                                                 <% } %>
                                             </td>
                                             <td>
-                                                 <% /* if(useRolesIcons == true) { */ %>
+                                                 <% /* if(usePrivilegeIcons == true) { */ %>
                                                 <% if(usePrivilegeIcons == true) { %>
                                                 <% for (var i = 0; i < privileges.length; i++) {%>
                                                 <% if (privileges[i].privilegeName == user.userPrivilegeName) {%>
-                                                <img src="/icons/<%= privileges[i].icon %>.png" class="avatarIcons" alt="Avatar"><%= user.userPrivilegeName %><br>
+                                                <img src="/icons/<%= privileges[i].icon %>.png" class="avatarIcons" alt="Avatar" title="<%= user.userPrivilegeName %>"><br>
                                                 <% break%>
                                                 <% } %>
                                                 <% } %>
                                                 <% }else {%>
-                                                <%= user.userPrivilegeName %>
+                                                    <strong>.</strong> <%= user.userPrivilegeName %>
                                                 <% } %>
                                             </td>
                                             <td align="center">
@@ -267,12 +268,12 @@
                                         <tr>
                                             <th></th>
                                             <th align="center">Photo</th>
-                                            <th>Name</th>
+                                            <th>Name / Email</th>
                                             <th>SMECS<br>Installed</th>
                                             <% if (userAuthID == 1) {%>
                                             <th>SMECS<br>Settings</th>
                                             <% } %>
-                                            <th>Email</th>
+
                                             <th>Parent of</th>
                                             <th align="center">Update</th>
                                             <th align="center">Move to Trash</th>
@@ -296,7 +297,9 @@
                                                 <a href="/photos/choosePhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>" class="avatarUsers"></a>
                                             </td>
                                             <% } %>
-                                            <td><%= user.firstName %> <%= user.lastName %></td>
+                                            <td><%= user.firstName %> <%= user.lastName %><br>
+                                                <%= user.email %>
+                                            </td>
                                             <td>
                                                 <% if (user.pushToken) { %>
                                                 <img  src="/miscPictures/greenCheckmarkWeb20.png">
@@ -309,7 +312,6 @@
                                                 <a href="/updateAppSettings/<%= user.id %>"><button class="btn btn-warning">change</button></a>
                                             </td>
                                             <% } %>
-                                            <td><%= user.email %></td>
                                             <td >
                                                 <% if (user.parent == true) { %>
                                                 <% for (var x = 0; x < user.parentOf.length; x++) {%>
