@@ -21,6 +21,23 @@
 
             // end of  get gps location of bus
 
+
+
+            var modeDrill=$("#testMode").val();
+            var modeDemo=$("#demoMode").val();
+
+
+            if (modeDrill == 'true') {
+                $("#realDiv").hide('slow');
+                $("#drillDiv").show('slow');
+                $("#demoDiv").hide('slow');
+            }
+            if (modeDemo == 'true') {
+                $("#realDiv").hide('slow');
+                $("#drillDiv").hide('slow');
+                $("#demoDiv").show('slow');
+            }
+
             $('input[name=radios]').click(function () {
 
                 if (this.id == "real") {
@@ -40,18 +57,15 @@
                 }
             });
 
-            var alert_ID, alertID, alertGroupID, alertGroupName, alertName;
-            var testModeON = false;
+            var alert_ID, alertID, alertGroupID, alertGroupName, alertName, alertMode;
             $("#btSubmit").click(function(){
                 alert_ID=$("#alertNameID").val();
                 alertGroupID = $('input[name=alert]:checked').val();
                 alertID=$('input[name=alert]:checked').attr('id');
                 alertName = $("input:radio[name='alert']:checked + label").text();
                 alertGroupName = $("input:radio[name='alert']:checked + label").attr('id');
+                alertMode = $('input[name=radios]:checked').val(); //real, drill, or demo
 
-                if ($('input[name=onoffswitch]:checked').length > 0) {
-                    testModeON = true;
-                }
                 //-----forms validation------------------------------------
 
                 if (alertGroupID == null ) {
@@ -66,6 +80,7 @@
                     alertID: alertID,
                     alertName: alertName,
                     testModeON: testModeON,
+                    alertMode: alertMode,
                     latitude: destLatitude,
                     longitude: destLongitude,
                     mapBus: mapBus
@@ -93,16 +108,17 @@
 
 <input type="hidden" id="alertNameID"  value="<%= alert.id %>">
 <input type="hidden" id="testMode"  value="<%= alert.testModeON %>">
+<input type="hidden" id="demoMode"  value="<%= alert.demoModeON %>">
 
 <!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
 <% if ( aclTest.length >=1 && alert.id == 0) { %>
     <div class="btn-group" data-toggle="buttons">
         <label class="">
-            <input type="radio" name="radios" id="real" checked/>Real</label>
+            <input type="radio" name="radios" id="real" value="real" checked/>Real</label>
         <label class="">
-            <input type="radio" name="radios" id="drill" />Drill</label>
+            <input type="radio" name="radios" id="drill" value="drill"/>Drill</label>
         <label class="">
-            <input type="radio" name="radios" id="demo" />Demo</label>
+            <input type="radio" name="radios" id="demo" value="demo"/>Demo</label>
     </div>
 <% } %>
 

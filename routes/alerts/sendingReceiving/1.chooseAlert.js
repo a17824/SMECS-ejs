@@ -44,11 +44,11 @@ module.exports.showGroups = function(req, res) {
 
         async.parallel([
             function(callback2){
-                models.Alerts.find({'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
+                models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
                 }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //real mode
             },
             function(callback2){
-                models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
+                models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
                 }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //drill mode
             },
             function(callback2){
@@ -95,15 +95,11 @@ module.exports.showGroups = function(req, res) {
 };
 
 module.exports.showGroupsPost = function(req, res) {
-    console.log('req.body.alertGroupID = ',req.body.alertGroupID);
     models.AlertsGroup.findOne({groupID: req.body.alertGroupID}, function (err, group) {
         if(err)
             console.log('err - ',err);
         else {
-            console.log('======testModeON-======--');
-            console.log('testModeON = ',req.body.testModeON);
-            console.log('radios = ',req.body.alertMode);
-            //var alertMode = req.body.alertMode;
+
             var testModeON = false;
             var demoModeON = false;
 
@@ -118,8 +114,8 @@ module.exports.showGroupsPost = function(req, res) {
                 alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
                 alertGroupName: req.body.alertGroupName,
                 groupIcon: group.icon,
-                testModeON: req.body.testModeON,
-                demoModeON: req.body.testModeON
+                testModeON: testModeON,
+                demoModeON: demoModeON
             });
             alertTemp1.save();
 
@@ -147,13 +143,13 @@ module.exports.showAlerts = function(req, res) {
     else
         roleX = req.user.userRoleID;
 
-    async.parallel([
+        async.parallel([
         function(callback2){
-            models.Alerts.find({'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
+            models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
             }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //real mode
         },
         function(callback2){
-            models.Alerts.find({'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
+            models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendDrill': {$elemMatch: {roleID: roleX, checkbox: true}}
             }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //drill mode
         },
         function(callback2){
@@ -503,6 +499,9 @@ module.exports.showAlertsPost = function(req, res) {
                         redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;
                     }
 
+
+*/
+
                     if(req.decoded){ // run SMECS API
                         res.json({
                             success: true,
@@ -517,7 +516,7 @@ module.exports.showAlertsPost = function(req, res) {
                     }
 
 
-                    */
+
                 }
             }
         });
