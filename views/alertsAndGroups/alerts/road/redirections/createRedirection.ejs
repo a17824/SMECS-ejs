@@ -46,29 +46,35 @@
             $('#some_select').html(select);
 
 
-            var functionID,functionName,sortID, pageToReturn;
+            var redirectID, redirectAPI, redirectEJS, sortID, pageToReturn;
             $("#btSubmit").click(function(){
-                functionID=$("#some_select").val();
-                functionName=$("#alertGroupName").val();
+                redirectID=$("#some_select").val();
+                redirectAPI=$("#redirectAPI").val();
+                redirectEJS=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
                 pageToReturn=$("#pageToReturn").val();
 
 
                 //-----forms validation------------------------------------
-                if (functionName == "" ) {
-                    alert("Function Name must be filled out");
+                if (redirectAPI == "" ) {
+                    alert("redirectAPI Name must be filled out");
                     return false;
                 }
-                if (functionID == "" ) {
-                    alert("Function ID must be filled out");
+                if (redirectEJS == "" ) {
+                    alert("redirectEJS Name must be filled out");
+                    return false;
+                }
+                if (redirectID == "" ) {
+                    alert("Redirect ID must be filled out");
                     return false;
                 }
                 //--------------------------------forms validation end-------
 
 
-                $.post("/AlertRoadFunctions",{
-                    functionID: functionID,
-                    functionName: functionName,
+                $.post("/AlertRoadRedirection",{
+                    redirectID: redirectID,
+                    redirectAPI: redirectAPI,
+                    redirectEJS: redirectEJS,
                     sortID: sortID,
                     pageToReturn: pageToReturn
 
@@ -81,7 +87,7 @@
                     window.location = data.redirect
                 }).error(function(error){
                     if(error.responseText == 'showAlert')
-                        alert("Function NAME already in use. Choose a different Name.")
+                        alert("Redirect NAME already in use. Choose a different Name.")
                 });
 
             });
@@ -99,19 +105,19 @@
 
 
                 <!-- menu profile quick info -->
-                <% include ./../../../layout/menuProfile.ejs %>
+                <% include ./../../../../layout/menuProfile.ejs %>
                 <!-- /menu profile quick info -->
 
                 <br>
 
                 <!-- sidebar menu -->
-                <% include ./../../../layout/sideMenu.ejs %>
+                <% include ./../../../../layout/sideMenu.ejs %>
                 <!-- /sidebar menu -->
             </div>
         </div>
 
         <!-- top navigation -->
-        <% include ./../../../layout/topNavigation.ejs %>
+        <% include ./../../../../layout/topNavigation.ejs %>
         <!-- /top navigation -->
 
         <!-- page content -->
@@ -119,7 +125,7 @@
 
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Create Function</h3>
+                    <h3>Create Redirection</h3>
                 </div>
 
 
@@ -162,7 +168,17 @@
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Function name:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">redirectAPI:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="saveFloor"
+                                               id="redirectAPI">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">redirectEJS:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"
@@ -184,7 +200,7 @@
                                 <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Function ID:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">redirectID:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='some_select' class="form-control"></select>
                                     </div>
@@ -217,7 +233,7 @@
 </body>
 <!-- footer content -->
 <footer class="adjustPos">
-    <% include ./../../../layout/footer.ejs %>
+    <% include ./../../../../layout/footer.ejs %>
 </footer>
 <!-- /footer content -->
 </html>

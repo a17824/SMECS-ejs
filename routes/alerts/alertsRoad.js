@@ -36,60 +36,59 @@ module.exports.show = function(req, res) {
 };
 
 
-/* Change Alert Road. -------------------------------*/
-module.exports.changeRoad = function(req, res) {
+
+
+
+/* CREATE AlertRoadStep. -------------------------------*/
+module.exports.createStep = function(req, res) {
     async.parallel([
         function(callback){
-            models.Alerts.findById(req.params.id).exec(callback);
+            models.AlertRoadFunctions.find(function(error, alerts) {
+
+            }).exec(callback);
+        },
+        function(callback){
+            models.AlertRoadRedirection.find(function(error, alerts) {
+
+            }).exec(callback);
         },
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        res.render('alertsAndGroups/alerts/road/ChangeAlertRoad', {
-            title: 'Change Alert Road',
-            alert: results[0],
-            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
+
+        var array = [];
+        var stream = models.Alerts.findById(req.params.id).sort({"alertRoad.step":1}).cursor();
+        stream.on('data', function (doc) {
+            doc.alertRoad.forEach(function (alertRoad) {
+                array.push(alertRoad.step);
+            })
+
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            array.sort((a,b) => a-b);
+            console.log('array = ',array);
+
+            res.render('alertsAndGroups/alerts/road/steps/createStep',{
+                title:'Create Step',
+                array: array,
+                functions: results[0],
+                redirections: results[1],
+                pageToReturn: req.params.id,
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+
+        })
     });
 };
-module.exports.changeRoadPost = function(req, res) {
+module.exports.createStepPost = function(req, res) {
+    console.log('stepNumber = ',req.body.stepNumber);
+    console.log('redirectAPI = ',req.body.redirectAPI);
+    console.log('redirectEJS = ',req.body.redirectEJS);
 
-    var alertToUpdate1 = req.body.alertToUpdate;
-    models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
-        models.AlertsGroup.findOne({'groupID': req.body.alertGroupID}, function(err, group){
-            alert.group.groupID = group.groupID;
-            alert.group.sortID = group.sortID;
-            alert.group.name = group.name;
-            alert.group.mp3 = group.sound.mp3;
-            alert.group.icon = group.icon;
-            alert.group.color.name = group.color.name;
-            alert.group.color.bgValue = group.color.bgValue;
-            alert.group.color.textValue = group.color.textValue;
-
-            alert.alertRequest911Call = req.body.request911Call;
-            alert.whoCanCall911 = req.body.whoCanCall911;
-            alert.alertName = req.body.alertName;
-            alert.alertID = req.body.alertID;
-            alert.sortID = req.body.sortID;
-            alert.alertRequestProcedureCompleted = req.body.alertRequestProcedureCompleted;
-            alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
-            alert.alertRequestForINeedHelp = req.body.alertRequestForINeedHelp;
-            alert.alertRequestSendEmail = req.body.alertRequestSendEmail;
-            alert.icon = req.body.icon;
-
-
-            alert.save(function (err) {
-                if (err && (err.code === 11000 || err.code === 11001)) {
-                    console.log(err);
-                    return res.status(409).send('showAlert')
-                }else {
-                    res.send({redirect: '/alertGroups/showAlertGroups'});
-                }
-            });
-        });
-    });
 };
 
 module.exports.deleteRoad = function(req, res) {
@@ -134,7 +133,7 @@ module.exports.createFunctions = function(req, res) {
         }).on('close', function () {
             // the stream is closed
 
-            res.render('alertsAndGroups/alerts/road/createFunction',{
+            res.render('alertsAndGroups/alerts/road/functions/createFunction',{
                 title:'Create Function',
                 arraySort: arraySort,
                 array: array,
@@ -202,7 +201,7 @@ module.exports.updateFunctions = function(req, res) {
         }).on('close', function () {
             // the stream is closed
 
-            res.render('alertsAndGroups/alerts/road/updateFunction',{
+            res.render('alertsAndGroups/alerts/road/functions/updateFunction',{
                 title:'Update Function',
                 arraySort: arraySort,
                 array: array,
@@ -329,7 +328,7 @@ module.exports.createRedirection = function(req, res) {
         }).on('close', function () {
             // the stream is closed
 
-            res.render('alertsAndGroups/alerts/road/createRedirection',{
+            res.render('alertsAndGroups/alerts/road/redirections/createRedirection',{
                 title:'Create Redirection',
                 arraySort: arraySort,
                 array: array,
@@ -398,7 +397,7 @@ module.exports.updateRedirection = function(req, res) {
         }).on('close', function () {
             // the stream is closed
 
-            res.render('alertsAndGroups/alerts/road/updateRedirection',{
+            res.render('alertsAndGroups/alerts/road/redirections/updateRedirection',{
                 title:'Update Redirection',
                 arraySort: arraySort,
                 array: array,

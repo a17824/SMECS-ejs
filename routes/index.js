@@ -371,13 +371,14 @@ router.get('/alerts/addAlerts/:id', auth.simpleAuth, auth.requireLogin, alerts.d
 /* SHOW Alert Road. */
 router.get('/alerts/showRoad/:id', auth.simpleAuth, auth.requireLogin, alertRoad.show, function(req, res, next) {
 });
-/* Change Alert Road. -------------------------------*/
-router.get('/alerts/changeRoad/:id', auth.simpleAuth, auth.requireLogin, alertRoad.changeRoad, function(req, res) {
+
+/* CREATE AlertRoadStep. -------------------------------*/
+router.get('/AlertRoadStep/:id', auth.simpleAuth, auth.requireLogin, alertRoad.createStep, function(req, res) {
 });
-router.post('/alerts/changeRoad', auth.simpleAuth, auth.requireLogin, alertRoad.changeRoadPost, function(req, res) {
+router.post('/AlertRoadStep', auth.simpleAuth, auth.requireLogin, alertRoad.createStepPost, function(req, res) {
 });
-/* DELETE Alerts. */
-router.get('/alerts/deleteRoad/:id', auth.simpleAuth, auth.requireLogin, alertRoad.deleteRoad, function(req, res) {
+/* DELETE AlertRoadStep. */
+router.get('/AlertRoadStep/delete/:alert_id/:function_id', auth.simpleAuth, auth.requireLogin, alertRoad.deleteRoad, function(req, res) {
 });
 
 

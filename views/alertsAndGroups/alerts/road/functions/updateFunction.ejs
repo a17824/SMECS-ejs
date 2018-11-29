@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 
-
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
@@ -14,14 +13,12 @@
 
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-
-
-
-
+    
 
     <script>
+       
         $(document).ready(function(){
-
+            
             var oldSortID = $("#oldSortID").val();
             var select_sort = '';
             var sortArray = $("#inUseSortID").val().split(",").map(Number);
@@ -36,48 +33,50 @@
             }
             $('#sort_select').html(select_sort);
 
+            var oldAlertGroupID = $("#oldAlertGroupID").val();
             var select = '';
             var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
-            for (var i=1;i<=99;i++){
-                if(myArray.indexOf(i) == -1){
-                    select += '<option val=' + i + '>' + i + '</option>';
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldAlertGroupID){
+                    if(i == oldAlertGroupID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
                 }
             }
             $('#some_select').html(select);
 
-
-            var redirectID, redirectAPI, redirectEJS, sortID, pageToReturn;
-            $("#btSubmit").click(function(){
-                redirectID=$("#some_select").val();
-                redirectAPI=$("#redirectAPI").val();
-                redirectEJS=$("#alertGroupName").val();
+            var alertGroup1,oldAlertGroupName,oldAlertGroupID,alertGroupID,alertGroupName,sortID, pageToReturn;
+            $("#<%= functions.id %>").click(function(){
+                alertGroup1=$(this).attr('id');
+                oldAlertGroupID=$("#oldAlertGroupID").val();
+                alertGroupID=$("#some_select").val();
+                oldAlertGroupName=$("#oldAlertGroupName").val();
+                alertGroupName=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
                 pageToReturn=$("#pageToReturn").val();
 
 
                 //-----forms validation------------------------------------
-                if (redirectAPI == "" ) {
-                    alert("redirectAPI Name must be filled out");
+                if (alertGroupName == "" ) {
+                    alert("Function Name must be filled out");
                     return false;
                 }
-                if (redirectEJS == "" ) {
-                    alert("redirectEJS Name must be filled out");
-                    return false;
-                }
-                if (redirectID == "" ) {
-                    alert("Redirect ID must be filled out");
+                if (alertGroupID == "" ) {
+                    alert("Function ID must be filled out");
                     return false;
                 }
                 //--------------------------------forms validation end-------
 
-
-                $.post("/AlertRoadRedirection",{
-                    redirectID: redirectID,
-                    redirectAPI: redirectAPI,
-                    redirectEJS: redirectEJS,
+                $.post("/AlertRoadFunctions/update",{
+                    alertGroupToUpdate: alertGroup1,
+                    oldAlertGroupID: oldAlertGroupID,
+                    groupID: alertGroupID,
+                    oldAlertGroupName: oldAlertGroupName,
+                    name: alertGroupName,
                     sortID: sortID,
                     pageToReturn: pageToReturn
-
 
                 },function(data){
                     if(data==='done')
@@ -87,9 +86,8 @@
                     window.location = data.redirect
                 }).error(function(error){
                     if(error.responseText == 'showAlert')
-                        alert("Redirect NAME already in use. Choose a different Name.")
+                        alert("Function already in use. Choose a different Name.")
                 });
-
             });
         });
     </script>
@@ -105,40 +103,43 @@
 
 
                 <!-- menu profile quick info -->
-                <% include ./../../../layout/menuProfile.ejs %>
+                <% include ./../../../../layout/menuProfile.ejs %>
                 <!-- /menu profile quick info -->
 
                 <br>
 
                 <!-- sidebar menu -->
-                <% include ./../../../layout/sideMenu.ejs %>
+                <% include ./../../../../layout/sideMenu.ejs %>
                 <!-- /sidebar menu -->
             </div>
         </div>
 
         <!-- top navigation -->
-        <% include ./../../../layout/topNavigation.ejs %>
+        <% include ./../../../../layout/topNavigation.ejs %>
         <!-- /top navigation -->
 
         <!-- page content -->
         <div class="right_col" role="main">
 
             <div class="page-title">
+
                 <div class="title_left">
-                    <h3>Create Redirection</h3>
+                    <h3>Update Function</h3>
                 </div>
-
-
 
                 <div class="title_right">
 
                     <div class="pull-left">
+
                         <button type="button"
-                                id="btSubmit"
+                                id="<%= functions.id %>"
                                 value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
                                 class="btn btn-success">Save
                         </button>
-                        <a href="/alerts/showRoad/<%= pageToReturn %>"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                        <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Cancel</button></a>
+
                     </div>
 
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -148,13 +149,14 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="clearfix"></div>
 
 
 
-            <input type="hidden" id="pageToReturn" value="<%= pageToReturn %>">
+
 
             <div class="row">
                 <div class="col-md-6 col-xs-12">
@@ -168,44 +170,40 @@
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">redirectAPI:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Function name:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="saveFloor"
-                                               id="redirectAPI">
+                                               placeholder="some function name"
+                                               id="alertGroupName"
+                                               value="<%= functions.functionName %>">
+
+                                        <input type="hidden"
+                                               id="oldAlertGroupName"
+                                               value="<%= functions.functionName %>">
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">redirectEJS:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               placeholder="saveFloor"
-                                               id="alertGroupName">
-                                    </div>
-                                </div>
-
-
+                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
+                                <input type="hidden" id="pageToReturn" value="<%= pageToReturn %>">
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="hidden" id="oldSortID" value="<%= functions.sortID %>">
                                         <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
                                         <select id='sort_select' class="form-control"></select>
                                     </div>
                                 </div>
 
-                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
-
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">redirectID:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Function ID:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='some_select' class="form-control"></select>
                                     </div>
                                 </div>
 
+                                <input type="hidden" id="oldAlertGroupID" value="<%= functions.functionID %>">
 
                             </form>
                             <div class="ln_solid"></div>
@@ -213,7 +211,12 @@
                     </div>
 
 
+
+
+
+
                 </div>
+
 
             </div>
         </div>
@@ -223,17 +226,16 @@
 </div>
 
 
-<!-- Bootstrap -->
+!-- Bootstrap -->
 <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.min.js"></script>
 
-
 </body>
 <!-- footer content -->
 <footer class="adjustPos">
-    <% include ./../../../layout/footer.ejs %>
+    <% include ./../../../../layout/footer.ejs %>
 </footer>
 <!-- /footer content -->
 </html>
