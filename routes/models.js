@@ -220,6 +220,8 @@ var AlertsSchema = new mongoose.Schema({
     alertRequestForINeedHelp: { type: Boolean, default: true },
     alertRequestSendEmail: { type: Boolean, default: false },
     alertAutoDrill: { type: Boolean, default: false },
+    alertLight: { type: Boolean, default: true },
+    alertLightSound: { type: Boolean, default: true },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,
@@ -252,7 +254,8 @@ var AlertsSchema = new mongoose.Schema({
         redirectEJS: String
     }]
 
-}, {collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
+}, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
+    collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names
 var Alerts;
 module.exports.Alerts = mongoose.model("Alerts", AlertsSchema);
 

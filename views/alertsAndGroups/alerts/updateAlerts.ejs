@@ -5,8 +5,10 @@
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
-    <!-- Custom Theme Style -->
+    <!-- color sound -->
     <link href="/public/gentelella/build/css/sound.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
     <link rel='stylesheet' href='/public/stylesheets/addUtility.css' />
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
@@ -126,31 +128,6 @@
             $('#some_select').html(select);
 
 
-            //build step functions depending on selected step
-            $("#step").change(function () {
-
-                var soundTypeId = this[this.selectedIndex].value;
-                var soundID = this[this.selectedIndex].id;
-
-                var soundArray = soundID.split(",").map(String);
-
-                var radioComplete = [];
-                for (var i = 1; i < soundArray.length; i += 3) {
-
-                    var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
-                        'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
-                        'name="radio" ' +
-                        'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
-                        '<div id="audio2"><audio controls controlsList="nodownload" style="position: relative; left: 150px; top: 10px"><source src="/public/sounds/' + soundArray[i+1] +'.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio></div></div><div class="divider-dashed"></div>');
-
-
-                    radioComplete.push(radioBtn);
-                }
-                $("#buildRadio").html(radioComplete);
-            });
-            //end of build step functions depending on selected step
-
-
 
             function radioOff() {
                 $('#smecsUserSelect').removeClass().addClass('disable');
@@ -192,10 +169,11 @@
 
 
 
-            var id,alertName,alertID,alertProcedure, request911Call, sortID, icon;
+            var id,alertName,alertID,alertProcedure,request911Call,sortID, icon,alertLight,alertLightSound;
             $("#<%= alert.id %>").click(function(){
 
-                var alertGroupIdAndSound=$("input:radio[name='alertGroupID']:checked").val();
+                var alertGroupIdAndSound=$("#alertGroupID").val();
+                var redirectAPI=$("#redirectAPI").val();
                 if(alertGroupIdAndSound){
                     var alertGroupIdAndSoundArray = alertGroupIdAndSound.split(",").map(String);
                     var alertGroupID = parseInt(alertGroupIdAndSoundArray[0]);
@@ -206,7 +184,8 @@
 
                 id=$(this).attr('id');
                 request911Call=$("input:radio[name='request911']:checked").val();
-
+                alertLight=$("input:radio[name='alertLight']:checked").val();
+                alertLightSound=$("input:radio[name='alertLightSound']:checked").val();
                 alertName=$("#alertName").val();
                 alertID=$("#some_select").val();
                 alertProcedure=$("#alertProcedure").val();
@@ -275,6 +254,8 @@
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
                     alertRequestForINeedHelp: alertRequestForINeedHelp,
                     alertRequestSendEmail: alertRequestSendEmail,
+                    alertLight: alertLight,
+                    alertLightSound: alertLightSound,
                     icon: icon,
                     sound: sound
 
@@ -411,37 +392,25 @@
                                             <select id='some_select' class="form-control"></select>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Step:</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <select id='step' class="form-control">
-
-                                                <% for (var i = 0; i <alert.alertRoad.length; i++) { %>
-                                                    <option id="<%= alert.alertRoad[i].callFunction %>" value="<%= alert.alertRoad[i].step %>"><%= alert.alertRoad[i].step %></option>
-                                                <% } %>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div id="buildFunction">
-                                        <% for (var i = 0; i <alert.alertRoad.length; i++) { %>
-                                            <% if( alert.alertRoad[0].callFunction ) { %>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Function <%= i+1 %></label>
-                                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                                        <input type="text"
-                                                               class="form-control"
-                                                               id="myText"
-                                                               value="colors">
-                                                    </div>
-                                                </div>
-                                            <% } %>
-                                        <% } %>
-                                    </div>
-
-
                                 <% } %>
 
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert group</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                        <select id="alertGroupID" class="form-control">
+                                            <% alertGroup.forEach(function(alertGroup) { %>
+                                            <%if (alertGroup.groupID == alert.group.groupID) { %>
+                                                <option value="<%= alertGroup.groupID %>,<%= alertGroup.name %>,<%= alertGroup.sound.mp3 %>" selected><%= alertGroup.name %></option>
+                                            <% }else {%>
+                                                <option value="<%= alertGroup.groupID %>,<%= alertGroup.name %>,<%= alertGroup.sound.mp3 %>"><%= alertGroup.name %></option>
+                                            <% } %>
+                                            <% }); %>
+                                        </select>
+
+                                    </div>
+                                </div>
 
 
                                 <div class="form-group">
@@ -455,35 +424,98 @@
                                 </div>
 
 
+                                <% if (alert.alertID != 26) {%>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -6px">Alert group</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkboxSafe" title="When sending this Alert notification, it will also send an email">Send email</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <% alertGroup.forEach(function(alertGroup, idx, array) { %>
-                                        <%if (alertGroup.groupID == alert.group.groupID) { %>
-                                        <input type="radio"
-                                               class="flat"
-                                               style="margin-bottom: 2px"
-                                               name="alertGroupID"
-                                               id="<%= alertGroup.name %>"
-                                               value="<%= alertGroup.groupID %>,<%= alertGroup.name %>,<%= alertGroup.sound.mp3 %>" checked>
-                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.name %></label>
-                                        <% }else {%>
-                                        <input type="radio"
-                                               class="flat"
-                                               style="margin-bottom: 2px"
-                                               name="alertGroupID"
-                                               id="<%= alertGroup.name %>"
-                                               value="<%= alertGroup.groupID %>,<%= alertGroup.name %>,<%= alertGroup.sound.mp3 %>">
-                                        <label for="alertGroupName" style="font-weight:normal; position: relative; top: 2px" ><%= alertGroup.name %></label>
+                                        <% if (alert.alertRequestSendEmail == true) {%>
+                                            <input type="checkbox"
+                                                   name="checkboxSendEmail"
+                                                   id="checkboxSendEmail"
+                                                   value="<%= alert.alertRequestSendEmail %>" checked>
+                                        <% }else{%>
+                                            <input type="checkbox"
+                                                   name="checkboxSendEmail"
+                                                   id="checkboxSendEmail"
+                                                   value="<%= alert.alertRequestSendEmail %>">
                                         <% } %>
-                                        <% if (idx !== array.length - 1){ %> <!-- if is not the last loop do... -->
-                                        <br>
-                                        <% } %>
-                                        <% }); %>
+                                        <label for="checkboxSendEmail"></label>
                                     </div>
 
                                 </div>
+                                <% } %>
 
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Alert Light</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                        <%if (alert.alertLight == false) { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="alertLight"
+                                                    name="alertLight"
+                                                    value="false" checked>
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLight"
+                                                   name="alertLight"
+                                                   value="true">
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }else {%>
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLight"
+                                                   name="alertLight"
+                                                   value="false">
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLight"
+                                                   name="alertLight"
+                                                   value="true" checked>
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }%>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Alert Light Sound</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                        <%if (alert.alertLightSound == false) { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="alertLightSound"
+                                                    name="alertLightSound"
+                                                    value="false" checked>
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLightSound"
+                                                   name="alertLightSound"
+                                                   value="true">
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }else {%>
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLightSound"
+                                                   name="alertLightSound"
+                                                   value="false">
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLightSound"
+                                                   name="alertLightSound"
+                                                   value="true" checked>
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }%>
+                                    </div>
+                                </div>
 
                             </form>
 
@@ -630,26 +662,6 @@
                                     </div>
                                 </div>
 
-                                <% if (alert.alertID != 26) {%>
-                                <div class="form-group">
-                                    <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxSafe">Send also an email</label>
-                                    <div class="col-md-7 col-sm-7 col-xs-12">
-
-                                        <% if (alert.alertRequestSendEmail == true) {%>
-                                            <input type="checkbox"
-                                                   name="checkboxSendEmail"
-                                                   id="checkboxSendEmail"
-                                                   value="<%= alert.alertRequestSendEmail %>" checked>
-                                        <% }else{%>
-                                            <input type="checkbox"
-                                                   name="checkboxSendEmail"
-                                                   id="checkboxSendEmail"
-                                                   value="<%= alert.alertRequestSendEmail %>">
-                                        <% } %>
-                                        <label for="checkboxSendEmail"></label>
-                                    </div>
-                                </div>
-                                <% } %>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px">Call 911</label>

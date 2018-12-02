@@ -56,8 +56,8 @@ module.exports.createStep = function(req, res) {
 
     ],function(err, results){
 
-        var array = [];
-        var stream = models.Alerts.findById(req.params.id).sort({"alertRoad.step":1}).cursor();
+        let array = [];
+        let stream = models.Alerts.findById(req.params.id).sort({"alertRoad.step":1}).cursor();
         stream.on('data', function (doc) {
             doc.alertRoad.forEach(function (alertRoad) {
                 array.push(alertRoad.step);
@@ -68,7 +68,6 @@ module.exports.createStep = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             array.sort((a,b) => a-b);
-            console.log('array = ',array);
 
             res.render('alertsAndGroups/alerts/road/steps/createStep',{
                 title:'Create Step',
@@ -85,9 +84,142 @@ module.exports.createStep = function(req, res) {
     });
 };
 module.exports.createStepPost = function(req, res) {
+    let alertID_pageToReturn = req.body.pageToReturn;
+    let step = req.body.stepNumber;
+    let functions = req.body.functions;
+    let redirectAPI = req.body.redirectAPI;
+    let redirectEJS = req.body.redirectEJS;
+
+    let newStep = {
+        step: step,
+        callFunction: functions,
+        redirectAPI: redirectAPI,
+        redirectEJS: redirectEJS
+    };
+    models.Alerts.findById({'_id': alertID_pageToReturn}, function(err, alert){
+        if (err || !alert) {
+            console.log('err - finding alert');
+        }else{
+            alert.alertRoad.push(newStep);
+            alert.save();
+            //update Functions database alertsWithThisFunction Array
+            if ( typeof functions !== 'undefined' && functions ) {
+                functions.forEach(function(functionName){
+                    models.AlertRoadFunctions.update(
+                        {functionName: functionName},
+                        {$addToSet: { alertsWithThisFunction: alert.alertID } }, function (err, listing) {
+                            if (err) {
+                                res.send("functionName - There was a problem adding the alert.alertID to the alertsWithThisFunction" + err);
+                            }
+                            else {
+                                console.log("functionName - Success adding alert.alertID to alertsWithThisFunction!");
+                                console.log(listing);
+                            }
+                        }
+                    );
+                });
+            }
+
+            //update Redirections database alertsWithThisFunction Array
+            if ( typeof redirectAPI !== 'undefined' && redirectAPI ) {
+                models.AlertRoadRedirection.update(
+                    {redirectAPI: redirectAPI},
+                    {$addToSet: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                        if (err) {
+                            res.send("redirectAPI - There was a problem adding the alert.alertID to the alertsWithThisRedirect" + err);
+                        }
+                        else {
+                            console.log("redirectAPI - Success adding alert.alertID to alertsWithThisRedirect!");
+                            console.log(listing);
+                        }
+                    }
+                );
+            }
+            if ( typeof redirectEJS !== 'undefined' && redirectEJS ) {
+                models.AlertRoadRedirection.update(
+                    {redirectEJS: redirectEJS},
+                    {$addToSet: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                        if (err) {
+                            res.send("redirectEJS - There was a problem adding the alert.alertID to the alertsWithThisRedirect" + err);
+                        }
+                        else {
+                            console.log("redirectEJS - Success adding alert.alertID to alertsWithThisRedirect!");
+                            console.log(listing);
+                        }
+                    }
+                );
+            }
+        }
+        return res.send({redirect:'/alerts/showRoad/' + req.body.pageToReturn})
+    });
+};
+
+
+/* UPDATE AlertRoadStep. -------------------------------*/
+module.exports.updateStep = function(req, res) {
+    async.parallel([
+        function(callback){
+            models.AlertRoadFunctions.find(function(error, alerts) {
+
+            }).exec(callback);
+        },
+        function(callback){
+            models.AlertRoadRedirection.find(function(error, alerts) {
+
+            }).exec(callback);
+        },
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        let stepToUpdate = req.params.step_id;
+        let stepValues;
+        let array = [];
+        let stream = models.Alerts.findById(req.params.alert_id).sort({"alertRoad.step":1}).cursor();
+        stream.on('data', function (doc) {
+            doc.alertRoad.forEach(function (alertRoad) {
+                array.push(alertRoad.step);
+                if(alertRoad.step == stepToUpdate) {
+                    stepValues = {
+                        step: alertRoad.step,
+                        callFunction: alertRoad.callFunction,
+                        redirectAPI: alertRoad.redirectAPI,
+                        redirectEJS: alertRoad.redirectEJS
+                    }
+                }
+            })
+
+        }).on('error', function (err) {
+            // handle the error
+        }).on('close', function () {
+            // the stream is closed
+            array.sort((a,b) => a-b);
+
+            console.log('pageToReturn = ',req.params.alert_id);
+            res.render('alertsAndGroups/alerts/road/steps/updateStep',{
+                title:'Update Step',
+                array: array,
+                stepValues: stepValues,
+                functions: results[0],
+                redirections: results[1],
+                pageToReturn: req.params.alert_id,
+                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+
+        })
+    });
+};
+module.exports.updateStepPost = function(req, res) {
     console.log('stepNumber = ',req.body.stepNumber);
+    console.log('functions = ',req.body.functions);
     console.log('redirectAPI = ',req.body.redirectAPI);
     console.log('redirectEJS = ',req.body.redirectEJS);
+    console.log('alertID = ',req.body.pageToReturn);
+
+    let oldStepValues = req.body.oldStepValues;
+    console.log('oldStepValues.step = ',oldStepValues.step);
+    console.log();
 
 };
 

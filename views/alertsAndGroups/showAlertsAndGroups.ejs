@@ -302,10 +302,14 @@
                                                 Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts"/>
                                                 <% } %>
                                             </th>
-                                            <th>Auto drills</th>
-                                            <th>Send email with alert</th>
-                                            <th>Request<br>Procedure<br>Completed</th>
-                                            <th>Request<br>We Are Safe</th>
+                                            <th title="Tells if this Alert has Scheduled drills">Auto Drills</th>
+                                            <th title="When sending this Alert notification, it will also send an email">Send Email</th>
+                                            <th title="Uses Alert Light in Classrooms">Light</th>
+                                            <th title="Light in Classrooms will emmit a sound">Light Sound</th>
+                                            <th title="Everyone that receives this Alert will need to
+submit if they completed all asked in Procedure">Request<br>Procedure<br>Completed</th>
+                                            <th title="If somebody needs assistance/help,
+this will allow them to ask for help">Request<br>We Are Safe</th>
                                             <th>Allow teacher<br>request help</th>
                                             <th>Request<br>911 Call</th>
                                             <th>Procedure</th>
@@ -338,8 +342,6 @@
                                                 <% } %>
                                             </td>
 
-
-
                                             <% if (alert.alertAutoDrill == true) { %>
                                                 <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
                                             <% } else { %>
@@ -347,6 +349,18 @@
                                             <% } %>
 
                                             <% if (alert.alertRequestSendEmail == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertLight == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertLightSound == true) { %>
                                                 <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
                                             <% } else { %>
                                                 <td><img  src="/miscPictures/redCross20.png"></td>

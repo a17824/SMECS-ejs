@@ -47,33 +47,54 @@
 
             ul.appendChild(li);
         }
+        var usersToRemove = [];
+        function removeUser(user){
+            var choice = user.getElementsByTagName('input');
+            usersToRemove.push(choice[0].value);
+        }
         //end of Request calling 911
 
 
         $(document).ready(function(){
 
+            var oldAlertID = $("#oldAlertID").val();
             var select = '';
             var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
             for (var i=1;i<=99;i++){
-                if(myArray.indexOf(i) == -1){
-                    select += '<option val=' + i + '>' + i + '</option>';
+                if(myArray.indexOf(i) == -1 || i == oldAlertID){
+                    if(i == oldAlertID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
                 }
             }
             $('#some_select').html(select);
 
 
-            var stepNumber,redirectAPI,redirectEJS,pageToReturn;
+            let stepNumber,redirectAPI,redirectEJS,pageToReturn;
             $("#btSubmit").click(function(){
                 stepNumber=$("#some_select").val();
                 redirectAPI=$("#redirectAPI").val();
                 redirectEJS=$("#redirectEJS").val();
                 pageToReturn=$("#pageToReturn").val();
 
-                let arrayFunctions = [];
-                if(typeof choices !== 'undefined' && choices && choices.length > 0 ) {
 
-                    for (var a = 0; a < choices.length; a++) {
-                        arrayFunctions.push(choices[a].value);
+                let arrayFunctions = [];
+                if (choices === undefined){
+                    arrayFunctions = $("#savedValueFunctions").val().split(",");
+                    for (var a = 0; a < usersToRemove.length; a++) {
+                        for (var i = 0; i < arrayFunctions.length; i++) {
+                            if (usersToRemove[a] == arrayFunctions[i]){
+                                arrayFunctions.splice(i, 1);
+                            }
+                        }
+                    }
+                } else {
+                    if(choices.length > 0) {
+                        for (var a = 0; a < choices.length; a++) {
+                            arrayFunctions.push(choices[a].value);
+                        }
                     }
                 }
 
@@ -99,7 +120,7 @@
                 */
                 //--------------------------------forms validation end-------
 
-                $.post("/AlertRoadStep",{
+                $.post("/AlertRoadStep/update",{
                     stepNumber: stepNumber,
                     functions: arrayFunctions,
                     redirectAPI: redirectAPI,
@@ -179,7 +200,8 @@
             <div class="clearfix"></div>
 
 
-
+            <input type="hidden" id="oldAlertID" value="<%= stepValues.step %>">
+            <input type="hidden" id="savedValueFunctions" value="<%= stepValues.callFunction %>">
             <input type="hidden" id="pageToReturn" value="<%= pageToReturn %>">
 
             <div class="row">
@@ -207,9 +229,12 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">RedirectAPI:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='redirectAPI' class="form-control">
-                                            <option disabled selected value> -- select a API redirection from dropdown list -- </option>
                                             <% redirections.forEach(function(redirectTo) { %>
-                                                <option value="<%= redirectTo.redirectAPI %>" ><%= redirectTo.redirectAPI %></option>
+                                            <%if (redirectTo.redirectAPI == stepValues.redirectAPI) { %>
+                                                <option value="<%= redirectTo.redirectAPI %>" selected><%= redirectTo.redirectAPI %></option>
+                                            <% }else {%>
+                                                <option value="<%= redirectTo.redirectAPI %>"><%= redirectTo.redirectAPI %></option>
+                                            <% } %>
                                             <% }); %>
                                         </select>
                                     </div>
@@ -219,9 +244,12 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">RedirectEJS:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select id='redirectEJS' class="form-control">
-                                            <option disabled selected value> -- select a EJS redirection from dropdown list -- </option>
                                             <% redirections.forEach(function(redirectTo) { %>
-                                                <option value="<%= redirectTo.redirectEJS %>" ><%= redirectTo.redirectEJS %></option>
+                                            <%if (redirectTo.redirectEJS == stepValues.redirectEJS) { %>
+                                                <option value="<%= redirectTo.redirectEJS %>" selected><%= redirectTo.redirectEJS %></option>
+                                            <% }else {%>
+                                                <option value="<%= redirectTo.redirectEJS %>"><%= redirectTo.redirectEJS %></option>
+                                            <% } %>
                                             <% }); %>
                                         </select>
                                     </div>
@@ -232,10 +260,12 @@
                                     <label for="smecsUserLabel" id="smecsUserLabel" class="enable" style="margin-left: 10px">Functions:</label><br>
 
                                     <ul id="smecsUserUl" class="enable">
-
-
-
-
+                                        <% for (var a = 0; a < stepValues.callFunction.length; a++) { %>
+                                            <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                                                <input type="hidden" name="users[]" value="<%= stepValues.callFunction[a] %>" />
+                                                <%= stepValues.callFunction[a] %>
+                                            </li>
+                                        <% } %>
                                     </ul>
 
                                     <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
