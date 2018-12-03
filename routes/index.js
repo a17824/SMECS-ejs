@@ -41,7 +41,7 @@ var showAlertsAndGroups = require('./alerts/showAlertsAndGroups');
 
 //Run this function once a month
 //schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
-schedule.scheduleJob({hour: 2, minute: 59, dayOfWeek: 1, dayOfMonth: [1,2,3,4,5,6,7]}, function(){
+schedule.scheduleJob({hour: 2, minute: 59, dayOfWeek: 2, dayOfMonth: [1,2,3,4,5,6,7]}, function(){
     console.log('This runs every first Monday of the month at 02:59AM');
     photos.cleanOldPhotos();
 });

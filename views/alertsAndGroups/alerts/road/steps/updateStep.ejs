@@ -72,13 +72,13 @@
             $('#some_select').html(select);
 
 
-            let stepNumber,redirectAPI,redirectEJS,pageToReturn;
+            let stepNumber,redirectAPI,redirectEJS,pageToReturn,oldStep;
             $("#btSubmit").click(function(){
                 stepNumber=$("#some_select").val();
                 redirectAPI=$("#redirectAPI").val();
                 redirectEJS=$("#redirectEJS").val();
                 pageToReturn=$("#pageToReturn").val();
-
+                oldStep=$("#oldAlertID").val();
 
                 let arrayFunctions = [];
                 if (choices === undefined){
@@ -99,28 +99,11 @@
                 }
 
                 //-----forms validation------------------------------------
-                /*
-                if (redirectAPI == null ) {
-                    alert("redirectAPI must be filled out");
-                    return false;
-                }
-                if (redirectEJS == null ) {
-                    alert("redirectEJS must be filled out");
-                    return false;
-                }
-                */
-                /*strange behaviour when saving and radio smecs == true and no user is in arrayUsers.
-                 Its s adding 1 user in arrayUsers(arrayUsers[0] == "").
-                 Following "if" is to delete this user */
-                /*
-                if(arrayUsers.length == 1 && arrayUsers[0] == ""){
-                    var index = arrayUsers.indexOf(5);
-                    arrayUsers.splice( index, 1 );
-                }
-                */
+
                 //--------------------------------forms validation end-------
 
                 $.post("/AlertRoadStep/update",{
+                    oldStep: oldStep,
                     stepNumber: stepNumber,
                     functions: arrayFunctions,
                     redirectAPI: redirectAPI,
@@ -172,7 +155,7 @@
 
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Create Step</h3>
+                    <h3>Update Step</h3>
                 </div>
 
 

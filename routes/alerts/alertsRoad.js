@@ -102,6 +102,7 @@ module.exports.createStepPost = function(req, res) {
         }else{
             alert.alertRoad.push(newStep);
             alert.save();
+
             //update Functions database alertsWithThisFunction Array
             if ( typeof functions !== 'undefined' && functions ) {
                 functions.forEach(function(functionName){
@@ -149,6 +150,7 @@ module.exports.createStepPost = function(req, res) {
                     }
                 );
             }
+            //end of Update Redirections database alertsWithThisFunction Array
         }
         return res.send({redirect:'/alerts/showRoad/' + req.body.pageToReturn})
     });
@@ -211,16 +213,92 @@ module.exports.updateStep = function(req, res) {
     });
 };
 module.exports.updateStepPost = function(req, res) {
-    console.log('stepNumber = ',req.body.stepNumber);
-    console.log('functions = ',req.body.functions);
-    console.log('redirectAPI = ',req.body.redirectAPI);
-    console.log('redirectEJS = ',req.body.redirectEJS);
-    console.log('alertID = ',req.body.pageToReturn);
+    let alertID_pageToReturn = req.body.pageToReturn;
+    let oldStep = req.body.oldStep;
+    let step = req.body.stepNumber;
+    let functions = req.body.functions;
+    let redirectAPI = req.body.redirectAPI;
+    let redirectEJS = req.body.redirectEJS;
+    let arrayFunctionsRemoved = [];
 
-    let oldStepValues = req.body.oldStepValues;
-    console.log('oldStepValues.step = ',oldStepValues.step);
-    console.log();
+    models.Alerts.findById({'_id': alertID_pageToReturn }, function(err, alert){
+        if (err || !alert) {
+            console.log('err - finding alert');
+        }else{
+            alert.alertRoad.forEach(function(alertRoad){
+                if(alertRoad.step == oldStep) {
+                    buildArrayWithFunctionsRemoved(alertRoad, functions, arrayFunctionsRemoved); //gets all functions removed from this step
+                    //console.log('arrayFunctionsRemoved = ',arrayFunctionsRemoved);
+                    let oldRedirectAPI = alertRoad.redirectAPI;
+                    let oldRedirectEJS = alertRoad.redirectEJS;
 
+                    alertRoad.step =  step;
+                    alertRoad.callFunction =  functions;
+                    alertRoad.redirectAPI =  redirectAPI;
+                    alertRoad.redirectEJS =  redirectEJS;
+                    alert.save(function (err) {
+                        if (err && (err.code === 11000 || err.code === 11001)) {
+                            console.log(err);
+                            return res.status(409).send('showAlert')
+                        }else {
+                            console.log('success updating AlertRoad');
+
+
+                        }
+                    });
+                    //update Functions database alertsWithThisFunction Array
+                    searchForFunctionsInAllAlertRoad(alert, arrayFunctionsRemoved); //gets array with functions names to delete from Functions
+                    //console.log('arrayFunctionsRemoved updated with Functions that needs to be removed from Functions.AlertsWithThisFunction = ',arrayFunctionsRemoved);
+                    addFunctionsToDB(res, functions, alert); //update Functions (ADD) database alertsWithThisFunction Array
+                    deleteFunctionsToDB(res, arrayFunctionsRemoved, alert); //update Functions (DELETES) database alertsWithThisFunction Array
+
+                    //update Redirections database alertsWithThisFunction Array
+                    addRedirectionToDB(res, alert, alertRoad.redirectAPI, alertRoad.redirectEJS); //update Redirections (ADD) database alertsWithThisFunction Array
+                    deleteRedirectionToDB(res, alert, oldRedirectAPI, oldRedirectEJS, alertRoad.step); //update Redirections (DELETES) database alertsWithThisFunction Array
+
+
+
+                    return res.send({redirect:'/alerts/showRoad/' + req.body.pageToReturn})
+                }
+            });
+
+            /*
+
+
+            //update Redirections database alertsWithThisFunction Array
+            if ( typeof redirectAPI !== 'undefined' && redirectAPI ) {
+                models.AlertRoadRedirection.update(
+                    {redirectAPI: redirectAPI},
+                    {$addToSet: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                        if (err) {
+                            res.send("redirectAPI - There was a problem adding the alert.alertID to the alertsWithThisRedirect" + err);
+                        }
+                        else {
+                            console.log("redirectAPI - Success adding alert.alertID to alertsWithThisRedirect!");
+                            console.log(listing);
+                        }
+                    }
+                );
+            }
+            if ( typeof redirectEJS !== 'undefined' && redirectEJS ) {
+                models.AlertRoadRedirection.update(
+                    {redirectEJS: redirectEJS},
+                    {$addToSet: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                        if (err) {
+                            res.send("redirectEJS - There was a problem adding the alert.alertID to the alertsWithThisRedirect" + err);
+                        }
+                        else {
+                            console.log("redirectEJS - Success adding alert.alertID to alertsWithThisRedirect!");
+                            console.log(listing);
+                        }
+                    }
+                );
+            }
+            //end of update Functions database alertsWithThisFunction Array
+            */
+        }
+
+    });
 };
 
 module.exports.deleteRoad = function(req, res) {
@@ -628,3 +706,246 @@ module.exports.deleteRedirection = function(req, res) {
     });
 };
 /* ---- end of DELETE Function. */
+
+function buildArrayWithFunctionsRemoved(alertRoad, functions, arrayFunctionsRemoved) {
+    if ( typeof functions !== 'undefined' && functions ){
+        alertRoad.callFunction.forEach(function (oldFunct) {
+            let flagFound = 0;
+            for (let z = 0; z < functions.length; z++) {
+                if (oldFunct == functions[z]) {
+                    flagFound = 1;
+                    break;
+                }
+            }
+            if(flagFound == 0)
+                arrayFunctionsRemoved.push(oldFunct);
+        });
+    }else { //if all functions were removed
+        alertRoad.callFunction.forEach(function (oldFunct) {
+            arrayFunctionsRemoved.push(oldFunct);
+        });
+    }
+
+
+
+}
+
+function searchForFunctionsInAllAlertRoad(alert, arrayFunctionsRemoved) {
+    //final array with FUnctions to be removed
+    if ( arrayFunctionsRemoved.length > 0 ) {
+        arrayFunctionsRemoved.forEach(function(functionNameToRemove){
+            let flagFound = 0;
+            alert.alertRoad.forEach(function (alertRoad) {
+                if ( typeof alertRoad.callFunction !== 'undefined' && alertRoad.callFunction ) {
+                    for (let z = 0; z < alertRoad.callFunction.length; z++) {
+                        if (functionNameToRemove == alertRoad.callFunction[z]) {
+                            flagFound = 1;
+                            break;
+                        }
+                    }
+                }
+            });
+            if(flagFound == 1)
+                arrayFunctionsRemoved.splice(functionNameToRemove, 1);
+
+        });
+    }
+}
+function addFunctionsToDB(res, functions, alert) {
+    if ( typeof functions !== 'undefined' && functions ) {
+        functions.forEach(function(functionName){
+            models.AlertRoadFunctions.update(
+                {functionName: functionName},
+                {$addToSet: { alertsWithThisFunction: alert.alertID } }, function (err, listing) {
+                    if (err) {
+                        res.send("functionName - There was a problem adding the alert.alertID to the alertsWithThisFunction" + err);
+                    }
+                    else {
+                        console.log("functionName - Success adding alert.alertID to alertsWithThisFunction!");
+                        console.log(listing);
+                    }
+                }
+            );
+        });
+    }
+}
+function deleteFunctionsToDB(res, toSearch, alert) {
+    if ( typeof toSearch !== 'undefined' && toSearch ) {
+        toSearch.forEach(function(functionName){
+            models.AlertRoadFunctions.update(
+                {functionName: functionName},
+                {$pull: { alertsWithThisFunction: alert.alertID } }, function (err, listing) {
+                    if (err) {
+                        res.send("functionName - There was a problem removing the alert.alertID to the alertsWithThisFunction" + err);
+                    }
+                    else {
+                        console.log("functionName - Success removing alert.alertID from alertsWithThisFunction!");
+                        console.log(listing);
+                    }
+                }
+            );
+        });
+    }
+
+}
+
+
+
+
+function addRedirectionToDB(res, alert, redirectAPI, redirectEJS) {
+    //update (ADD) Redirections database alertsWithThisFunction Array
+    if ( typeof redirectAPI !== 'undefined' && redirectAPI ) {
+        models.AlertRoadRedirection.update(
+            {redirectAPI: redirectAPI},
+            {$addToSet: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                if (err) {
+                    res.send("redirectAPI - There was a problem adding the alert.alertID to the alertsWithThisRedirect" + err);
+                }
+                else {
+                    console.log("redirectAPI - Success adding alert.alertID to alertsWithThisRedirect!");
+                    console.log(listing);
+                }
+            }
+        );
+    }
+    if ( typeof redirectEJS !== 'undefined' && redirectEJS ) {
+        models.AlertRoadRedirection.update(
+            {redirectEJS: redirectEJS},
+            {$addToSet: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                if (err) {
+                    res.send("redirectEJS - There was a problem adding the alert.alertID to the alertsWithThisRedirect" + err);
+                }
+                else {
+                    console.log("redirectEJS - Success adding alert.alertID to alertsWithThisRedirect!");
+                    console.log(listing);
+                }
+            }
+        );
+    }
+    //end of Update Redirections database alertsWithThisFunction Array
+}
+function deleteRedirectionToDB(res, alert, oldRedirectionAPI, oldRedirectionEJS, step) {
+
+    //update (DELETE) oldRedirectAPI from AlertRoadRedirection DB
+    let flagFoundAPI = 0;
+    if ( oldRedirectionAPI.length > 0 ) {
+
+
+
+            models.AlertRoadRedirection.find({}, function (err, redi) {
+                if (err || !r) {
+                    console.log('AlertRoadRedirection EJS not updated successfully');
+                }
+                else {
+                    let flagFoundAPI = 0;
+
+                    for (let z = 0; z < alert.alertRoad.length; z++) {
+
+                        if (redi.redirectAPI == alertRoad[z].redirectAPI &&
+                            typeof alert.alertRoad[z].redirectAPI !== 'undefined' && alert.alertRoad[z].redirectAPI && alert.alertRoad[z].step == step){ //exists
+                            flagFoundAPI = 1;
+                            break
+                        }
+                        else {
+                            if (redi.redirectEJS == alertRoad[z].redirectEJS &&
+                                typeof alert.alertRoad[z].redirectEJS !== 'undefined' && alert.alertRoad[z].redirectEJS && alert.alertRoad[z].step == step){ //exists){ //exists
+                                flagFoundAPI = 1;
+                                break
+                            }
+                        }
+                    }
+                }
+                if (flagFoundAPI == 0){
+                    if (redi.alertsWithThisRedirect.includes(alert.alertID)) {
+                        console.log('DELETE API');
+                        let index = redi.alertsWithThisRedirect.indexOf(alert.alertID);
+                        redi.alertsWithThisRedirect.splice(index, 1);
+                        redi.save();
+                    }
+                }
+            });
+
+
+    }
+    //end of update (DELETE) from AlertRoadRedirection DB
+
+
+    /*
+    //update (DELETE) oldRedirectEJS from AlertRoadRedirection DB
+    let flagFoundEJS = 0;
+    if ( oldRedirectionEJS.length > 0 ) {
+        alert.alertRoad.forEach(function (alertRoad) {
+            if ( typeof alertRoad.redirectEJS !== 'undefined' && alertRoad.redirectEJS && alertRoad.step == step ) {
+
+                models.AlertRoadRedirection.findOne({'redirectAPI': oldRedirectionAPI}, function (err, r) {
+                    if (err || !r) {
+                        console.log('AlertRoadRedirection API not updated successfully');
+                    }
+                    else {
+                        console.log('step = ',step);
+                        console.log('oldRedirectionEJS = ',oldRedirectionEJS);
+                        console.log('alertRoad.redirectEJS = ',alertRoad.redirectEJS);
+                        console.log('r.redirectEJS = ',r.redirectEJS);
+
+                        if (oldRedirectionEJS == alertRoad.redirectEJS){
+                            flagFoundEJS = 1;
+                            if (alertRoad.redirectEJS != r.redirectEJS) {
+                                if (r.alertsWithThisRedirect.includes(alert.alertID)) {
+                                    console.log('DELETE EJS');
+                                    let index = r.alertsWithThisRedirect.indexOf(alert.alertID);
+                                    r.alertsWithThisRedirect.splice(index, 1);
+                                    r.save();
+                                }
+                            }
+
+                        }
+                        else{
+
+                            //deleteAlertsWithThisRedirect(oldRedirectionAPI,oldRedirectionEJS);
+                            if (alertRoad.redirectEJS != r.redirectEJS) {
+                                if (r.alertsWithThisRedirect.includes(alert.alertID)) {
+                                    console.log('FUN DELETE EJS');
+                                    let index = r.alertsWithThisRedirect.indexOf(alert.alertID);
+                                    r.alertsWithThisRedirect.splice(index, 1);
+                                    r.save();
+                                }
+                            }
+                        }
+
+                    }
+                });
+
+            }
+        });
+    }
+    //end of update (DELETE) oldRedirectEJS from AlertRoadRedirection DB
+    function deleteAlertsWithThisRedirect(oldRedirectionAPI,oldRedirectionEJS) {
+        if(flagFoundAPI == 0 && flagFoundEJS == 0) {
+            models.AlertRoadRedirection.update(
+                {redirectAPI: oldRedirectionAPI},
+                {$pull: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                    if (err) {
+                        res.send("oldRedirectionAPI - There was a problem removing the alert.alertID to the alertsWithThisRedirect" + err);
+                    }
+                    else {
+                        //console.log("oldRedirectionAPI - Success removing alert.alertID from alertsWithThisRedirect!");
+                        //console.log(listing);
+                    }
+                }
+            );
+            models.AlertRoadRedirection.update(
+                {redirectEJS: oldRedirectionEJS},
+                {$pull: { alertsWithThisRedirect: alert.alertID } }, function (err, listing) {
+                    if (err) {
+                        res.send("oldRedirectionAPI - There was a problem removing the alert.alertID to the alertsWithThisRedirect" + err);
+                    }
+                    else {
+                        //console.log("oldRedirectionAPI - Success removing alert.alertID from alertsWithThisRedirect!");
+                        //console.log(listing);
+                    }
+                }
+            );
+        }
+    }
+    */
+}
