@@ -288,6 +288,16 @@ module.exports.showAlertsPost = function(req, res) {
 
 
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
+                        let testModeON = false;
+                        let demoModeON = false;
+
+                        if(req.body.alertMode == 'drill'){
+                            testModeON = true;
+                        }
+                        if(req.body.alertMode == 'demo'){
+                            demoModeON = true;
+                        }
+
                         var alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,
@@ -297,7 +307,8 @@ module.exports.showAlertsPost = function(req, res) {
                             groupColorTx: alert[0].group.color.textValue,
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
-                            testModeON: req.body.testModeON,
+                            testModeON: testModeON,
+                            demoModeON: demoModeON,
                             requestProcedureCompleted: alert[0].alertRequestProcedureCompleted,
                             requestWeAreSafe: alert[0].alertRequestWeAreSafe,
                             requestINeedHelp: alert[0].alertRequestForINeedHelp,
@@ -380,6 +391,8 @@ module.exports.showAlertsPost = function(req, res) {
                             for (var i=0; i < road.callFunction.length; i++) {
                                 if(road.callFunction[i] == 'studentStep1')
                                     studentStep1(req, res, alertTemp1);
+                                if(road.callFunction[i] == 'busMap')
+                                    busMap(req, res, alertTemp1);
                                 if(road.callFunction[i] == 'createAlert')
                                     createAlert(req, res, alertTemp1);
                             }
@@ -564,12 +577,18 @@ function studentStep1(req, res, alertTemp1) {
     alertTemp1.save();
     student.saveStudentFile(req, res, alertTemp1);
 }
+function busMap(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
 function createAlert(req, res, alertTemp1) {
 
     if(!alertTemp1.demoModeON) {
-    alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-        /*****  CALL HERE NOTIFICATION API  *****/
-        pushNotification.alert(result, 'newAlert');
-    });
+        alertTemp1.latitude = req.body.latitude;
+        alertTemp1.longitude = req.body.longitude;
+        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.alert(result, 'newAlert');
+        });
     }
 }

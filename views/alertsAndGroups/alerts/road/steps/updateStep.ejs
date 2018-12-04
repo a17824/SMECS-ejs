@@ -100,6 +100,14 @@
 
                 //-----forms validation------------------------------------
 
+                /*strange behaviour when saving and radio smecs == true and no user is in arrayUsers.
+                 Its s adding 1 user in arrayUsers(arrayUsers[0] == "").
+                 Following "if" is to delete this user */
+                if(arrayFunctions.length == 1 && arrayFunctions[0] == ""){
+                    let index = arrayFunctions.indexOf(5);
+                    arrayFunctions.splice( index, 1 );
+                }
+
                 //--------------------------------forms validation end-------
 
                 $.post("/AlertRoadStep/update",{

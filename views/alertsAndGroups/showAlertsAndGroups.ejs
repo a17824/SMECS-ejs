@@ -16,7 +16,7 @@
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
-    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/showAlertsAndGroups.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -288,14 +288,17 @@
                                     <table id="datatable" class="table table-hover">
                                         <thead>
                                         <tr>
-
                                             <th>Group Number & Name</th>
+                                            <th>Alert #</th>
                                             <% if (userAuthID == 1) {%>
                                                 <th>Alert ID</th>
                                             <% } %>
-                                            <th>Alert #</th>
                                             <th>Alert Name</th>
-                                            <th>
+                                            <% if (userAuthID == 1) {%>
+                                                <th>Road</th>
+                                                <th>Alert Road</th>
+                                            <% } %>
+                                            <th title="Puts Icons on CellPhone alert buttons">
                                                 <% if(useAlertsIcons == true) { %>
                                                 Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts" checked/>
                                                 <% }else {%>
@@ -314,9 +317,6 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                             <th>Request<br>911 Call</th>
                                             <th>Procedure</th>
                                             <th>Update</th>
-                                            <% if (userAuthID == 1) {%>
-                                                <th>Alert Road</th>
-                                            <% } %>
                                             <th>Remove</th>
                                         </tr>
                                         </thead>
@@ -326,14 +326,27 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                         <% if(alertGroup.name == alert.group.name) { %>
                                         <% if (alert.softDeleted == false) { %>
                                         <tr>
-
                                             <td><%= alertGroup.sortID %> <%= alert.group.name %></td>
+                                            <td><%= alert.sortID %></td>
                                             <% if (userAuthID == 1) {%>
                                                 <td><%= alert.alertID %></td>
                                             <% } %>
-                                            <td><%= alert.sortID %></td>
                                             <td><%= alert.alertName %></td>
-
+                                            <% if (userAuthID == 1) {%>
+                                                <td>
+                                                    <a href="/alerts/showRoad/<%= alert.id %>"><button class="btn btn-warning">change</button></a>
+                                                </td>
+                                                <td>
+                                                    <% if (alert.alertRoad) { %>
+                                                        <% for (var x = 0; x < alert.alertRoad.length; x++) {%>
+                                                            <strong>.</strong><%= alert.alertRoad[x].step %>(<span class="rAPI"><%= alert.alertRoad[x].redirectAPI %></span>,<span class="rEJS"><%= alert.alertRoad[x].redirectEJS %></span>)<br>
+                                                            [<span class="rFun"><%= alert.alertRoad[x].callFunction %></span>]<br>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <img  src="/miscPictures/redCross20.png">
+                                                    <% } %>
+                                                </td>
+                                            <% } %>
                                             <td>
                                                 <% if(useAlertsIcons == true) { %>
                                                 <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts" alt="Avatar">
@@ -408,16 +421,12 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                                 <a href="/alerts/updateAlerts/<%= alert.id %>"><button class="btn btn-warning" disabled>update</button></a>
                                                 <% } %>
                                             </td>
-                                            <% if (userAuthID == 1) {%>
-                                            <td>
-                                                <a href="/alerts/showRoad/<%= alert.id %>"><button class="btn btn-warning">change</button></a>
-                                            </td>
-                                            <% } %>
+
                                             <td>
                                                 <% if (aclDeleteAlert == null || aclDeleteAlert.checkBoxValue == true) {%>
-                                                <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger">remove</button></a>
+                                                    <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger">remove</button></a>
                                                 <% } else { %>
-                                                <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger" disabled>remove</button></a>
+                                                    <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger" disabled>remove</button></a>
                                                 <% } %>
                                             </td>
                                         </tr>

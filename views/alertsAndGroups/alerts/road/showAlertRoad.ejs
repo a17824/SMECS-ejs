@@ -84,7 +84,9 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_content">
-
+                            <div class="title_left">
+                                <h3><%= title2 %></h3>
+                            </div>
                             <div align="center">
                                 <button class="btn btn-success" id="exit" onclick="location.href='/AlertRoadStep/<%= alert._id %>'">Create Step</button>
                             </div>
@@ -121,7 +123,7 @@
                                                 <a href="/AlertRoadStep/update/<%= alert._id %>/<%= alertRoad.step %>"><button class="btn btn-warning">update</button></a>
                                             </td>
                                             <td>
-                                                <a href="/alerts/deleteRoad/<%= alertRoad.step %>"><button class="btn btn-danger">delete</button></a>
+                                                <a href="/AlertRoadStep/delete/<%= alert._id %>/<%= alertRoad.step %>" onclick="return(YNconfirm());"><button class="btn btn-danger">delete</button></a>
                                             </td>
                                         </tr>
                                     <% }); %>
@@ -174,7 +176,7 @@
                                                     <% for (var x = 0; x < functions.alertsWithThisFunction.length; x++) {%>
                                                         <% alerts.forEach(function(al) { %>
                                                             <% if (al.alertID == functions.alertsWithThisFunction[x]) { %>
-                                                                <strong>.</strong> <%= al.alertName %><br>
+                                                                <strong>.</strong> <%= al.alertID %> <%= al.alertName %><br>
                                                             <% } %>
                                                         <% }); %>
 
@@ -243,7 +245,7 @@
                                                     <% for (var x = 0; x < functions.alertsWithThisRedirect.length; x++) {%>
                                                         <% alerts.forEach(function(al) { %>
                                                             <% if (al.alertID == functions.alertsWithThisRedirect[x]) { %>
-                                                                <strong>.</strong> <%= al.alertName %><br>
+                                                                <strong>.</strong> <%= al.alertID %> <%= al.alertName %><br>
                                                             <% } %>
                                                         <% }); %>
 

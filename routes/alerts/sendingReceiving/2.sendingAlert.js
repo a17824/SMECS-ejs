@@ -322,14 +322,11 @@ module.exports.postNotes = function(req, res) {
             var htmlNote = '</span></div><span style="color:#333333">&nbsp;';
             var newNote = req.body.note;
 
-            console.log('newNote = ',newNote);
-
             if(req.decoded){ // run SMECS API
                 alert.note = htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }else{  // run SMECS EJS
                 alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }
-            console.log('alert.note = ',alert.note);
 
             if (alert.alertNameID == 26 ) {
                 alert.save();

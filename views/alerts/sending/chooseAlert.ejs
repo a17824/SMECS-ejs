@@ -73,13 +73,14 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
+                console.log('alertMode = ',alertMode);
+
                 $.post("/alerts/sending/chooseAlert",{
                     alertToUpdate: alert_ID,
                     alertGroupID: alertGroupID,
                     alertGroupName: alertGroupName,
                     alertID: alertID,
                     alertName: alertName,
-                    testModeON: testModeON,
                     alertMode: alertMode,
                     latitude: destLatitude,
                     longitude: destLongitude,
@@ -95,6 +96,7 @@
                     if(error.responseText == 'showAlert')
                         alert("Alert not sent.")
                 });
+
             });
         });
     </script>
