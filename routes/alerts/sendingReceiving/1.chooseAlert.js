@@ -320,7 +320,9 @@ module.exports.showAlertsPost = function(req, res) {
                             placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
                             placeholderStudentWithGunSeated: placeholderStudentWithGunSeated,
                             placeholderStudentWithGunBehaviour: placeholderStudentWithGunBehaviour,
-                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo
+                            placeholderEvacuateWhereTo: placeholderEvacuateWhereTo,
+                            alertRoad: alert[0].alertRoad,
+                            roadIndex: 1
 
                         });
                         alertTemp1.save(function(err, resp) {
@@ -361,7 +363,8 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.alertIcon = alert[0].icon;
                                     alertTemp.placeholderNote = placeholderNote;
-
+                                    alertTemp.alertRoad = alert[0].alertRoad;
+                                    alertTemp.roadIndex = 1;
 
                                     alertTemp.save();
 
@@ -385,14 +388,16 @@ module.exports.showAlertsPost = function(req, res) {
                     console.log('No scopes or users to send this alert');
                 }else {
 
-                    //console.log('alert[0].alertRoad = ',alert[0].alertRoad);
+                    /***      ALERT ROAD      ***/
                     alert[0].alertRoad.forEach(function (road) {
                         if(road.step == 1) {
-                            for (var i=0; i < road.callFunction.length; i++) {
+                            for (let i=0; i < road.callFunction.length; i++) {
                                 if(road.callFunction[i] == 'studentStep1')
                                     studentStep1(req, res, alertTemp1);
                                 if(road.callFunction[i] == 'busMap')
                                     busMap(req, res, alertTemp1);
+                                if(road.callFunction[i] == 'saveAlert1')
+                                    saveAlert1(req, res, alertTemp1);
                                 if(road.callFunction[i] == 'createAlert')
                                     createAlert(req, res, alertTemp1);
                             }
@@ -401,7 +406,7 @@ module.exports.showAlertsPost = function(req, res) {
                         }
                     });
 
-
+                    /***     end of ALERT ROAD      ***/
 
 
 
@@ -429,7 +434,8 @@ module.exports.showAlertsPost = function(req, res) {
                         req.body.alertID == 11 ||
                         req.body.alertID == 15 ||
                         req.body.alertID == 23 ||
-                        req.body.alertID == 26) {
+                        //req.body.alertID == 26
+                        ) {
 
                         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
 
@@ -574,15 +580,16 @@ function buildAlertsSameColor(results, arrayGroups, alertTemp) {
 
 function studentStep1(req, res, alertTemp1) {
     alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
-    alertTemp1.save();
     student.saveStudentFile(req, res, alertTemp1);
 }
 function busMap(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
+}
+function saveAlert1(req, res, alertTemp1) {
+    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
     alertTemp1.save();
 }
 function createAlert(req, res, alertTemp1) {
-
     if(!alertTemp1.demoModeON) {
         alertTemp1.latitude = req.body.latitude;
         alertTemp1.longitude = req.body.longitude;

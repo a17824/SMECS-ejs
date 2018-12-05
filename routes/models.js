@@ -512,7 +512,14 @@ var AlertSentTempSchema = new mongoose.Schema({
         }
     }],
     reqAssOn: [String],
-    reqAssOff: [String]
+    reqAssOff: [String],
+    roadIndex: String,
+    alertRoad: [{
+        step: Number,
+        callFunction: Array,
+        redirectAPI: String,
+        redirectEJS: String
+    }]
 
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"

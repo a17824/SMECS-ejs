@@ -9,6 +9,7 @@ var pushNotification = require('./pushNotification.js');
 var moment = require('moment');
 
 
+
 //          FLOOR           \\
 module.exports.showFloor = function(req, res) {
     async.parallel([
@@ -77,9 +78,6 @@ module.exports.postFloor = function(req, res) {
         }
         else {
             //if user skip floor question or if floor photo don't exist on database or all/none/multiple/outside floor selected
-            console.log('floorID = ',floorID);
-            console.log('floorName = ',floorName);
-            console.log('floorPhoto = ',floorPhoto);
             if ( floorID == null ||
                 floorPhoto === '' ||
                 floorID == 'allFloors' ||
@@ -126,8 +124,9 @@ module.exports.postFloor = function(req, res) {
                 //---------------end of checkFloorPhotoExists
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
-                alert.save();
-
+                //alert.roadIndex += 1;
+                //alert.save();
+/*
                 if (alert.alertNameID == 2 ||
                     alert.alertNameID == 4 ||
                     alert.alertNameID == 5 ||
@@ -145,11 +144,26 @@ module.exports.postFloor = function(req, res) {
                     alert.alertNameID == 23 ||
                     alert.alertNameID == 26 ) {
 
-                    //if user goes back in browser and removes floor floor
-
                     redirectAPI = 'notes';
                     redirectEJS = '/alerts/sending/notes/' + alertToUpdate1;
                 }
+                */
+
+                //if user goes back in browser and removes floor floor
+                console.log('UIIIIIIIIIIIIII');
+                /***      ALERT ROAD      ***/
+                alert.alertRoad.forEach(function (road) {
+                    console.log(road.step + ' = ' + alert.roadIndex);
+                    if(road.step == alert.roadIndex) {
+                        for (var i=0; i < road.callFunction.length; i++) {
+                            if(road.callFunction[i] == 'saveAlert1')
+                                saveAlert1(req, res, alert);
+                        }
+                        redirectAPI = road.redirectAPI;
+                        redirectEJS = road.redirectEJS + alertToUpdate1;
+                    }
+                });
+                /***     end of ALERT ROAD      ***/
             }
             //if user choose a floor and photo exists
             else {
@@ -218,7 +232,8 @@ module.exports.showFloorLocation = function(req, res) {
 };
 
 module.exports.postFloorLocation = function(req, res) {
-
+    let redirectAPI; //API user
+    let redirectEJS; //EJS user
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -228,10 +243,10 @@ module.exports.postFloorLocation = function(req, res) {
             if(alert.floorName !== 'skipped by user'){
                 alert.sniperCoordinateX = req.body.coordinateX;
                 alert.sniperCoordinateY = req.body.coordinateY;
-                alert.save();
             }
             console.log('saved temp Alert ' + alert.alertName + ' info from FLOOR LOCATION POST');
 
+            /*
             if (alert.alertNameID == 2 ||
                 alert.alertNameID == 4 ||
                 alert.alertNameID == 5 ||
@@ -247,24 +262,39 @@ module.exports.postFloorLocation = function(req, res) {
                 alert.alertNameID == 18 ||
                 alert.alertNameID == 19 ||
                 alert.alertNameID == 23 ||
-                alert.alertNameID == 26  ) {
+                alert.alertNameID == 26  ) { */
 
-                if(req.decoded){ // run SMECS API
-                    res.json({
-                        success: true,
-                        redirect: 'notes'
-                    });
-                }else{  // run SMECS EJS
-                    res.send({redirect:'/alerts/sending/notes/' + alertToUpdate1});
+            /***      ALERT ROAD      ***/
+            alert.alertRoad.forEach(function (road) {
+                if(road.step == alert.roadIndex) {
+                    for (var i=0; i < road.callFunction.length; i++) {
+                        if(road.callFunction[i] == 'saveAlert1')
+                            saveAlert1(req, res, alert);
+                    }
+                    redirectAPI = road.redirectAPI;
+                    redirectEJS = road.redirectEJS + alertToUpdate1;
                 }
+            });
+            /***     end of ALERT ROAD      ***/
+
+            if(req.decoded){ // run SMECS API
+                res.json({
+                    success: true,
+                    redirect: redirectAPI
+                });
+            }else{  // run SMECS EJS
+                res.send({redirect: redirectEJS});
             }
+            //}
+
+
+
         }
     });
 };
 
 //          NOTES          \\
 module.exports.showNotes = function(req, res) {
-
     async.parallel([
         function(callback){
             models.AlertSentTemp.findById(req.params.id).exec(callback);
@@ -327,7 +357,7 @@ module.exports.postNotes = function(req, res) {
             }else{  // run SMECS EJS
                 alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }
-
+            /*
             if (alert.alertNameID == 26 ) {
                 alert.save();
                 redirectAPI = 'summary';
@@ -393,6 +423,28 @@ module.exports.postNotes = function(req, res) {
                 redirectAPI = 'summary';
                 redirectEJS = '/alerts/sending/reviewAlert/' + alertToUpdate1;
             }
+            */
+
+            /***      ALERT ROAD      ***/
+            alert.alertRoad.forEach(function (road) {
+                if(road.step == alert.roadIndex) {
+                    for (var i=0; i < road.callFunction.length; i++) {
+                        if(road.callFunction[i] == 'studentStep1')
+                            studentStep1(req, res, alert);
+                        if(road.callFunction[i] == 'busMap')
+                            busMap(req, res, alert);
+                        if(road.callFunction[i] == 'saveAlert1')
+                            saveAlert1(req, res, alert);
+                        if(road.callFunction[i] == 'createAlert')
+                            createAlert(req, res, alert);
+                    }
+                    redirectAPI = road.redirectAPI;
+                    redirectEJS = road.redirectEJS + alertToUpdate1;
+                }
+            });
+            alert.roadIndex += 1;
+            alert.save();
+            /***     end of ALERT ROAD      ***/
 
             if(req.decoded){ // run SMECS API
                 res.json({
@@ -403,6 +455,8 @@ module.exports.postNotes = function(req, res) {
             }else{  // run SMECS EJS
                 res.send({redirect: redirectEJS});
             }
+
+
         }
     });
 };
@@ -458,7 +512,8 @@ module.exports.showStudent = function(req, res) {
 };
 
 module.exports.postStudent = function(req, res) {
-
+    let redirectAPI; //API user
+    let redirectEJS; //EJS user
     var alertToUpdate1 = req.body.alertToUpdate;
     var studentName = req.body.student;
     var studentPhoto = req.body.photo;
@@ -475,7 +530,7 @@ module.exports.postStudent = function(req, res) {
         }
         else {
             //ALERT Missing Child,Student with a Gun, Suspected Drug/Alcohol use, Suicide Threat
-            if (alert.alertNameID == 4 ||
+            /*if (alert.alertNameID == 4 ||
                 alert.alertNameID == 5 ||
                 alert.alertNameID == 16 ||
                 alert.alertNameID == 17 ||
@@ -489,18 +544,38 @@ module.exports.postStudent = function(req, res) {
                     student.saveStudentFile(req, res, alert);
                     alertSentInfo.create(req, res, alert,function (result,err) {  //create AlertSentInfo
                         /*****  CALL HERE NOTIFICATION API  *****/
-                        pushNotification.alert(result, 'newAlert');
-                    });
+                        //pushNotification.alert(result, 'newAlert');
+                   // });
+               // }*/
+
+            /***      ALERT ROAD      ***/
+            alert.alertRoad.forEach(function (road) {
+                if(road.step == alert.roadIndex) {
+                    for (var i=0; i < road.callFunction.length; i++) {
+                        if(road.callFunction[i] == 'student2')
+                            student2(req, res, alert, studentName, studentPhoto);
+                        if(road.callFunction[i] == 'studentSaveFile')
+                            studentSaveFile(req, res, alert);
+                        if(road.callFunction[i] == 'createAlert')
+                            createAlert(req, res, alert);
+                    }
+                    redirectAPI = road.redirectAPI;
+                    redirectEJS = road.redirectEJS + alertToUpdate1;
                 }
-                if(req.decoded){ // run SMECS API
-                    res.json({
-                        success: true,
-                        redirect: 'floor'
-                    });
-                }else{  // run SMECS EJS
-                    res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
-                }
+            });
+            alert.roadIndex += 1;
+            alert.save();
+            /***     end of ALERT ROAD      ***/
+
+            if(req.decoded){ // run SMECS API
+                res.json({
+                    success: true,
+                    redirect: redirectAPI
+                });
+            }else{  // run SMECS EJS
+                res.send({redirect: redirectEJS});
             }
+            //}
         }
     });
 };
@@ -668,3 +743,56 @@ module.exports.postMultiSelection = function(req, res) {
         }
     });
 };
+
+function notesSaveOnly(req, res, alertTemp1) {
+    alertTemp1.save();
+}
+function notesMissingStudent(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function notesStundentWithGun(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function notesReqAssisntance(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function multiMedical(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function multiSchoolClosed(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function multiUltilitiesFailures(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function student2(req, res, alertTemp1, studentName, studentPhoto) {
+    alertTemp1.studentName = studentName;
+    alertTemp1.studentPhoto = studentPhoto;
+}
+function studentSaveFile(req, res, alertTemp1) {
+    student.saveStudentFile(req, res, alertTemp1);
+}
+function studentMissingStudent(req, res, alertTemp1) {
+    alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.save();
+}
+function saveAlert1(req, res, alertTemp1) {
+    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
+    alertTemp1.save();
+}
+function createAlert(req, res, alertTemp1) {
+    if(!alertTemp1.demoModeON) {
+        alertTemp1.latitude = req.body.latitude;
+        alertTemp1.longitude = req.body.longitude;
+        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.alert(result, 'newAlert');
+        });
+    }
+}

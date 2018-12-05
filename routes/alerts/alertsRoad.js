@@ -24,7 +24,7 @@ module.exports.show = function(req, res) {
     ],function(err, results){
         res.render('alertsAndGroups/alerts/road/showAlertRoad', {
             title: 'Alert Road',
-            title2: results[0].alertName,
+            title2: results[0].alertID + ' ' + results[0].alertName,
             alert: results[0],
             AlertRoadFunctions: results[1],
             AlertRoadRedirection: results[2],
