@@ -22,17 +22,15 @@
             // end of  get gps location of bus
 
 
-
-            var modeDrill=$("#testMode").val();
-            var modeDemo=$("#demoMode").val();
+            var alertMode=$("#alertMode").val();
 
 
-            if (modeDrill == 'true') {
+            if (alertMode == 'drill') {
                 $("#realDiv").hide('slow');
                 $("#drillDiv").show('slow');
                 $("#demoDiv").hide('slow');
             }
-            if (modeDemo == 'true') {
+            if (alertMode == 'demo') {
                 $("#realDiv").hide('slow');
                 $("#drillDiv").hide('slow');
                 $("#demoDiv").show('slow');
@@ -73,7 +71,6 @@
                     return false;
                 }
                 //--------------------------------forms validation end-------
-                console.log('alertMode = ',alertMode);
 
                 $.post("/alerts/sending/chooseAlert",{
                     alertToUpdate: alert_ID,
@@ -108,9 +105,8 @@
 <p style="color: red"><%- error_messages %></p>
 <% } %>
 
-<input type="hidden" id="alertNameID"  value="<%= alert.id %>">
-<input type="hidden" id="testMode"  value="<%= alert.testModeON %>">
-<input type="hidden" id="demoMode"  value="<%= alert.demoModeON %>">
+<input type="hidden" id="alertNameID" value="<%= alert.id %>">
+<input type="hidden" id="alertMode" value="<%= alert.realDrillDemo %>">
 
 <!-- if user authenticated has permission to send Test alert -> draw checkbox Test Mode//-->
 <% if ( aclTest.length >=1 && alert.id == 0) { %>

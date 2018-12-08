@@ -11,10 +11,9 @@ var async = require("async");
  */
 
 module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
-    if(alertTemp.testModeON)
-        var errorMesssageNoScope = 'In Drill mode,';
-     else
-        var errorMesssageNoScope = 'In Real mode,';
+    let errorMesssageNoScope = 'In Real mode,';
+    if(alertTemp.realDrillDemo == 'drill')
+        errorMesssageNoScope = 'In Drill mode,';
 
     async.parallel([
         function(callback2){
@@ -31,24 +30,22 @@ module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
 
         var arrayRoleID = []; //scope ID
         var arrayRoleName = []; //scope Name
-        if(alertTemp.testModeON){
-            results[0].whoCanSendReceive.sendDrill.forEach(function (role) {
+        if(alertTemp.realDrillDemo == 'drill'){
+            results[0].whoCanSendReceive.receiveDrill.forEach(function (role) {
                 if(role.checkbox == true){
                     arrayRoleID.push(role.roleID); //ROLES that will receive alert
                     arrayRoleName.push(role.roleName);
                 }
-
             });
-        } else{
+        }
+        if(alertTemp.realDrillDemo == 'real'){
             results[0].whoCanSendReceive.receiveReal.forEach(function (role) {
                 if(role.checkbox == true){
                     arrayRoleID.push(role.roleID); //ROLES that will receive alert
                     arrayRoleName.push(role.roleName);
                 }
-
             });
         }
-
 
         if (arrayRoleID.length < 1 || arrayRoleID == null) {
             console.log('This alert has no Roles to send this alert');

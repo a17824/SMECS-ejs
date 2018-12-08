@@ -98,9 +98,9 @@
                                     <thead>
                                     <tr>
                                         <th>Step</th>
-                                        <th>Redirect API</th>
-                                        <th>Redirect EJS</th>
-                                        <th>Functions</th>
+                                        <th>Do This Functions</th>
+                                        <th>API Redirect To</th>
+                                        <th>EJS Redirect To</th>
                                         <th>Update</th>
                                         <th>Delete</th>
                                     </tr>
@@ -108,8 +108,6 @@
                                     <% alert.alertRoad.forEach(function(alertRoad) { %>
                                         <tr>
                                             <td><%= alertRoad.step %></td>
-                                            <td><%= alertRoad.redirectAPI %></td>
-                                            <td><%= alertRoad.redirectEJS %></td>
                                             <td >
                                                 <% if (alertRoad.callFunction) { %>
                                                     <% for (var x = 0; x < alertRoad.callFunction.length; x++) {%>
@@ -119,6 +117,8 @@
                                                     <img  src="/miscPictures/redCross20.png">
                                                 <% } %>
                                             </td>
+                                            <td><%= alertRoad.redirectAPI %></td>
+                                            <td><%= alertRoad.redirectEJS %></td>
                                             <td>
                                                 <a href="/AlertRoadStep/update/<%= alert._id %>/<%= alertRoad.step %>"><button class="btn btn-warning">update</button></a>
                                             </td>

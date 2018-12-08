@@ -156,13 +156,14 @@ module.exports.postFloor = function(req, res) {
                     console.log(road.step + ' = ' + alert.roadIndex);
                     if(road.step == alert.roadIndex) {
                         for (var i=0; i < road.callFunction.length; i++) {
-                            if(road.callFunction[i] == 'saveAlert1')
-                                saveAlert1(req, res, alert);
+
                         }
                         redirectAPI = road.redirectAPI;
                         redirectEJS = road.redirectEJS + alertToUpdate1;
                     }
                 });
+                alert.roadIndex = ++alert.roadIndex;
+                alert.save();
                 /***     end of ALERT ROAD      ***/
             }
             //if user choose a floor and photo exists
@@ -488,7 +489,6 @@ module.exports.showStudent = function(req, res) {
             if(req.decoded){ //API user
                 res.json({
                     success: true,
-                    testModeON: results[0].testModeON,
                     title: results[0].alertName,
                     alert: results[0],
                     userAuthGroupAlerts: results[2].appSettings.groupAlertsButtons, //for Back or Exit button

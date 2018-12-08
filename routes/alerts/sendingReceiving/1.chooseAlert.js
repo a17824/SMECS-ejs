@@ -66,7 +66,8 @@ module.exports.showGroups = function(req, res) {
         ],function(err, results){
             var arrayGroups = [];
             buildArrayGroups(results, arrayGroups); //Build array Groups for Real and Drill Alerts
-
+            console.log('arrayGroups[1]');
+            console.log(arrayGroups[0]);
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -100,22 +101,11 @@ module.exports.showGroupsPost = function(req, res) {
             console.log('err - ',err);
         else {
 
-            var testModeON = false;
-            var demoModeON = false;
-
-            if(req.body.alertMode == 'drill'){
-                testModeON = true;
-            }
-            if(req.body.alertMode == 'demo'){
-                demoModeON = true;
-            }
-
-            var alertTemp1 = new models.AlertSentTemp({
+            let alertTemp1 = new models.AlertSentTemp({
                 alertGroupID: req.body.alertGroupID, //first time running IntelliJ gives error of 'Cannot read property 'groupID' of undefined'
                 alertGroupName: req.body.alertGroupName,
                 groupIcon: group.icon,
-                testModeON: testModeON,
-                demoModeON: demoModeON
+                realDrillDemo: req.body.alertMode
             });
             alertTemp1.save();
 
@@ -288,17 +278,9 @@ module.exports.showAlertsPost = function(req, res) {
 
 
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
-                        let testModeON = false;
-                        let demoModeON = false;
 
-                        if(req.body.alertMode == 'drill'){
-                            testModeON = true;
-                        }
-                        if(req.body.alertMode == 'demo'){
-                            demoModeON = true;
-                        }
-
-                        var alertTemp1 = new models.AlertSentTemp({
+                        console.log('req.body.alertMode = ',req.body.alertMode);
+                        let alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,
                             groupSound: alert[0].group.mp3,
@@ -307,8 +289,7 @@ module.exports.showAlertsPost = function(req, res) {
                             groupColorTx: alert[0].group.color.textValue,
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
-                            testModeON: testModeON,
-                            demoModeON: demoModeON,
+                            realDrillDemo: req.body.alertMode,
                             requestProcedureCompleted: alert[0].alertRequestProcedureCompleted,
                             requestWeAreSafe: alert[0].alertRequestWeAreSafe,
                             requestINeedHelp: alert[0].alertRequestForINeedHelp,
@@ -396,8 +377,6 @@ module.exports.showAlertsPost = function(req, res) {
                                     studentStep1(req, res, alertTemp1);
                                 if(road.callFunction[i] == 'busMap')
                                     busMap(req, res, alertTemp1);
-                                if(road.callFunction[i] == 'saveAlert1')
-                                    saveAlert1(req, res, alertTemp1);
                                 if(road.callFunction[i] == 'createAlert')
                                     createAlert(req, res, alertTemp1);
                             }
@@ -405,7 +384,8 @@ module.exports.showAlertsPost = function(req, res) {
                             redirectEJS = road.redirectEJS + alertTemp1._id;
                         }
                     });
-
+                    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
+                    alertTemp1.save();
                     /***     end of ALERT ROAD      ***/
 
 
@@ -590,7 +570,7 @@ function saveAlert1(req, res, alertTemp1) {
     alertTemp1.save();
 }
 function createAlert(req, res, alertTemp1) {
-    if(!alertTemp1.demoModeON) {
+    if(alertTemp1.realDrillDemo !== 'demo') {
         alertTemp1.latitude = req.body.latitude;
         alertTemp1.longitude = req.body.longitude;
         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo

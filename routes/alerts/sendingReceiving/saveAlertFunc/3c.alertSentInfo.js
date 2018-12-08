@@ -68,7 +68,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
         request911Call: tempAlert.request911Call,
         whoCanCall911: tempAlert.whoCanCall911,
         note: tempAlert.note,
-        testModeON: tempAlert.testModeON,
+        realDrillDemo: tempAlert.realDrillDemo,
         floorName: tempAlert.floorName,
         floorPhoto: tempAlert._id + '_' + tempAlert.floorPhoto,
         sniperCoordinateX: tempAlert.sniperCoordinateX,

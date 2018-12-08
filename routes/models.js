@@ -33,7 +33,7 @@ var UsersSchema = new mongoose.Schema({
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     receptionPA: { type: Boolean, default: false},
-    pushToken: String,
+    pushToken: [String],
     redirect: { type: String, default: 'home'},
     redirectTabUsers: { type: String, default: 'showUsers'},
     redirectTabAlertGroups: { type: String, default: 'showGroups'},
@@ -305,7 +305,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sentTo: [{                      //30
         firstName: String,
         lastName: String,
-        pushToken: String,
+        pushToken: [String],
         email: String,
         called911: {
             called911Boolean: {type: Boolean, default: false},
@@ -343,7 +343,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
         statusClosedDate: String,
         statusClosedTime: String
     },
-    testModeON: Boolean,
+    realDrillDemo: String,
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
     requestINeedHelp: { type: Boolean, default: false },
@@ -435,8 +435,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     sentBy: String,
     sentTime: String,
     notePlaceholder: String,
-    testModeON: Boolean,
-    demoModeON: Boolean,
+    realDrillDemo: String,
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
     requestINeedHelp: { type: Boolean, default: false },
@@ -448,7 +447,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         firstName: String,
         lastName: String,
         email: String,
-        pushToken: String,
+        pushToken: [String],
         photo: String
     }],
     sentSmecsAppUsersScope: [{

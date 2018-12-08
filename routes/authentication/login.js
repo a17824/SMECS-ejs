@@ -94,31 +94,48 @@ module.exports.postLogin = function(req, res, next) {
                     var token = jwt.sign({user: user}, config.secret, {
                         //expiresIn: 1440 // expires in 24 hours
                     });
-                    user.pushToken = req.body.pushToken;
-                    user.save(function (err) {
-                        if (err) {
-                            res.json({
-                                success: false,
-                                message: 'contact your system administrator. pushToken not saved'
-                            });
-                        } else {
-                            // return the information including token as JSON
-                            res.json({
-                                success: true,
-                                message: 'Welcome aboard!',
-                                token: token,
-                                userRoleID: user.userRoleID,
-                                userRoleName: user.userRoleName,
-                                userPrivilegeID: user.userPrivilegeID,
-                                userPrivilegeName: user.userPrivilegeName,
-                                firstName: user.firstName,
-                                lastName: user.lastName,
-                                email: user.email
-                            });
-                        }
+                    let newPushToken = req.body.pushToken;
+                    if (!user.pushToken.includes(newPushToken)) {
+                        user.pushToken.push(newPushToken);
+                        user.save(function (err) {
+                            if (err) {
+                                res.json({
+                                    success: false,
+                                    message: 'contact your system administrator. pushToken not saved'
+                                });
+                            } else {
+                                //delete new push token from other users
+                                models.Users.find({}, function (err, users2) {
+                                    if (err || !users2) console.log("No users to delete push token");
+                                    else {
+                                        users2.forEach(function (user2) {
+                                            if (user.email != user2.email) {
+                                                if (user2.pushToken.includes(newPushToken)) {
+                                                    let index = user2.pushToken.indexOf(newPushToken);
+                                                    user2.pushToken.splice(index, 1);
+                                                    user2.save();
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                });
+                            }
+                        });
+                    }
+                    // return the information including token as JSON
+                    res.json({
+                        success: true,
+                        message: 'Welcome aboard!',
+                        token: token,
+                        userRoleID: user.userRoleID,
+                        userRoleName: user.userRoleName,
+                        userPrivilegeID: user.userPrivilegeID,
+                        userPrivilegeName: user.userPrivilegeName,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email
                     });
-
-
                 }
             }
         });

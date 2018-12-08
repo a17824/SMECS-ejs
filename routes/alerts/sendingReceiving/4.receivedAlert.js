@@ -49,8 +49,8 @@ module.exports.receivedAlert = function(req, res) {
                                     //-------------------
 
                                     //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
-                                    if(results[0].testModeON){
-                                        var role = alert.whoCanSendReceive.receiveDrill;
+                                    if(results[0].realDrillDemo == 'real'){
+                                        let role = alert.whoCanSendReceive.receiveReal;
                                         userApiEjs.forEach(function (userAuthRole) {
                                             for (var t = 0; t < role.length; t++) {
                                                 if(userAuthRole == role[t].roleID && role[t].checkbox == true){
@@ -59,8 +59,9 @@ module.exports.receivedAlert = function(req, res) {
                                                 }
                                             }
                                         })
-                                    }else{
-                                        var role = alert.whoCanSendReceive.receiveReal;
+                                    }
+                                    if(results[0].realDrillDemo == 'drill'){
+                                        let role = alert.whoCanSendReceive.receiveDrill;
                                         userApiEjs.forEach(function (userAuthRole) {
                                             for (var t = 0; t < role.length; t++) {
                                                 if(userAuthRole == role[t].roleID && role[t].checkbox == true){
@@ -69,7 +70,6 @@ module.exports.receivedAlert = function(req, res) {
                                                 }
                                             }
                                         })
-
                                     }
                                     //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
 

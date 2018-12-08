@@ -215,6 +215,31 @@
                                         <select id='some_select' class="form-control"></select>
                                     </div>
                                 </div>
+                                <br>
+
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Functions:</label>
+                                <div id="smecsUserDiv" class="enable" style="margin-left: 27%">
+
+                                    <ul id="smecsUserUl" class="enable">
+                                        <% for (var a = 0; a < stepValues.callFunction.length; a++) { %>
+                                            <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                                                <input type="hidden" name="users[]" value="<%= stepValues.callFunction[a] %>" />
+                                                <%= stepValues.callFunction[a] %>
+                                            </li>
+                                        <% } %>
+                                    </ul>
+
+                                    <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+                                        <!–– <option selected disabled hidden> -- select a function -- </option> ––>
+                                        <option disabled selected value> -- select a function -- </option>
+                                        <% functions.forEach(function(func) { %>
+                                            <option value="<%= func.functionName %>"><%= func.functionName %></option>
+                                        <% }); %>
+                                    </select>
+                                    <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+                                    <br><br>
+                                </div>
+                                <br>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">RedirectAPI:</label>
@@ -245,32 +270,6 @@
                                         </select>
                                     </div>
                                 </div>
-
-
-                                <div id="smecsUserDiv" class="enable">
-                                    <label for="smecsUserLabel" id="smecsUserLabel" class="enable" style="margin-left: 10px">Functions:</label><br>
-
-                                    <ul id="smecsUserUl" class="enable">
-                                        <% for (var a = 0; a < stepValues.callFunction.length; a++) { %>
-                                            <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
-                                                <input type="hidden" name="users[]" value="<%= stepValues.callFunction[a] %>" />
-                                                <%= stepValues.callFunction[a] %>
-                                            </li>
-                                        <% } %>
-                                    </ul>
-
-                                    <select class="enable" id="smecsUserSelect" onchange="selectUser(this);">
-                                        <!–– <option selected disabled hidden> -- select a function -- </option> ––>
-                                        <option disabled selected value> -- select a function -- </option>
-                                        <% functions.forEach(function(func) { %>
-                                            <option value="<%= func.functionName %>"><%= func.functionName %></option>
-                                        <% }); %>
-                                    </select>
-                                    <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
-                                    <br><br>
-                                </div>
-
-
 
 
 
