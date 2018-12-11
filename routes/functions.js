@@ -2,7 +2,7 @@
 var models = require('./models');
 var async = require("async");
 var aclPermissions = require('./acl/aclPermissions');
-
+let pushNotification = require('./alerts/sendingReceiving/pushNotification.js');
 
 //REDIRECT TO PREVIOUS PAGE
 module.exports.redirectPage = function(req, res, page) {
@@ -87,10 +87,16 @@ module.exports.useIcons = function(req, res) {
             if(err) console.log("Something wrong when updating usePrivilegeIcons");});}
     if(iconType == 'groups'){
         models.Icons.findOneAndUpdate({_id: '5afcab36dcba311ccc719b0a'}, {$set:{useAlertGroupIcons:useIcons}}, {new: true}, function(err){
-            if(err) console.log("Something wrong when updating useAlertGroupIcons");});}
+            if(err) console.log("Something wrong when updating useAlertGroupIcons");
+            else  pushNotification.icons(icons.useAlertGroupIcons,'checkIcons');
+        });
+    }
     if(iconType == 'alerts'){
-        models.Icons.findOneAndUpdate({_id: '5afcab36dcba311ccc719b0a'}, {$set:{useAlertsIcons:useIcons}}, {new: true}, function(err){
-            if(err) console.log("Something wrong when updating useAlertsIcons");});}
+        models.Icons.findOneAndUpdate({_id: '5afcab36dcba311ccc719b0a'}, {$set:{useAlertsIcons:useIcons}}, {new: true}, function(err,icons){
+            if(err) console.log("Something wrong when updating useAlertsIcons");
+            else  pushNotification.icons(icons.useAlertsIcons,'checkIcons');
+        });
+    }
 };
 
 

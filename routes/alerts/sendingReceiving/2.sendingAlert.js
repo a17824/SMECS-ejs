@@ -150,12 +150,12 @@ module.exports.postFloor = function(req, res) {
                 */
 
                 //if user goes back in browser and removes floor floor
-                console.log('UIIIIIIIIIIIIII');
+
                 /***      ALERT ROAD      ***/
                 alert.alertRoad.forEach(function (road) {
                     console.log(road.step + ' = ' + alert.roadIndex);
                     if(road.step == alert.roadIndex) {
-                        for (var i=0; i < road.callFunction.length; i++) {
+                        for (let i=0; i < road.callFunction.length; i++) {
 
                         }
                         redirectAPI = road.redirectAPI;
@@ -269,13 +269,14 @@ module.exports.postFloorLocation = function(req, res) {
             alert.alertRoad.forEach(function (road) {
                 if(road.step == alert.roadIndex) {
                     for (var i=0; i < road.callFunction.length; i++) {
-                        if(road.callFunction[i] == 'saveAlert1')
-                            saveAlert1(req, res, alert);
+
                     }
                     redirectAPI = road.redirectAPI;
                     redirectEJS = road.redirectEJS + alertToUpdate1;
                 }
             });
+            alert.roadIndex = ++alert.roadIndex;
+            alert.save();
             /***     end of ALERT ROAD      ***/
 
             if(req.decoded){ // run SMECS API
@@ -430,20 +431,13 @@ module.exports.postNotes = function(req, res) {
             alert.alertRoad.forEach(function (road) {
                 if(road.step == alert.roadIndex) {
                     for (var i=0; i < road.callFunction.length; i++) {
-                        if(road.callFunction[i] == 'studentStep1')
-                            studentStep1(req, res, alert);
-                        if(road.callFunction[i] == 'busMap')
-                            busMap(req, res, alert);
-                        if(road.callFunction[i] == 'saveAlert1')
-                            saveAlert1(req, res, alert);
-                        if(road.callFunction[i] == 'createAlert')
-                            createAlert(req, res, alert);
+
                     }
                     redirectAPI = road.redirectAPI;
                     redirectEJS = road.redirectEJS + alertToUpdate1;
                 }
             });
-            alert.roadIndex += 1;
+            alert.roadIndex = ++alert.roadIndex;
             alert.save();
             /***     end of ALERT ROAD      ***/
 
@@ -780,10 +774,6 @@ function studentSaveFile(req, res, alertTemp1) {
 }
 function studentMissingStudent(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
-}
-function saveAlert1(req, res, alertTemp1) {
-    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
     alertTemp1.save();
 }
 function createAlert(req, res, alertTemp1) {

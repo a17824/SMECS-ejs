@@ -66,8 +66,7 @@ module.exports.showGroups = function(req, res) {
         ],function(err, results){
             var arrayGroups = [];
             buildArrayGroups(results, arrayGroups); //Build array Groups for Real and Drill Alerts
-            console.log('arrayGroups[1]');
-            console.log(arrayGroups[0]);
+
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -564,10 +563,6 @@ function studentStep1(req, res, alertTemp1) {
 }
 function busMap(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
-}
-function saveAlert1(req, res, alertTemp1) {
-    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
-    alertTemp1.save();
 }
 function createAlert(req, res, alertTemp1) {
     if(alertTemp1.realDrillDemo !== 'demo') {

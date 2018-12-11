@@ -28,7 +28,6 @@ module.exports.homeReports = function(req, res, next) {
         if(md.is('iPad') == true)
             page = 'home-reports/home-mobReports';
 
-        console.log('page = ', page);
 
         res.render(page,{
             title: 'REPORTS SENT',

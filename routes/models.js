@@ -352,6 +352,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sniperCoordinateX: String,
     sniperCoordinateY: String,
     note: String,
+    resolution: String,
     floorName: String,                 //read from FloorLevels database (radio buttons)
     floorPhoto: String,
     floorLocation: String,              //auto load picture from floorLevels database

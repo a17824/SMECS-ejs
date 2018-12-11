@@ -1,6 +1,7 @@
 //Dependencies
 //var FCM = require('fcm-node'); //for Firebase
 let OneSignal = require('onesignal-node'); //for OneSignal
+let models = require('./../../models');
 
 /*****  CALL HERE NOTIFICATION API  ****
  *  var 'action' can be:                *
@@ -68,8 +69,32 @@ module.exports.alert= function(alert, action) {
 };
 
 
+module.exports.icons = function(icons,action) {
+    models.Users.find({pushToken: {$exists: true, $not: {$size: 0}}}, function (err,users) {
+        if( err || !users) console.log("No users with pushToken to update");
+        else{
+            let allUsersWithPushToken = [];
+            users.forEach(function (user) {
+                user.pushToken.forEach(function (token) {
+                    allUsersWithPushToken.push(token);
+                });
+            });
+            let message = new OneSignal.Notification({
+                contents: {
+                    en: 'update on/off group buttons'
+                },
+                include_player_ids: allUsersWithPushToken
+            });
+            message.postBody["data"] = {
+                action: action,
+                icons: icons
+            };
+            sendPush(message);
+        }
+    });
+};
+//end of Create message for cellPhone notification
 
-//Create message for cellPhone notification
 module.exports.notifyUser = function(user, action) {
     /* FIREBASE
     var message = {
@@ -85,6 +110,9 @@ module.exports.notifyUser = function(user, action) {
 
     // we need to create a notification to send
     let message = new OneSignal.Notification({
+        contents: {
+            en: 'update on/off group buttons'
+        },
         include_player_ids: user.pushToken
     });
     message.postBody["data"] = {
@@ -94,8 +122,6 @@ module.exports.notifyUser = function(user, action) {
     };
     sendPush(message);
 };
-//end of Create message for cellPhone notification
-
 
 
 
