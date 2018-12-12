@@ -58,6 +58,8 @@ module.exports.reviewAlert = function(req, res) {
 
 module.exports.postReviewAlert = function(req, res, next) {
     var alertToUpdate1;
+    let redirectAPI; //API user
+    let redirectEJS; //EJS user
 
     if(req.body.alertToUpdate == 0) //panic alert
         alertToUpdate1 = req.params.id;
@@ -68,7 +70,7 @@ module.exports.postReviewAlert = function(req, res, next) {
     async.waterfall([
         function (callback) {
             models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
-
+/*
                 // Alert that requires FLOOR function
                 if (tempAlert.alertNameID == 2 ||
                     tempAlert.alertNameID == 4 ||
@@ -100,6 +102,27 @@ module.exports.postReviewAlert = function(req, res, next) {
 
                     student.updateStudentFile(req, res, tempAlert);
                 }
+*/
+                /***      ALERT ROAD      ***/
+                tempAlert.alertRoad.forEach(function (road) {
+                    if(road.step == tempAlert.roadIndex) {
+                        for (let i=0; i < road.callFunction.length; i++) {
+                            if(road.callFunction[i] == 'saveFloorFile')
+                                floor.saveFloorFile(req, res, tempAlert);
+                            if(road.callFunction[i] == 'updateStudentFile')
+                                student.updateStudentFile(req, res, tempAlert);
+                            if(road.callFunction[i] == 'createAlert')
+                                createAlert(req, res, tempAlert);
+                        }
+                        redirectAPI = road.redirectAPI;
+                        redirectEJS = road.redirectEJS + alertToUpdate1;
+                    }
+                });
+                tempAlert.roadIndex = ++tempAlert.roadIndex;
+                tempAlert.save();
+                /***     end of ALERT ROAD      ***/
+
+
                 callback(null, tempAlert);
             });
         },
@@ -129,13 +152,30 @@ module.exports.postReviewAlert = function(req, res, next) {
 
     ], function (err, tempAlert) {
 
-        alertSentInfo.update(req, res, tempAlert,function (result,err) {  //update AlertSentInfo
+        //alertSentInfo.update(req, res, tempAlert,function (result,err) {  //update AlertSentInfo
 
             /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.alert(result, 'newAlert');
+            //pushNotification.alert(result, 'newAlert');
 
+        //});
+
+        /***      ALERT ROAD      ***/
+        tempAlert.alertRoad.forEach(function (road) {
+            if(road.step == tempAlert.roadIndex) {
+                for (let i=0; i < road.callFunction.length; i++) {
+                    if(road.callFunction[i] == 'updateAlert')
+                        updateAlert(req, res, tempAlert);
+                }
+                //redirectAPI = road.redirectAPI;
+                //redirectEJS = road.redirectEJS + alertToUpdate1;
+            }
         });
+        tempAlert.roadIndex = ++tempAlert.roadIndex;
+        tempAlert.save();
+        /***     end of ALERT ROAD      ***/
 
+
+/*
         if(req.decoded){ //API user
             res.json({
                 success: true,
@@ -146,6 +186,39 @@ module.exports.postReviewAlert = function(req, res, next) {
         }else{  //EJS user
             res.send({redirect: '/alerts/received/receiveAlert/' + tempAlert._id});
         }
+*/
+
+        if(req.decoded){ // run SMECS API
+            res.json({
+                success: true,
+                message: 'Alert Successfully sent.',
+                redirect: redirectAPI
+            });
+        }else{  // run SMECS EJS
+            res.send({redirect: redirectEJS});
+        }
     });
 };
 
+function createAlert(req, res, alertTemp1) {
+    console.log('CREATE');
+    if(alertTemp1.realDrillDemo !== 'demo') {
+        alertTemp1.latitude = req.body.latitude;
+        alertTemp1.longitude = req.body.longitude;
+        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.alert(result, 'newAlert');
+        });
+    }
+}
+function updateAlert(req, res, alertTemp1) {
+    console.log('UPDATE');
+    if(alertTemp1.realDrillDemo !== 'demo') {
+        alertSentInfo.update(req, res, alertTemp1,function (result,err) {  //update AlertSentInfo
+
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.alert(result, 'newAlert');
+
+        });
+    }
+}

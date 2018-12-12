@@ -12,7 +12,6 @@ var fs   = require('fs-extra');
 
 module.exports.saveFloorFile = function(req, res, tempAlert) {
 
-
     //copy floor Photo from floor database to alertSentInfo database -----------------
     models.Floors.findOne({floorName: tempAlert.floorName}, function (err, result) {
         if (err) {

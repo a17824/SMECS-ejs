@@ -153,7 +153,6 @@ module.exports.postFloor = function(req, res) {
 
                 /***      ALERT ROAD      ***/
                 alert.alertRoad.forEach(function (road) {
-                    console.log(road.step + ' = ' + alert.roadIndex);
                     if(road.step == alert.roadIndex) {
                         for (let i=0; i < road.callFunction.length; i++) {
 
@@ -268,7 +267,7 @@ module.exports.postFloorLocation = function(req, res) {
             /***      ALERT ROAD      ***/
             alert.alertRoad.forEach(function (road) {
                 if(road.step == alert.roadIndex) {
-                    for (var i=0; i < road.callFunction.length; i++) {
+                    for (let i=0; i < road.callFunction.length; i++) {
 
                     }
                     redirectAPI = road.redirectAPI;
@@ -337,8 +336,8 @@ module.exports.showNotes = function(req, res) {
 };
 module.exports.postNotes = function(req, res) {
 
-    var redirectAPI; //API user
-    var redirectEJS; //EJS user
+    let redirectAPI; //API user
+    let redirectEJS; //EJS user
     var allFloorsButtonHidden;  //API user
 
 
@@ -406,11 +405,7 @@ module.exports.postNotes = function(req, res) {
                 }
 
                 if (alert.alertNameID == 12 ) {
-
-                    //alert.latitude = req.body.latitude;
-                    //alert.longitude = req.body.longitude;
                     alert.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
-                    //alert.mapBus = req.body.mapBus;
                     alert.save();
                 }
                 if (alert.alertNameID == 27 ) {
@@ -430,8 +425,13 @@ module.exports.postNotes = function(req, res) {
             /***      ALERT ROAD      ***/
             alert.alertRoad.forEach(function (road) {
                 if(road.step == alert.roadIndex) {
-                    for (var i=0; i < road.callFunction.length; i++) {
-
+                    for (let i=0; i < road.callFunction.length; i++) {
+                        if(road.callFunction[i] == 'studentMissingStudent')
+                            studentMissingStudent(req, res, alert);
+                        if(road.callFunction[i] == 'notesStudentWithGun')
+                            notesStudentWithGun(req, res, alert);
+                        if(road.callFunction[i] == 'notesBus')
+                            notesBus(req, res, alert);
                     }
                     redirectAPI = road.redirectAPI;
                     redirectEJS = road.redirectEJS + alertToUpdate1;
@@ -440,7 +440,7 @@ module.exports.postNotes = function(req, res) {
             alert.roadIndex = ++alert.roadIndex;
             alert.save();
             /***     end of ALERT ROAD      ***/
-
+            console.log('alert.missingChildLastTimeSeen = ',alert.missingChildLastTimeSeen);
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -557,7 +557,7 @@ module.exports.postStudent = function(req, res) {
                     redirectEJS = road.redirectEJS + alertToUpdate1;
                 }
             });
-            alert.roadIndex += 1;
+            alert.roadIndex = ++alert.roadIndex;
             alert.save();
             /***     end of ALERT ROAD      ***/
 
@@ -633,7 +633,8 @@ module.exports.showMultiSelection = function(req, res) {
 };
 
 module.exports.postMultiSelection = function(req, res) {
-
+    let redirectAPI; //API user
+    let redirectEJS; //EJS user
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -648,7 +649,7 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.multiSelectionIDs = req.body.checkboxesIDs.split(',').map(String);
             }
 
-
+/*
             //ALERT Utilities Failures,
             if (alert.alertNameID == 14 ||
                 alert.alertNameID == 26 ) {
@@ -722,7 +723,7 @@ module.exports.postMultiSelection = function(req, res) {
             }
             //ALERT SchoolClosed
             if (alert.alertNameID == 29 ) {
-                alert.dayClosed = req.body.medicalInjuredParties;
+
                 alert.save();
 
                 if(req.decoded){ // run SMECS API
@@ -734,36 +735,97 @@ module.exports.postMultiSelection = function(req, res) {
                     res.send({redirect:'/alerts/sending/notes/' + alertToUpdate1});
                 }
             }
+*/
+
+            /***      ALERT ROAD      ***/
+            alert.alertRoad.forEach(function (road) {
+                if(road.step == alert.roadIndex) {
+                    for (var i=0; i < road.callFunction.length; i++) {
+                        if(road.callFunction[i] == 'multiUtilities')
+                            multiUtilities(req, res, alert);
+                        if(road.callFunction[i] == 'multiMedical')
+                            multiMedical(req, res, alert);
+                        if(road.callFunction[i] == 'multiSchoolClosed')
+                            multiSchoolClosed(req, res, alert);
+                        if(road.callFunction[i] == 'createAlert')
+                            createAlert(req, res, alert);
+                    }
+                    redirectAPI = road.redirectAPI;
+                    redirectEJS = road.redirectEJS + alertToUpdate1;
+                }
+            });
+            alert.roadIndex = ++alert.roadIndex;
+            alert.save();
+            /***     end of ALERT ROAD      ***/
+
+            if(req.decoded){ // run SMECS API
+                res.json({
+                    success: true,
+                    redirect: redirectAPI
+                });
+            }else{  // run SMECS EJS
+                res.send({redirect: redirectEJS});
+            }
         }
     });
 };
 
-function notesSaveOnly(req, res, alertTemp1) {
-    alertTemp1.save();
-}
-function notesMissingStudent(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
-}
-function notesStundentWithGun(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
-}
-function notesReqAssisntance(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
+
+function multiSchoolClosed(req, res, alertTemp1) {
+    alertTemp1.dayClosed = req.body.medicalInjuredParties;
 }
 function multiMedical(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
+    alertTemp1.medicalInjuredParties = req.body.medicalInjuredParties;
 }
-function multiSchoolClosed(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
+function multiUtilities(req, res, alert) {
+    models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
+        if(err){
+            console.log('err = ', err);
+        }else {
+            alert.requestAssistance = [];
+            utils.forEach(function (util) {
+                var request = {
+                    utilityID: util.utilityID,
+                    utilityName: util.utilityName,
+                    contactName: util.contactName,
+                    phone: util.phone,
+                    email: util.email,
+                    smecsApp: util.smecsApp
+                };
+                alert.requestAssistance.push(request);
+            });
+
+            if (alert.alertNameID == 26) {
+                alert.reqAssOn = req.body.reqAssChecked;
+                alert.reqAssOff = req.body.reqAssNotChecked;
+
+                var reqAssOn, reqAssOff;
+
+                if (req.decoded) {       // API user
+                    reqAssOn = req.body.reqAssChecked.split(',').map(String);
+                    reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
+                } else {                 // EJS user
+                    reqAssOn = req.body.reqAssChecked;
+                    reqAssOff = req.body.reqAssNotChecked;
+                }
+
+
+                alert.reqAssOn = reqAssOn;
+                alert.reqAssOff = reqAssOff;
+
+
+                var arraySmecsAppToSent = [];
+                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update');
+            }
+            if (alert.alertNameID !== 26) {
+                alert.save();
+            }
+
+        }
+    });
 }
-function multiUltilitiesFailures(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
+function notesBus(req, res, alertTemp1) {
+    alertTemp1.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
 }
 function student2(req, res, alertTemp1, studentName, studentPhoto) {
     alertTemp1.studentName = studentName;
@@ -773,11 +835,17 @@ function studentSaveFile(req, res, alertTemp1) {
     student.saveStudentFile(req, res, alertTemp1);
 }
 function studentMissingStudent(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-    alertTemp1.save();
+    alertTemp1.missingChildLastTimeSeen = req.body.lastTimeSeen;
+    alertTemp1.missingChildLastPlaceSeen = req.body.lastPlaceSeen;
+    alertTemp1.missingChildClothesWearing = req.body.clothesWearing;
 }
+function notesStudentWithGun(req, res, alertTemp1) {
+    alertTemp1.studentWithGunSeated = req.body.seat;
+    alertTemp1.studentWithGunBehaviour = req.body.studentBehaviour;
+}
+
 function createAlert(req, res, alertTemp1) {
-    if(!alertTemp1.demoModeON) {
+    if(alertTemp1.realDrillDemo !== 'demo') {
         alertTemp1.latitude = req.body.latitude;
         alertTemp1.longitude = req.body.longitude;
         alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
