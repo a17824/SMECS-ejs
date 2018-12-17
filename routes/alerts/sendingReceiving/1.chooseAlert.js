@@ -4,8 +4,8 @@ var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var functions = require('./../../functions');
 var student = require('./saveAlertFunc/3b.student.js');
-var alertSentInfo = require('./saveAlertFunc/3c.alertSentInfo.js');
-var pushNotification = require('./pushNotification.js');
+
+var createAlert = require('./createAlert.js');
 
 
 
@@ -132,7 +132,7 @@ module.exports.showAlerts = function(req, res) {
     else
         roleX = req.user.userRoleID;
 
-        async.parallel([
+    async.parallel([
         function(callback2){
             models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
             }, callback2).sort({"group.sortID": 1}).sort({"sortID": 1}).cursor();                       //real mode
@@ -226,8 +226,9 @@ module.exports.showAlerts = function(req, res) {
 };
 
 module.exports.showAlertsPost = function(req, res) {
-    var redirectAPI; //API user
-    var redirectEJS; //EJS user
+    let redirectAPI; //API user
+    let data; //API user
+    let redirectEJS; //EJS user
 
     async.waterfall([
         function (callback) {
@@ -313,7 +314,6 @@ module.exports.showAlertsPost = function(req, res) {
                                         message: 'Something went wrong, please try again. If this problem persists please contact SMECS tech support team.'
                                     })
                             } else {
-                                console.log('the tempAler1 has been saved');
                                 callback(null, alertTemp1, alert);
                             }
                         });
@@ -368,24 +368,78 @@ module.exports.showAlertsPost = function(req, res) {
                 }else {
 
                     /***      ALERT ROAD      ***/
-                    alert[0].alertRoad.forEach(function (road) {
-                        if(road.step == 1) {
-                            for (let i=0; i < road.callFunction.length; i++) {
-                                if(road.callFunction[i] == 'studentStep1')
-                                    studentStep1(req, res, alertTemp1);
-                                if(road.callFunction[i] == 'busMap')
-                                    busMap(req, res, alertTemp1);
-                                if(road.callFunction[i] == 'createAlert')
-                                    createAlert(req, res, alertTemp1);
+                    function lastRedirectFunction(cb2){
+                        alert[0].alertRoad.forEach(function (road) {
+                            if(road.step == 1) {
+
+                                function redirectFunction(cb){
+                                    if(road.callFunction.length >= 1){
+                                        for (let i=0; i < road.callFunction.length; i++) {
+                                            if(road.callFunction[i] === 'studentStep1'){
+                                                studentStep1(req, res, alertTemp1);
+                                            }
+                                            if(road.callFunction[i] === 'busMap'){
+                                                busMap(req, res, alertTemp1);
+                                            }
+                                            if(road.callFunction[i] === 'createAlert'){
+                                                createAlert.createAlert(req, res, alertTemp1, function(pinOkFalse){
+                                                    console.log('A if = ',pinOkFalse);
+                                                    cb(pinOkFalse);
+                                                });
+                                            }
+                                        }
+                                    }else{
+                                        cb('NA');
+                                        console.log('A else = ');
+                                    }
+
+
+                                }
+
+                                redirectFunction(function (returnValue) {
+                                    // use the return value here instead of like a regular (non-evented) return value
+                                    console.log('B = ',returnValue);
+                                    if(returnValue === 1 || returnValue === 'NA') {
+                                        console.log('C if = ',road.redirectAPI);
+                                        success = true;
+                                        redirectAPI = road.redirectAPI;
+                                        redirectEJS = road.redirectEJS + alertTemp1._id;
+                                        cb2(redirectAPI);
+                                    }else {
+                                        data = {
+                                            success: false,
+                                            redirectAPI: 'notes'
+                                        };
+                                        console.log('C else = ',redirectAPI);
+                                        cb2(data);
+                                    }
+                                });
+
+
+
                             }
-                            redirectAPI = road.redirectAPI;
-                            redirectEJS = road.redirectEJS + alertTemp1._id;
-                        }
-                    });
-                    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
-                    alertTemp1.save();
+                        });
+                    }
+
                     /***     end of ALERT ROAD      ***/
 
+                    lastRedirectFunction(function (result) {
+                        alertTemp1.roadIndex = ++alertTemp1.roadIndex;
+                        alertTemp1.save();
+                        console.log('result = ',result);
+                        console.log('D suc = ',result.success);
+                        console.log('D red = ',result.redirectAPI);
+
+                        if(req.decoded){ // run SMECS API
+                            res.json({
+                                success: result.success,
+                                redirect: result.redirectAPI,
+                                _id: alertTemp1._id
+                            });
+                        }else{  // run SMECS EJS
+                            res.send({redirect: redirectEJS});
+                        }
+                    });
 
 
 
@@ -499,18 +553,6 @@ module.exports.showAlertsPost = function(req, res) {
 
 */
 
-                    if(req.decoded){ // run SMECS API
-                        res.json({
-                            success: true,
-                            redirect: redirectAPI,
-                            _id: alertTemp1._id
-                        });
-                    }else{  // run SMECS EJS
-                        if (req.body.alertID == 1 )
-                            return res.redirect(307, redirectEJS);
-                        else
-                            return res.send({redirect: redirectEJS})
-                    }
 
 
 
@@ -563,13 +605,4 @@ function studentStep1(req, res, alertTemp1) {
 function busMap(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
 }
-function createAlert(req, res, alertTemp1) {
-    if(alertTemp1.realDrillDemo !== 'demo') {
-        alertTemp1.latitude = req.body.latitude;
-        alertTemp1.longitude = req.body.longitude;
-        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-            /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.alert(result, 'newAlert');
-        });
-    }
-}
+

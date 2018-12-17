@@ -288,12 +288,12 @@
                                     <table id="datatable" class="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Group Number & Name</th>
-                                            <th>Alert #</th>
+                                            <th>#</th>
                                             <% if (userAuthID == 1) {%>
                                                 <th>Alert ID</th>
                                             <% } %>
                                             <th>Alert Name</th>
+                                            <th>Group Number & Name</th>
                                             <% if (userAuthID == 1) {%>
                                                 <th>Road</th>
                                                 <th>Alert Road</th>
@@ -326,12 +326,12 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                         <% if(alertGroup.name == alert.group.name) { %>
                                         <% if (alert.softDeleted == false) { %>
                                         <tr>
-                                            <td><%= alertGroup.sortID %> <%= alert.group.name %></td>
                                             <td><%= alert.sortID %></td>
                                             <% if (userAuthID == 1) {%>
                                                 <td><%= alert.alertID %></td>
                                             <% } %>
                                             <td><%= alert.alertName %></td>
+                                            <td><%= alertGroup.sortID %>-<%= alert.group.name %></td>
                                             <% if (userAuthID == 1) {%>
                                                 <td>
                                                     <a href="/alerts/showRoad/<%= alert.id %>"><button class="btn btn-warning">change</button></a>

@@ -8,15 +8,14 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    
-    <link rel='stylesheet' href='/public/stylesheets/building.css' />
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    
+
     
 
     <script>
-        
         $(document).ready(function(){
             
             var oldSortID = $("#oldSortID").val();
@@ -33,49 +32,52 @@
             }
             $('#sort_select').html(select_sort);
 
+            var oldAlertGroupID = $("#oldAlertGroupID").val();
             var select = '';
             var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
-            for (var i=1;i<=99;i++){
-                if(myArray.indexOf(i) == -1){
-                    select += '<option val=' + i + '>' + i + '</option>';
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldAlertGroupID){
+                    if(i == oldAlertGroupID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
                 }
             }
             $('#some_select').html(select);
 
-
-            var alertGroupID,floorName,sortID;
-            $("#btSubmit").click(function(){
+            var alertGroup1,oldAlertGroupID,alertGroupID,alertGroupName,sortID;
+            $("#<%= room.id %>").click(function(){
+                alertGroup1=$(this).attr('id');
+                oldAlertGroupID=$("#oldAlertGroupID").val();
                 alertGroupID=$("#some_select").val();
-                floorName=$("#floorName").val();
+                alertGroupName=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
-                var building_select = $("#building_select option").filter(":selected").val();
+
+                let floor_select = $("#floor_select option").filter(":selected").val();
 
                 //-----forms validation------------------------------------
-                if (floorName == "" ) {
+                if (alertGroupName == "" ) {
                     alert("Floor Name must be filled out");
                     return false;
                 }
                 if (alertGroupID == "" ) {
-                    alert("Building ID must be filled out");
-                    return false;
-                }
-                if (building_select == "" ) {
-                    alert("Please choose Building where this new floor belongs");
+                    alert("Floor ID must be filled out");
                     return false;
                 }
                 //--------------------------------forms validation end-------
 
-                $.post("/floor/add",{
-
-                    floorID: alertGroupID,
-                    floorName: floorName,
+                $.post("/room/update",{
+                    roomToUpdate1: alertGroup1,
+                    oldRoomID: oldAlertGroupID,
+                    roomID: alertGroupID,
+                    roomName: alertGroupName,
                     sortID: sortID,
-                    building: building_select
+                    floor: floor_select
 
                 }, function (data) {
                     window.location = data.redirect
                 });
-
             });
         });
     </script>
@@ -110,33 +112,32 @@
         <div class="right_col" role="main">
 
             <div class="page-title">
+
                 <div class="title_left">
-                    <h3>Add Floor</h3>
+                    <h3>Update Room</h3>
                 </div>
-
-
 
                 <div class="title_right">
 
                     <div class="pull-left">
-                        <% if (aclAddFloor == null || aclAddFloor.checkBoxValue == true) {%>
-                            <button type="button"
-                                    id="btSubmit"
-                                    value="Submit"
-                                    onClick="GetSelectedItem('DropDownID');"
-                                    class="btn btn-success">Save
-                            </button>
-
-                            <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                        <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="<%= room.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success">Save
+                        </button>
                         <% } else { %>
-                            <button type="button"
-                                    id="btSubmit"
-                                    value="Submit"
-                                    onClick="GetSelectedItem('DropDownID');"
-                                    class="btn btn-success" disabled>Save
-                            </button>
+                        <button type="button"
+                                id="<%= room.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success" disabled>Save
+                        </button>
                         <% } %>
+
                         <a href="/buildingFloorRoom/show"><button type="button" class="btn btn-default">Cancel</button></a>
+
                     </div>
 
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -146,10 +147,10 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="clearfix"></div>
-
 
             <ul>
                 <div align="center" style="size: 100px">
@@ -176,59 +177,61 @@
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor name:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Room name:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="1st Floor"
-                                               id="floorName">
+                                               placeholder="Building 2"
+                                               id="alertGroupName"
+                                               value="<%= room.roomName %>">
+
                                     </div>
                                 </div>
 
-
+                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="hidden" id="oldSortID" value="<%= room.sortID %>">
                                         <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
                                         <select id='sort_select' class="form-control"></select>
                                     </div>
                                 </div>
 
-                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
                                 <% if (userAuthID == 1) {%>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Group ID:</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <select id='some_select' class="form-control"></select>
-                                        </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Room ID:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
                                     </div>
+                                </div>
                                 <% } else { %>
-                                    <select id='some_select' style="display:none;"></select>
+                                <select id='some_select' style="display:none;"></select>
                                 <% } %>
+                                <input type="hidden" id="oldAlertGroupID" value="<%= room.roomID %>">
+
+
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building > Floor:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select id='building_select' class="form-control">
-                                        <option disabled selected value> -- select a Building from dropdown list -- </option>
-                                        <% buildings.forEach(function(building) { %>
-                                            <option value="<%= building.buildingID %>_|_<%= building.sortID %>_|_<%= building.buildingName %>" ><%= building.buildingName %></option>
-                                        <% }); %>
+                                        <select id='floor_select' class="form-control">
+                                            <% floors.forEach(function(floor) { %>
+                                            <%if (floor.floorID == room.Floor.floorID) { %>
+                                                <option value="<%= floor.floorID %>_|_<%= floor.sortID %>_|_<%= floor.floorName %>_|_<%= floor.Building.buildingID %>_|_<%= floor.Building.sortID %>_|_<%= floor.Building.name %>" selected><%= floor.Building.name %> > <%= floor.floorName %></option>
+                                            <% }else {%>
+                                                <option value="<%= floor.floorID %>_|_<%= floor.sortID %>_|_<%= floor.floorName %>_|_<%= floor.Building.buildingID %>_|_<%= floor.Building.sortID %>_|_<%= floor.Building.name %>"><%= floor.Building.name %> > <%= floor.floorName %></option>
+                                            <% } %>
+                                            <% }); %>
                                         </select>
                                     </div>
                                 </div>
-
 
                             </form>
                             <div class="ln_solid"></div>
                         </div>
                     </div>
-
-
-
-
-
 
                 </div>
 

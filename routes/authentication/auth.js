@@ -51,7 +51,7 @@ module.exports.requireLogin = function(req, res, next) {
 
 
 /*****  CALL HERE NOTIFICATION API  ****
-                     *
+ *
  *          API                             *
  ***************************************/
 
@@ -90,9 +90,7 @@ module.exports.auth = function (req, res, next) {
 
 // route middleware to verify pin
 module.exports.pin = function (req, res, next) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
     var email = req.decoded.user.email;
-    var pushToken = req.body.pushToken;
     models.Users.findOne({'email': email}, function (err, user) {
         if (err) {
             return res.json({
@@ -100,23 +98,14 @@ module.exports.pin = function (req, res, next) {
                 message: 'Failed to locate user.'
             });
         } else {
-            if (pushToken) {
-                user.pushToken = req.body.pushToken;
-                user.save();
+            if (!bcrypt.compareSync(req.body.pin, user.pin)) {
                 res.json({
-                    success: true,
-                    message: 'Push token updated'
+                    success: false,
+                    message: 'Authentication failed. Wrong password.'
                 });
             } else {
-                if (!bcrypt.compareSync(req.body.pin, user.pin)) {
-                    res.json({
-                        success: false,
-                        message: 'Authentication failed. Wrong password.'
-                    });
-                } else {
-                    console.log('Pin OK');
-                    next();
-                }
+                console.log('Pin OK');
+                next();
             }
         }
     });

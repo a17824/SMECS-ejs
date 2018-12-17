@@ -61,38 +61,37 @@ module.exports.add = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        var arraySort = [];
-        var array = [];
+        let arraySort = [];
+        let array = [];
 
-        var streamSort = models.Building.find().sort({"sortID":1}).cursor();
+        let streamSort = models.Building.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
             // the stream is closed
+            let stream = models.Building.find().sort({"sortID":1}).cursor();
+            stream.on('data', function (doc) {
+                array.push(doc.buildingID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+
+                res.render('BuildingFloorsRooms/Building/addBuilding',{
+                    title:'Add Building',
+                    arraySort: arraySort,
+                    array: array,
+                    userAuthID: req.user.userPrivilegeID,
+                    building: results[0],
+                    aclAddFloor: results[1],      //aclPermissions addFloor
+                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            })
         });
-
-        var stream = models.Building.find().sort({"sortID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.buildingID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-
-            res.render('BuildingFloorsRooms/Building/addBuilding',{
-                title:'Add Building',
-                arraySort: arraySort,
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                building: results[0],
-                aclAddFloor: results[1],      //aclPermissions addFloor
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        })
     })
 };
 module.exports.addPost = function(req, res) {
@@ -164,8 +163,7 @@ module.exports.update = function(req, res) {
     })
 };
 module.exports.updatePost = function(req, res) {
-    var buildingToUpdate1 = req.body.buildingToUpdate1;
-console.log('buildingToUpdate1 = ',buildingToUpdate1);
+    let buildingToUpdate1 = req.body.buildingToUpdate1;
 
     models.Building.findById({'_id': buildingToUpdate1}, function(err, building){
         building.buildingID = req.body.buildingID;
@@ -178,25 +176,53 @@ console.log('buildingToUpdate1 = ',buildingToUpdate1);
                 return res.status(409).send('showAlert')
             }else{
                 //UPDATE Floors Building_name & Building_id & Building_sort DATABASE--------
-                var floorToUpdate1 = req.body.oldBuildingID;
+                var buildingToUpdate2 = req.body.oldBuildingID;
                 models.Floors.find({}, function(err, floors) {
                     if( err || !floors) console.log("No Floors to update");
-                    else floors.forEach( function(floor) {
-                        if (floor.Building.buildingID == floorToUpdate1){
-                            floor.Building.buildingID = req.body.buildingID;
-                            floor.Building.sortID = req.body.sortID;
-                            floor.Building.name = req.body.buildingName;
-                            floor.save(function (err) {
-                                if (err && (err.code === 11000 || err.code === 11001)) {
-                                    console.log(err);
-                                    return res.status(409).send('showAlert')
-                                }else {
-                                }
-                            });
-                        }
-                    });
+                    else {
+                        floors.forEach( function(floor) {
+                            if (floor.Building.buildingID == buildingToUpdate2){
+                                floor.Building.buildingID = req.body.buildingID;
+                                floor.Building.sortID = req.body.sortID;
+                                floor.Building.name = req.body.buildingName;
+                                floor.save(function (err) {
+                                    if (err && (err.code === 11000 || err.code === 11001)) {
+                                        console.log(err);
+                                        return res.status(409).send('showAlert')
+                                    }else {
+                                        console.log('Success updating Floors database');
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
                 //--------end UPDATE Alerts Group_name & Group_id Database
+
+                //UPDATE Rooms Building_name & Building_id DATABASE--------
+                models.Room.find({}, function(err, rooms) {
+                    if( err || !rooms) console.log("No Rooms to update");
+                    else {
+                        rooms.forEach(function (room) {
+                            if (room.Building.buildingID == buildingToUpdate2) {
+                                room.Building.buildingID = req.body.buildingID;
+                                room.Building.sortID = req.body.sortID;
+                                room.Building.name = req.body.buildingName;
+                                room.save(function (err) {
+                                    if (err && (err.code === 11000 || err.code === 11001)) {
+                                        console.log(err);
+                                        return res.status(409).send('showAlert')
+                                    } else {
+                                        console.log('Success updating Rooms database');
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+                //end of UPDATE Rooms Building_name & Building_id DATABASE--------
+
+                console.log('Success updating Building database');
                 return res.send({redirect:'/buildingFloorRoom/show'})
             }
         });
@@ -211,7 +237,7 @@ module.exports.delete = function(req, res) {
     models.Building.findById({'_id': buildingToDelete}, function(err, building) {
         //check if there are Floors using this Building
         models.Floors.findOne({ 'Building.buildingID': building.buildingID }, function (err, result) {
-            if (err) { console.log(err) };
+            if (err) { console.log('err - ',err) };
 
             if (result) {
                 console.log("Building NOT deleted");
@@ -220,19 +246,7 @@ module.exports.delete = function(req, res) {
                 res.redirect('/buildingFloorRoom/show');
             }
             //end of check if there are Rooms using this Floor
-
             else {
-                /*
-                // delete photo before delete floor----------------
-                var newFloor = "";
-                var floorPlan = floor.floorPlan;
-                console.log(floor);
-                if (floorPlan != newFloor) { //delete old floorPlan if exists
-                    fs.unlinkSync('./public/floorPlans/' + floorPlan);
-                    console.log('successfully deleted ' + floorPlan);
-                }
-                // ------------end delete floorPlan before delete floor
-                */
                 models.Building.remove({'_id': buildingToDelete}, function(err) {
                     //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
                     res.redirect('/buildingFloorRoom/show');

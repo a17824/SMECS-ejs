@@ -4,166 +4,225 @@ var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
 var functions = require('../../functions');
 
-/* SHOW Rooms. */
-module.exports.show = function(req, res, next) {
+/* ADD Room. -------------------------------*/
+module.exports.add = function(req, res) {
     async.parallel([
         function(callback){
-            models.Room.find().sort({"floorID":1}).sort({"roomID":1}).exec(callback);
+            models.Room.find(function(error, room) {}).exec(callback);
         },
         function(callback){
-            models.Floors.find().sort({"floorID":1}).exec(callback);
+            models.Floors.find(function(error, floor) {}).exec(callback);
         },
-        function(callback){aclPermissions.addRooms(req, res, callback);},   //aclPermissions addRooms
-        function(callback){aclPermissions.modifyRoom(req, res, callback);},   //aclPermissions modifyRoom
-        function(callback){aclPermissions.deleteRoom(req, res, callback);},   //aclPermissions deleteRoom
+        function(callback){
+            models.Building.find(function(error, building) {}).exec(callback);
+        },
+        function(callback){aclPermissions.addFloor(req, res, callback);},  //aclPermissions addFloor
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTabUsers(req, res, 'showUsers');
-        res.render('rooms/showRooms',{
-            title:'Rooms',
-            userAuthID: req.user.userPrivilegeID,
-            room: results[0],
-            floor: results[1],
-            aclAddRoom: results[2], //aclPermissions addRoom
-            aclModifyRoom: results[3], //aclPermissions modifyRoom
-            aclDeleteRoom: results[4], //aclPermissions deleteRoom
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
-    })
-};
-/* end of SHOW active Alerts. */
-
-
-/* CREATE Room. -------------------------------*/
-module.exports.create = function(req, res) {
-    async.parallel([
-        function(callback){
-            models.Floors.find(function(error, floor) {
-
-            }).sort({"floorID":1}).exec(callback);
-        },
-        function(callback){
-            models.Room.find(function(error, alerts) {
-
-            }).exec(callback);
-        },
-        function(callback){aclPermissions.addRooms(req, res, callback);},  //aclPermissions addRooms
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
-
-    ],function(err, results){
+        var arraySort = [];
         var array = [];
-        var stream = models.Room.find().sort({"roomID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.roomID);
+
+        var streamSort = models.Room.find().sort({"sortID":1}).cursor();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('rooms/createRoom',{
-                title:'Create Room',
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                floor: results[0],
-                room: results[1],
-                aclAddRooms: results[2],      //aclPermissions addRooms
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        })
+            let stream = models.Room.find().sort({"sortID":1}).cursor();
+            stream.on('data', function (doc2) {
+                array.push(doc2.roomID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+
+                res.render('BuildingFloorsRooms/Room/addRoom',{
+                    title:'Add Room',
+                    arraySort: arraySort,
+                    array: array,
+                    userAuthID: req.user.userPrivilegeID,
+                    room: results[0],
+                    floors: results[1],
+                    buildings: results[2],
+                    aclAddFloor: results[3],      //aclPermissions addFloor
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            })
+        });
+
+
     })
 };
+module.exports.addPost = function(req, res) {
+    let arraySplit2 = req.body.floor.split("_|_");
+    let floorID = parseInt(arraySplit2[0]);
+    let floorSortID = parseInt(arraySplit2[1]);
+    let floorName = arraySplit2[2];
+    let buildingID = parseInt(arraySplit2[3]);
+    let buildingSortID = parseInt(arraySplit2[4]);
+    let buildingName = arraySplit2[5];
 
-module.exports.createPost = function(req, res) {
-    var room1 = new models.Room({
-        floorID: req.body.floorID,
-        floorName: req.body.floorName,
-        roomID: req.body.roomID,
-        roomName: req.body.roomName
-    });
-    room1.save(function (err) {
-        if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("err - ",err);
-            return res.status(409).send('showAlert')
-        }else{
-            console.log(req.body.roomName + " successfully saved");
-            return res.send({redirect:'/options/rooms'})
+    let roomName = req.body.roomName;
+
+    models.Room.findOne({'roomName': roomName},function(error, room) {
+        if(error) console.log('error adding room =',error);
+        else{
+            if(room && room.Floor.name === floorName && room.Building.name === buildingName){
+                req.flash('error_messages', ' Attention! There is already a Room with this name on this Floor on this building <br> Please choose a different floor name');
+                //res.redirect('/floor/add1');
+                return res.send({redirect:'/room/add'})
+            }
+            else{
+                let room1 = new models.Room({
+                    Building: {
+                        buildingID: buildingID,
+                        sortID: buildingSortID,
+                        name: buildingName
+                    },
+                    Floor: {
+                        floorID: floorID,
+                        sortID: floorSortID,
+                        name: floorName
+                    },
+                    roomID: req.body.roomID,
+                    sortID: req.body.sortID,
+                    roomName: req.body.roomName
+                });
+                room1.save(function (err) {
+                    if (err) {
+                        console.log("err - ",err);
+                        return res.status(409).send('showAlert')
+                    }else{
+                        return res.send({redirect:'/buildingFloorRoom/show'})
+                    }
+                });
+            }
         }
+
     });
 };
-/*-------------------------end of adding Room*/
-
+/* -------------------------------end of ADD FLOOR. */
 
 
 /* UPDATE Room. -------------------------------*/
 module.exports.update = function(req, res) {
+    var arraySort = [];
     var array = [];
     async.parallel([
         function(callback){
-            models.Room.findById(req.params.id).exec(callback);
+            models.Room.findById(req.params.id,function(error, room) {
+
+            }).exec(callback);
         },
         function(callback) {
-            models.Floors.find().sort({"floorID": 1}).exec(callback);
+            models.Floors.find().sort({"sortID": 1}).exec(callback);
         },
+        function(callback) {
+            models.Building.find().sort({"sortID": 1}).exec(callback);
+        },
+        function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
+        function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-
-        var stream = models.Room.find().sort({"roomID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.roomID);
-
+        var streamSort = models.Room.find().sort({"sortID":1}).cursor();
+        streamSort.on('data', function (doc) {
+            arraySort.push(doc.sortID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('rooms/updateRoom', {
-                title: 'Update Room',
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                room: results[0],
-                floor: results[1],
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
+            var stream = models.Room.find().sort({"roomID":1}).cursor();
+            stream.on('data', function (doc2) {
+                array.push(doc2.roomID);
+
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log(array);
+
+                res.render('BuildingFloorsRooms/Room/updateRoom',{
+                    title:'Update Room',
+                    userAuthID: req.user.userPrivilegeID,
+                    arraySort: arraySort,
+                    array: array,
+                    room: results[0],
+                    floors: results[1],
+                    buildings: results[2],
+                    aclShowFloors: results[3],      //aclPermissions showFloors
+                    aclModifyFloor: results[4],      //aclPermissions modifyFloor
+                    aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            })
         });
     })
 };
 module.exports.updatePost = function(req, res) {
-    var roomToUpdate1 = req.body.roomToUpdate;
-    models.Room.findById({'_id': roomToUpdate1}, function(err, room){
-        room.floorID = req.body.floorID;
-        room.floorName = req.body.floorName;
-        room.roomName = req.body.roomName;
-        room.roomID = req.body.roomID;
-        room.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }else {
-                console.log(req.body.roomName + " successfully updated");
-                res.send({redirect: '/options/rooms'});
-            }
-        });
+    let roomToUpdate1 = req.body.roomToUpdate1;
+
+    let arraySplit2 = req.body.floor.split("_|_");
+    let floorID = parseInt(arraySplit2[0]);
+    let floorSortID = parseInt(arraySplit2[1]);
+    let floorName = arraySplit2[2];
+    let buildingID = parseInt(arraySplit2[3]);
+    let buildingSortID = parseInt(arraySplit2[4]);
+    let buildingName = arraySplit2[5];
+
+    let roomName = req.body.roomName;
+
+    models.Room.findById(roomToUpdate1,function(error, roomToUpdate) {
+        if(error || !roomToUpdate) console.log('error finding Room to update =',error);
+        else{
+            models.Room.findOne({_id: {$ne: roomToUpdate1},'roomName': roomName, 'Floor.floorID': floorID, 'Building.buildingID': buildingID},function(error, room) {
+                if(error) console.log('error finding Room to update =',error);
+                else {
+                    if (room) {
+                        console.log("Room NOT updated");
+                        req.flash('error_messages', ' Attention! There is already a Room with this name on this Floor on this building <br> Please choose a different floor name');
+                        //res.redirect('/floor/add1');
+                        return res.send({redirect: '/room/update/' + roomToUpdate1})
+                    }
+                    else {
+                        console.log("Room updated");
+                        roomToUpdate.Building.buildingID = buildingID;
+                        roomToUpdate.Building.sortID = buildingSortID;
+                        roomToUpdate.Building.name = buildingName;
+
+                        roomToUpdate.Floor.floorID = floorID;
+                        roomToUpdate.Floor.sortID = floorSortID;
+                        roomToUpdate.Floor.name = floorName;
+
+                        roomToUpdate.roomID = req.body.roomID;
+                        roomToUpdate.sortID = req.body.sortID;
+                        roomToUpdate.roomName = req.body.roomName;
+
+                        roomToUpdate.save(function (err) {
+                            if (err) {
+                                console.log("err - ", err);
+                                return res.status(409).send('showAlert')
+                            } else {
+                                return res.send({redirect: '/buildingFloorRoom/show'})
+                            }
+                        });
+                    }
+                }
+            });
+        }
     });
-
-
 };
-/*-------------------------end of update Room*/
-
+/*---------------------------------------------------------------end of update floors*/
 
 
 /* DELETE Room. */
 module.exports.delete = function(req, res) {
-    var roomToDelete = req.params.id;
+    let roomToDelete = req.params.id;
     models.Room.remove({'_id': roomToDelete}, function(err) {
-        return res.redirect('/options/rooms');
+        return res.redirect('/buildingFloorRoom/show');
     });
 };
 /* ----- end of DELETE Alerts. */

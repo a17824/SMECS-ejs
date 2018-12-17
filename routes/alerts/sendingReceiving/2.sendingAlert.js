@@ -440,7 +440,7 @@ module.exports.postNotes = function(req, res) {
             alert.roadIndex = ++alert.roadIndex;
             alert.save();
             /***     end of ALERT ROAD      ***/
-            console.log('alert.missingChildLastTimeSeen = ',alert.missingChildLastTimeSeen);
+
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,

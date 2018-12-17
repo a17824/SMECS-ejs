@@ -600,7 +600,7 @@ var FloorsSchema = new mongoose.Schema({
     },
     floorID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
-    floorName: { type: String, unique: true }, // Cafetaria, 1st Floor, 2nd, 3rd
+    floorName: String, // Cafetaria, 1st Floor, 2nd, 3rd
     floorPlan: String
 
 }, {collection:"Floors"}); //stops Mongoose of giving plurals to our collections names
@@ -611,10 +611,12 @@ module.exports.Floors = mongoose.model("Floors", FloorsSchema);
 var RoomSchema = new mongoose.Schema({
     Building: {
         buildingID: Number,
+        sortID: Number,
         name: String
     },
     Floor: {
         floorID: Number,
+        sortID: Number,
         name: String
     },
     roomID: { type: Number, unique: true },

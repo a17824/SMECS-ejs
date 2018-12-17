@@ -48,7 +48,8 @@
                 alertGroupID=$("#some_select").val();
                 floorName=$("#floorName").val();
                 sortID=$("#sort_select").val();
-                var building_select = $("#building_select option").filter(":selected").val();
+
+                let floor_select = $("#floor_select option").filter(":selected").val();
 
                 //-----forms validation------------------------------------
                 if (floorName == "" ) {
@@ -59,18 +60,19 @@
                     alert("Building ID must be filled out");
                     return false;
                 }
-                if (building_select == "" ) {
+
+                if (floor_select == "" ) {
                     alert("Please choose Building where this new floor belongs");
                     return false;
                 }
                 //--------------------------------forms validation end-------
 
-                $.post("/floor/add",{
+                $.post("/room/add",{
 
-                    floorID: alertGroupID,
-                    floorName: floorName,
+                    roomID: alertGroupID,
+                    roomName: floorName,
                     sortID: sortID,
-                    building: building_select
+                    floor: floor_select
 
                 }, function (data) {
                     window.location = data.redirect
@@ -111,7 +113,7 @@
 
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Add Floor</h3>
+                    <h3>Add Room</h3>
                 </div>
 
 
@@ -198,7 +200,7 @@
                                 <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
                                 <% if (userAuthID == 1) {%>
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Group ID:</label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Room ID:</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
                                             <select id='some_select' class="form-control"></select>
                                         </div>
@@ -207,18 +209,19 @@
                                     <select id='some_select' style="display:none;"></select>
                                 <% } %>
 
+
+
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building > Floor:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select id='building_select' class="form-control">
-                                        <option disabled selected value> -- select a Building from dropdown list -- </option>
-                                        <% buildings.forEach(function(building) { %>
-                                            <option value="<%= building.buildingID %>_|_<%= building.sortID %>_|_<%= building.buildingName %>" ><%= building.buildingName %></option>
-                                        <% }); %>
+                                        <select id='floor_select' class="form-control">
+                                            <option disabled selected value> -- select a Floor from dropdown list -- </option>
+                                            <% floors.forEach(function(floor) { %>
+                                                <option value="<%= floor.floorID %>_|_<%= floor.sortID %>_|_<%= floor.floorName %>_|_<%= floor.Building.buildingID %>_|_<%= floor.Building.sortID %>_|_<%= floor.Building.name %>" ><%= floor.Building.name %> > <%= floor.floorName %></option>
+                                            <% }); %>
                                         </select>
                                     </div>
                                 </div>
-
 
                             </form>
                             <div class="ln_solid"></div>

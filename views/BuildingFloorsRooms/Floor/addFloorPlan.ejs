@@ -21,18 +21,18 @@
 
 
                 <!-- menu profile quick info -->
-                <% include ../layout/menuProfile.ejs %>
+                <% include ./../../layout/menuProfile.ejs %>
                 <!-- /menu profile quick info -->
 
                 <br />
                 <!-- sidebar menu -->
-                <% include ../layout/sideMenu.ejs %>
+                <% include ./../../layout/sideMenu.ejs %>
                 <!-- /sidebar menu -->
             </div>
         </div>
 
         <!-- top navigation -->
-        <% include ../layout/topNavigation.ejs %>
+        <% include ./../../layout/topNavigation.ejs %>
         <!-- /top navigation -->
 
         <!-- page content -->
@@ -65,16 +65,16 @@
                                 <div class="centered-text">
                                     <% if(iPad){ %>
                                     <div class="moveLittleRight2">
-                                        <a href="/floors/showFloors" class="pull-bottom_Back"><button class="btn btn-default">Cancel</button></a>
+                                        <a href="/buildingFloorRoom/show" class="pull-bottom_Back"><button class="btn btn-default">Cancel</button></a>
                                     </div>
                                     <% }else { %>
                                     <div class="moveLittleRight3">
-                                        <a href="/floors/showFloors" class="pull-bottom_Back2"><button class="btn btn-default">Cancel</button></a>
+                                        <a href="/buildingFloorRoom/show" class="pull-bottom_Back2"><button class="btn btn-default">Cancel</button></a>
                                     </div>
                                     <% } %>
                                 </div>
 
-                                        <form action="/floors/addFloorPlan/:id" enctype="multipart/form-data" method="post">
+                                        <form action="/floor/addFloorPlan/:id" enctype="multipart/form-data" method="post">
                                             <input name="<%= floor.id %>" type="hidden"/>
                                             <div class="divChooseBigger center-block">
                                                 <% if (floor.floorPlan === '' || floor.floorPlan == undefined) {%>
@@ -128,7 +128,7 @@
 </body>
 <!-- footer content -->
 <footer class="adjustPos">
-    <% include ../layout/footer.ejs %>
+    <% include ./../../layout/footer.ejs %>
 </footer>
 <!-- /footer content -->
 </html>

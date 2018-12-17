@@ -15,7 +15,6 @@ module.exports.postUpdateNotes = function(req, res) {
 
     if ( typeof newNote == 'undefined') //if user send an note update empty
     {
-        console.log('eeeee');
         newNote = '';
     }
 

@@ -553,7 +553,7 @@ router.post('/building/update/', auth.simpleAuth, auth.requireLogin, building.up
 });
 
 /* DELETE Building. */
-router.get('/buildingFloorRoom/show/:id', auth.simpleAuth, auth.requireLogin, building.delete, function(req, res) {
+router.get('/building/delete/:id', auth.simpleAuth, auth.requireLogin, building.delete, function(req, res) {
 });
 
 /* ADD Floor. -------------------------------*/
@@ -561,48 +561,42 @@ router.get('/floor/add', auth.simpleAuth, auth.requireLogin, floors.add, functio
 });
 router.post('/floor/add', auth.simpleAuth, auth.requireLogin, floors.addPost, function(req, res) {
 });
-
-/* UPDATE Building. -------------------------------*/
+/* UPDATE Floor. -------------------------------*/
 router.get('/floor/update/:id', auth.simpleAuth, auth.requireLogin, floors.update, function(req, res) {
 });
 router.post('/floor/update/', auth.simpleAuth, auth.requireLogin, floors.updatePost, function(req, res) {
 });
 
-/* DELETE Building. */
-router.get('/buildingFloorRoom/show/:id', auth.simpleAuth, auth.requireLogin, floors.delete, function(req, res) {
+/* DELETE Floor. */
+router.get('/floor/delete/:id', auth.simpleAuth, auth.requireLogin, floors.delete, function(req, res) {
 });
 
 
 
 //--ADD or CHANGE FLOOR PLAN -------------------------------------
-router.get('/floors/addFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.addUpdateFloorPlan, function (req, res){
+router.get('/floor/addFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.addUpdateFloorPlan, function (req, res){
 });
-router.post('/floors/addFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.addUpdateFloorPlanPost, function (req, res){
+router.post('/floor/addFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.addUpdateFloorPlanPost, function (req, res){
 });
 
 // delete FLOOR PLAN------------------
-router.get('/floors/deleteFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.deleteFloorPlan, function(req, res) {
+router.get('/floor/deleteFloorPlan/:id', auth.simpleAuth, auth.requireLogin, floors.deleteFloorPlan, function(req, res) {
 });
 
 
-/* SHOW ROOMS. */
-router.get('/options/rooms', auth.simpleAuth, auth.requireLogin, rooms.show, function(req, res, next) {
+/* ADD Room. -------------------------------*/
+router.get('/room/add', auth.simpleAuth, auth.requireLogin, rooms.add, function(req, res) {
+});
+router.post('/room/add', auth.simpleAuth, auth.requireLogin, rooms.addPost, function(req, res) {
+});
+/* UPDATE Room. -------------------------------*/
+router.get('/room/update/:id', auth.simpleAuth, auth.requireLogin, rooms.update, function(req, res) {
+});
+router.post('/room/update/', auth.simpleAuth, auth.requireLogin, rooms.updatePost, function(req, res) {
 });
 
-/* CREATE ROOM. -------------------------------*/
-router.get('/options/createRoom', auth.simpleAuth, auth.requireLogin, rooms.create, function(req, res) {
-});
-router.post('/options/createRoom', auth.simpleAuth, auth.requireLogin, rooms.createPost, function(req, res) {
-});
-
-/* UPDATE ROOM. -------------------------------*/
-router.get('/options/updateRoom/:id', auth.simpleAuth, auth.requireLogin, rooms.update, function(req, res) {
-});
-router.post('/options/updateRoom', auth.simpleAuth, auth.requireLogin, rooms.updatePost, function(req, res) {
-});
-
-/* DELETE ROOMS. */
-router.get('/options/deleteRoom/:id', auth.simpleAuth, auth.requireLogin, rooms.delete, function(req, res) {
+/* DELETE Room. */
+router.get('/room/delete/:id', auth.simpleAuth, auth.requireLogin, rooms.delete, function(req, res) {
 });
 
 
