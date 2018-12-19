@@ -619,9 +619,9 @@
 
                             <div align="center">
                                 <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>'">Add option</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>/<%= alert.alertID %>'">Add option</button>
                                 <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>'" disabled>Add option</button>
+                                    <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add option</button>
                                 <% } %>
                             </div>
 

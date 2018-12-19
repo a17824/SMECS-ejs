@@ -628,7 +628,7 @@ router.get('/medical/showMedical/:modelType', auth.simpleAuth, auth.requireLogin
 });
 
 /* ADD MEDICAL. -------------------------------*/
-router.get('/medical/addMedical/:modelType', auth.simpleAuth, auth.requireLogin, medical.add, function(req, res) {
+router.get('/medical/addMedical/:modelType/:alertID', auth.simpleAuth, auth.requireLogin, medical.add, function(req, res) {
 });
 router.post('/medical/addMedical', auth.simpleAuth, auth.requireLogin, medical.addPost, function(req, res) {
 });

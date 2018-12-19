@@ -45,6 +45,8 @@ module.exports.show = function(req, res, next) {
 /* ADD Medical. -------------------------------*/
 module.exports.add = function(req, res) {
     var modelType = req.params.modelType; // Medical or SchoolClosed
+    let alertID = req.params.alertID;
+
     var title = 'Add Medical Emergencies';
     if(modelType == 'SchoolClosed')
         title = 'Add cause for School Closed';
@@ -71,9 +73,10 @@ module.exports.add = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('medical/addMedical',{
+            res.render('alertsAndGroups/alerts/options/addAlertOption',{
                 title: title,
                 modelType: modelType,
+                alertID: alertID,
                 array: array,
                 userAuthID: req.user.userPrivilegeID,
                 medical: results[0],
@@ -88,6 +91,7 @@ module.exports.add = function(req, res) {
 };
 module.exports.addPost = function(req, res) {
     var modelType = req.body.modelType; // Medical, SchoolClosed or EvacuateTo
+    let alertID = req.body.alertID;
 
     var medical1 = new models[modelType]({
         utilityID: req.body.utilityID,
@@ -98,7 +102,7 @@ module.exports.addPost = function(req, res) {
             console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            return res.send({redirect:'/medical/showMedical/' + modelType})
+            return res.send({redirect:'/alerts/updateAlerts/' + alertID})
         }
     });
 };
