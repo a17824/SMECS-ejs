@@ -402,15 +402,19 @@ module.exports.showAlertsPost = function(req, res) {
                                     if(returnValue === 1 || returnValue === 'NA') {
                                         console.log('C if = ',road.redirectAPI);
                                         success = true;
-                                        redirectAPI = road.redirectAPI;
-                                        redirectEJS = road.redirectEJS + alertTemp1._id;
-                                        cb2(redirectAPI);
+                                        data = {
+                                            success: true,
+                                            redirectAPI: road.redirectAPI,
+                                            redirectEJS: road.redirectEJS + alertTemp1._id
+                                        };
+                                        cb2(data);
                                     }else {
                                         data = {
                                             success: false,
-                                            redirectAPI: 'notes'
+                                            redirectAPI: 'notes',
+                                            redirectEJS: '/alerts/sending/chooseGroup'
                                         };
-                                        console.log('C else = ',redirectAPI);
+                                        console.log('C else = ',data.redirectAPI);
                                         cb2(data);
                                     }
                                 });
@@ -432,12 +436,12 @@ module.exports.showAlertsPost = function(req, res) {
 
                         if(req.decoded){ // run SMECS API
                             res.json({
-                                success: result.success,
-                                redirect: result.redirectAPI,
+                                success: result.data.success,
+                                redirect: result.data.redirectAPI,
                                 _id: alertTemp1._id
                             });
                         }else{  // run SMECS EJS
-                            res.send({redirect: redirectEJS});
+                            res.send({redirect: data.redirectEJS});
                         }
                     });
 

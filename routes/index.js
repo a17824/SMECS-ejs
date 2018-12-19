@@ -634,13 +634,13 @@ router.post('/medical/addMedical', auth.simpleAuth, auth.requireLogin, medical.a
 });
 
 /* UPDATE MEDICAL. -------------------------------*/
-router.get('/medical/updateMedical/:id/:modelType', auth.simpleAuth, auth.requireLogin, medical.update, function(req, res) {
+router.get('/medical/updateMedical/:id/:modelType/:alertID', auth.simpleAuth, auth.requireLogin, medical.update, function(req, res) {
 });
 router.post('/medical/updateMedical', auth.simpleAuth, auth.requireLogin, medical.updatePost, function(req, res) {
 });
 
 /* DELETE MEDICAL. */
-router.get('/medical/deleteMedical/:id/:modelType', auth.simpleAuth, auth.requireLogin, medical.delete, function(req, res) {
+router.get('/medical/deleteMedical/:id/:modelType/:alertID', auth.simpleAuth, auth.requireLogin, medical.delete, function(req, res) {
 });
 
 /* PA show Reception Users. -------------------------------*/

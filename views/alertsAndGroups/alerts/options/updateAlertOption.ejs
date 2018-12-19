@@ -1,0 +1,226 @@
+
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+    <script>
+        $(document).ready(function(){
+            var oldMedicalID = $("#oldMedicalID").val();
+            var select = '';
+            var myArray = $("#inUseMedicalID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldMedicalID){
+                    if(i == oldMedicalID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
+                }
+            }
+            $('#some_select').html(select);
+
+            var medical_ID, utilityName, utilityID;
+            var oldMedicalName,oldMedicalID,modelType,alertID;
+            $("#<%= medical.id %>").click(function(){
+                medical_ID=$(this).attr('id');
+                oldMedicalName=$("#oldMedicalName").val();
+                utilityName=$("#utilityName").val();
+                oldMedicalID=$("#oldMedicalID").val();
+                utilityID=$("#some_select").val();
+                modelType=$("#modelType").val();
+                alertID=$("#alertID").val();
+
+                //-----forms validation------------------------------------
+                if (utilityName == "" ) {
+                    alert("UTILITY NAME must be filled out");
+                    return false;
+                }
+
+                //--------------------------------forms validation end-------
+
+                $.post("/medical/updateMedical",{
+                    medicalToUpdate: medical_ID,
+                    oldMedicalName: oldMedicalName,
+                    utilityName: utilityName,
+                    oldMedicalID: oldMedicalID,
+                    utilityID: utilityID,
+                    modelType: modelType,
+                    alertID: alertID
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Medical Emergeny Name already in use. Choose a different Name .")
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ./../../../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../../../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../../../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <input type="hidden" id="inUseMedicalID" value="<%= array %>">
+            <input type="hidden" id="modelType" value="<%= modelType %>">
+            <input type="hidden" id="alertID" value="<%= alertID %>">
+
+            <div class="page-title">
+
+                <div class="title_left">
+                    <h3>Update Alert Option</h3>
+                </div>
+
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="<%= medical.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success">Save
+                        </button>
+                        <% } else { %>
+                        <button type="button"
+                                id="<%= medical.id %>"
+                                value="Submit"
+                                onClick="GetSelectedItem('DropDownID');"
+                                class="btn btn-success" disabled>Save
+                        </button>
+                        <% } %>
+
+                        <a href="/alerts/updateAlerts/<%= alertID %>"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="clearfix"></div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <% if (modelType == 'EvacuateTo') {%>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Evacuate to:</label>
+                                    <% } else { %>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name:</label>
+                                    <% } %>
+
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="utilityName"
+                                               value="<%= medical.utilityName %>">
+
+                                    </div>
+                                </div>
+
+
+
+                                <% if (userAuthID == 1) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Option ID:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <select id='some_select' style="display:none;"></select>
+                                <% } %>
+                                <input type="hidden" id="oldMedicalName" value="<%= medical.utilityName %>">
+                                <input type="hidden" id="oldMedicalID" value="<%= medical.utilityID %>">
+
+
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /page content -->
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../../../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>

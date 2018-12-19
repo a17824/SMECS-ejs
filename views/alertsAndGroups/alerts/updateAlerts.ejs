@@ -96,7 +96,13 @@
         }
         //end of Request calling 911
 
-
+        //DELETE Confirmation
+        function YNconfirm(type, optionName) {
+            if (confirm('ATTENTION: \'' + optionName + '\' option will be deleted. Are you sure?'))
+                return true;
+            else
+                return false;
+        };
 
         $(document).ready(function(){
             var oldSortID = $("#oldSortID").val();
@@ -306,7 +312,7 @@
 
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Update Alert</h3>
+                    <h3>Update <%= alert.alertName %> Alert</h3>
                 </div>
 
 
@@ -385,14 +391,14 @@
                                     </div>
                                 </div>
 
-                                <% if (userAuthID == 1) {%>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <select id='some_select' class="form-control"></select>
-                                        </div>
+
+                                <div class="form-group <%= showHideAlertID %>">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Alert ID</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <select id='some_select' class="form-control"></select>
                                     </div>
-                                <% } %>
+                                </div>
+
 
 
                                 <div class="form-group">
@@ -523,6 +529,10 @@
                     </div>
 
 
+
+
+
+
                     <div class="x_panel">
                         <div class="x_title">
                             <h2><small>Schedule</small></h2>
@@ -596,6 +606,67 @@
 
 
                 <div class="col-md-6 col-xs-12">
+
+
+                    <input type="hidden" id="modelType"  value="<%= modelType %>">
+                    <% if (modelType !== 'other') {%>
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small><%= title2 %></small></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <div align="center">
+                                <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>'">Add option</button>
+                                <% } else { %>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>'" disabled>Add option</button>
+                                <% } %>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="datatable-buttons" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Options</th>
+                                        <% if (userAuthID == 1) {%>
+                                            <th>ID</th>
+                                        <% } %>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <tbody>
+                                    <% options.forEach(function(option) { %>
+                                        <tr>
+                                            <td><%= option.utilityName %></td>
+                                            <% if (userAuthID == 1) {%>
+                                                <td><%= option.utilityID %></td>
+                                            <% } %>
+
+                                            <td>
+                                                <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
+                                                    <a href="/medical/updateMedical/<%= option.id %>/<%= modelType %>/<%= alert.alertID %>"><button class="btn btn-warning">update</button></a>
+                                                <% } else { %>
+                                                    <a href=""><button class="btn btn-warning" disabled>update</button></a>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (aclDeleteMedical == null || aclDeleteMedical.checkBoxValue == true) {%>
+                                                    <a href="/medical/deleteMedical/<%= option.id %>/<%= modelType %>/<%= alert.alertID %>" onclick="return(YNconfirm('<%= title2 %>','<%= option.utilityName %>'));"><button class="btn btn-danger">delete</button></a>
+                                                <% } else { %>
+                                                    <a href=""><button class="btn btn-danger" disabled>delete</button></a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+
                     <div class="x_panel">
                         <div class="x_title">
                             <h2><small>Requests</small></h2>

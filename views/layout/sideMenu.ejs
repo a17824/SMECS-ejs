@@ -60,10 +60,9 @@
             <% } %>
             <% } %>
             <% if (aclSideMenu == null || aclSideMenu.floors.checkBoxValue == true || aclSideMenu.rooms.checkBoxValue == true || aclSideMenu.utilities.checkBoxValue == true){%>
-            <li><a><i class="fa fa-building fa-lg"></i> Building <span class="fa fa-chevron-right"></span></a>
+            <li><a><i class="fa fa-building fa-lg"></i> Building & Utilities<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="/buildingFloorRoom/show">Buildings & Floors & Rooms</a></li>
-                    <li><a href="/options/rooms">Rooms</a></li>
                     <li><a href="/utilities/showUtilities">Utilities</a></li>
                     <li><a href="/medical/showMedical/SchoolClosed">School Closed</a></li>
                     <li><a href="/medical/showMedical/EvacuateTo">Evacuate to</a></li>
@@ -72,15 +71,16 @@
             </li>
             <% } %>
 
-
-            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
-            <li><a><i class="fa fa-bullhorn"></i> PA <span class="fa fa-chevron-down"></span></a>
-                <ul class="nav child_menu">
-                    <li><a href="/pa/showPa"> PA</a></li>
-                    <li><a href="/pa/showRecorded">Recorded</a></li>
-                </ul>
-            </li>
-            <% } %>
+                <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
+                    <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+                        <li><a><i class="fa fa-bullhorn"></i> PA <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li><a href="/pa/showPa"> PA</a></li>
+                                <li><a href="/pa/showRecorded">Recorded</a></li>
+                            </ul>
+                        </li>
+                    <% } %>
+                <% } %>
 
             <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
             <li><a><i class="fa fa-braille fa-lg"></i> Social Media Manager<span class="fa fa-chevron-right"></span></a></li>

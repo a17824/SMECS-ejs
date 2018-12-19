@@ -416,9 +416,9 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                             </td>
                                             <td>
                                                 <% if (aclModifyAlert == null || aclModifyAlert.checkBoxValue == true) {%>
-                                                <a href="/alerts/updateAlerts/<%= alert.id %>"><button class="btn btn-warning">update</button></a>
+                                                <a href="/alerts/updateAlerts/<%= alert.alertID %>"><button class="btn btn-warning">update</button></a>
                                                 <% } else { %>
-                                                <a href="/alerts/updateAlerts/<%= alert.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                                <a href="/alerts/updateAlerts/<%= alert.alertID %>"><button class="btn btn-warning" disabled>update</button></a>
                                                 <% } %>
                                             </td>
 

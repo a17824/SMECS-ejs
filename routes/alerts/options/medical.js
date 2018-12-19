@@ -104,9 +104,11 @@ module.exports.addPost = function(req, res) {
 };
 /*-------------------------end of adding Medical*/
 
-/* UPDATE Medical. -------------------------------*/
+/* UPDATE Alert Option. -------------------------------*/
 module.exports.update = function(req, res) {
     var modelType = req.params.modelType; // Medical, SchoolClosed or EvacuateTo
+    let alertID = req.params.alertID;
+
     var title = 'Update Medical Emergencies';
     if(modelType == 'SchoolClosed')
         title = 'Update cause for School Closed';
@@ -136,9 +138,11 @@ module.exports.update = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('medical/updateMedical',{
+
+            res.render('alertsAndGroups/alerts/options/updateAlertOption',{
                 title: title,
                 modelType: modelType,
+                alertID: alertID,
                 userAuthID: req.user.userPrivilegeID,
                 array: array,
                 medical: results[0],
@@ -154,6 +158,7 @@ module.exports.update = function(req, res) {
 module.exports.updatePost = function(req, res) {
     var medicalToUpdate1 = req.body.medicalToUpdate;
     var modelType = req.body.modelType; // Medical, SchoolClosed, EvacuateTo, Building
+    let alertID = req.body.alertID;
 
     models[modelType].findById({'_id': medicalToUpdate1}, function(err, medical){
         if(err)
@@ -166,28 +171,22 @@ module.exports.updatePost = function(req, res) {
                     console.log(err);
                     return res.status(409).send('showAlert')
                 } else {
-                    if (modelType == 'Building')
-                        return res.send({redirect:'/floors/showFloors'})
-                    else
-                        return res.send({redirect:'/medical/showMedical/' + modelType})
+                    return res.send({redirect:'/alerts/updateAlerts/' + alertID})
                 }
             });
         }
     });
 
 };
-/*-------------------------end of update Medical*/
+/*-------------------------end of UPDATE Alert Option*/
 
-/* DELETE UTILITY. */
+/* DELETE Alert Option. */
 module.exports.delete = function(req, res) {
-    var medicalToDelete = req.params.id;
-    var modelType = req.params.modelType;
-        models[modelType].remove({'_id': medicalToDelete}, function(err) {
-            //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
-            if (modelType == 'Building')
-                res.redirect('/floors/showFloors');
-            else
-                res.redirect('/medical/showMedical/' + modelType);
-        });
+    let medicalToDelete = req.params.id;
+    let modelType = req.params.modelType;
+    let alertID = req.params.alertID;
+    models[modelType].remove({'_id': medicalToDelete}, function(err) {
+        res.redirect('/alerts/updateAlerts/' + alertID);
+    });
 };
-/* ------------ end of DELETE UTILITY. */
+/* ------------ end of Alert Option. */

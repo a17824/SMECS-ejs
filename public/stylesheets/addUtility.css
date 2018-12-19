@@ -27,8 +27,6 @@ div.enable {
 }
 
 
-
-
 ul.enable {
     list-style-type: none;
     width: 20em;
@@ -186,5 +184,10 @@ input[type=checkbox]:checked + label:after {
     display: none;
 }
 #checkboxSendEmail {
+    display: none;
+}
+
+
+.hide {
     display: none;
 }

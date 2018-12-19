@@ -154,11 +154,22 @@ module.exports.createPost = function(req, res) {
 
 /* UPDATE Alerts. -------------------------------*/
 module.exports.update = function(req, res) {
-    var arraySort = [];
-    var array = [];
+    let arraySort = [];
+    let array = [];
+
+    let modelType = 'EvacuateTo';
+    let title2 = 'Evacuate To' ;
+    if(req.params.id == 18){
+        modelType = 'Medical';
+        title2 = 'Medical Emergencies'
+    }
+    if(req.params.id == 29){
+        modelType = 'SchoolClosed';
+        title2 = 'Cause of School Closed';
+    }
     async.parallel([
         function(callback){
-            models.Alerts.findById(req.params.id).exec(callback);
+            models.Alerts.findOne({'alertID': req.params.id}).exec(callback);
         },
         function(callback) {
             models.AlertsGroup.find().sort({"sortID": 1}).exec(callback);
@@ -166,44 +177,74 @@ module.exports.update = function(req, res) {
         function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
+        function(callback){
+            models[modelType].find().sort({"utilityID":1}).exec(callback);
+        },
+        function(callback){aclPermissions.addMedical(req, res, callback);},   //aclPermissions addMedical
+        function(callback){aclPermissions.modifyMedical(req, res, callback);},   //aclPermissions modifyMedical
+        function(callback){aclPermissions.deleteMedical(req, res, callback);},   //aclPermissions deleteMedical
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
-        var streamSort = models.Alerts.find().sort({"sortID":1}).cursor();
+        //Show Hide Alerts Options in EJS
+        if(req.params.id != 7 &&
+            req.params.id != 18 &&
+            req.params.id != 29 ){
+            modelType = 'other';
+            console.log('modelType2 = ',modelType);
+        }
+
+        console.log('modelType3 = ',modelType);
+
+        //show hide AlertID select in EJS
+        let showHideAlertID = 'hide';
+        if (req.user.userPrivilegeID == 1)
+            showHideAlertID = '';
+
+
+        let streamSort = models.Alerts.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
-            // the stream is closed
-            //console.log(arraySort);
-        });
+            let stream = models.Alerts.find().sort({"alertID":1}).cursor();
+            stream.on('data', function (doc2) {
+                array.push(doc2.alertID);
 
-        var stream = models.Alerts.find().sort({"alertID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.alertID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log('array = ',array);
+                res.render('alertsAndGroups/alerts/updateAlerts', {
+                    title: 'Update Alert',
+                    arraySort: arraySort,
+                    array: array,
+                    userAuthID: req.user.userPrivilegeID,
+                    showHideAlertID: showHideAlertID,
+                    alert: results[0],
+                    alertGroup: results[1],
+                    roles: results[2],
 
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('alertsAndGroups/alerts/updateAlerts', {
-                title: 'Update Alert',
-                arraySort: arraySort,
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                alert: results[0],
-                alertGroup: results[1],
-                roles: results[2],
-                aclModifyAlertGroup: results[3],      //aclPermissions modifyAlertGroup
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
+                    modelType: modelType,
+                    title2: title2,
+                    options: results[3],
+                    aclAddMedical: results[4], //aclPermissions addMedical
+                    aclModifyMedical: results[5], //aclPermissions modifyMedical
+                    aclDeleteMedical: results[6], //aclPermissions deleteMedical
+
+                    aclModifyAlertGroup: results[7],      //aclPermissions modifyAlertGroup
+                    aclSideMenu: results[8],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
             });
         });
+
+
     })
 };
 module.exports.updatePost = function(req, res) {
