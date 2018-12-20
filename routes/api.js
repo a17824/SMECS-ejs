@@ -7,6 +7,7 @@ var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var email = require('./authentication/email');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
+let createAlert = require('./alerts/sendingReceiving/createAlert');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var updates = require('./alerts/sendingReceiving/5.updates.js');
 var reports = require('./api/reports.js');
@@ -53,6 +54,12 @@ routerApi.post('/alerts/sending/multiSelection', auth.auth, sendingAlert.postMul
 routerApi.get('/alerts/sending/reviewAlert/:id', auth.auth, reviewAlert.reviewAlert, function(req, res, next) {});
 routerApi.post('/alerts/sending/reviewAlert', auth.auth, auth.pin, reviewAlert.postReviewAlert, function(req, res) {});
 routerApi.post('/alerts/sending/panic/:id', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
+
+/* Verify Pin. -------------------------------*/
+routerApi.get('/verifyPin/:id', auth.auth, createAlert.verifyPinGet, function(req, res) {});
+routerApi.post('/verifyPin', auth.simpleAuth, auth.requireLogin, createAlert.verifyPinPost, function(req, res) {});
+/* Create Alert. -------------------------------*/
+routerApi.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.createAlert, function(req, res) {});
 
 /* Receive alert ------------------------------------------*/
 routerApi.get('/alerts/received/receiveAlert/:id', auth.auth, receiveAlert.receivedAlert, function(req, res, next) {});

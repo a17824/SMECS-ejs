@@ -33,10 +33,15 @@ var pa = require('./alerts/options/pa');
 var chooseAlert = require('./alerts/sendingReceiving/1.chooseAlert');
 var sendingAlert = require('./alerts/sendingReceiving/2.sendingAlert.js');
 var reviewAlert = require('./alerts/sendingReceiving/3.reviewAlert.js');
+let createAlert = require('./alerts/sendingReceiving/createAlert');
 var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var procedureR = require('./alerts/sendingReceiving/procedureR');
+
 var functions = require('./functions');
 var showAlertsAndGroups = require('./alerts/showAlertsAndGroups');
+
+
+
 
 
 //Run this function once a month
@@ -719,6 +724,13 @@ router.post('/alerts/sending/multiSelection', auth.simpleAuth, auth.requireLogin
 router.get('/alerts/sending/reviewAlert/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.reviewAlert, function(req, res, next) {});
 router.post('/alerts/sending/reviewAlert', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});
 router.post('/alerts/sending/panic/:id', auth.simpleAuth, auth.requireLogin, reviewAlert.postReviewAlert, function(req, res) {});
+
+
+/* Verify Pin. -------------------------------*/
+router.get('/verifyPin/:id', auth.simpleAuth, auth.requireLogin, createAlert.verifyPinGet, function(req, res) {});
+router.post('/verifyPin', auth.simpleAuth, auth.requireLogin, createAlert.verifyPinPost, function(req, res) {});
+/* Create Alert. -------------------------------*/
+router.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.createAlert, function(req, res) {});
 
 
 /*RECEIVING ALERTS*/

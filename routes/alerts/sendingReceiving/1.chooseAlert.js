@@ -5,7 +5,6 @@ var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var functions = require('./../../functions');
 var student = require('./saveAlertFunc/3b.student.js');
 
-var createAlert = require('./createAlert.js');
 
 
 
@@ -368,82 +367,36 @@ module.exports.showAlertsPost = function(req, res) {
                 }else {
 
                     /***      ALERT ROAD      ***/
-                    function lastRedirectFunction(cb2){
-                        alert[0].alertRoad.forEach(function (road) {
-                            if(road.step == 1) {
 
-                                function redirectFunction(cb){
-                                    if(road.callFunction.length >= 1){
-                                        for (let i=0; i < road.callFunction.length; i++) {
-                                            if(road.callFunction[i] === 'studentStep1'){
-                                                studentStep1(req, res, alertTemp1);
-                                            }
-                                            if(road.callFunction[i] === 'busMap'){
-                                                busMap(req, res, alertTemp1);
-                                            }
-                                            if(road.callFunction[i] === 'createAlert'){
-                                                createAlert.createAlert(req, res, alertTemp1, function(pinOkFalse){
-                                                    console.log('A if = ',pinOkFalse);
-                                                    cb(pinOkFalse);
-                                                });
-                                            }
-                                        }
-                                    }else{
-                                        cb('NA');
-                                        console.log('A else = ');
+                    alert[0].alertRoad.forEach(function (road) {
+                        if(road.step == 1) {
+                            if (road.callFunction.length >= 1) {
+                                for (let i = 0; i < road.callFunction.length; i++) {
+                                    if (road.callFunction[i] === 'studentStep1') {
+                                        studentStep1(req, res, alertTemp1);
                                     }
-
-
+                                    if (road.callFunction[i] === 'busMap') {
+                                        busMap(req, res, alertTemp1);
+                                    }
                                 }
-
-                                redirectFunction(function (returnValue) {
-                                    // use the return value here instead of like a regular (non-evented) return value
-                                    console.log('B = ',returnValue);
-                                    if(returnValue === 1 || returnValue === 'NA') {
-                                        console.log('C if = ',road.redirectAPI);
-                                        success = true;
-                                        data = {
-                                            success: true,
-                                            redirectAPI: road.redirectAPI,
-                                            redirectEJS: road.redirectEJS + alertTemp1._id
-                                        };
-                                        cb2(data);
-                                    }else {
-                                        data = {
-                                            success: false,
-                                            redirectAPI: 'notes',
-                                            redirectEJS: '/alerts/sending/chooseGroup'
-                                        };
-                                        console.log('C else = ',data.redirectAPI);
-                                        cb2(data);
-                                    }
-                                });
-
-
-
                             }
-                        });
-                    }
-
-                    /***     end of ALERT ROAD      ***/
-
-                    lastRedirectFunction(function (result) {
-                        alertTemp1.roadIndex = ++alertTemp1.roadIndex;
-                        alertTemp1.save();
-                        console.log('result = ',result);
-                        console.log('D suc = ',result.success);
-                        console.log('D red = ',result.redirectAPI);
-
-                        if(req.decoded){ // run SMECS API
-                            res.json({
-                                success: result.data.success,
-                                redirect: result.data.redirectAPI,
-                                _id: alertTemp1._id
-                            });
-                        }else{  // run SMECS EJS
-                            res.send({redirect: data.redirectEJS});
+                            redirectAPI = road.redirectAPI;
+                            redirectEJS = road.redirectEJS + alertTemp1._id;
                         }
                     });
+                    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
+                    alertTemp1.save();
+                    /***     end of ALERT ROAD      ***/
+
+                    if(req.decoded){ // run SMECS API
+                        res.json({
+                            success: true,
+                            redirect: redirectAPI
+                        });
+                    }else{  // run SMECS EJS
+                        res.send({redirect: redirectEJS});
+                    }
+
 
 
 

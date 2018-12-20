@@ -1,0 +1,167 @@
+
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <link rel='stylesheet' href='/public/stylesheets/building.css' />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function(){
+
+            var pin,alertToUpdate;
+            $("#btSubmit").click(function(){
+                pin=$("#utilityName").val();
+                alertToUpdate=$("#alertToUpdate").val();
+
+                //-----forms validation------------------------------------
+                if (pin == "" ) {
+                    alert("NAME must be filled out");
+                    return false;
+                }
+                let pinFormat=/^\d{4}$/;
+                if (!pinFormat.test(pin)) {
+                    alert("Pin code should be 4 digits ");
+                    return false;
+                }
+                //--------------------------------forms validation end-------
+
+                $.post("/verifyPin",{
+                    pin: pin,
+                    alertToUpdate: alertToUpdate
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Pin Incorrect")
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ./../../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <input type="hidden" id="alertToUpdate" value="<%= alertToUpdate %>">
+
+            <div class="page-title">
+
+
+
+
+                <div class="title_right">
+
+
+
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+
+
+
+
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small></small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Verify Pin:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password"
+                                               class="form-control"
+                                               id="utilityName">
+                                        <br>
+                                        <button type="button"
+                                                id="btSubmit"
+                                                value="Submit"
+                                                class="btn btn-success pull-right">Submit
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /page content -->
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>

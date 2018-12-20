@@ -550,8 +550,6 @@ module.exports.postStudent = function(req, res) {
                             student2(req, res, alert, studentName, studentPhoto);
                         if(road.callFunction[i] == 'studentSaveFile')
                             studentSaveFile(req, res, alert);
-                        if(road.callFunction[i] == 'createAlert')
-                            createAlert(req, res, alert);
                     }
                     redirectAPI = road.redirectAPI;
                     redirectEJS = road.redirectEJS + alertToUpdate1;
@@ -559,8 +557,6 @@ module.exports.postStudent = function(req, res) {
             });
             alert.roadIndex = ++alert.roadIndex;
             alert.save();
-            /***     end of ALERT ROAD      ***/
-
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -569,6 +565,9 @@ module.exports.postStudent = function(req, res) {
             }else{  // run SMECS EJS
                 res.send({redirect: redirectEJS});
             }
+            /***     end of ALERT ROAD      ***/
+
+
             //}
         }
     });
