@@ -67,7 +67,8 @@ module.exports.postReviewAlert = function(req, res, next) {
         function (callback) {
             models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
 
-                /***      ALERT ROAD      ***/
+                /****************************       ALERT ROAD       ****************************/
+                /** functions needed here are: floor.saveFloorFile, student.updateStudentFile  **/
                 redirectTo.redirectTo(req,res,tempAlert,'verify');
 
                 callback(null, tempAlert);
@@ -99,8 +100,8 @@ module.exports.postReviewAlert = function(req, res, next) {
 
     ], function (err, tempAlert) {
 
-        /***      ALERT ROAD      ***/
+        /****************************      ALERT ROAD      ****************************/
+        /** functions needed here are: updateAlert                                   **/
         redirectTo.redirectTo(req,res,tempAlert,'doNotRedirect');
-
     });
 };

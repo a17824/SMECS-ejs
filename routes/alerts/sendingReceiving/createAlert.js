@@ -150,15 +150,8 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                 if(road.callFunction[i] === 'updateAlert')
                     updateAlert(req, res, alertTemp);
             }
-            if(flag === 'floorMap'){
-                redirectAPI = arg1;
-                redirectEJS = arg2;
-                flag = 'verify';
-                --alertTemp.roadIndex;
-            }else{
-                redirectAPI = road.redirectAPI;
-                redirectEJS = road.redirectEJS + alertTemp._id;
-            }
+            redirectAPI = road.redirectAPI;
+            redirectEJS = road.redirectEJS + alertTemp._id;
         }
     });
     ++alertTemp.roadIndex;
@@ -166,8 +159,14 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
         if(err)
             console.log('create.js module.exports.redirectTo alertTemp.save ERR = ',err)
     });
-
-    if(flag !== 'doNotRedirect'){
+    if(flag === 'floorMap'){ //if user choose a floor and photo exists
+        redirectAPI = arg1;
+        redirectEJS = arg2;
+        console.log('redirectEJS 1 = ',redirectEJS);
+        flag = 'verify';
+        --alertTemp.roadIndex;
+    }
+    if(flag !== 'doNotRedirect'){   //if it's not an alert update -> do redirection
         if(req.decoded){ // run SMECS API
             res.json({
                 success: true,
@@ -175,7 +174,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
             });
         }
         else{  // run SMECS EJS
-            if(flag === 'verify'){
+            if(flag === 'verify') {
                 res.send({redirect: redirectEJS});
             }
             else{
@@ -185,7 +184,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
     }
 
     /***     end of ALERT ROAD      ***/
-}
+};
 
 
 //ALERT ROAD FUNCTIONS

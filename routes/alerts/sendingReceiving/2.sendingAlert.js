@@ -124,7 +124,8 @@ module.exports.postFloor = function(req, res) {
 
                 //if user goes back in browser and removes floor floor
 
-                /***      ALERT ROAD      ***/
+                /****************************      ALERT ROAD      ****************************/
+                /** functions needed here are:                                               **/
                 redirectTo.redirectTo(req,res,alert,'verify');
             }
 
@@ -137,7 +138,8 @@ module.exports.postFloor = function(req, res) {
                 redirectAPI = 'floorMap';
                 redirectEJS = '/alerts/sending/floorLocation/' + alertToUpdate1;
 
-                /***      ALERT ROAD      ***/
+                /****************************      ALERT ROAD      ****************************/
+                /** functions needed here are:                                               **/
                 redirectTo.redirectTo(req,res,alert,'floorMap',redirectAPI,redirectEJS);
             }
         }
@@ -201,7 +203,8 @@ module.exports.postFloorLocation = function(req, res) {
             }
             console.log('saved temp Alert ' + alert.alertName + ' info from FLOOR LOCATION POST');
 
-            /***      ALERT ROAD      ***/
+            /****************************      ALERT ROAD      ****************************/
+            /** functions needed here are:                                               **/
             redirectTo.redirectTo(req,res,alert,'verify');
 
         }
@@ -271,7 +274,8 @@ module.exports.postNotes = function(req, res) {
                 alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }
 
-            /***      ALERT ROAD      ***/
+            /****************************          ALERT ROAD          ****************************/
+            /** functions needed here are: studentMissingStudent, notesStudentWithGun, notesBus  **/
             redirectTo.redirectTo(req,res,alert,'verify');
 
         }
@@ -343,7 +347,8 @@ module.exports.postStudent = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            /***      ALERT ROAD      ***/
+            /****************************      ALERT ROAD      ****************************/
+            /** functions needed here are: student2, studentSaveFile                     **/
             redirectTo.redirectTo(req,res,alert,'verify',studentName,studentPhoto);
 
         }
@@ -423,10 +428,9 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.multiSelectionIDs = req.body.checkboxesIDs.split(',').map(String);
             }
 
-
-            /***      ALERT ROAD      ***/
+            /****************************       ALERT ROAD       ****************************/
+            /** functions needed here are: multiUtilities, multiMedical, multiSchoolClosed **/
             redirectTo.redirectTo(req,res,alert,'verify');
-
         }
     });
 };

@@ -363,7 +363,8 @@ module.exports.showAlertsPost = function(req, res) {
                 if(alertTemp1.sentRoleIDScope < 1){
                     console.log('No scopes or users to send this alert');
                 }else {
-                    /***      ALERT ROAD      ***/
+                    /****************************      ALERT ROAD      ****************************/
+                    /** functions needed here are: studentStep1, busMap                          **/
                     redirectTo.redirectTo(req,res,alertTemp1,'verify');
 
                 }
