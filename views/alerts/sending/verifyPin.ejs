@@ -115,6 +115,18 @@
                         <div class="x_content">
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
+
+                                <ul>
+                                    <div align="center" style="size: 100px">
+                                        <% if ( error_messages.length >= 1) { %>
+                                            <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                                <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                                <strong><%- error_messages %></strong>
+                                            </div>
+                                        <% } %>
+
+                                    </div>
+                                </ul>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Verify Pin:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
@@ -128,8 +140,9 @@
                                                 class="btn btn-success pull-right">Submit
                                         </button>
                                     </div>
-
                                 </div>
+
+
                             </form>
                             <div class="ln_solid"></div>
                         </div>

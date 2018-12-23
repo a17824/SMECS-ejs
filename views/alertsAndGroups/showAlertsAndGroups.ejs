@@ -338,6 +338,7 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                                 </td>
                                                 <td>
                                                     <% if (alert.alertRoad) { %>
+
                                                         <% for (var x = 0; x < alert.alertRoad.length; x++) {%>
                                                             <strong>.</strong><%= alert.alertRoad[x].step %>[<span class="rFun"><%= alert.alertRoad[x].callFunction %></span>]<br>
                                                             (<span class="rAPI"><%= alert.alertRoad[x].redirectAPI %></span>,<span class="rEJS"><%= alert.alertRoad[x].redirectEJS %></span>)<br>

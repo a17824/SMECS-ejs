@@ -98,10 +98,8 @@ module.exports.addPost = function(req, res) {
     });
     user1.save(function (err) {
         if (err && (err.code === 11000 || err.code === 11001)) {
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
             return res.status(409).send('showAlert')
         }else{
-            console.log("11111111111111111111");
             return res.send({redirect:'/utilities/showUtilitiesUsers'})
         }
     });

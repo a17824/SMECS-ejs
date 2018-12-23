@@ -3,7 +3,8 @@ var models = require('./../../models');
 var async = require("async");
 var whoReceiveAlert = require('./saveAlertFunc/1b.createRolesUsersScope.js');
 var functions = require('./../../functions');
-var student = require('./saveAlertFunc/3b.student.js');
+//var student = require('./saveAlertFunc/3b.student.js');
+let redirectTo = require('./createAlert');
 
 
 
@@ -225,9 +226,6 @@ module.exports.showAlerts = function(req, res) {
 };
 
 module.exports.showAlertsPost = function(req, res) {
-    let redirectAPI; //API user
-    let data; //API user
-    let redirectEJS; //EJS user
 
     async.waterfall([
         function (callback) {
@@ -346,7 +344,7 @@ module.exports.showAlertsPost = function(req, res) {
 
                                     alertTemp.save();
 
-                                    callback(null, alertTemp, alert);
+                                    callback(null, alertTemp);
                                 }
                             }
                         })
@@ -355,7 +353,7 @@ module.exports.showAlertsPost = function(req, res) {
                 }
             });
         }
-    ], function (err, alertTemp1, alert) {
+    ], function (err, alertTemp1) {
         whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) {
             if(err){
                 console.log('err = ', err);
@@ -365,153 +363,8 @@ module.exports.showAlertsPost = function(req, res) {
                 if(alertTemp1.sentRoleIDScope < 1){
                     console.log('No scopes or users to send this alert');
                 }else {
-
                     /***      ALERT ROAD      ***/
-
-                    alert[0].alertRoad.forEach(function (road) {
-                        if(road.step == 1) {
-                            if (road.callFunction.length >= 1) {
-                                for (let i = 0; i < road.callFunction.length; i++) {
-                                    if (road.callFunction[i] === 'studentStep1') {
-                                        studentStep1(req, res, alertTemp1);
-                                    }
-                                    if (road.callFunction[i] === 'busMap') {
-                                        busMap(req, res, alertTemp1);
-                                    }
-                                }
-                            }
-                            redirectAPI = road.redirectAPI;
-                            redirectEJS = road.redirectEJS + alertTemp1._id;
-                        }
-                    });
-                    alertTemp1.roadIndex = ++alertTemp1.roadIndex;
-                    alertTemp1.save();
-                    /***     end of ALERT ROAD      ***/
-
-                    if(req.decoded){ // run SMECS API
-                        res.json({
-                            success: true,
-                            redirect: redirectAPI
-                        });
-                    }else{  // run SMECS EJS
-                        res.send({redirect: redirectEJS});
-                    }
-
-
-
-
-
-                    /*
-
-                    if (req.body.alertID == 1 ) {
-
-                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
-                            pushNotification.alert(result, 'newAlert');
-                        });
-
-                        redirectAPI = 'panic';
-                        redirectEJS = '/alerts/received/receiveAlert/' + alertTemp1._id;
-
-                    }
-
-                    if (req.body.alertID == 2 ||
-                        req.body.alertID == 6 ||
-                        req.body.alertID == 7 ||
-                        req.body.alertID == 9 ||
-                        req.body.alertID == 10 ||
-                        req.body.alertID == 11 ||
-                        req.body.alertID == 15 ||
-                        req.body.alertID == 23 ||
-                        //req.body.alertID == 26
-                        ) {
-
-                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
-                            pushNotification.alert(result, 'newAlert');
-                        });
-
-                        redirectAPI = 'floor';
-                        redirectEJS = '/alerts/sending/floor/' + alertTemp1._id;
-                    }
-
-                    if (req.body.alertID == 3 ||
-                        req.body.alertID == 8 ||
-                        req.body.alertID == 13 ||
-                        req.body.alertID == 20 ||
-                        req.body.alertID == 21 ||
-                        req.body.alertID == 22 ||
-                        req.body.alertID == 27 ) {
-
-
-
-                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
-                            pushNotification.alert(result, 'newAlert');
-                        });
-
-                        redirectAPI = 'notes';
-                        redirectEJS = '/alerts/sending/notes/' + alertTemp1._id;
-                    }
-
-                    if (req.body.alertID == 4 ) {
-
-                        redirectAPI = 'student';
-                        redirectEJS = '/alerts/sending/student/' + alertTemp1._id;
-                    }
-
-                    if (req.body.alertID == 5 ||
-                        req.body.alertID == 16 ||
-                        req.body.alertID == 17 ||
-                        req.body.alertID == 19 ) {
-
-                        alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
-                        alertTemp1.save();
-                        student.saveStudentFile(req, res, alertTemp1);
-                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
-                            pushNotification.alert(result, 'newAlert');
-                        });
-
-                        redirectAPI = 'student';
-                        redirectEJS = '/alerts/sending/student/' + alertTemp1._id;
-                    }
-
-                    if (req.body.alertID == 12 ){
-
-                        alertTemp1.latitude = req.body.latitude;
-                        alertTemp1.longitude = req.body.longitude;
-                        alertTemp1.mapBus = req.body.mapBus;
-                        alertTemp1.save();
-
-                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
-                            pushNotification.alert(result, 'newAlert');
-                        });
-
-                        redirectAPI = 'notes';
-                        redirectEJS = '/alerts/sending/notes/' + alertTemp1._id;
-                    }
-
-                    if (req.body.alertID == 14 ||
-                        req.body.alertID == 18 ||
-                        req.body.alertID == 26 ||
-                        req.body.alertID == 29 ) {
-
-                        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-
-                            pushNotification.alert(result, 'newAlert');
-                        });
-
-                        redirectAPI = 'multiSelection';
-                        redirectEJS = '/alerts/sending/multiSelection/' + alertTemp1._id;
-                    }
-
-
-*/
-
-
-
+                    redirectTo.redirectTo(req,res,alertTemp1,'verify');
 
                 }
             }
@@ -554,12 +407,3 @@ function buildAlertsSameColor(results, arrayGroups, alertTemp) {
         arrayGroups.push(arrayAlertsRealTest);
     }
 }
-
-function studentStep1(req, res, alertTemp1) {
-    alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
-    student.saveStudentFile(req, res, alertTemp1);
-}
-function busMap(req, res, alertTemp1) {
-    alertTemp1.mapBus = req.body.mapBus;
-}
-

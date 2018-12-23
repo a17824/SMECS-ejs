@@ -2,11 +2,8 @@
 var models = require('./../../models');
 var async = require("async");
 var functions = require('./../../functions');
-var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
-var student = require('./saveAlertFunc/3b.student.js');
-var alertSentInfo = require('./saveAlertFunc/3c.alertSentInfo.js');
-var pushNotification = require('./pushNotification.js');
 var moment = require('moment');
+let redirectTo = require('./createAlert');
 
 
 
@@ -124,49 +121,14 @@ module.exports.postFloor = function(req, res) {
                 //---------------end of checkFloorPhotoExists
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
-                //alert.roadIndex += 1;
-                //alert.save();
-/*
-                if (alert.alertNameID == 2 ||
-                    alert.alertNameID == 4 ||
-                    alert.alertNameID == 5 ||
-                    alert.alertNameID == 6 ||
-                    alert.alertNameID == 7 ||
-                    alert.alertNameID == 9 ||
-                    alert.alertNameID == 10 ||
-                    alert.alertNameID == 11 ||
-                    alert.alertNameID == 14 ||
-                    alert.alertNameID == 15 ||
-                    alert.alertNameID == 16 ||
-                    alert.alertNameID == 17 ||
-                    alert.alertNameID == 18 ||
-                    alert.alertNameID == 19 ||
-                    alert.alertNameID == 23 ||
-                    alert.alertNameID == 26 ) {
-
-                    redirectAPI = 'notes';
-                    redirectEJS = '/alerts/sending/notes/' + alertToUpdate1;
-                }
-                */
 
                 //if user goes back in browser and removes floor floor
 
                 /***      ALERT ROAD      ***/
-                alert.alertRoad.forEach(function (road) {
-                    if(road.step == alert.roadIndex) {
-                        for (let i=0; i < road.callFunction.length; i++) {
-
-                        }
-                        redirectAPI = road.redirectAPI;
-                        redirectEJS = road.redirectEJS + alertToUpdate1;
-                    }
-                });
-                alert.roadIndex = ++alert.roadIndex;
-                alert.save();
-                /***     end of ALERT ROAD      ***/
+                redirectTo.redirectTo(req,res,alert,'verify');
             }
-            //if user choose a floor and photo exists
-            else {
+
+            else {  //if user choose a floor and photo exists
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
@@ -174,14 +136,9 @@ module.exports.postFloor = function(req, res) {
 
                 redirectAPI = 'floorMap';
                 redirectEJS = '/alerts/sending/floorLocation/' + alertToUpdate1;
-            }
-            if(req.decoded){ // run SMECS API
-                res.json({
-                    success: true,
-                    redirect: redirectAPI
-                });
-            }else{  // run SMECS EJS
-                res.send({redirect: redirectEJS});
+
+                /***      ALERT ROAD      ***/
+                redirectTo.redirectTo(req,res,alert,'floorMap',redirectAPI,redirectEJS);
             }
         }
     });
@@ -232,8 +189,6 @@ module.exports.showFloorLocation = function(req, res) {
 };
 
 module.exports.postFloorLocation = function(req, res) {
-    let redirectAPI; //API user
-    let redirectEJS; //EJS user
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -246,49 +201,8 @@ module.exports.postFloorLocation = function(req, res) {
             }
             console.log('saved temp Alert ' + alert.alertName + ' info from FLOOR LOCATION POST');
 
-            /*
-            if (alert.alertNameID == 2 ||
-                alert.alertNameID == 4 ||
-                alert.alertNameID == 5 ||
-                alert.alertNameID == 6 ||
-                alert.alertNameID == 7 ||
-                alert.alertNameID == 9 ||
-                alert.alertNameID == 10 ||
-                alert.alertNameID == 11 ||
-                alert.alertNameID == 14 ||
-                alert.alertNameID == 15 ||
-                alert.alertNameID == 16 ||
-                alert.alertNameID == 17 ||
-                alert.alertNameID == 18 ||
-                alert.alertNameID == 19 ||
-                alert.alertNameID == 23 ||
-                alert.alertNameID == 26  ) { */
-
             /***      ALERT ROAD      ***/
-            alert.alertRoad.forEach(function (road) {
-                if(road.step == alert.roadIndex) {
-                    for (let i=0; i < road.callFunction.length; i++) {
-
-                    }
-                    redirectAPI = road.redirectAPI;
-                    redirectEJS = road.redirectEJS + alertToUpdate1;
-                }
-            });
-            alert.roadIndex = ++alert.roadIndex;
-            alert.save();
-            /***     end of ALERT ROAD      ***/
-
-            if(req.decoded){ // run SMECS API
-                res.json({
-                    success: true,
-                    redirect: redirectAPI
-                });
-            }else{  // run SMECS EJS
-                res.send({redirect: redirectEJS});
-            }
-            //}
-
-
+            redirectTo.redirectTo(req,res,alert,'verify');
 
         }
     });
@@ -336,8 +250,6 @@ module.exports.showNotes = function(req, res) {
 };
 module.exports.postNotes = function(req, res) {
 
-    let redirectAPI; //API user
-    let redirectEJS; //EJS user
     var allFloorsButtonHidden;  //API user
 
 
@@ -358,99 +270,9 @@ module.exports.postNotes = function(req, res) {
             }else{  // run SMECS EJS
                 alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }
-            /*
-            if (alert.alertNameID == 26 ) {
-                alert.save();
-                redirectAPI = 'summary';
-                redirectEJS = '/alerts/sending/reviewAlert/' + alertToUpdate1;
-
-            }else {
-                if (alert.alertNameID == 2 ||
-                    alert.alertNameID == 3 ||
-                    alert.alertNameID == 6 ||
-                    alert.alertNameID == 7 ||
-                    alert.alertNameID == 8 ||
-                    alert.alertNameID == 9 ||
-                    alert.alertNameID == 10 ||
-                    alert.alertNameID == 11 ||
-                    alert.alertNameID == 13 ||
-                    alert.alertNameID == 14 ||
-                    alert.alertNameID == 15 ||
-                    alert.alertNameID == 16 ||
-                    alert.alertNameID == 17 ||
-                    alert.alertNameID == 18 ||
-                    alert.alertNameID == 19 ||
-                    alert.alertNameID == 20 ||
-                    alert.alertNameID == 21 ||
-                    alert.alertNameID == 22 ||
-                    alert.alertNameID == 23 ||
-                    alert.alertNameID == 26 ||
-                    alert.alertNameID == 27 ||
-                    alert.alertNameID == 29 ) {
-
-                    alert.save();
-                }
-                if (alert.alertNameID == 4 ) {
-
-                    alert.missingChildLastTimeSeen = req.body.lastTimeSeen;
-                    alert.missingChildLastPlaceSeen = req.body.lastPlaceSeen;
-                    alert.missingChildClothesWearing = req.body.clothesWearing;
-                    alert.save();
-                }
-                if (alert.alertNameID == 5 ) {
-
-                    alert.studentWithGunSeated = req.body.seat;
-                    alert.studentWithGunBehaviour = req.body.studentBehaviour;
-                    alert.save();
-                }
-
-                if (alert.alertNameID == 12 ) {
-                    alert.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
-                    alert.save();
-                }
-                if (alert.alertNameID == 27 ) {
-
-                    alert.busMorningAfternoon = req.body.busMorningAfternoon;
-                    alert.busDelayedAhead = req.body.busDelayedAhead;
-                    alert.busTimeChanged = req.body.busTime;
-                    alert.busTimeChangedEmail = req.body.busSendEmail;
-                    alert.save();
-                }
-
-                redirectAPI = 'summary';
-                redirectEJS = '/alerts/sending/reviewAlert/' + alertToUpdate1;
-            }
-            */
 
             /***      ALERT ROAD      ***/
-            alert.alertRoad.forEach(function (road) {
-                if(road.step == alert.roadIndex) {
-                    for (let i=0; i < road.callFunction.length; i++) {
-                        if(road.callFunction[i] == 'studentMissingStudent')
-                            studentMissingStudent(req, res, alert);
-                        if(road.callFunction[i] == 'notesStudentWithGun')
-                            notesStudentWithGun(req, res, alert);
-                        if(road.callFunction[i] == 'notesBus')
-                            notesBus(req, res, alert);
-                    }
-                    redirectAPI = road.redirectAPI;
-                    redirectEJS = road.redirectEJS + alertToUpdate1;
-                }
-            });
-            alert.roadIndex = ++alert.roadIndex;
-            alert.save();
-            /***     end of ALERT ROAD      ***/
-
-            if(req.decoded){ // run SMECS API
-                res.json({
-                    success: true,
-                    redirect: redirectAPI,
-                    allFloorsButtonHidden: allFloorsButtonHidden
-                });
-            }else{  // run SMECS EJS
-                res.send({redirect: redirectEJS});
-            }
-
+            redirectTo.redirectTo(req,res,alert,'verify');
 
         }
     });
@@ -506,8 +328,6 @@ module.exports.showStudent = function(req, res) {
 };
 
 module.exports.postStudent = function(req, res) {
-    let redirectAPI; //API user
-    let redirectEJS; //EJS user
     var alertToUpdate1 = req.body.alertToUpdate;
     var studentName = req.body.student;
     var studentPhoto = req.body.photo;
@@ -523,52 +343,9 @@ module.exports.postStudent = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            //ALERT Missing Child,Student with a Gun, Suspected Drug/Alcohol use, Suicide Threat
-            /*if (alert.alertNameID == 4 ||
-                alert.alertNameID == 5 ||
-                alert.alertNameID == 16 ||
-                alert.alertNameID == 17 ||
-                alert.alertNameID == 19 ) {
-
-                alert.studentName = studentName;
-                alert.studentPhoto = studentPhoto;
-                alert.save();
-
-                if (alert.alertNameID == 4) {
-                    student.saveStudentFile(req, res, alert);
-                    alertSentInfo.create(req, res, alert,function (result,err) {  //create AlertSentInfo
-                        /*****  CALL HERE NOTIFICATION API  *****/
-                        //pushNotification.alert(result, 'newAlert');
-                   // });
-               // }*/
-
             /***      ALERT ROAD      ***/
-            alert.alertRoad.forEach(function (road) {
-                if(road.step == alert.roadIndex) {
-                    for (var i=0; i < road.callFunction.length; i++) {
-                        if(road.callFunction[i] == 'student2')
-                            student2(req, res, alert, studentName, studentPhoto);
-                        if(road.callFunction[i] == 'studentSaveFile')
-                            studentSaveFile(req, res, alert);
-                    }
-                    redirectAPI = road.redirectAPI;
-                    redirectEJS = road.redirectEJS + alertToUpdate1;
-                }
-            });
-            alert.roadIndex = ++alert.roadIndex;
-            alert.save();
-            if(req.decoded){ // run SMECS API
-                res.json({
-                    success: true,
-                    redirect: redirectAPI
-                });
-            }else{  // run SMECS EJS
-                res.send({redirect: redirectEJS});
-            }
-            /***     end of ALERT ROAD      ***/
+            redirectTo.redirectTo(req,res,alert,'verify',studentName,studentPhoto);
 
-
-            //}
         }
     });
 };
@@ -632,8 +409,6 @@ module.exports.showMultiSelection = function(req, res) {
 };
 
 module.exports.postMultiSelection = function(req, res) {
-    let redirectAPI; //API user
-    let redirectEJS; //EJS user
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -648,208 +423,10 @@ module.exports.postMultiSelection = function(req, res) {
                 alert.multiSelectionIDs = req.body.checkboxesIDs.split(',').map(String);
             }
 
-/*
-            //ALERT Utilities Failures,
-            if (alert.alertNameID == 14 ||
-                alert.alertNameID == 26 ) {
-                models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
-                    if(err){
-                        console.log('err = ', err);
-                    }else {
-                        alert.requestAssistance = [];
-                        utils.forEach(function (util) {
-                            var request = {
-                                utilityID: util.utilityID,
-                                utilityName: util.utilityName,
-                                contactName: util.contactName,
-                                phone: util.phone,
-                                email: util.email,
-                                smecsApp: util.smecsApp
-                            };
-                            alert.requestAssistance.push(request);
-                        });
-
-                        if (alert.alertNameID == 26) {
-                            alert.reqAssOn = req.body.reqAssChecked;
-                            alert.reqAssOff = req.body.reqAssNotChecked;
-
-                            var reqAssOn, reqAssOff;
-
-                            if (req.decoded) {       // API user
-                                reqAssOn = req.body.reqAssChecked.split(',').map(String);
-                                reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
-                            } else {                 // EJS user
-                                reqAssOn = req.body.reqAssChecked;
-                                reqAssOff = req.body.reqAssNotChecked;
-                            }
-
-
-                            alert.reqAssOn = reqAssOn;
-                            alert.reqAssOff = reqAssOff;
-
-
-                            var arraySmecsAppToSent = [];
-                            reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update');
-                        }
-                        if (alert.alertNameID !== 26) {
-                            alert.save();
-                        }
-                        if (req.decoded) { // run SMECS API
-                            res.json({
-                                success: true,
-                                redirect: 'floor'
-                            });
-                        } else {  // run SMECS EJS
-                            res.send({redirect: '/alerts/sending/floor/' + alertToUpdate1});
-                        }
-                    }
-                });
-
-            }
-            //ALERT Medical Emergencies
-            if (alert.alertNameID == 18 ) {
-                alert.medicalInjuredParties = req.body.medicalInjuredParties;
-                alert.save();
-
-                if(req.decoded){ // run SMECS API
-                    res.json({
-                        success: true,
-                        redirect: 'floor'
-                    });
-                }else{  // run SMECS EJS
-                    res.send({redirect:'/alerts/sending/floor/' + alertToUpdate1});
-                }
-            }
-            //ALERT SchoolClosed
-            if (alert.alertNameID == 29 ) {
-
-                alert.save();
-
-                if(req.decoded){ // run SMECS API
-                    res.json({
-                        success: true,
-                        redirect: 'notes'
-                    });
-                }else{  // run SMECS EJS
-                    res.send({redirect:'/alerts/sending/notes/' + alertToUpdate1});
-                }
-            }
-*/
 
             /***      ALERT ROAD      ***/
-            alert.alertRoad.forEach(function (road) {
-                if(road.step == alert.roadIndex) {
-                    for (var i=0; i < road.callFunction.length; i++) {
-                        if(road.callFunction[i] == 'multiUtilities')
-                            multiUtilities(req, res, alert);
-                        if(road.callFunction[i] == 'multiMedical')
-                            multiMedical(req, res, alert);
-                        if(road.callFunction[i] == 'multiSchoolClosed')
-                            multiSchoolClosed(req, res, alert);
-                        if(road.callFunction[i] == 'createAlert')
-                            createAlert(req, res, alert);
-                    }
-                    redirectAPI = road.redirectAPI;
-                    redirectEJS = road.redirectEJS + alertToUpdate1;
-                }
-            });
-            alert.roadIndex = ++alert.roadIndex;
-            alert.save();
-            /***     end of ALERT ROAD      ***/
+            redirectTo.redirectTo(req,res,alert,'verify');
 
-            if(req.decoded){ // run SMECS API
-                res.json({
-                    success: true,
-                    redirect: redirectAPI
-                });
-            }else{  // run SMECS EJS
-                res.send({redirect: redirectEJS});
-            }
         }
     });
 };
-
-
-function multiSchoolClosed(req, res, alertTemp1) {
-    alertTemp1.dayClosed = req.body.medicalInjuredParties;
-}
-function multiMedical(req, res, alertTemp1) {
-    alertTemp1.medicalInjuredParties = req.body.medicalInjuredParties;
-}
-function multiUtilities(req, res, alert) {
-    models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
-        if(err){
-            console.log('err = ', err);
-        }else {
-            alert.requestAssistance = [];
-            utils.forEach(function (util) {
-                var request = {
-                    utilityID: util.utilityID,
-                    utilityName: util.utilityName,
-                    contactName: util.contactName,
-                    phone: util.phone,
-                    email: util.email,
-                    smecsApp: util.smecsApp
-                };
-                alert.requestAssistance.push(request);
-            });
-
-            if (alert.alertNameID == 26) {
-                alert.reqAssOn = req.body.reqAssChecked;
-                alert.reqAssOff = req.body.reqAssNotChecked;
-
-                var reqAssOn, reqAssOff;
-
-                if (req.decoded) {       // API user
-                    reqAssOn = req.body.reqAssChecked.split(',').map(String);
-                    reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
-                } else {                 // EJS user
-                    reqAssOn = req.body.reqAssChecked;
-                    reqAssOff = req.body.reqAssNotChecked;
-                }
-
-
-                alert.reqAssOn = reqAssOn;
-                alert.reqAssOff = reqAssOff;
-
-
-                var arraySmecsAppToSent = [];
-                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update');
-            }
-            if (alert.alertNameID !== 26) {
-                alert.save();
-            }
-
-        }
-    });
-}
-function notesBus(req, res, alertTemp1) {
-    alertTemp1.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
-}
-function student2(req, res, alertTemp1, studentName, studentPhoto) {
-    alertTemp1.studentName = studentName;
-    alertTemp1.studentPhoto = studentPhoto;
-}
-function studentSaveFile(req, res, alertTemp1) {
-    student.saveStudentFile(req, res, alertTemp1);
-}
-function studentMissingStudent(req, res, alertTemp1) {
-    alertTemp1.missingChildLastTimeSeen = req.body.lastTimeSeen;
-    alertTemp1.missingChildLastPlaceSeen = req.body.lastPlaceSeen;
-    alertTemp1.missingChildClothesWearing = req.body.clothesWearing;
-}
-function notesStudentWithGun(req, res, alertTemp1) {
-    alertTemp1.studentWithGunSeated = req.body.seat;
-    alertTemp1.studentWithGunBehaviour = req.body.studentBehaviour;
-}
-
-function createAlert(req, res, alertTemp1) {
-    if(alertTemp1.realDrillDemo !== 'demo') {
-        alertTemp1.latitude = req.body.latitude;
-        alertTemp1.longitude = req.body.longitude;
-        alertSentInfo.create(req, res, alertTemp1,function (result,err) {  //create AlertSentInfo
-            /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.alert(result, 'newAlert');
-        });
-    }
-}

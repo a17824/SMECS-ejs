@@ -93,8 +93,6 @@ module.exports.updateStudentFile = function(req, res, tempAlert) {
                     }
                 });
 
-                console.log('111111111');
-                console.log(tempAlert.studentPhoto);
                 console.log(tempAlert._id + '_' + 'photoNotAvailable.bmp');
                 //delete old photo if exists
                 var path = './public/alertSentInfo/studentsPhotos/' + tempAlert._id + '_' + 'photoNotAvailable.bmp';

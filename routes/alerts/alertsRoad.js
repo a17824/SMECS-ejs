@@ -80,7 +80,6 @@ module.exports.createStep = function(req, res) {
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
-
         })
     });
 };
@@ -101,7 +100,8 @@ module.exports.createStepPost = function(req, res) {
         if (err || !alert) {
             console.log('err - finding alert');
         }else{
-            alert.alertRoad.push(newStep);
+            let position = newStep.step-1;
+            alert.alertRoad.splice(position, 0, newStep);
             alert.save();
 
             //update Functions database alertsWithThisFunction Array
