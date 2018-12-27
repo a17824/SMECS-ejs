@@ -7,20 +7,7 @@
 
     <% var latidtude2 %>
     <!-- Alert that requires FLOOR -->
-    <% if (info.alertNameID == 2 ||
-            info.alertNameID == 4  ||
-            info.alertNameID == 5  ||
-            info.alertNameID == 6 ||
-            info.alertNameID == 7 ||
-            info.alertNameID == 9 ||
-            info.alertNameID == 10 ||
-            info.alertNameID == 11 ||
-            info.alertNameID == 14 ||
-            info.alertNameID == 15 ||
-            info.alertNameID == 18 ||
-            info.alertNameID == 19 ||
-            info.alertNameID == 23 ||
-            info.alertNameID == 26 ) {%>
+    <% if ( flagFloor === 'floor' ) {%>
 
         <script>
             var x, y;
@@ -125,20 +112,7 @@
 <% } %>
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 2 ||
-        info.alertNameID == 4  ||
-        info.alertNameID == 5  ||
-        info.alertNameID == 6 ||
-        info.alertNameID == 7 ||
-        info.alertNameID == 9 ||
-        info.alertNameID == 10 ||
-        info.alertNameID == 11 ||
-        info.alertNameID == 14 ||
-        info.alertNameID == 15 ||
-        info.alertNameID == 18 ||
-        info.alertNameID == 19 ||
-        info.alertNameID == 23 ||
-        info.alertNameID == 26 ) {%>
+<% if ( flagFloor === 'floor' ) {%>
 
     <input type="hidden" id="x" size="40" value="<%= info.sniperCoordinateX %>">
     <input type="hidden" id="y" size="40" value="<%= info.sniperCoordinateY %>">
@@ -203,20 +177,7 @@
 <% } %>
 
 <!-- Alert that requires FLOOR -->
-<% if (info.alertNameID == 2 ||
-        info.alertNameID == 4  ||
-        info.alertNameID == 5  ||
-        info.alertNameID == 6 ||
-        info.alertNameID == 7 ||
-        info.alertNameID == 9 ||
-        info.alertNameID == 10 ||
-        info.alertNameID == 11 ||
-        info.alertNameID == 14 ||
-        info.alertNameID == 15 ||
-        info.alertNameID == 18 ||
-        info.alertNameID == 19 ||
-        info.alertNameID == 23 ||
-        info.alertNameID == 26 ) {%>
+<% if ( flagFloor === 'floor' ) {%>
 
     <% if (info.floorName) {%>
         <!-- Alert EVACUATE -->

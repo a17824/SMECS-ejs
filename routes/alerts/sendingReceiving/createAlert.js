@@ -118,6 +118,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
     /***      ALERT ROAD      ***/
     let redirectAPI = ''; //API user
     let redirectEJS = ''; //EJS user
+
     alertTemp.alertRoad.forEach(function (road) {
 
         if(road.step == alertTemp.roadIndex) {
@@ -147,8 +148,6 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                     floor.saveFloorFile(req, res, alertTemp);
                 if(road.callFunction[i] === 'updateStudentFile')
                     student.updateStudentFile(req, res, alertTemp);
-                if(road.callFunction[i] === 'updateAlert')
-                    updateAlert(req, res, alertTemp);
             }
             redirectAPI = road.redirectAPI;
             redirectEJS = road.redirectEJS + alertTemp._id;
@@ -162,27 +161,23 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
     if(flag === 'floorMap'){ //if user choose a floor and photo exists
         redirectAPI = arg1;
         redirectEJS = arg2;
-        console.log('redirectEJS 1 = ',redirectEJS);
         flag = 'verify';
         --alertTemp.roadIndex;
     }
-    if(flag !== 'doNotRedirect'){   //if it's not an alert update -> do redirection
-        if(req.decoded){ // run SMECS API
-            res.json({
-                success: true,
-                redirect: redirectAPI
-            });
+    if(req.decoded){ // run SMECS API
+        res.json({
+            success: true,
+            redirect: redirectAPI
+        });
+    }
+    else{  // run SMECS EJS
+        if(flag === 'verify') {
+            res.send({redirect: redirectEJS});
         }
-        else{  // run SMECS EJS
-            if(flag === 'verify') {
-                res.send({redirect: redirectEJS});
-            }
-            else{
-                res.redirect(redirectEJS);
-            }
+        else{
+            res.redirect(redirectEJS);
         }
     }
-
     /***     end of ALERT ROAD      ***/
 };
 
@@ -201,9 +196,12 @@ module.exports.createAlert= function(req, res) {
             if(alertTemp.realDrillDemo !== 'demo') {
                 alertTemp.latitude = req.body.latitude;
                 alertTemp.longitude = req.body.longitude;
+
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo
                     /*****  CALL HERE NOTIFICATION API  *****/
+                    console.log('Im here = 1');
                     pushNotification.alert(result, 'newAlert');
+                    console.log('Im here = 3');
                     redirectTo.redirectTo(req,res,alertTemp,flag);
                 });
             }
@@ -215,15 +213,19 @@ module.exports.createAlert= function(req, res) {
     });
 };
 /* end of Create AlertSentInfo and Send PushNotification. -------------------------------*/
-function updateAlert(req, res, alertTemp1) {
-    if(alertTemp1.realDrillDemo !== 'demo') {
-        alertSentInfo.update(req, res, alertTemp1,function (result) {  //update AlertSentInfo
+//function updateAlert(req, res, alertTemp1) {
+module.exports.updateAlert= function(req, res) {
+    let alertToUpdate = req.params.id;
+    let flag = 'update';
+    models.AlertSentTemp.findById(alertToUpdate, function (err, alertTemp) {
+        alertSentInfo.update(req, res, alertTemp,function (result) {  //update AlertSentInfo
 
             /*****  CALL HERE NOTIFICATION API  *****/
             pushNotification.alert(result, 'updateAlert');
+            redirectTo.redirectTo(req,res,alertTemp,flag);
         });
-    }
-}
+    });
+};
 function studentStep1(req, res, alertTemp1) {
     alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
     student.saveStudentFile(req, res, alertTemp1);

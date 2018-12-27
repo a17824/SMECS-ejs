@@ -731,6 +731,8 @@ router.get('/verifyPin/:id', auth.simpleAuth, auth.requireLogin, createAlert.ver
 router.post('/verifyPin', auth.simpleAuth, auth.requireLogin, createAlert.verifyPinPost, function(req, res) {});
 /* Create Alert. -------------------------------*/
 router.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.createAlert, function(req, res) {});
+/* Update Alert. -------------------------------*/
+router.get('/updateAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.updateAlert, function(req, res) {});
 
 
 /*RECEIVING ALERTS*/

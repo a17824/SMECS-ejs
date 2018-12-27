@@ -93,7 +93,8 @@ module.exports.create = function(req, res, tempAlert, callback) {
         sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope,
         latitude: tempAlert.latitude,
         longitude: tempAlert.longitude,
-        mapBus: tempAlert.mapBus
+        mapBus: tempAlert.mapBus,
+        alertRoad: tempAlert.alertRoad
     });
     alert1.save();
     callback(alert1)
@@ -102,40 +103,43 @@ module.exports.create = function(req, res, tempAlert, callback) {
 
 
 module.exports.update = function(req, res, tempAlert, callback) {
-    var wrapped = moment(new Date());
 
-    var sentTo = [];
-    tempAlert.sentTo.forEach(function (user) {
-        var sentToArr = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            pushToken: user.pushToken
-        };
-        sentTo.push(sentToArr);
-    });
-    var studentPhoto = undefined;
-    if (tempAlert.alertNameID == 4 ||
-        tempAlert.alertNameID == 5 ||
-        tempAlert.alertNameID == 16 ||
-        tempAlert.alertNameID == 17 ||
-        tempAlert.alertNameID == 19) {
-
-        studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
-    }
-
-    var sentByApiEjs;
-    if (req.decoded)        // API user
-        sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
-    else
-        sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
-
-
-    models.AlertSentInfo.findById({'_id': tempAlert._id}, function (err, alert) {
+    models.AlertSentInfo.findById(tempAlert._id, function (err, alert) {
         if (!alert) {
-            console.log('SOMETHING WENT WRONG UPDATING AlertSentInfo');
+            console.log('SOMETHING WENT WRONG UPDATING AlertSentInfo OR DEMO MODE WAS SELECTED TO SEND ALERT');
+            //return res.send({redirect:'/alerts/sending/chooseGroup'})
+            res.redirect('/alerts/sending/chooseGroup');
         }
         else {
+            var wrapped = moment(new Date());
+            var sentTo = [];
+            tempAlert.sentTo.forEach(function (user) {
+                var sentToArr = {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    pushToken: user.pushToken
+                };
+                sentTo.push(sentToArr);
+            });
+            var studentPhoto = undefined;
+            if (tempAlert.alertNameID == 4 ||
+                tempAlert.alertNameID == 5 ||
+                tempAlert.alertNameID == 16 ||
+                tempAlert.alertNameID == 17 ||
+                tempAlert.alertNameID == 19) {
+
+                studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
+            }
+
+            var sentByApiEjs;
+            if (req.decoded)        // API user
+                sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
+            else
+                sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
+
+
+
             alert.sentBy = sentByApiEjs;
             alert.sentRoleIDScope = tempAlert.sentRoleIDScope;
             alert.sentRoleNameScope = tempAlert.sentRoleNameScope;

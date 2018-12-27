@@ -24,6 +24,14 @@ module.exports.reviewAlert = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+            let flag = 'alertWithNoFloor';
+            for (let i=0; i < results[0].alertRoad.length; i++) {
+                if (results[0].alertRoad[i].redirectAPI === 'floor'){
+                    flag = 'floor';
+                    break
+                }
+            }
+
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -31,8 +39,8 @@ module.exports.reviewAlert = function(req, res) {
                     info: results[0],
                     floor: results[1],
                     utilities: results[2],
-                    results: results[3] // check if alert is softDeleted for Utilities Failure
-
+                    results: results[3], // check if alert is softDeleted for Utilities Failure
+                    flagFloor: flag
                 });
 
             }else{  // run SMECS EJS
@@ -45,7 +53,8 @@ module.exports.reviewAlert = function(req, res) {
                     alerts: results[3], // check if alert is softDeleted for Utilities Failure
                     aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                    userAuthPhoto: req.user.photo
+                    userAuthPhoto: req.user.photo,
+                    flagFloor: flag
                 });
             }
         }
@@ -102,6 +111,8 @@ module.exports.postReviewAlert = function(req, res, next) {
 
         /****************************      ALERT ROAD      ****************************/
         /** functions needed here are: updateAlert                                   **/
-        redirectTo.redirectTo(req,res,tempAlert,'doNotRedirect');
+        //redirectTo.redirectTo(req,res,tempAlert,'doNotRedirect');
     });
 };
+
+

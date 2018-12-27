@@ -60,6 +60,8 @@ routerApi.get('/verifyPin/:id', auth.auth, createAlert.verifyPinGet, function(re
 routerApi.post('/verifyPin', auth.simpleAuth, auth.requireLogin, createAlert.verifyPinPost, function(req, res) {});
 /* Create Alert. -------------------------------*/
 routerApi.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.createAlert, function(req, res) {});
+/* Create Alert. -------------------------------*/
+routerApi.get('/updateAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.updateAlert, function(req, res) {});
 
 /* Receive alert ------------------------------------------*/
 routerApi.get('/alerts/received/receiveAlert/:id', auth.auth, receiveAlert.receivedAlert, function(req, res, next) {});

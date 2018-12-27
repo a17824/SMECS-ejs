@@ -64,6 +64,7 @@ module.exports.alert= function(alert, action) {
     };
 
     //let userName = user.firstName + ' ' + user.lastName;
+    console.log('Im here = 2');
     sendPush(message);
 
 };
@@ -156,7 +157,7 @@ function sendPush(message) {
             //console.log("Couldn't send message to " + userName);
             console.log(data, httpResponse.statusCode);
         } else {
-            //console.log(userName);
+            console.log('PUSH NOTIFICATION SENT');
             //console.log(data, httpResponse.statusCode);
         }
     });

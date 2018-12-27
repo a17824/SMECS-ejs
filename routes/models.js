@@ -415,7 +415,13 @@ var AlertSentInfoSchema = new mongoose.Schema({
     expirationDate: {
         type: Date,
         expires: 0
-    }
+    },
+    alertRoad: [{
+        step: Number,
+        callFunction: Array,
+        redirectAPI: String,
+        redirectEJS: String
+    }]
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names

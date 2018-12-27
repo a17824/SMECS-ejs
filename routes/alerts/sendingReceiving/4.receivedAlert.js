@@ -85,6 +85,13 @@ module.exports.receivedAlert = function(req, res) {
                     });
                 }
             ], function (err, canRequestAssistance, enableProcedureButton) {
+                let flag = 'alertWithNoFloor';
+                for (let i=0; i < results[0].alertRoad.length; i++) {
+                    if (results[0].alertRoad[i].redirectAPI === 'floor'){
+                        flag = 'floor';
+                        break
+                    }
+                }
 
                 if(req.decoded){ //API user
                     res.json({
@@ -97,7 +104,8 @@ module.exports.receivedAlert = function(req, res) {
                         room: results[3],
                         utilities: results[4],
                         canRequestAssistance: canRequestAssistance,
-                        enableProcedureButton: enableProcedureButton
+                        enableProcedureButton: enableProcedureButton,
+                        flagFloor: flag
                     });
 
                 }else{  //EJS user
@@ -112,7 +120,8 @@ module.exports.receivedAlert = function(req, res) {
                         enableProcedureButton: enableProcedureButton,
                         aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                        userAuthPhoto: req.user.photo
+                        userAuthPhoto: req.user.photo,
+                        flagFloor: flag
                     });
                 }
             });
