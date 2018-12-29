@@ -64,7 +64,6 @@ module.exports.alert= function(alert, action) {
     };
 
     //let userName = user.firstName + ' ' + user.lastName;
-    console.log('Im here = 2');
     sendPush(message);
 
 };

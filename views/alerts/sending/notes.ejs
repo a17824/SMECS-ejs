@@ -219,6 +219,25 @@
 
                 });
             });
+            //back button
+            $("#back").click(function () {
+                let alert_ID=$("#alert_ID").val();
+
+                $.post('/sendAlertBackButton', {
+                    alertToUpdate: alert_ID
+
+                }, function (data) {
+                    if (data === 'done') {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("App stop responding, call SMECS APP team for help .")
+                });
+            });
+            //end of back button
+
         });
     </script>
 </head>
@@ -230,6 +249,7 @@
 <% } %>
 
 <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
+<input type="hidden" id="alert_ID"  value="<%= alert._id %>">
 <input type="hidden" id="missingChildLastTimeSeen"  value="<%= alert.missingChildLastTimeSeen %>"> <!-- for back button/refresh -->
 <input type="hidden" id="busTimeChanged"  value="<%= alert.busTimeChanged %>"> <!-- for back button/refresh -->
 
@@ -322,12 +342,15 @@
     <input type="submit" value="Exit Alert" >
 </form>
 <% } else { %>
-<button class="backButton" onclick="goBack()">Back</button>
+
+    <input type="button" id="back" value="Back" >
+
+<!--<button class="backButton" onclick="goBack()">Back</button>
 <script>
     function goBack() {
         window.history.back();
     }
-</script>
+</script> -->
 <% }%>
 </body>
 </html>

@@ -153,6 +153,7 @@ module.exports.update = function(req, res) {
     })
 };
 module.exports.updatePost = function(req, res) {
+
     async.parallel([
         function(callback){buildIconsColorSound.groupColorExport(function(color){callback(null, color);});}  //get Group Colors
 
@@ -171,8 +172,8 @@ module.exports.updatePost = function(req, res) {
         var soundName = soundArray[2];
         var soundMp3 = soundArray[3];
 
-
         models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
+
             alertGroup.groupID = req.body.groupID;
             alertGroup.name = req.body.name;
             alertGroup.sortID = req.body.sortID;

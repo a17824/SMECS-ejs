@@ -87,7 +87,7 @@ module.exports.auth = function (req, res, next) {
         });
     }
 };
-
+/*
 // route middleware to verify pin
 module.exports.pin = function (req, res, next) {
     var email = req.decoded.user.email;
@@ -109,4 +109,4 @@ module.exports.pin = function (req, res, next) {
             }
         }
     });
-};
+};*/

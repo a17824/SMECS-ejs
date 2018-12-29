@@ -520,6 +520,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     reqAssOn: [String],
     reqAssOff: [String],
     roadIndex: String,
+    alertSent: { type: Boolean, default: false },
     alertRoad: [{
         step: Number,
         callFunction: Array,

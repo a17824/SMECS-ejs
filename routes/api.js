@@ -52,16 +52,16 @@ routerApi.post('/alerts/sending/multiSelection', auth.auth, sendingAlert.postMul
 
 /* Send Alert - Review ALert. -------------------------------*/
 routerApi.get('/alerts/sending/reviewAlert/:id', auth.auth, reviewAlert.reviewAlert, function(req, res, next) {});
-routerApi.post('/alerts/sending/reviewAlert', auth.auth, auth.pin, reviewAlert.postReviewAlert, function(req, res) {});
+routerApi.post('/alerts/sending/reviewAlert', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
 routerApi.post('/alerts/sending/panic/:id', auth.auth, reviewAlert.postReviewAlert, function(req, res) {});
 
 /* Verify Pin. -------------------------------*/
 routerApi.get('/verifyPin/:id', auth.auth, createAlert.verifyPinGet, function(req, res) {});
-routerApi.post('/verifyPin', auth.simpleAuth, auth.requireLogin, createAlert.verifyPinPost, function(req, res) {});
+routerApi.post('/verifyPin', auth.auth, createAlert.verifyPinPost, function(req, res) {});
 /* Create Alert. -------------------------------*/
-routerApi.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.createAlert, function(req, res) {});
-/* Create Alert. -------------------------------*/
-routerApi.get('/updateAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.updateAlert, function(req, res) {});
+routerApi.get('/createAlert/:id', auth.auth, createAlert.createAlert, function(req, res) {});
+/* Update Alert. -------------------------------*/
+routerApi.get('/updateAlert/:id', auth.auth, createAlert.updateAlert, function(req, res) {});
 
 /* Receive alert ------------------------------------------*/
 routerApi.get('/alerts/received/receiveAlert/:id', auth.auth, receiveAlert.receivedAlert, function(req, res, next) {});

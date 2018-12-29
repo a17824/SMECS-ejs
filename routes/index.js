@@ -734,6 +734,8 @@ router.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.c
 /* Update Alert. -------------------------------*/
 router.get('/updateAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.updateAlert, function(req, res) {});
 
+/* Sending Alert BACK BUTTON pressed. -------------------------------*/
+router.post('/sendAlertBackButton', auth.simpleAuth, auth.requireLogin, createAlert.updateRoadIndex, function(req, res) {});
 
 /*RECEIVING ALERTS*/
 

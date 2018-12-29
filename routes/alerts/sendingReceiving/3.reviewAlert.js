@@ -78,7 +78,7 @@ module.exports.postReviewAlert = function(req, res, next) {
 
                 /****************************       ALERT ROAD       ****************************/
                 /** functions needed here are: floor.saveFloorFile, student.updateStudentFile  **/
-                redirectTo.redirectTo(req,res,tempAlert,'verify');
+                redirectTo.redirectTo(req,res,tempAlert,'GETtoPOST');
 
                 callback(null, tempAlert);
             });

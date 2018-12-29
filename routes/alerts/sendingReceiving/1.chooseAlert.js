@@ -97,7 +97,7 @@ module.exports.showGroups = function(req, res) {
 module.exports.showGroupsPost = function(req, res) {
     models.AlertsGroup.findOne({groupID: req.body.alertGroupID}, function (err, group) {
         if(err)
-            console.log('err - ',err);
+            console.log('err 3 - ',err);
         else {
 
             let alertTemp1 = new models.AlertSentTemp({
@@ -156,7 +156,7 @@ module.exports.showAlerts = function(req, res) {
         if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
             models.AlertSentTemp.findById(req.params.id, function (err, alert) {
                 if(err)
-                    console.log('err - ',err);
+                    console.log('err 2 - ',err);
                 else{
                     if (!alert) {
                         functions.alertTimeExpired(req,res);
@@ -321,7 +321,7 @@ module.exports.showAlertsPost = function(req, res) {
                         var alertToUpdate1 = req.body.alertToUpdate;
                         models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alertTemp) {
                             if(err)
-                                console.log('err - ',err);
+                                console.log('err 1 - ',err);
                             else {
                                 if (!alertTemp) {
                                     functions.alertTimeExpired(req,res);
@@ -365,7 +365,7 @@ module.exports.showAlertsPost = function(req, res) {
                 }else {
                     /****************************      ALERT ROAD      ****************************/
                     /** functions needed here are: studentStep1, busMap                          **/
-                    redirectTo.redirectTo(req,res,alertTemp1,'verify');
+                    redirectTo.redirectTo(req,res,alertTemp1,'GETtoPOST');
 
                 }
             }

@@ -16,35 +16,56 @@ let redirectTo = require('./createAlert');
 module.exports.verifyPinGet = function(req, res) {
     let alertToUpdate = req.params.id;
 
-    async.parallel([
-        function(callback) {
-            if(req.decoded) { //API user
-                models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
-            }else{  //EJS user
-                functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
-            }
-        }
-
-    ],function(err, results){
-        if (!results[0]) {
-            functions.alertTimeExpired(req,res);
-        }
+    models.AlertSentTemp.findById(alertToUpdate, function (err, alertTemp) {
+        if(!alertTemp || err)
+            console.log('updateRoadIndex failed. err = ',err);
         else {
-
-            if(req.decoded){ // run SMECS API
-                res.json({
-                    success: true
+            if(alertTemp.alertSent){ //if alert already sent, skip send alert
+                let flag = 'alertSent';
+                ++alertTemp.roadIndex;
+                alertTemp.save(function (err) {
+                    if(err)
+                        console.log('failed to update alertTemp.roadIndex. ERR = ',err);
+                    else
+                        console.log('success decreasing alertTemp.roadIndex');
                 });
+                redirectTo.redirectTo(req,res,alertTemp,flag);
+            }
+            else { // else go to send alert
+                async.parallel([
+                    function(callback) {
+                        if(req.decoded) { //API user
+                            models.Users.findOne({'email': req.decoded.user.email}).exec(callback);
+                        }else{  //EJS user
+                            functions.aclSideMenu(req, res, function (acl) {callback(null, acl);}); //aclPermissions sideMenu
+                        }
+                    }
 
-            }else{  // run SMECS EJS
-                res.render('alerts/sending/verifyPin', {
-                    title: 'Verify Pin',
-                    alertToUpdate: alertToUpdate,
-                    aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                    userAuthPhoto: req.user.photo
+                ],function(err, results){
+                    if (!results[0]) {
+                        functions.alertTimeExpired(req,res);
+                    }
+                    else {
+                        if(req.decoded){ // run SMECS API
+                            res.json({
+                                success: true
+                            });
+
+                        }else{  // run SMECS EJS
+                            res.render('alerts/sending/verifyPin', {
+                                title: 'Verify Pin',
+                                alertToUpdate: alertToUpdate,
+                                aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                                userAuthPhoto: req.user.photo
+                            });
+                        }
+                    }
                 });
             }
+
+
+
         }
     });
 };
@@ -52,7 +73,7 @@ module.exports.verifyPinGet = function(req, res) {
 module.exports.verifyPinPost = function(req, res) {
     let bodyPin = req.body.pin;
     let alertToUpdate = req.body.alertToUpdate;
-    let flag = 'verify';
+    let flag = 'GETtoPOST';
 
     let email; // EJS user
     if (req.decoded)      // API user
@@ -161,17 +182,18 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
     if(flag === 'floorMap'){ //if user choose a floor and photo exists
         redirectAPI = arg1;
         redirectEJS = arg2;
-        flag = 'verify';
+        flag = 'GETtoPOST';
         --alertTemp.roadIndex;
     }
     if(req.decoded){ // run SMECS API
         res.json({
             success: true,
-            redirect: redirectAPI
+            redirect: redirectAPI,
+            alert_ID: alertTemp._id
         });
     }
     else{  // run SMECS EJS
-        if(flag === 'verify') {
+        if(flag === 'GETtoPOST') {
             res.send({redirect: redirectEJS});
         }
         else{
@@ -199,9 +221,14 @@ module.exports.createAlert= function(req, res) {
 
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo
                     /*****  CALL HERE NOTIFICATION API  *****/
-                    console.log('Im here = 1');
                     pushNotification.alert(result, 'newAlert');
-                    console.log('Im here = 3');
+                    alertTemp.alertSent = true;
+                    alertTemp.save(function (err) {
+                        if(err)
+                            console.log('failed to update alertTemp.alertSent to = false. ERR = ',err);
+                        else
+                            console.log('success to update alertTemp.alertSent to = true');
+                    });
                     redirectTo.redirectTo(req,res,alertTemp,flag);
                 });
             }
@@ -213,7 +240,7 @@ module.exports.createAlert= function(req, res) {
     });
 };
 /* end of Create AlertSentInfo and Send PushNotification. -------------------------------*/
-//function updateAlert(req, res, alertTemp1) {
+
 module.exports.updateAlert= function(req, res) {
     let alertToUpdate = req.params.id;
     let flag = 'update';
@@ -226,6 +253,35 @@ module.exports.updateAlert= function(req, res) {
         });
     });
 };
+
+module.exports.updateRoadIndex= function(req, res) {
+    let alertToUpdate = req.body.alertToUpdate;
+    let flag = 'GETtoPOST';
+
+    models.AlertSentTemp.findById(alertToUpdate, function (err, alertTemp) {
+        if(!alertTemp || err)
+            console.log('updateRoadIndex failed. err = ',err);
+        else {
+            --alertTemp.roadIndex;
+            --alertTemp.roadIndex;
+
+            alertTemp.alertRoad.forEach(function (road) {
+                if (road.step == alertTemp.roadIndex && road.redirectAPI === 'createAlert') {
+                    --alertTemp.roadIndex;
+                    alertTemp.alertRoad.forEach(function (road2) {
+                        if (road2.step == alertTemp.roadIndex && road2.redirectAPI === 'verifyPin') {
+                            --alertTemp.roadIndex;
+                        }
+                    })
+                }
+            });
+            redirectTo.redirectTo(req,res,alertTemp,flag);
+        }
+    });
+};
+
+
+
 function studentStep1(req, res, alertTemp1) {
     alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
     student.saveStudentFile(req, res, alertTemp1);

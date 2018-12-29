@@ -126,7 +126,7 @@ module.exports.postFloor = function(req, res) {
 
                 /****************************      ALERT ROAD      ****************************/
                 /** functions needed here are:                                               **/
-                redirectTo.redirectTo(req,res,alert,'verify');
+                redirectTo.redirectTo(req,res,alert,'GETtoPOST');
             }
 
             else {  //if user choose a floor and photo exists
@@ -205,7 +205,7 @@ module.exports.postFloorLocation = function(req, res) {
 
             /****************************      ALERT ROAD      ****************************/
             /** functions needed here are:                                               **/
-            redirectTo.redirectTo(req,res,alert,'verify');
+            redirectTo.redirectTo(req,res,alert,'GETtoPOST');
 
         }
     });
@@ -276,7 +276,7 @@ module.exports.postNotes = function(req, res) {
 
             /****************************          ALERT ROAD          ****************************/
             /** functions needed here are: studentMissingStudent, notesStudentWithGun, notesBus  **/
-            redirectTo.redirectTo(req,res,alert,'verify');
+            redirectTo.redirectTo(req,res,alert,'GETtoPOST');
 
         }
     });
@@ -349,7 +349,7 @@ module.exports.postStudent = function(req, res) {
         else {
             /****************************      ALERT ROAD      ****************************/
             /** functions needed here are: student2, studentSaveFile                     **/
-            redirectTo.redirectTo(req,res,alert,'verify',studentName,studentPhoto);
+            redirectTo.redirectTo(req,res,alert,'GETtoPOST',studentName,studentPhoto);
 
         }
     });
@@ -430,7 +430,7 @@ module.exports.postMultiSelection = function(req, res) {
 
             /****************************       ALERT ROAD       ****************************/
             /** functions needed here are: multiUtilities, multiMedical, multiSchoolClosed **/
-            redirectTo.redirectTo(req,res,alert,'verify');
+            redirectTo.redirectTo(req,res,alert,'GETtoPOST');
         }
     });
 };

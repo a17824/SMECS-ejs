@@ -27,10 +27,9 @@ function colorBuild(callback){
             {RgbValue: '6A5ACD', ColorName: 'Slateblue', ColorText: 'FFFFFF'},
             {RgbValue: 'efad4f', ColorName: 'Orange', ColorText: 'FFFFFF'},
             {RgbValue: 'FFD700', ColorName: 'Gold', ColorText: 'FFFFFF'},
-            {RgbValue: 'fdfd96 ', ColorName: 'Yellow', ColorText: '000000'},
+            {RgbValue: 'fdfd96', ColorName: 'Yellow', ColorText: '000000'},
             {RgbValue: '000000', ColorName: 'Black', ColorText: 'FFFFFF'},
             {RgbValue: 'FFFFFF', ColorName: 'White', ColorText: '000000'}
-
 
 
         ]
