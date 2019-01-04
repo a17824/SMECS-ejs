@@ -298,18 +298,24 @@ module.exports.procedure = function(req, res) {
             models.Alerts.findById(req.params.id).exec(callback);
         },
         function(callback){aclPermissions.modifyProcedure(req, res, callback);},   //aclPermissions modifyProcedure
+        function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
-        res.render('alertsAndGroups/alerts/procedure', {
+        let procedureSpecific = results[0].procedureSpecific;
+
+        res.render('alertsAndGroups/alerts/procedures', {
             userAuthID: req.user.userPrivilegeID,
             userAuthRedirect: req.user.redirect,
             alert: results[0],
+            procedureSpecific: procedureSpecific,
             aclModifyProcedure: results[1], //aclPermissions modifyProcedure
-            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclShowProcedure: results[2], //aclPermissions showProcedure
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
+            userAuthPhoto: req.user.photo,
+            redirectTab: req.user.redirectTabProcedure
         });
     })
 

@@ -222,6 +222,31 @@ module.exports.updatePost = function(req, res) {
                 });
                 //end of UPDATE Rooms Building_name & Building_id DATABASE--------
 
+                //UPDATE Alerts Building_name & Building_id DATABASE--------
+                models.Alerts.find({}, function(err, alerts) {
+                    if( err || !alerts) console.log("No Rooms to update");
+                    else {
+                        alerts.forEach(function (alert) {
+                            alert.procedureSpecific.forEach(function (room) {
+                                if (room.Building.buildingID == buildingToUpdate2) {
+                                    room.Building.buildingID = req.body.buildingID;
+                                    room.Building.sortID = req.body.sortID;
+                                    room.Building.name = req.body.buildingName;
+                                    alert.save(function (err) {
+                                        if (err && (err.code === 11000 || err.code === 11001)) {
+                                            console.log(err);
+                                            return res.status(409).send('showAlert')
+                                        } else {
+                                            console.log('Success updating building in Alerts database');
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+                //end of UPDATE Alerts Building_name & Building_id DATABASE--------
+
                 console.log('Success updating Building database');
                 return res.send({redirect:'/buildingFloorRoom/show'})
             }

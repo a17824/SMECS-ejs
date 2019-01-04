@@ -73,6 +73,20 @@ module.exports.redirectTabBuilding = function(req, res, tab) {
     });
 };
 
+module.exports.redirectTabProcedure = function(req, res, tab) {
+    console.log('tab = ',req.body.tab);
+    if(req.body.tab)
+        tab = req.body.tab;
+
+    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirectTabProcedure:tab}}, {new: true}, function(err, user){
+        if(err){
+            console.log("Something wrong when updating user.redirectTabProcedure!");
+        }
+        else {
+            console.log('successfully updated user.redirectTabProcedure');
+        }
+    });
+};
 
 
 module.exports.useIcons = function(req, res) {

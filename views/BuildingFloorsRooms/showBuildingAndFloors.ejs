@@ -38,6 +38,9 @@
     <script type="text/javascript">
         //DELETE Confirmation
         function YNconfirm(type) {
+            if ( type === 'room'){
+                type = 'room and his specific procedure'
+            }
             if (confirm('ATTENTION: This ' + type + ' will be deleted. Are you sure?'))
                 return true;
             else

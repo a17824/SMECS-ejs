@@ -187,7 +187,8 @@ module.exports.updatePost = function(req, res) {
                                 return res.status(409).send('showAlert')
                             } else {
                                 let floorToUpdate2 = req.body.oldFloorID;
-                                //UPDATE Rooms Building_name & Building_id DATABASE--------
+
+                                //UPDATE Rooms Floor_name & Floor_id DATABASE--------
                                 models.Room.find({}, function(err, rooms) {
                                     if( err || !rooms) console.log("No Rooms to update");
                                     else {
@@ -211,7 +212,36 @@ module.exports.updatePost = function(req, res) {
                                         });
                                     }
                                 });
-                                //end of UPDATE Rooms Building_name & Building_id DATABASE--------
+                                //end of UPDATE Rooms Floor_name & Floor_id DATABASE--------
+
+                                //UPDATE Alerts Floor_name & Floor_id DATABASE--------
+                                models.Alerts.find({}, function(err, alerts) {
+                                    if( err || !alerts) console.log("No Rooms to update");
+                                    else {
+                                        alerts.forEach(function (alert) {
+                                            alert.procedureSpecific.forEach(function (room) {
+                                                if (room.Floor.floorID == floorToUpdate2) {
+                                                    room.Building.buildingID = buildingID;
+                                                    room.Building.sortID = buildingSortID;
+                                                    room.Building.name = buildingName;
+                                                    room.Floor.floorID = req.body.floorID;
+                                                    room.Floor.sortID = req.body.sortID;
+                                                    room.Floor.name = req.body.floorName;
+                                                    alert.save(function (err) {
+                                                        if (err && (err.code === 11000 || err.code === 11001)) {
+                                                            console.log(err);
+                                                            return res.status(409).send('showAlert')
+                                                        } else {
+                                                            console.log('Success updating floor in Alerts database');
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                                //end of UPDATE Alerts Floor_name & Floor_id DATABASE--------
+
 
                                 console.log('Success updating Floor database');
                                 return res.send({redirect: '/buildingFloorRoom/show'})

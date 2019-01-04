@@ -38,6 +38,7 @@ var UsersSchema = new mongoose.Schema({
     redirectTabUsers: { type: String, default: 'showUsers'},
     redirectTabAlertGroups: { type: String, default: 'showGroups'},
     redirectTabBuildings: { type: String, default: 'showBuilding'},
+    redirectTabProcedure: { type: String, default: 'showGeneral'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
         theme: String
@@ -213,6 +214,22 @@ var AlertsSchema = new mongoose.Schema({
     alertID: { type: Number, unique: true },
     alertName: { type: String, unique: true }, // Lockdown, Evacuate...
     alertProcedure: String,
+    procedureSpecific: [{
+        Building: {
+            buildingID: Number,
+            sortID: Number,
+            name: String
+        },
+        Floor: {
+            floorID: Number,
+            sortID: Number,
+            name: String
+        },
+        roomID: { type: Number, unique: true },
+        sortID: { type: Number, unique: true },
+        roomName: String,
+        procedure: String
+    }],
     alertRequest911Call: { type: Boolean, default: false },
     whoCanCall911: [String],
     alertRequestProcedureCompleted: { type: Boolean, default: true },

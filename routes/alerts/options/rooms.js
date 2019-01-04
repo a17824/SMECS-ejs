@@ -93,9 +93,30 @@ module.exports.addPost = function(req, res) {
                 });
                 room1.save(function (err) {
                     if (err) {
-                        console.log("err - ",err);
+                        console.log("err adding room - ",err);
                         return res.status(409).send('showAlert')
                     }else{
+
+                        //ADD Alerts Building_name & Building_id DATABASE--------
+                        models.Alerts.find({}, function(err, alerts) {
+                            if( err || !alerts) console.log("No Rooms to update");
+                            else {
+                                alerts.forEach(function (alert) {
+                                    alert.procedureSpecific.splice(alert.procedureSpecific.sortID, 0, room1);
+                                    alert.save();
+
+                                    alert.save(function (err) {
+                                        if (err) {
+                                            console.log("err adding Room ro Alert database - ", err);
+                                        } else {
+                                            console.log("success adding Room to Alert database");
+                                        }
+                                    })
+                                });
+                            }
+                        });
+                        //end of ADD Alerts Building_name & Building_id DATABASE--------
+
                         return res.send({redirect:'/buildingFloorRoom/show'})
                     }
                 });
@@ -188,7 +209,8 @@ module.exports.updatePost = function(req, res) {
                         return res.send({redirect: '/room/update/' + roomToUpdate1})
                     }
                     else {
-                        console.log("Room updated");
+                        let oldRoomID = roomToUpdate.roomID; // to find and update in Alert database procedureSpecific.roomID
+
                         roomToUpdate.Building.buildingID = buildingID;
                         roomToUpdate.Building.sortID = buildingSortID;
                         roomToUpdate.Building.name = buildingName;
@@ -206,6 +228,40 @@ module.exports.updatePost = function(req, res) {
                                 console.log("err - ", err);
                                 return res.status(409).send('showAlert')
                             } else {
+                                console.log("Room updated");
+                                //UPDATE Alerts Room_name & Room_id DATABASE--------
+                                models.Alerts.find({}, function(err, alerts) {
+                                    if( err || !alerts) console.log("No Rooms to update");
+                                    else {
+                                        alerts.forEach(function (alert) {
+                                            alert.procedureSpecific.forEach(function (room) {
+                                                if (room.roomID == oldRoomID) {
+                                                    room.Building.buildingID = buildingID;
+                                                    room.Building.sortID = buildingSortID;
+                                                    room.Building.name = buildingName;
+
+                                                    room.Floor.floorID = floorID;
+                                                    room.Floor.sortID = floorSortID;
+                                                    room.Floor.name = floorName;
+
+                                                    room.roomID = req.body.roomID;
+                                                    room.sortID = req.body.sortID;
+                                                    room.roomName = req.body.roomName;
+                                                    alert.save(function (err) {
+                                                        if (err ) {
+                                                            console.log('err updating room in Alert database - ',err);
+                                                        } else {
+                                                            console.log('Success updating Rooms in Alerts database');
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                                //end of UPDATE Alerts Room_name & Room_id DATABASE--------
+
+
                                 return res.send({redirect: '/buildingFloorRoom/show'})
                             }
                         });
@@ -221,8 +277,33 @@ module.exports.updatePost = function(req, res) {
 /* DELETE Room. */
 module.exports.delete = function(req, res) {
     let roomToDelete = req.params.id;
-    models.Room.remove({'_id': roomToDelete}, function(err) {
-        return res.redirect('/buildingFloorRoom/show');
+    models.Room.findById(roomToDelete,function(error, roomToUpdate) {
+        models.Alerts.find({}, function(err, alerts) {
+            if( err || !alerts) console.log("No alerts found");
+            else {
+                alerts.forEach(function (alert) {
+                    for (let z = 0; z < alert.procedureSpecific.length; z++) {
+                        if(alert.procedureSpecific[z].roomID == roomToUpdate.roomID) {
+                            alert.procedureSpecific.splice(z, 1);
+                            alert.save(function (err) {
+                                if (err )
+                                    console.log('err deleting room from Alert database - ',err);
+                                else
+                                    console.log('success - removing room from Alerts database');
+                            });
+                        }
+                    }
+                });
+                models.Room.remove({'_id': roomToDelete}, function(err, room) {
+                    if( err || !room) console.log("No Rooms to update");
+                    else {
+                        return res.redirect('/buildingFloorRoom/show');
+                    }
+                });
+            }
+        });
     });
+
+
 };
 /* ----- end of DELETE Alerts. */

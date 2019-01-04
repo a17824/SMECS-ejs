@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- Datatables -->
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    <!-- ckeditor  -->
+    <script src="/public/ckeditor/ckeditor.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+                $('a[role="tab"]').on('shown.bs.tab', function (e) {
+                    var target = $(e.target).attr("id") // activated tab
+                    //alert(target);
+
+                    $.post("/redirectTabProcedure", {
+                        tab: target
+
+                    }, function (data) {
+                        console.log('data.redirect = ',data.redirect);
+                        window.location = data.redirect
+                    });
+                });
+
+                //editor
+                var id;
+                $("#<%= alert.id %>").click(function(){
+                    id=$(this).attr('id');
+                    //var alertProcedure=$("#alertProcedure").val();
+                    var data = CKEDITOR.instances.editor1.getData();
+
+                    //-----forms validation------------------------------------
+
+                    //--------------------------------forms validation end-------
+
+                    $.post("/alerts/procedure",{
+                        alertToUpdate: id,
+                        alertProcedure: data //alertProcedure
+
+
+                    },function(data){
+                        if(data==='done')
+                        {
+                            alert("login success");
+                        }
+                        window.location = data.redirect
+                    }).error(function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Alert Name already already in use. Choose a different Name.")
+
+                    });
+                });
+
+            }
+        );
+        // function to resize textarea box --------------
+        (function($) {
+            jQuery.fn.cke_resize = function() {
+                return this.each(function() {
+                    var $this = $(this);
+                    var rows = $this.attr('rows');
+                    var height = rows * 20;
+                    $this.next("div.cke").find(".cke_contents").css("height", height);
+                });
+            };
+        })(jQuery);
+
+        CKEDITOR.on( 'instanceReady', function(){
+            $("textarea.ckeditor").cke_resize();
+        })
+        // ------------ end of function to resize textarea box
+    </script>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+                <!-- menu profile quick info -->
+                <% include ../../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ../../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+
+
+        <div class="right_col" role="main">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+
+
+                            <ul>
+                                <div align="center" style="size: 100px">
+                                    <% if ( error_messages.length >= 1) { %>
+                                    <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                    <strong><%- error_messages %></strong>
+                                    </div>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+
+                            <br>
+                            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+
+                                    <% if (redirectTab == 'showGeneral') {%>
+                                    <% var activeGeneral = 'active' %>
+                                    <% }else {%>
+                                    <% var activeGeneral = '' %>
+                                    <% } %>
+                                    <% if (redirectTab == 'showSpecific') {%>
+                                    <% var activeSpecific = 'active' %>
+                                    <% }else {%>
+                                    <% var activeSpecific = '' %>
+                                    <% } %>
+
+                                    <li role="presentation" class="<%= activeGeneral %>"><a href="#tab_content1" role="tab" id="showGeneral" data-toggle="tab" aria-expanded="false">General</a>
+                                    </li>
+                                    <li role="presentation" class="<%= activeSpecific %>"><a href="#tab_content2" role="tab" id="showSpecific" data-toggle="tab" aria-expanded="false">Specific</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="myTabContent" class="tab-content">
+
+
+                                <% if (redirectTab == 'showGeneral') {%>
+                                <% var showGeneral = 'tab-pane fade active in table-responsive' %>
+                                <% } else {%>
+                                <% var showGeneral = 'tab-pane fade table-responsive' %>
+                                <% } %>
+
+
+                                <div role="tabpanel" class="<%= showGeneral %>" id="tab_content1">
+
+                                    <form>
+                                        <p>
+                                            <input id="<%= alert.id %>" onclick="toggleReadOnly();" type="button" value="Save" style="display:none">
+                                            <input id="readOnlyOff" onclick="toggleReadOnly( false );" type="button" value="Edit Text" style="display:none">
+                                        </p>
+
+                                        <% if (aclModifyProcedure == null || aclModifyProcedure.checkBoxValue == true) {%>
+                                            <textarea class="ckeditor" cols="40" id="editor1" name="editor1" rows="25"><%= alert.alertProcedure %></textarea><br>
+
+
+                                            <script>
+                                                var editor;
+
+
+                                                // The instanceReady event is fired when an instance of CKEditor has finished
+                                                // its initialization.
+                                                CKEDITOR.on( 'instanceReady', function ( ev ) {
+                                                    editor = ev.editor;
+
+                                                    // Show this "on" button. (on page load puts button state "Edit Text" and Edit Only)
+                                                    document.getElementById( 'readOnlyOff' ).style.display = '';
+                                                    editor.setReadOnly( true );
+
+                                                    // Event fired when the readOnly property changes.
+                                                    editor.on( 'readOnly', function () {
+                                                        document.getElementById( '<%= alert.id %>' ).style.display = this.readOnly ? 'none' : '';
+                                                        document.getElementById( 'readOnlyOff' ).style.display = this.readOnly ? '' : 'none';
+                                                    } );
+                                                } );
+
+
+                                                function toggleReadOnly( isReadOnly ) {
+                                                    // Change the read-only state of the editor.
+                                                    // http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setReadOnly
+                                                    editor.setReadOnly( isReadOnly );
+                                                }
+                                            </script>
+
+
+
+                                        <% } else { %>
+                                            <textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="30" disabled><%= alert.alertProcedure %></textarea>
+                                            <script>
+                                                var editor = CKEDITOR.inline( 'editor1', {
+                                                    removePlugins: 'toolbar',
+                                                    allowedContent: true
+                                                } );
+                                            </script>
+                                        <% } %>
+                                    </form>
+
+                                    <form action="/alertGroups/showAlertGroups">
+                                        <input type="submit" value="Back">
+                                    </form>
+                                    <br><br><br>
+                                </div>
+
+
+
+                                <% if (redirectTab == 'showSpecific') {%>
+                                <% var showSpecific = 'tab-pane fade active in' %>
+                                <% } else {%>
+                                <% var showSpecific = 'tab-pane fade' %>
+                                <% } %>
+
+                                <div role="tabpanel" class="<%= showSpecific %>" id="tab_content2">
+                                    <table id="datatable-fixed-header" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Building Name</th>
+                                            <th>Floor Name</th>
+                                            <th>Room Name</th>
+                                            <th>Procedure</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <% procedureSpecific.forEach(function(room) { %>
+                                        <tr>
+                                            <td><%= room.Building.name %></td>
+                                            <td><%= room.Floor.name %></td>
+                                            <td><%= room.roomName %></td>
+                                            <td>
+                                                <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
+                                                    <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info">show</button></a>
+                                                <% } else { %>
+                                                    <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info" disabled>show</button></a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+
+<!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+
+
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>
