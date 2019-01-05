@@ -40,7 +40,7 @@
         // its initialization.
         CKEDITOR.on( 'instanceReady', function ( ev ) {
             editor = ev.editor;
-            ev.editor.resize("100%");
+
             // Show this "on" button. (on page load puts button state "Edit Text" and Edit Only)
             document.getElementById( 'readOnlyOff' ).style.display = '';
             editor.setReadOnly( true );
@@ -79,20 +79,6 @@
                     var target = $(e.target).attr("id") // activated tab
                     //alert(target);
 
-                    //if tab 'Specific' selected, hide buttons
-                    if(target === 'showSpecific'){
-                        var x = document.getElementById("edit");
-                        x.style.display = "none";
-
-                        var z = document.getElementById("save");
-                        z.style.display = "none";
-                    }
-                    //if tab 'General' selected, show edit and back buttons
-                    if(target === 'showGeneral'){
-                        var x = document.getElementById("edit");
-                        x.style.display = "inline-block";
-                    }
-
                     $.post("/redirectTabProcedure", {
                         tab: target
 
@@ -110,15 +96,16 @@
 
                     //var alertProcedure=$("#alertProcedure").val();
                     var data = CKEDITOR.instances.editor1.getData();
+                    let roomID=$("#roomID").val();
 
                     //-----forms validation------------------------------------
 
                     //--------------------------------forms validation end-------
 
-                    $.post("/alerts/procedure",{
+                    $.post("/alerts/specificProcedure",{
                         alertToUpdate: id,
-                        alertProcedure: data //alertProcedure
-
+                        alertProcedure: data, //alertProcedure
+                        roomID: roomID
 
                     },function(data){
                         if(data==='done')
@@ -146,14 +133,11 @@
                 });
             };
         })(jQuery);
-/*
+
         CKEDITOR.on( 'instanceReady', function(){
             $("textarea.ckeditor").cke_resize();
-        })*/
-
+        })
         // ------------ end of function to resize textarea box
-
-
     </script>
 
 </head>
@@ -181,7 +165,7 @@
         <% include ../../layout/topNavigation.ejs %>
         <!-- /top navigation -->
 
-
+        <input type="hidden" id="roomID" value="<%= roomID %>">
 
         <div class="right_col" role="main">
             <div class="row">
@@ -206,109 +190,54 @@
                             </ul>
 
 
-                            <div class="" role="tabpanel" data-example-id="togglable-tabs">
-                                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
 
-                                    <% if (redirectTab == 'showGeneral') {%>
-                                    <% var activeGeneral = 'active' %>
-                                    <% }else {%>
-                                    <% var activeGeneral = '' %>
-                                    <% } %>
-                                    <% if (redirectTab == 'showSpecific') {%>
-                                    <% var activeSpecific = 'active' %>
-                                    <% }else {%>
-                                    <% var activeSpecific = '' %>
-                                    <% } %>
 
-                                    <li role="presentation" class="<%= activeGeneral %>"><a href="#tab_content1" role="tab" id="showGeneral" data-toggle="tab" aria-expanded="false">General</a>
-                                    </li>
-                                    <li role="presentation" class="<%= activeSpecific %>"><a href="#tab_content2" role="tab" id="showSpecific" data-toggle="tab" aria-expanded="false">Specific</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div id="myTabContent" class="tab-content">
 
-                                <ul>
-                                    <div align="center">
+                                    <ul>
+                                        <div align="center">
 
-                                        <div id='save' style="display:none">
-                                            <button class="btn btn-success"  id="saveButton" value="<%= alert.id %>" onclick="toggleReadOnly();">Save</button>
-                                            <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Back</button></a>
+                                            <div id='save' style="display:none">
+                                                <button class="btn btn-success"  id="saveButton" value="<%= alert.id %>" onclick="toggleReadOnly();">Save</button>
+                                                <a href="/alerts/procedure/<%= alert.id %>"><button type="button" class="btn btn-default">Back</button></a>
+                                            </div>
+                                            <div id='edit' style="display: block;">
+                                                <button class="btn btn-success"  id="readOnlyOff" onclick="toggleReadOnly( false );">Edit Text</button>
+                                                <a href="/alerts/procedure/<%= alert.id %>"><button type="button" class="btn btn-default">Back</button></a>
+                                            </div>
+
+
                                         </div>
-                                        <div id='edit' style="display: block;">
-                                            <button class="btn btn-success"  id="readOnlyOff" onclick="toggleReadOnly( false );">Edit Text</button>
-                                            <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Back</button></a>
-                                        </div>
+                                    </ul>
+
+                                        <form>
 
 
+                                            <% if (aclModifyProcedure == null || aclModifyProcedure.checkBoxValue == true) {%>
+                                                <textarea class="ckeditor" cols="40" id="editor1" name="editor1" rows="25"><%= roomProcedure %></textarea><br>
+                                            <% } else { %>
+                                                <textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="30" disabled><%= roomProcedure %></textarea>
+                                                <script>
+                                                    var editor = CKEDITOR.inline( 'editor1', {
+                                                        removePlugins: 'toolbar',
+                                                        allowedContent: true
+                                                    } );
+
+                                                </script>
+                                            <% } %>
+                                        </form>
+
+
+                                        <br><br><br>
                                     </div>
-                                </ul>
-                                <% if (redirectTab == 'showGeneral') {%>
-                                <% var showGeneral = 'tab-pane fade active in table-responsive' %>
-                                <% } else {%>
-                                <% var showGeneral = 'tab-pane fade table-responsive' %>
-                                <% } %>
 
 
-                                <div role="tabpanel" class="<%= showGeneral %>" id="tab_content1">
-
-                                    <form>
-
-
-                                        <% if (aclModifyProcedure == null || aclModifyProcedure.checkBoxValue == true) {%>
-                                            <textarea class="ckeditor" cols="40" id="editor1" name="editor1" rows="25"><%= alert.alertProcedure %></textarea><br>
-                                        <% } else { %>
-                                            <textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="30" disabled><%= alert.alertProcedure %></textarea>
-
-                                        <% } %>
-                                    </form>
-
-
-                                    <br><br><br>
-                                </div>
-
-
-
-                                <% if (redirectTab == 'showSpecific') {%>
-                                <% var showSpecific = 'tab-pane fade active in' %>
-                                <% } else {%>
-                                <% var showSpecific = 'tab-pane fade' %>
-                                <% } %>
-
-                                <div role="tabpanel" class="<%= showSpecific %>" id="tab_content2">
-                                    <table id="datatable-fixed-header" class="table table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th>Building Name</th>
-                                            <th>Floor Name</th>
-                                            <th>Room Name</th>
-                                            <th>Procedure</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <% procedureSpecific.forEach(function(room) { %>
-                                        <tr>
-                                            <td><%= room.Building.name %></td>
-                                            <td><%= room.Floor.name %></td>
-                                            <td><%= room.roomName %></td>
-                                            <td>
-                                                <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
-                                                    <a href="/alerts/specificProcedure/<%= alert.id %>/<%= room.roomID %>"><button class="btn btn-info">show</button></a>
-                                                <% } else { %>
-                                                    <a href=""><button class="btn btn-info" disabled>show</button></a>
-                                                <% } %>
-                                            </td>
-                                        </tr>
-                                        <% }); %>
-                                        </tbody>
-                                    </table>
                                 </div>
 
 
 
 
 
-                            </div>
+
                         </div>
                     </div>
                 </div>

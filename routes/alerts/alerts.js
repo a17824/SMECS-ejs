@@ -331,6 +331,72 @@ module.exports.procedurePost = function(req, res) {
                 return res.status(409).send('showAlert')
             }
         });
+        res.send({redirect: '/alertGroups/showAlertGroups'});
+    });
+};
+/*-------------------------end of PROCEDURE Alerts*/
+
+
+/* PROCEDURE Alerts. -------------------------------*/
+module.exports.specificProcedure = function(req, res) {
+    let roomID = req.params.roomID;
+
+    async.parallel([
+        function(callback){
+            models.Alerts.findById(req.params.id).exec(callback);
+        },
+        function(callback){aclPermissions.modifyProcedure(req, res, callback);},   //aclPermissions modifyProcedure
+        function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        let roomProcedure = '';
+        results[0].procedureSpecific.forEach(function (room) {
+            if(room.roomID == roomID)
+                roomProcedure = room.procedure;
+        });
+
+        res.render('alertsAndGroups/alerts/specificProcedure', {
+            userAuthID: req.user.userPrivilegeID,
+            userAuthRedirect: req.user.redirect,
+            alert: results[0],
+            roomID: roomID,
+            roomProcedure: roomProcedure,
+            aclModifyProcedure: results[1], //aclPermissions modifyProcedure
+            aclShowProcedure: results[2], //aclPermissions showProcedure
+            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo,
+            redirectTab: req.user.redirectTabProcedure
+        });
+    })
+
+};
+
+module.exports.specificProcedurePost = function(req, res) {
+    let alertToUpdate1 = req.body.alertToUpdate;
+    let roomID = req.body.roomID;
+    let procedure = req.body.alertProcedure;
+
+    models.Alerts.findById(alertToUpdate1, function(err, alertRoom){
+        if(!alertRoom || err)
+            console.log('alertRoom failed. err = ',err);
+        else {
+            alertRoom.procedureSpecific.forEach(function (room) {
+                if(room.roomID == roomID){
+                    room.procedure = procedure;
+                    alertRoom.save(function (err) {
+                        if (err)
+                            console.log('error saving specific procedure - ',err);
+                        else{
+                            console.log('success saving specific procedure');
+                            res.send({redirect: '/alerts/procedure/' + alertToUpdate1});
+                        }
+
+                    });
+                }
+            });
+        }
     });
 };
 /*-------------------------end of PROCEDURE Alerts*/

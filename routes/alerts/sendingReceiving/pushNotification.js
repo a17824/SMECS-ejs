@@ -37,14 +37,17 @@ module.exports.alert= function(alert, action) {
 //end of FOR FIREBASE - Create message for cellPhone notification
 
 // FOR OneSignal - Create message for cellPhone notification
-module.exports.alert= function(alert, action) {
+module.exports.alert= function(alert, action, userAuthEmail) {
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
     if (alert.realDrillDemo == 'drill')
         testModeON = 'Drill Alert -';
 
+
+    console.log('userAuthEmail = ',userAuthEmail);
     alert.sentTo.forEach(function (user) {
-        if (user.pushToken) {
+        console.log('user.email = ',user.email);
+        if (user.pushToken && (user.email !== userAuthEmail)) {
             user.pushToken.forEach(function (token) {
                 allUsersWithPushToken.push(token);
             });

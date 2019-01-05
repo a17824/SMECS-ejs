@@ -13,15 +13,16 @@
                 id=$(this).attr('id');
                 //var alertProcedure=$("#alertProcedure").val();
                 var data = CKEDITOR.instances.editor1.getData();
+                let roomID=$("#roomID").val();
 
                 //-----forms validation------------------------------------
 
                 //--------------------------------forms validation end-------
 
-                $.post("/alerts/procedure",{
+                $.post("/alerts/specificProcedure",{
                     alertToUpdate: id,
-                    alertProcedure: data //alertProcedure
-
+                    alertProcedure: data, //alertProcedure
+                    roomID: roomID
 
                 },function(data){
                     if(data==='done')
@@ -57,6 +58,8 @@
 <body>
 <h1></h1>
 
+<input type="hidden" id="roomID" value="<%= roomID %>">
+
 <form>
     <p>
         <input id="<%= alert.id %>" onclick="toggleReadOnly();" type="button" value="Save" style="display:none">
@@ -64,7 +67,7 @@
     </p>
 
     <% if (aclModifyProcedure == null || aclModifyProcedure.checkBoxValue == true) {%>
-    <textarea class="ckeditor" cols="40" id="editor1" name="editor1" rows="25"><%= alert.alertProcedure %></textarea><br>
+    <textarea class="ckeditor" cols="40" id="editor1" name="editor1" rows="25"><%= roomProcedure %></textarea><br>
 
 
     <script>

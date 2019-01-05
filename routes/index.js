@@ -348,10 +348,15 @@ router.post('/alerts/updateAlerts', auth.simpleAuth, auth.requireLogin, alerts.u
 
 
 
-/* PROCEDURE Alerts. -------------------------------*/
+/* GENERAL PROCEDURE Alerts. -------------------------------*/
 router.get('/alerts/procedure/:id', auth.simpleAuth, auth.requireLogin, alerts.procedure, function(req, res) {
 });
 router.post('/alerts/procedure', auth.simpleAuth, auth.requireLogin, alerts.procedurePost, function(req, res) {
+});
+/* SPECIFIC PROCEDURE Alerts. -------------------------------*/
+router.get('/alerts/specificProcedure/:id/:roomID', auth.simpleAuth, auth.requireLogin, alerts.specificProcedure, function(req, res) {
+});
+router.post('/alerts/specificProcedure', auth.simpleAuth, auth.requireLogin, alerts.specificProcedurePost, function(req, res) {
 });
 
 

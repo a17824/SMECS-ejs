@@ -210,6 +210,12 @@ module.exports.createAlert= function(req, res) {
     let alertToUpdate = req.params.id;
     let flag = 'create';
 
+    let email; // EJS user
+    if (req.decoded)      // API user
+        email = req.decoded.user.email;
+    else
+        email = req.user.email;
+
     models.AlertSentTemp.findById({'_id': alertToUpdate}, function (err, alertTemp) {
         if (!alertTemp) {
             functions.alertTimeExpired(req,res);
@@ -221,7 +227,7 @@ module.exports.createAlert= function(req, res) {
 
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo
                     /*****  CALL HERE NOTIFICATION API  *****/
-                    pushNotification.alert(result, 'newAlert');
+                    pushNotification.alert(result, 'newAlert', email);
                     alertTemp.alertSent = true;
                     alertTemp.save(function (err) {
                         if(err)
