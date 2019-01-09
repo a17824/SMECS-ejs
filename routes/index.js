@@ -757,6 +757,7 @@ router.get('/alerts/receiving/procedureR/:id', auth.simpleAuth, auth.requireLogi
 /* Tab Redirect ------------------*/
 router.post('/redirectTabUsers', auth.simpleAuth, auth.requireLogin, functions.redirectTabUsers, function(req, res) {});
 router.post('/redirectTabAlertGroups', auth.simpleAuth, auth.requireLogin, functions.redirectTabAlertGroups, function(req, res) {});
+router.post('/redirectTabBuildings', auth.simpleAuth, auth.requireLogin, functions.redirectTabBuildings, function(req, res) {});
 router.post('/redirectTabProcedure', auth.simpleAuth, auth.requireLogin, functions.redirectTabProcedure, function(req, res) {});
 
 

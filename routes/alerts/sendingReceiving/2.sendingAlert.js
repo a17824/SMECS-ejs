@@ -14,6 +14,9 @@ module.exports.showFloor = function(req, res) {
             models.AlertSentTemp.findById(req.params.id).exec(callback);
         },
         function(callback){
+            models.Building.find().exec(callback);
+        },
+        function(callback){
             models.Floors.find().sort({"floorID":1}).exec(callback);
         },
         function(callback){
@@ -28,19 +31,32 @@ module.exports.showFloor = function(req, res) {
         }
 
     ],function(err, results){
+        let arrayFloors = [];
+        results[2].forEach(function (floor, idx, array) {
+            arrayFloors.push(floor.Building.buildingID + '_|');
+            arrayFloors.push(floor.Building.name + '_|');
+            arrayFloors.push(floor.floorID + '_|');
+            arrayFloors.push(floor.floorName + '_|');
+            if (idx === array.length - 1) //if last loop remove '_|'
+                arrayFloors.push(floor.floorPlan);
+            else
+                arrayFloors.push(floor.floorPlan + '_|');
+
+        });
+
         if (!results[0]) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            var modelToUse = results[1];   // to use Floor collection
+            var modelToUse = results[2];   // to use Floor collection
             if (results[0].alertNameID == 7){   // to use EvacuateTo collection
-                modelToUse = results[2];
+                modelToUse = results[3];
             }
 
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
-                    userAuthGroupAlerts: results[3].appSettings.groupAlertsButtons, //for Back or Exit button
+                    userAuthGroupAlerts: results[4].appSettings.groupAlertsButtons, //for Back or Exit button
                     title: results[0].alertName,
                     alert: results[0],
                     floor: modelToUse
@@ -51,8 +67,10 @@ module.exports.showFloor = function(req, res) {
                     title: results[0].alertName,
                     userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,   //for Back or Exit button
                     alert: results[0],
+                    buildings: results[1],
                     floor: modelToUse,
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    arrayFloors: arrayFloors,
+                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -65,9 +83,12 @@ module.exports.postFloor = function(req, res) {
     var redirectEJS; //EJS user
 
     var alertToUpdate1 = req.body.alertToUpdate;
-    var floorID = req.body.floorID;
+    let arraySplit = req.body.buildingFloorID.split("_|_");
+    let buildingID = arraySplit[0];
+    let floorID = arraySplit[1];
     var floorName = req.body.floorName;
     var floorPhoto = req.body.floorPhoto;
+
 
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -119,6 +140,8 @@ module.exports.postFloor = function(req, res) {
                     alert.sniperCoordinateY = undefined;
                 }
                 //---------------end of checkFloorPhotoExists
+                alert.buildingID = buildingID;
+                alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
 
@@ -130,6 +153,7 @@ module.exports.postFloor = function(req, res) {
             }
 
             else {  //if user choose a floor and photo exists
+                alert.buildingID = buildingID;
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;

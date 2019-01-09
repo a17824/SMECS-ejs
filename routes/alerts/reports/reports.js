@@ -20,7 +20,7 @@ module.exports.homeReports = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
-        functions.redirectTabBuilding(req, res, 'showBuilding');
+        functions.redirectTabBuildings(req, res, 'showBuilding');
 
         var page = 'home-reports/home-reports';
 

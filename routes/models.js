@@ -486,6 +486,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
     placeholderNote: String,
     note: String,
+    buildingID: String,
     floorName: String,                 //read from FloorLevels database (radio buttons)
     floorID: String,                    //for Hazardous Alert "all floors exit to evacuate" option
     floorPhoto: String,

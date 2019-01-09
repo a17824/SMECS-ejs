@@ -23,7 +23,7 @@ module.exports.show = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
-        functions.redirectTabBuilding(req, res, 'showBuilding');
+        functions.redirectTabBuildings(req, res, 'showBuilding');
 
         res.render('roles2/showRoles2',{
             title:'Roles',

@@ -58,7 +58,7 @@ module.exports.redirectTabAlertGroups = function(req, res, tab) {
     });
 };
 
-module.exports.redirectTabBuilding = function(req, res, tab) {
+module.exports.redirectTabBuildings = function(req, res, tab) {
     console.log('tab = ',req.body.tab);
     if(req.body.tab)
         tab = req.body.tab;
