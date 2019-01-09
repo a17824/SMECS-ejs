@@ -370,6 +370,9 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sniperCoordinateY: String,
     note: String,
     resolution: String,
+    buildingID: String,
+    buildingName: String,
+    floorID: String,
     floorName: String,                 //read from FloorLevels database (radio buttons)
     floorPhoto: String,
     floorLocation: String,              //auto load picture from floorLevels database
@@ -487,6 +490,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     placeholderNote: String,
     note: String,
     buildingID: String,
+    buildingName: String,
     floorName: String,                 //read from FloorLevels database (radio buttons)
     floorID: String,                    //for Hazardous Alert "all floors exit to evacuate" option
     floorPhoto: String,

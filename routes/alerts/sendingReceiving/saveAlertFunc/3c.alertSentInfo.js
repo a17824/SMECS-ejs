@@ -69,6 +69,9 @@ module.exports.create = function(req, res, tempAlert, callback) {
         whoCanCall911: tempAlert.whoCanCall911,
         note: tempAlert.note,
         realDrillDemo: tempAlert.realDrillDemo,
+        buildingID: tempAlert.buildingID,
+        buildingName: tempAlert.buildingName,
+        floorID: tempAlert.floorID,
         floorName: tempAlert.floorName,
         floorPhoto: tempAlert._id + '_' + tempAlert.floorPhoto,
         sniperCoordinateX: tempAlert.sniperCoordinateX,
@@ -163,6 +166,9 @@ module.exports.update = function(req, res, tempAlert, callback) {
             }
             // end of NOTES CHAT
 
+            alert.buildingID = tempAlert.buildingID;
+            alert.buildingName = tempAlert.buildingName;
+            alert.floorID = tempAlert.floorID;
             alert.floorName = tempAlert.floorName;
             alert.floorPhoto = tempAlert._id + '_' + tempAlert.floorPhoto;
             alert.sniperCoordinateX = tempAlert.sniperCoordinateX;

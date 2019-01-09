@@ -11,7 +11,7 @@ module.exports.add = function(req, res) {
             models.Room.find(function(error, room) {}).exec(callback);
         },
         function(callback){
-            models.Floors.find(function(error, floor) {}).exec(callback);
+            models.Floors.find({'floorName':{'$ne':'Other/Multiple Locations'}},function(error, floor) {}).exec(callback);
         },
         function(callback){
             models.Building.find(function(error, building) {}).exec(callback);
@@ -139,7 +139,7 @@ module.exports.update = function(req, res) {
             }).exec(callback);
         },
         function(callback) {
-            models.Floors.find().sort({"sortID": 1}).exec(callback);
+            models.Floors.find({'floorName':{'$ne':'Other/Multiple Locations'}},function(error, floor) {}).exec(callback);
         },
         function(callback) {
             models.Building.find().sort({"sortID": 1}).exec(callback);

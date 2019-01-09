@@ -44,9 +44,8 @@ module.exports.alert= function(alert, action, userAuthEmail) {
         testModeON = 'Drill Alert -';
 
 
-    console.log('userAuthEmail = ',userAuthEmail);
     alert.sentTo.forEach(function (user) {
-        console.log('user.email = ',user.email);
+        //console.log('user.email = ',user.email); //show to who this alert will be sent
         if (user.pushToken && (user.email !== userAuthEmail)) {
             user.pushToken.forEach(function (token) {
                 allUsersWithPushToken.push(token);

@@ -262,26 +262,36 @@ module.exports.updateAlert= function(req, res) {
 
 module.exports.updateRoadIndex= function(req, res) {
     let alertToUpdate = req.body.alertToUpdate;
+    let floorLocation = req.body.floorLocation;
     let flag = 'GETtoPOST';
 
     models.AlertSentTemp.findById(alertToUpdate, function (err, alertTemp) {
-        if(!alertTemp || err)
+        if(!alertTemp || err){
             console.log('updateRoadIndex failed. err = ',err);
+            functions.alertTimeExpired(req,res);
+        }
         else {
-            --alertTemp.roadIndex;
-            --alertTemp.roadIndex;
+            if(floorLocation){ // if back button comes from floorLocation.ejs
+                --alertTemp.roadIndex;
+                redirectTo.redirectTo(req,res,alertTemp,flag);
+            }
+            else {
+                --alertTemp.roadIndex;
+                --alertTemp.roadIndex;
 
-            alertTemp.alertRoad.forEach(function (road) {
-                if (road.step == alertTemp.roadIndex && road.redirectAPI === 'createAlert') {
-                    --alertTemp.roadIndex;
-                    alertTemp.alertRoad.forEach(function (road2) {
-                        if (road2.step == alertTemp.roadIndex && road2.redirectAPI === 'verifyPin') {
-                            --alertTemp.roadIndex;
-                        }
-                    })
-                }
-            });
-            redirectTo.redirectTo(req,res,alertTemp,flag);
+                alertTemp.alertRoad.forEach(function (road) {
+                    if (road.step == alertTemp.roadIndex && road.redirectAPI === 'createAlert') {
+                        --alertTemp.roadIndex;
+                        alertTemp.alertRoad.forEach(function (road2) {
+                            if (road2.step == alertTemp.roadIndex && road2.redirectAPI === 'verifyPin') {
+                                --alertTemp.roadIndex;
+                            }
+                        })
+                    }
+                });
+                redirectTo.redirectTo(req,res,alertTemp,flag);
+            }
+
         }
     });
 };

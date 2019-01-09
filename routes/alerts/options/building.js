@@ -107,7 +107,74 @@ module.exports.addPost = function(req, res) {
             console.log("err - ",err);
             return res.status(409).send('showAlert')
         }else{
-            return res.send({redirect:'/buildingFloorRoom/show'})
+            //add "Other/Multiple Locations" floor - to this new building\\
+
+            //get floorID and floorSortID in use
+            let floorSort_inUse = [];
+            let floorID_inUse = [];
+            let streamSort = models.Floors.find().sort({"sortID":1}).cursor();
+            streamSort.on('data', function (doc) {
+                floorSort_inUse.push(doc.sortID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                let stream = models.Floors.find().sort({"sortID":1}).cursor();
+                stream.on('data', function (doc2) {
+                    floorID_inUse.push(doc2.floorID);
+                }).on('error', function (err) {
+                    // handle the error
+                }).on('close', function () {
+                    // the stream is closed
+
+                    //check for empty floorID
+                    let new_floorID;
+                    for(let i = 999; i > 0; --i) {
+                        if (floorID_inUse.indexOf(i) > -1) {
+                            //In the array!
+                        } else {
+                            //Not in the array
+                            new_floorID = i;
+                            break;
+                        }
+                    }
+                    //end of check for empty floorID
+
+                    //check for empty floorSort
+                    let new_floorSort;
+                    for(let i = 999; i > 0; --i) {
+                        if (floorID_inUse.indexOf(i) > -1) {
+                            //In the array!
+                        } else {
+                            //Not in the array
+                            new_floorSort = i;
+                            break;
+                        }
+                    }
+                    //end of check for empty floorSort
+
+
+                    let floor1 = new models.Floors({
+                        Building: {
+                            buildingID: req.body.buildingID,
+                            sortID: req.body.sortID,
+                            name: req.body.buildingName
+                        },
+                        floorID: new_floorID,
+                        sortID: new_floorSort,
+                        floorName: 'Other/Multiple Locations',
+                        floorPlan: ''
+                    });
+                    floor1.save();
+                    console.log("success adding Other/Multiple Floors to Floor database");
+
+
+                    //end of add "Other/Multiple Locations" Floor to this new building
+
+                    return res.send({redirect:'/buildingFloorRoom/show'})
+
+                })
+            });
+
         }
     });
 };
@@ -261,10 +328,10 @@ module.exports.delete = function(req, res) {
     var buildingToDelete = req.params.id;
     models.Building.findById({'_id': buildingToDelete}, function(err, building) {
         //check if there are Floors using this Building
-        models.Floors.findOne({ 'Building.buildingID': building.buildingID }, function (err, result) {
+        models.Floors.find({ 'Building.buildingID': building.buildingID }, function (err, result) {
             if (err) { console.log('err - ',err) };
 
-            if (result) {
+            if (result.length > 1) {
                 console.log("Building NOT deleted");
                 //return res.status(409).send(' ALERT! ' + building.name + ' building not deleted because there are Floors using this Building. Please remove the Floors using this Building and then delete this Building.')
                 req.flash('error_messages', ' Attention! ' + building.buildingName + ' building was not deleted because there are Floors using this Building. <br> Please remove Floors under this Building and then delete this Building.');
@@ -272,10 +339,21 @@ module.exports.delete = function(req, res) {
             }
             //end of check if there are Rooms using this Floor
             else {
-                models.Building.remove({'_id': buildingToDelete}, function(err) {
-                    //res.send((err === null) ? { msg: 'Floor not deleted' } : { msg:'error: ' + err });
-                    res.redirect('/buildingFloorRoom/show');
+                models.Building.remove({'_id': buildingToDelete}, function(err) {   //building
+                    if(err) console.log('failed deleting Building. err - ',err);
+                    else {
+                        console.log('success removing building');
+                        models.Floors.remove({'_id': result[0]._id}, function(err2) {   //remove Other/Multiple Floors
+                            if(err) console.log('failed removing floor Other/Multiple Floor. err2 - ',err2);
+                            else {
+                                console.log('success removing floor Other/Multiple Floor.');
+                                res.redirect('/buildingFloorRoom/show');
+                            }
+                        });
+                    }
+
                 });
+
 
             }
         });
@@ -284,7 +362,7 @@ module.exports.delete = function(req, res) {
 /* ------------ end of DELETE FLOOR. */
 
 
-
+/*
 //--ADD or CHANGE FloorPlan -------------------------------------
 module.exports.addUpdateFloorPlan = function (req, res){
     async.parallel([
@@ -329,11 +407,11 @@ module.exports.addUpdateFloorPlanPost = function (req, res){
         fields[field] = value;
 
         form.on('end', function(fields, files) {
-            /* Temporary location of our uploaded file */
+            //Temporary location of our uploaded file
             var temp_path = this.openedFiles[0].path;
-            /* The file name of the uploaded file */
+            // The file name of the uploaded file
             var file_name = this.openedFiles[0].name;
-            /* Location where we want to copy the uploaded file */
+            // Location where we want to copy the uploaded file
             var new_location = 'public/floorPlans/';
 
             if (this.openedFiles[0].name){ // if a file is selected do this
@@ -393,3 +471,4 @@ module.exports.deleteFloorPlan = function(req, res) {
     });
 };
 //----------------end delete FLOOR PLAN
+*/

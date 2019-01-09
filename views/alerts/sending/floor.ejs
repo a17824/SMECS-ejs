@@ -9,25 +9,55 @@
 
 
         $(document).ready(function(){
+            //build radios on page load
+            let floors=$("#floors").val();
+            let floorsArray = floors.split("_|,").map(String);
 
-            //build radios depending on selected Building
-            $("#building_select").change(function () {
+            let selected_buildingID=$("#selectedBuildingID").val();
+            let selected_floorID=$("#selectedFloorID").val();
 
-                let buildingID = this[this.selectedIndex].value;
-                let floors=$("#floors").val();
+            let flagOnPageLoad = 0
+            let radioComplete = [];
+            for (let i = 0; i < floorsArray.length; i += 5) {
+                if(floorsArray[i] == selected_buildingID) { //back button - checks if there is a selected option saved
+                    if(floorsArray[i+2] == selected_floorID) {
+                        let radioBtn = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i + 1] + '_|_' + floorsArray[i + 2] + '" value="' + floorsArray[i + 4] + '" checked/><label>' + floorsArray[i + 3] + '</label><br>');
+                        radioComplete.push(radioBtn);
+                    }
+                    else {
+                        let radioBtn = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i+1] + '_|_' + floorsArray[i+2] + '" value="' + floorsArray[i+4] + '" /><label>' + floorsArray[i+3] + '</label><br>');
+                        radioComplete.push(radioBtn);
+                    }
+                    flagOnPageLoad = 1
+                }
 
-                let floorsArray = floors.split("_|,").map(String);
-
-                let radioComplete = [];
-                for (var i = 0; i < floorsArray.length; i += 5) {
-                    console.log('floors1 = ',floorsArray[i]);
-                    if(floorsArray[i] == buildingID){
-                        var radioBtn = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i+2] + '" value="' + floorsArray[i+4] + '" /><label for="' + floorName + '">' + floorsArray[i+3] + ' </label><br>');
-
+            }
+            if(flagOnPageLoad == 0){ //first time on page load
+                let buildingID = $("#building_select").val();
+                for (let i = 0; i < floorsArray.length; i += 5) {
+                    if(floorsArray[i] == buildingID) {
+                        let radioBtn = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i + 1] + '_|_' + floorsArray[i + 2] + '" value="' + floorsArray[i + 4] + '" /><label>' + floorsArray[i + 3] + '</label><br>');
                         radioComplete.push(radioBtn);
                     }
                 }
-                $("#buildRadio").html(radioComplete);
+            }
+            $("#buildRadio").html(radioComplete);
+            //end of build radios o page load
+
+
+            //build radios depending on selected Building
+            $("#building_select").change(function () {
+                let buildingID = this[this.selectedIndex].value;
+
+                let radioComplete2 = [];
+                for (let i = 0; i < floorsArray.length; i += 5) {
+                    if(floorsArray[i] == buildingID){
+                        let radioBtn2 = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i+1] + '_|_' + floorsArray[i+2] + '" value="' + floorsArray[i+4] + '" /><label>' + floorsArray[i+3] + '</label><br>');
+
+                        radioComplete2.push(radioBtn2);
+                    }
+                }
+                $("#buildRadio").html(radioComplete2);
             });
             //end of build radios depending on selected buildingType
 
@@ -54,7 +84,6 @@
                 floorName = $("input:radio[name='floorID']:checked + label").text();
                 floorID = $('input[name=floorID]:checked').attr('id');
                 alertNameID=$("#alertNameID").val();
-
 
                 //-----forms validation------------------------------------
 
@@ -111,6 +140,9 @@
 <input type="hidden" id="alert_ID"  value="<%= alert._id %>">
 
 <input type="hidden" id="floors"  value="<%= arrayFloors %>">
+<input type="hidden" id="selectedBuildingID"  value="<%= alert.buildingID %>">
+<input type="hidden" id="selectedFloorID"  value="<%= alert.floorID %>">
+
 
 <form>
 
@@ -150,36 +182,13 @@
             <% }%>
 
         <% } else { %>
-            <% if (floor.floorName == alert.floorName) {%> <!-- for back button/refresh -->
-            <input type="radio" class="radio-button" name="floorID" id=<%= floor.floorID %> value="<%= floor.floorPlan %>" checked><label for="floorName"><%= floor.floorName %></label><br>
-            <% } else { %>
-                <input type="radio" class="radio-button" name="floorID" id=<%= floor.Building.buildingID %>_|_<%= floor.floorID %> value="<%= floor.floorPlan %>"><label for="floorName"><%= floor.floorName %></label><br>
-            <% }%>
+                <!-- for back button/refresh radios are built in javascript -->
         <% }%>
     <% }); %>
     </div>
 
 
-    <% if (alert.alertNameID == 14 ||
-            alert.alertNameID == 26 ) {%>
-        <% if ('Multiple floors' == alert.floorName) {%> <!-- for back button/refresh -->
-        <input type="radio" class="radio-button" name="floorID" id="allFloors" value="allFloors" checked><label for="floorName">Multiple floors</label><br>
-        <% } else { %>
-            <input type="radio" class="radio-button" name="floorID" id="allFloors" value="allFloors"><label for="floorName">Multiple floors</label><br>
-        <% }%>
-    <% }%>
-    <% if (alert.alertNameID == 23) {%>
-        <% if ('Multiple Locations' == alert.floorName) {%> <!-- for back button/refresh -->
-        <input type="radio" class="radio-button" name="floorID" id="multipleLocations" value="multipleLocations" checked><label for="floorName">Other/Multiple Locations</label><br>
-        <% } else { %>
-            <input type="radio" class="radio-button" name="floorID" id="multipleLocations" value="multipleLocations"><label for="floorName">Other/Multiple Locations</label><br>
-        <% }%>
-        <% if ('Outside Building' == alert.floorName) {%> <!-- for back button/refresh -->
-        <input type="radio" class="radio-button" name="floorID" id="outside" value="outside" checked><label for="floorName">Outside Building</label><br>
-        <% } else { %>
-            <input type="radio" class="radio-button" name="floorID" id="outside" value="outside"><label for="floorName">Outside Building</label><br>
-        <% }%>
-    <% }%>
+
     <br>
 
     <input type="button" id="<%= alert.id %>" value="Next" ><br>

@@ -71,6 +71,25 @@
                     }
                 });
             });
+            //back button
+            $("#back").click(function () {
+                alert_ID=$("#alert_ID").val();
+
+                $.post('/sendAlertBackButton', {
+                    alertToUpdate: alert_ID,
+                    floorLocation: true
+
+                }, function (data) {
+                    if (data === 'done') {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("App stop responding, call SMECS APP team for help .")
+                });
+            });
+            //end of back button
         });
     </script>
 
@@ -87,6 +106,7 @@
     <h2>Touch/click exact Floor Location</h2>
 <% }%>
 
+<input type="hidden" id="alert_ID"  value="<%= alert._id %>">
 <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
 
 <form>
@@ -104,11 +124,6 @@
 </form>
 
 <input type="button" id="<%= alert.id %>" value="Next" ><br><br>
-<button class="backButton" onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
+<button type="button" id="back" value="Back">Back</button>
 </body>
 </html>

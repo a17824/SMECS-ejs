@@ -32,22 +32,24 @@ module.exports.showFloor = function(req, res) {
 
     ],function(err, results){
         let arrayFloors = [];
-        results[2].forEach(function (floor, idx, array) {
-            arrayFloors.push(floor.Building.buildingID + '_|');
-            arrayFloors.push(floor.Building.name + '_|');
-            arrayFloors.push(floor.floorID + '_|');
-            arrayFloors.push(floor.floorName + '_|');
-            if (idx === array.length - 1) //if last loop remove '_|'
-                arrayFloors.push(floor.floorPlan);
-            else
-                arrayFloors.push(floor.floorPlan + '_|');
 
-        });
 
         if (!results[0]) {
             functions.alertTimeExpired(req,res);
         }
         else {
+            results[2].forEach(function (floor, idx, array) {
+                arrayFloors.push(floor.Building.buildingID + '_|');
+                arrayFloors.push(floor.Building.name + '_|');
+                arrayFloors.push(floor.floorID + '_|');
+                arrayFloors.push(floor.floorName + '_|');
+                if (idx === array.length - 1) //if last loop remove '_|'
+                    arrayFloors.push(floor.floorPlan);
+                else
+                    arrayFloors.push(floor.floorPlan + '_|');
+
+            });
+
             var modelToUse = results[2];   // to use Floor collection
             if (results[0].alertNameID == 7){   // to use EvacuateTo collection
                 modelToUse = results[3];
@@ -79,16 +81,33 @@ module.exports.showFloor = function(req, res) {
     });
 };
 module.exports.postFloor = function(req, res) {
+
     var redirectAPI; //API user
     var redirectEJS; //EJS user
 
     var alertToUpdate1 = req.body.alertToUpdate;
-    let arraySplit = req.body.buildingFloorID.split("_|_");
-    let buildingID = arraySplit[0];
-    let floorID = arraySplit[1];
+    let buildingID = '';
+    let buildingName = '';
+    let floorID = '';
+
+
+
+    if ( typeof req.body.buildingFloorID !== 'undefined' && req.body.buildingFloorID )
+    {
+        let arraySplit = req.body.buildingFloorID.split("_|_");
+        buildingID = arraySplit[0];
+        buildingName = arraySplit[1];
+        floorID = arraySplit[2];
+        console.log('floorID 000 = ',floorID);
+    }
+    else
+    {
+        buildingID = 'skipped by user';
+        buildingName = 'skipped by user';
+        floorID = 'skipped by user';
+    }
     var floorName = req.body.floorName;
     var floorPhoto = req.body.floorPhoto;
-
 
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -97,11 +116,13 @@ module.exports.postFloor = function(req, res) {
         else {
             //if user skip floor question or if floor photo don't exist on database or all/none/multiple/outside floor selected
             if ( floorID == null ||
+                floorID === 'skipped by user' ||
                 floorPhoto === '' ||
-                floorID == 'allFloors' ||
+                /*floorID == 'allFloors' ||
                 floorID == 'multipleLocations' ||
                 floorID == 'outside' ||
-                alert.alertNameID == 7 ) { // or if is Evacuate alert
+                alert.alertNameID == 7 ||*/
+                floorName === 'Other/Multiple Locations') { // or if is Evacuate alert
 
                 //checkFloorPhotoExists---------------------
                 if (floorName == '' || !floorName){    //if user skip floor question
@@ -119,7 +140,7 @@ module.exports.postFloor = function(req, res) {
                     alert.sniperCoordinateY = undefined;
                 }
 
-                if (floorID == 'allFloors'){ //if ANY FLOOR/ALL EXIT FLOORS are selected (for 'evacuation exit' of EVACUATE Alert)
+                /*if (floorID == 'allFloors'){ //if ANY FLOOR/ALL EXIT FLOORS are selected (for 'evacuation exit' of EVACUATE Alert)
                     floorPhoto = 'Multiple floors';
                     alert.sniperCoordinateX = undefined;
                     alert.sniperCoordinateY = undefined;
@@ -138,9 +159,15 @@ module.exports.postFloor = function(req, res) {
                     floorPhoto = 'Outside Building';
                     alert.sniperCoordinateX = undefined;
                     alert.sniperCoordinateY = undefined;
+                }*/
+                if (alert.alertName === 'Other/Multiple Locations'){ //if ANY FLOOR/ALL EXIT FLOORS are selected (for 'evacuation exit' of EVACUATE Alert)
+                    floorPhoto = 'Multiple floors';
+                    alert.sniperCoordinateX = undefined;
+                    alert.sniperCoordinateY = undefined;
                 }
                 //---------------end of checkFloorPhotoExists
                 alert.buildingID = buildingID;
+                alert.buildingName = buildingName;
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
@@ -154,6 +181,7 @@ module.exports.postFloor = function(req, res) {
 
             else {  //if user choose a floor and photo exists
                 alert.buildingID = buildingID;
+                alert.buildingName = buildingName;
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
