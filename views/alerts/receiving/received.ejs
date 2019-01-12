@@ -428,6 +428,7 @@
 <!-- REQUEST ASSISTANCE -->
 <% if (info.alert.alertID == 14 ||
         info.alert.alertID == 26 ) {%>
+
 <% if (canRequestAssistance == true) {%>
 
 <% var arrayLabels = ["smecs app", "send email", "call"]; %>
@@ -495,6 +496,7 @@
 <% }); %>
 
 <% info.requestAssistance.forEach(function(requested) { %>
+
 <% if(requested.utilityID == info.multiSelectionIDs[i]) { %>
 
 <% if (flagButtonsFromContacts == 1) {%><!-- IF arrayReqSent is not empty, means request was already sent, then draw this slides buttons -->
@@ -516,6 +518,7 @@
 <!-- end of Build slide button SENT -->
 
      <% if (info.multiSelectionNames[i] == arrayReqSent[c] && arrayDefaultContact[x] == arrayReqSent[c+1] && arrayReqSent[c+2] == false) { %><!-- new -->
+
 <!-- Build slide button OFF -->
         <div class="onoffswitch" style="display:inline-block;">
             <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
@@ -535,9 +538,11 @@
 <!-- end of IF arrayReqSent is not empty, means request was already sent, then draw this slides buttons -->
 
 <% if (flagButtonsFromContacts == 0) {%><!-- IF arrayReqSent is empty, do this -->
+
 <!-- Build slide buttons Before user has Requests Assistance (get defaults values for type of contact -->
 <div class="onoffswitch" style="display:inline-block;">
     <% if (utility.defaultContact == arrayDefaultContact[x]) {%>
+
     <!-- Build slide button ON -->
     <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
            id="<%= info.multiSelectionIDs[i] + arrayIDs[x] %>"

@@ -33,9 +33,7 @@ module.exports.alertInfoGet = function (req, res) {
 
 /* Send number of opened alerts. -------------------------------*/
 module.exports.openAlertsGet = function (req, res) {
-    models.AlertSentInfo.find({
-        'status.statusString': 'open'
-    }, function (err, alerts) {
+    models.AlertSentInfo.find({'status.statusString': 'open'}, function (err, alerts) {
         if (err) {
             res.json({
                 success: 'false',

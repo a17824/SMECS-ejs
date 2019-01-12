@@ -140,66 +140,89 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
     let redirectAPI = ''; //API user
     let redirectEJS = ''; //EJS user
 
-    alertTemp.alertRoad.forEach(function (road) {
+    console.log('1111111');
+    let flagWait = 0;
 
-        if(road.step == alertTemp.roadIndex) {
+    function waitForAlertRoadToEnd(cb){
 
-            for (let i=0; i < road.callFunction.length; i++) {
-                if (road.callFunction[i] === 'studentStep1')
-                    studentStep1(req, res, alertTemp);
-                if (road.callFunction[i] === 'busMap')
-                    busMap(req, res, alertTemp);
-                if(road.callFunction[i] === 'studentMissingStudent')
-                    studentMissingStudent(req, res, alertTemp);
-                if(road.callFunction[i] === 'notesStudentWithGun')
-                    notesStudentWithGun(req, res, alertTemp);
-                if(road.callFunction[i] === 'notesBus')
-                    notesBus(req, res, alertTemp);
-                if(road.callFunction[i] === 'student2')
-                    student2(req, res, alertTemp, arg1, arg2);
-                if(road.callFunction[i] === 'studentSaveFile')
-                    studentSaveFile(req, res, alertTemp);
-                if(road.callFunction[i] === 'multiUtilities')
-                    multiUtilities(req, res, alertTemp);
-                if(road.callFunction[i] === 'multiMedical')
-                    multiMedical(req, res, alertTemp);
-                if(road.callFunction[i] === 'multiSchoolClosed')
-                    multiSchoolClosed(req, res, alertTemp);
-                if(road.callFunction[i] === 'saveFloorFile')
-                    floor.saveFloorFile(req, res, alertTemp);
-                if(road.callFunction[i] === 'updateStudentFile')
-                    student.updateStudentFile(req, res, alertTemp);
+        alertTemp.alertRoad.forEach(function (road) {
+
+            if(road.step == alertTemp.roadIndex) {
+
+                for (let i=0; i < road.callFunction.length; i++) {
+
+                    if (road.callFunction[i] === 'studentStep1')
+                        studentStep1(req, res, alertTemp);
+                    if (road.callFunction[i] === 'busMap')
+                        busMap(req, res, alertTemp);
+                    if(road.callFunction[i] === 'studentMissingStudent')
+                        studentMissingStudent(req, res, alertTemp);
+                    if(road.callFunction[i] === 'notesStudentWithGun')
+                        notesStudentWithGun(req, res, alertTemp);
+                    if(road.callFunction[i] === 'notesBus')
+                        notesBus(req, res, alertTemp);
+                    if(road.callFunction[i] === 'student2')
+                        student2(req, res, alertTemp, arg1, arg2);
+                    if(road.callFunction[i] === 'studentSaveFile')
+                        studentSaveFile(req, res, alertTemp);
+                    if(road.callFunction[i] === 'multiUtilities'){
+                        flagWait = 1;
+                        multiUtilities(req, res, alertTemp, function (waitForCallback) {
+                            console.log(waitForCallback);
+                            cb('3333');
+                        });
+                    }
+                    if(road.callFunction[i] === 'multiMedical')
+                        multiMedical(req, res, alertTemp);
+                    if(road.callFunction[i] === 'multiSchoolClosed')
+                        multiSchoolClosed(req, res, alertTemp);
+                    if(road.callFunction[i] === 'saveFloorFile')
+                        floor.saveFloorFile(req, res, alertTemp);
+                    if(road.callFunction[i] === 'updateStudentFile')
+                        student.updateStudentFile(req, res, alertTemp);
+                }
+                redirectAPI = road.redirectAPI;
+                redirectEJS = road.redirectEJS + alertTemp._id;
             }
-            redirectAPI = road.redirectAPI;
-            redirectEJS = road.redirectEJS + alertTemp._id;
-        }
-    });
-    ++alertTemp.roadIndex;
-    alertTemp.save(function (err) {
-        if(err)
-            console.log('create.js module.exports.redirectTo alertTemp.save ERR = ',err)
-    });
-    if(flag === 'floorMap'){ //if user choose a floor and photo exists
-        redirectAPI = arg1;
-        redirectEJS = arg2;
-        flag = 'GETtoPOST';
-        --alertTemp.roadIndex;
-    }
-    if(req.decoded){ // run SMECS API
-        res.json({
-            success: true,
-            redirect: redirectAPI,
-            alert_ID: alertTemp._id
         });
-    }
-    else{  // run SMECS EJS
-        if(flag === 'GETtoPOST') {
-            res.send({redirect: redirectEJS});
+        if(flagWait == 0){
+           cb('3333');
         }
-        else{
-            res.redirect(redirectEJS);
-        }
+        //cb
     }
+
+    waitForAlertRoadToEnd(function (waitForCallback) {
+        console.log(waitForCallback);
+        ++alertTemp.roadIndex;
+        alertTemp.save(function (err) {
+            if(err)
+                console.log('create.js module.exports.redirectTo alertTemp.save ERR = ',err)
+        });
+        if(flag === 'floorMap'){ //if user choose a floor and photo exists
+            redirectAPI = arg1;
+            redirectEJS = arg2;
+            flag = 'GETtoPOST';
+            --alertTemp.roadIndex;
+        }
+        if(req.decoded){ // run SMECS API
+            res.json({
+                success: true,
+                redirect: redirectAPI,
+                alert_ID: alertTemp._id
+            });
+        }
+        else{  // run SMECS EJS
+            if(flag === 'GETtoPOST') {
+                res.send({redirect: redirectEJS});
+            }
+            else{
+                res.redirect(redirectEJS);
+            }
+        }
+    });
+
+
+
     /***     end of ALERT ROAD      ***/
 };
 
@@ -311,7 +334,7 @@ function multiSchoolClosed(req, res, alertTemp1) {
 function multiMedical(req, res, alertTemp1) {
     alertTemp1.medicalInjuredParties = req.body.medicalInjuredParties;
 }
-function multiUtilities(req, res, alert) {
+function multiUtilities(req, res, alert, callBack) {
     models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
         if(err){
             console.log('err = ', err);
@@ -351,10 +374,12 @@ function multiUtilities(req, res, alert) {
                 var arraySmecsAppToSent = [];
                 reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update');
             }
+
             if (alert.alertNameID !== 26) {
+                console.log('requestAssistance = ',alert.requestAssistance);
                 alert.save();
             }
-
+            callBack('222222')
         }
     });
 }

@@ -43,31 +43,85 @@ module.exports.alert= function(alert, action, userAuthEmail) {
     if (alert.realDrillDemo == 'drill')
         testModeON = 'Drill Alert -';
 
+    let arrayUsersToSend = [];
+    alert.sentTo.forEach(function (users) {
+        arrayUsersToSend.push(users.email);
+    });
 
-    alert.sentTo.forEach(function (user) {
-        //console.log('user.email = ',user.email); //show to who this alert will be sent
-        if (user.pushToken && (user.email !== userAuthEmail)) {
-            user.pushToken.forEach(function (token) {
-                allUsersWithPushToken.push(token);
+    models.Users.find({'email': { $in : arrayUsersToSend}}, function (err, users) {
+        if (err) {
+            console.log('err - finding Users to send Alert');
+        } else {
+            users.forEach(function (user) {
+                console.log('user.email = ',user.email); //show to who this alert will be sent
+                if (user.pushToken && (user.email !== userAuthEmail)) {
+                    user.pushToken.forEach(function (token) {
+                        console.log('user.email with token = ',user.email);
+                        allUsersWithPushToken.push(token);
+                    });
+                }
             });
+            // we need to create a notification to send
+            let message = new OneSignal.Notification({
+                contents: {
+                    en: testModeON + ' ' + alert.alert.name
+                },
+                include_player_ids: allUsersWithPushToken
+            });
+            message.postBody["data"] = {
+                alertID: alert._id,
+                sound: alert.groupSound,
+                action: action
+            };
+
+            //let userName = user.firstName + ' ' + user.lastName;
+            sendPush(message);
         }
     });
-    // we need to create a notification to send
-    let message = new OneSignal.Notification({
-        contents: {
-            en: testModeON + ' ' + alert.alert.name
-        },
-        include_player_ids: allUsersWithPushToken
+};
+
+
+// FOR OneSignal - Update open alerts badge number
+module.exports.updateBadge= function(alerts) {
+    let allUsersWithPushToken = [];
+
+    let arrayUsersToSend = [];
+    alerts.forEach(function (alert) {
+        alert.sentTo.forEach(function (users) {
+            arrayUsersToSend.indexOf(users.email) === -1 ? arrayUsersToSend.push(users.email) : console.log("This item already exists"); //add to array if not exists
+        });
     });
-    message.postBody["data"] = {
-        alertID: alert._id,
-        sound: alert.groupSound,
-        action: action
-    };
+    console.log(arrayUsersToSend);
 
-    //let userName = user.firstName + ' ' + user.lastName;
-    sendPush(message);
+    models.Users.find({'email': { $in : arrayUsersToSend}}, function (err, users) {
+        if (err) {
+            console.log('err - finding Users to send Alert');
+        } else {
+            users.forEach(function (user) {
+                //console.log('user.email = ',user.email); //show to who this alert will be sent
+                if (user.pushToken) {
+                    user.pushToken.forEach(function (token) {
+                        //console.log('user.email with token = ',user.email);
+                        allUsersWithPushToken.push(token);
+                    });
+                }
+            });
 
+            // we need to create a notification to send
+            let message = new OneSignal.Notification({
+                contents: {
+                    en: 'updateOpenAlertsBadge'
+                },
+                include_player_ids: allUsersWithPushToken
+            });
+            message.postBody["data"] = {
+                action: 'closeAlert'
+            };
+
+            //let userName = user.firstName + ' ' + user.lastName;
+            sendPush(message);
+        }
+    });
 };
 
 

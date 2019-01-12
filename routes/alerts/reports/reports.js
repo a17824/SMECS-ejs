@@ -109,12 +109,13 @@ module.exports.updateStatus = function(req, res) {
                 }
                 alert.save();
                 console.log('success - Alert status changed to ' + alert.status.statusString);
-                /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.alert(alert, 'closeAlert');
-        });
-        return res.send({redirect: '/reports/homeReports'});
-    }
-})
+
+            });
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.updateBadge(alerts);
+            return res.send({redirect: '/reports/homeReports'});
+        }
+    })
 };
 /* ------------ end of SoftDeleted USERS. */
 
