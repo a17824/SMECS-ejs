@@ -180,6 +180,10 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                         floor.saveFloorFile(req, res, alertTemp);
                     if(road.callFunction[i] === 'updateStudentFile')
                         student.updateStudentFile(req, res, alertTemp);
+                    if(road.callFunction[i] === 'busEarlyLate')
+                        busEarlyLate(req, res, alertTemp);
+                    if(road.callFunction[i] === 'earlyDismissal')
+                        earlyDismissal(req, res, alertTemp);
                 }
                 redirectAPI = road.redirectAPI;
                 redirectEJS = road.redirectEJS + alertTemp._id;
@@ -329,7 +333,9 @@ function busMap(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
 }
 function multiSchoolClosed(req, res, alertTemp1) {
-    alertTemp1.dayClosed = req.body.medicalInjuredParties;
+    //console.log(typeof req.body.daysClosed);
+    //console.log('daysClosed = ',req.body.daysClosed);
+    alertTemp1.daysClosed = req.body.daysClosed;
 }
 function multiMedical(req, res, alertTemp1) {
     alertTemp1.medicalInjuredParties = req.body.medicalInjuredParties;
@@ -401,4 +407,17 @@ function studentMissingStudent(req, res, alertTemp1) {
 function notesStudentWithGun(req, res, alertTemp1) {
     alertTemp1.studentWithGunSeated = req.body.seat;
     alertTemp1.studentWithGunBehaviour = req.body.studentBehaviour;
+}
+function busEarlyLate(req, res, alertTemp1) {
+    alertTemp1.busMorningAfternoon = req.body.busMorningAfternoon;
+    alertTemp1.busDelayedAhead = req.body.busDelayedAhead;
+    alertTemp1.busTimeChanged = req.body.busTime;
+    alertTemp1.busTimeChangedEmail = req.body.busSendEmail;
+}
+function earlyDismissal(req, res, alertTemp1) {
+    //console.log(typeof req.body.earlyDismissalTime);
+    //console.log('earlyDismissalDate = ',req.body.earlyDismissalDate);
+    alertTemp1.earlyDismissalDate = req.body.earlyDismissalDate;
+    alertTemp1.earlyDismissalTime = req.body.earlyDismissalTime;
+    alertTemp1.busTimeChangedEmail = req.body.busSendEmail;
 }

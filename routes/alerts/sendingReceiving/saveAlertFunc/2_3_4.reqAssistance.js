@@ -121,9 +121,8 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse, ac
 
 module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility) {
     alert.sentSmecsAppUsersScope.forEach(function (user) {
-        console.log(alert.alertName + ' -> ' + user.utilityName + ' - > Request SMECS APP sent' );
+        console.log(alert.alert.name + ' -> ' + user.utilityName + ' - > Request SMECS APP sent' );
     });
-
     /********************************
      * NOTIFICATION API HERE        *
      * scope to sent is:            *
@@ -131,7 +130,7 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility) {
      ********************************/
 };
 module.exports.sendPushNotificationReqAssEmail = function(alert, utility) {
-    console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request EMAIL sent');
+    console.log(alert.alert.name + ' -> ' + utility.utilityName + ' - > Request EMAIL sent');
     /********************************
      * NOTIFICATION API HERE        *
      * scope to sent is:            *
@@ -139,7 +138,7 @@ module.exports.sendPushNotificationReqAssEmail = function(alert, utility) {
      ********************************/
 };
 module.exports.sendPushNotificationReqAssCall = function(alert, utility) {
-    console.log(alert.alertName + ' -> ' + utility.utilityName + ' - > Request CALL sent');
+    console.log(alert.alert.name + ' -> ' + utility.utilityName + ' - > Request CALL sent');
     /*************************
      * NOTIFICATION API HERE *
      *************************/

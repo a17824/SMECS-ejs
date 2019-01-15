@@ -77,7 +77,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
         sniperCoordinateX: tempAlert.sniperCoordinateX,
         sniperCoordinateY: tempAlert.sniperCoordinateY,
         medicalInjuredParties: tempAlert.medicalInjuredParties,
-        dayClosed: tempAlert.dayClosed,
+        daysClosed: tempAlert.daysClosed,
         multiSelectionNames: tempAlert.multiSelectionNames,
         multiSelectionIDs: tempAlert.multiSelectionIDs,
         studentName: tempAlert.studentName,
@@ -93,6 +93,8 @@ module.exports.create = function(req, res, tempAlert, callback) {
         busDelayedAhead: tempAlert.busDelayedAhead,
         busTimeChanged: tempAlert.busTimeChanged,
         busTimeChangedEmail: tempAlert.busTimeChangedEmail,
+        earlyDismissalDate: tempAlert.earlyDismissalDate,
+        earlyDismissalTime: tempAlert.earlyDismissalTime,
         sentSmecsAppUsersScope: tempAlert.sentSmecsAppUsersScope,
         latitude: tempAlert.latitude,
         longitude: tempAlert.longitude,
@@ -174,7 +176,7 @@ module.exports.update = function(req, res, tempAlert, callback) {
             alert.sniperCoordinateX = tempAlert.sniperCoordinateX;
             alert.sniperCoordinateY = tempAlert.sniperCoordinateY;
             alert.medicalInjuredParties = tempAlert.medicalInjuredParties;
-            alert.dayClosed = tempAlert.dayClosed;
+            alert.daysClosed = tempAlert.daysClosed;
             alert.multiSelectionNames = tempAlert.multiSelectionNames;
             alert.multiSelectionIDs = tempAlert.multiSelectionIDs;
             alert.studentName = tempAlert.studentName;
@@ -190,6 +192,8 @@ module.exports.update = function(req, res, tempAlert, callback) {
             alert.busDelayedAhead = tempAlert.busDelayedAhead;
             alert.busTimeChanged = tempAlert.busTimeChanged;
             alert.busTimeChangedEmail = tempAlert.busTimeChangedEmail;
+            alert.earlyDismissalDate = tempAlert.earlyDismissalDate;
+            alert.earlyDismissalTime = tempAlert.earlyDismissalTime;
             alert.sentSmecsAppUsersScope = tempAlert.sentSmecsAppUsersScope;
             alert.latitude = tempAlert.latitude;
             alert.longitude = tempAlert.longitude;

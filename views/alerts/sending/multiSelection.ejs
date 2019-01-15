@@ -3,6 +3,19 @@
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- DataPicker for Alert 29 -->
+    <!-- Include Required Prerequisites -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/public/MultipleDatesPicker/bootstrap.css" />
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="/public/MultipleDatesPicker/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="/public/MultipleDatesPicker/daterangepicker.css" />
+
+    <!-- end of DataPicker -->
     <script>
         //Detect if user is using the back/foreward button, then reload whole page
         if (!!window.performance && window.performance.navigation.type === 2) {
@@ -20,6 +33,8 @@
         // end of Reload whole page if page is cached
 
         $(document).ready(function(){
+            var alertID = document.getElementById('alertNameID');
+
             $(function() {
                 $('.checkbox').change(function() {
                     $(this).next('.showthis').toggle(this.checked);
@@ -27,12 +42,24 @@
                 })
             });
 
+            /********** School closed *******************/
+            if(alertID.value == 29) {
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker();
+                    $('input[name="daterange"]').change(function(){
+                        $(this).val();
+                        console.log($(this).val());
+                    });
+                });
+            }
+            /********** School closed ************/
+
             var alert_ID, alertNameID, parties;
             $("#<%= alert.id %>").click(function(){
                 alert_ID=$(this).attr('id');
                 alertNameID=$("#alertNameID").val();
                 parties=$("#parties").val();
-
+                let daysClosed=$("#daysClosed").val();
 
                 var checkedID = [];
                 $.each($("input[name='checkbox']:checked"), function(){
@@ -112,6 +139,7 @@
                     checkboxesNames: checkedName,
                     checkboxesIDs: checkedID,
                     medicalInjuredParties: parties,
+                    daysClosed: daysClosed,
                     reqAssChecked: searchIDsChecked,
                     reqAssNotChecked: searchIDsNotChecked
 
@@ -151,17 +179,20 @@
     <% } %>
 
     <% if (alert.alertNameID == 29) {%>
-    <label for="situation"><b>Day school will be closed:</b> </label>
-    <input type="number" id="parties" name="parties" style="width:40px" min="0" value="<%= alert.dayClosed %>">&nbsp(optional)<br><br>
+    <label for="situation"><b>Day(s) school will be closed:</b> </label>
+        <input class="" type="text" name="daterange" id="daysClosed" value="01/15/2020 - 02/15/2010"><br><br>
+
     <% } %>
 
     <% if (alert.alertNameID == 14 ||
             alert.alertNameID == 18) {%>
     <label for="situation"><b>Situation:</b> (optional)</label><br>
     <% } %>
-    <% if (alert.alertNameID == 26 ) {%>
+    <% if (alert.alertNameID == 26 ||
+            alert.alertNameID == 29) {%>
     <label for="situation"><b>Situation:</b></label><br>
     <% } %>
+
 
     <% var typeOfDatabase; %>
     <% if (alert.alertNameID == 14 ||
@@ -181,14 +212,14 @@
             <% var check = 0;    %>
             <% for (var i=0; i < alert.multiSelectionNames.length; i++) { %>
                 <% if (utility.utilityName == alert.multiSelectionNames[i]) { %>
-                    <input class="checkbox" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>" checked><%= utility.utilityName %>
+                    <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>" checked> <%= utility.utilityName %>
 
 
                     <% check = 1; %>
                 <% }  %>
             <% } %>
             <% if (check == 0) {%>
-                <input class="checkbox" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"><%= utility.utilityName %>
+                <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"> <%= utility.utilityName %>
 
             <% } %>
     <!--ON/OFF switch button for back button/refresh -->
@@ -236,7 +267,7 @@
         <!-- END OF back button/refresh write checkbox selected before -->
 
         <% } else { %> <!-- frist time entering/loading this page -->
-                <input class="checkbox" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"><%= utility.utilityName %>
+                <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"> <%= utility.utilityName %>
 
 
 

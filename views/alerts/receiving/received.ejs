@@ -350,7 +350,23 @@
 
 
 
+<!-- Alert Early dismissal -->
+<% if (info.alert.alertID == 25 ) {%>
+    <label for="busRadio"><b>Day of early dismissal:</b> <%= info.earlyDismissalDate %></label><br><br>
 
+    <label for="busTime"><b>Dismissal time:</b> <%= info.earlyDismissalTime %></label><br><br>
+
+    <label for="email"><b>Send email notification:</b></label>
+    <% if (info.busTimeChangedEmail == true ) {%>
+        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" checked onclick="return false;"><br><br>
+    <% } else {%>
+        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" onclick="return false;"><br><br>
+    <% } %>
+<% } %>
+
+
+
+<!-- Alert Bus Transportation changed -->
 <% if (info.alert.alertID == 27 ) {%>
 <label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
 
@@ -400,8 +416,7 @@
 <% } %>
 
 <% if (info.alert.alertID == 29 ) {%>
-<label for="situation"><b>Day school will be closed:</b></label>
-<input type="text" id="parties"  size="1" value="<%= info.dayClosed %>" readonly ><br><br>
+<label for="situation"><b>Day(s) school will be closed:</b> <%= info.daysClosed %></label><br><br>
 <% } %>
 
 

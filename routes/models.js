@@ -391,11 +391,13 @@ var AlertSentInfoSchema = new mongoose.Schema({
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...
     busTimeChangedEmail: Boolean,            //on or off (to send email to parents)
+    earlyDismissalDate: String,
+    earlyDismissalTime: String,
     multiSelectionNames: [String],
     multiSelectionIDs: [String],
     askedForAssistance: Boolean,
     medicalInjuredParties: Number,
-    dayClosed: String,
+    daysClosed: String,
     requestAssistance: [{
         utilityID: Number,
         utilityName: String,
@@ -512,10 +514,12 @@ var AlertSentTempSchema = new mongoose.Schema({
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...
     busTimeChangedEmail: Boolean,            //on or off (to send email to parents)
+    earlyDismissalDate: String,
+    earlyDismissalTime: String,
     multiSelectionNames: [String],          // Utilities in Failure or Medical Emergencies
     multiSelectionIDs: [String],
     medicalInjuredParties: Number,          //comboBox, listBox
-    dayClosed: String,
+    daysClosed: String,
     requestAssistance: [{
         utilityID: Number,
         utilityName: String,

@@ -2,6 +2,9 @@
 <head>
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+
+
     <link rel='stylesheet' href='/stylesheets/missChild.css' />
     <script>
 
@@ -9,13 +12,13 @@
             var alertID = document.getElementById('alertNameID');
 
             var finalBustime;
-            /********** Bus Transportation changed *******************/
+            /********** Bus Transportation changed  or Early Dismissal*******************/
             if(alertID.value == 27){
                 var bus = document.getElementById('busTimeChanged');
                 function busPopulate(selector) {
                     var select = $(selector);
                     var hours, minutes, ampm;
-                    for(var i = 15; i <= 305; i += 15){
+                    for(var i = 10; i <= 305; i += 5){
                         hours = Math.floor(i / 60);
                         minutes = i % 60;
                         if (minutes < 10){
@@ -26,12 +29,12 @@
                         ampm = 'hours';
                         hours = hours % 12;
                         if (hours === 0){
-                            ampm = 'mintues';
+                            ampm = 'minutes';
                         }
                         if (hours === 1){
                             ampm = 'hour';
                         }
-                        if (hours === 0 && minutes === 15 ) {
+                        if (hours === 0 && minutes === 10 ) {
                             select.append($('<option></option>')
                                 .text(' n/a '));
                         }
@@ -105,6 +108,8 @@
             }
             // end of  get gps location of bus
             */
+
+
             $("#<%= alert.id %>").click(function(){
                 var alert_ID=$(this).attr('id');
                 var alertNameID=$("#alertNameID").val();
@@ -115,6 +120,8 @@
                 var seat=$("#seat").val();
                 var studentBehaviour=$("#studentBehaviour").val();
                 var whereToEvacuate=$("#whereToEvacuate").val();
+                var earlyDismissalDate=$("#dateinput").val();
+                var earlyDismissalTime=$("#earlyDismissalTime").val();
 
                 if(alertNameID == 27) {
                     var busTime = $("#busTimeSelect").val();
@@ -197,6 +204,8 @@
                         busDelayedAhead: delayedAhead,
                         busTime: busTime2,
                         busSendEmail: busSendEmail,
+                        earlyDismissalDate: earlyDismissalDate,
+                        earlyDismissalTime: earlyDismissalTime,
                         lastPlaceSeen: lastPlaceSeen,
                         clothesWearing: clothesWearing,
                         seat: seat,
@@ -256,55 +265,72 @@
 <form>
 
     <% if (alert.alertNameID == 4) {%>
-    <label for="lastTimeSeen"><b>Last time seen:</b>(optional)</label>
-    <select id="timeSelect"> </select><br><br>
+        <label for="lastTimeSeen"><b>Last time seen:</b>(optional)</label>
+        <select id="timeSelect"> </select><br><br>
 
-    <label for="place"><b>Last place seen:</b>(optional)</label><br>
-    <input type="text" id="lastPlaceSeen" size="31" placeholder="ex: Gymn" value="<%= alert.missingChildLastPlaceSeen %>"><br><br>
+        <label for="place"><b>Last place seen:</b>(optional)</label><br>
+        <input type="text" id="lastPlaceSeen" size="31" placeholder="ex: Gymn" value="<%= alert.missingChildLastPlaceSeen %>"><br><br>
 
-    <label for="clothes"><b>Clothes wearing:</b>(optional)</label><br>
-    <textarea id="clothesWearing" cols="33" placeholder="ex: school uniform" ><%= alert.missingChildClothesWearing %></textarea><br><br>
+        <label for="clothes"><b>Clothes wearing:</b>(optional)</label><br>
+        <textarea id="clothesWearing" cols="33" placeholder="ex: school uniform" ><%= alert.missingChildClothesWearing %></textarea><br><br>
     <% } %>
 
     <% if (alert.alertNameID == 5) {%>
-    <label for="seat"><b>He/she is seated:</b>(optional)</label><br>
-    <textarea id="seat" rows="2"  cols="33" placeholder="ex: second row, second seat from left"><%= alert.studentWithGunSeated %></textarea><br><br>
+        <label for="seat"><b>He/she is seated:</b>(optional)</label><br>
+        <textarea id="seat" rows="2"  cols="33" placeholder="ex: second row, second seat from left"><%= alert.studentWithGunSeated %></textarea><br><br>
 
-    <label for="behaviour"><b>Current behaviour:</b>(optional)</label><br>
-    <textarea id="studentBehaviour" cols="33" placeholder="ex: normal" ><%= alert.studentWithGunBehaviour %></textarea><br><br>
+        <label for="behaviour"><b>Current behaviour:</b>(optional)</label><br>
+        <textarea id="studentBehaviour" cols="33" placeholder="ex: normal" ><%= alert.studentWithGunBehaviour %></textarea><br><br>
     <% } %>
 
+
+
+    <% if (alert.alertNameID == 25) {%>
+        <label for="busRadio"><b>Day of early dismissal:</b></label>
+        <input type="date" name="date" id="dateinput" ><br><br>
+
+        <label for="busTime"><b>Dismissal time:</b>(optional)</label>
+        <input type="time" name="usr_time" id="earlyDismissalTime"><br><br>
+
+        <label for="email"><b>Send email notification:</b></label>
+        <% if (alert.busTimeChangedEmail == true) {%>
+            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>" checked><br><br>
+        <% }else{%>
+            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>"><br><br>
+        <% } %>
+    <% } %>
 
 
 
     <% if (alert.alertNameID == 27) {%>
+        <label for="busRadio"><b>Time of day:</b></label><br>
+        <% if (alert.busMorningAfternoon == 'afternoon') {%>
+            <input type="radio" name="radioBusDay" value="morning" > Morning (Bus picking up)<br>
+            <input type="radio" name="radioBusDay" value="afternoon" checked> Afternoon (Bus dropping off)<br><br>
+        <% }else{%>
+            <input type="radio" name="radioBusDay" value="morning" checked> Morning (Bus picking up)<br>
+            <input type="radio" name="radioBusDay" value="afternoon" > Afternoon (Bus dropping off)<br><br>
+        <% } %>
+        <label for="busRadio"><b>Bus is:</b></label><br>
+        <% if (alert.busDelayedAhead == 'ahead') {%>
+            <input type="radio" name="radioBusAheadDelayed" value="delayed" > Delayed &emsp;<br>
+            <input type="radio" name="radioBusAheadDelayed" value="ahead" checked> Ahead<br><br>
+        <% }else{%>
+            <input type="radio" name="radioBusAheadDelayed" value="delayed" checked> Delayed &emsp;<br>
+            <input type="radio" name="radioBusAheadDelayed" value="ahead" > Ahead<br><br>
+        <% } %>
+        <label for="busTime"><b>Time:</b>(optional)</label>
+        <select id="busTimeSelect"> </select><br><br>
 
-    <label for="busRadio"><b>Time of day:</b></label><br>
-    <% if (alert.busMorningAfternoon == 'afternoon') {%>
-    <input type="radio" name="radioBusDay" value="morning" > Morning (Bus picking up)<br>
-    <input type="radio" name="radioBusDay" value="afternoon" checked> Afternoon (Bus dropping off)<br><br>
-    <% }else{%>
-    <input type="radio" name="radioBusDay" value="morning" checked> Morning (Bus picking up)<br>
-    <input type="radio" name="radioBusDay" value="afternoon" > Afternoon (Bus dropping off)<br><br>
+        <label for="email"><b>Send email notification:</b></label>
+        <% if (alert.busTimeChangedEmail == true) {%>
+            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>" checked><br><br>
+        <% }else{%>
+            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>"><br><br>
+        <% } %>
     <% } %>
-    <label for="busRadio"><b>Bus is:</b></label><br>
-    <% if (alert.busDelayedAhead == 'ahead') {%>
-    <input type="radio" name="radioBusAheadDelayed" value="delayed" > Delayed &emsp;<br>
-    <input type="radio" name="radioBusAheadDelayed" value="ahead" checked> Ahead<br><br>
-    <% }else{%>
-    <input type="radio" name="radioBusAheadDelayed" value="delayed" checked> Delayed &emsp;<br>
-    <input type="radio" name="radioBusAheadDelayed" value="ahead" > Ahead<br><br>
-    <% } %>
-    <label for="busTime"><b>Time:</b>(optional)</label>
-    <select id="busTimeSelect"> </select><br><br>
 
-    <label for="email"><b>Send email notification:</b></label>
-    <% if (alert.busTimeChangedEmail == true) {%>
-    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>" checked><br><br>
-    <% }else{%>
-    <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>"><br><br>
-    <% } %>
-    <% } %>
+
 
 
     <% if (alert.alertNameID == 12) {%>
@@ -314,13 +340,13 @@
         <% }else { %>
             <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= alert.busAccidentNoInjuries %>">
         <% } %>
-    <br><br>
+        <br><br>
     <% } %>
 
     <% if (alert.alertNameID == 6) {%>
-    <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
+        <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
     <% } else { %>
-    <label for="note"><b>Note:</b>(optional)</label><br>
+        <label for="note"><b>Note:</b>(optional)</label><br>
     <% }%>
     <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
 
@@ -336,7 +362,9 @@
         alert.alertNameID == 13 ||
         alert.alertNameID == 20 ||
         alert.alertNameID == 21 ||
-        alert.alertNameID == 22 )) {%>
+        alert.alertNameID == 22 ||
+        alert.alertNameID == 25 ||
+        alert.alertNameID == 27 )) {%>
 
 <form action="/alerts/sending/chooseAlert">
     <input type="submit" value="Exit Alert" >
