@@ -25,6 +25,7 @@ module.exports.homeReports = function(req, res, next) {
         var page = 'home-reports/home-reports';
 
         var md = new MobileDetect(req.headers['user-agent']);
+
         if(md.is('iPad') == true)
             page = 'home-reports/home-mobReports';
 

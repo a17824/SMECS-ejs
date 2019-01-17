@@ -1,0 +1,11 @@
+
+.circle-audio-player {
+	/*display: block;*/
+	position: absolute;
+	right: 0px;
+	/*margin: 0 auto;*/
+	cursor: pointer;
+}
+#playerContainer {
+	/*padding: 0px;*/
+}
