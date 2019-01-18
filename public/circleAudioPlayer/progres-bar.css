@@ -58,3 +58,8 @@
     stroke-dasharray  : 298.1371428256714;
     stroke-dashoffset : 298.1371428256714;
 }
+
+.positionRight{
+    position: absolute;
+    right: -50px;
+}

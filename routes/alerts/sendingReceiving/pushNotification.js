@@ -53,10 +53,10 @@ module.exports.alert= function(alert, action, userAuthEmail) {
             console.log('err - finding Users to send Alert');
         } else {
             users.forEach(function (user) {
-                console.log('user.email = ',user.email); //show to who this alert will be sent
+                console.log('user.email = ',user.email); //show to who this alert should be sent
                 if (user.pushToken && (user.email !== userAuthEmail)) {
                     user.pushToken.forEach(function (token) {
-                        console.log('user.email with token = ',user.email);
+                        console.log('user.email with token = ',user.email);//show to who this alert will be sent
                         allUsersWithPushToken.push(token);
                     });
                 }

@@ -3,11 +3,15 @@ var moment = require('moment');
 
 /* Send all alerts. -------------------------------*/
 module.exports.reportsGet = function (req, res) {
-    models.AlertSentInfo.find({}, function (err, alert) {
-        res.json({
-            success: 'true',
-            alerts: alert
-        });
+    models.AlertSentInfo.find({'status.statusString': "open"}, function (err, alert) {
+        if (err || !alert) console.log('no open alerts found. err - ',err);
+        else {
+            console.log('alert.length = ',alert.length);
+            res.json({
+                success: 'true',
+                alerts: alert
+            });
+        }
     });
 };
 

@@ -104,7 +104,7 @@ module.exports.postLogin = function(req, res, next) {
                                     message: 'contact your system administrator. pushToken not saved'
                                 });
                             } else {
-                                //delete new push token from other users
+                                //delete new push token from other users (if a user log
                                 models.Users.find({}, function (err, users2) {
                                     if (err || !users2) console.log("No users to delete push token");
                                     else {

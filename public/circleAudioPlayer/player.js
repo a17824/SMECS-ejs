@@ -116,7 +116,7 @@
                 '<g class="shape">',
                 '<circle class="progress-track" cx="50" cy="50" r="47.45" stroke="#becce1" stroke-opacity="0.25" stroke-linecap="round" fill="none" stroke-width="5"/>',
                 '<circle class="precache-bar" cx="50" cy="50" r="47.45" stroke="#302F32" stroke-opacity="0.25" stroke-linecap="round" fill="none" stroke-width="5" transform="rotate(-90 50 50)"/>',
-                '<circle class="progress-bar" cx="50" cy="50" r="47.45" stroke="#009EF8" stroke-opacity="1" stroke-linecap="round" fill="none" stroke-width="5" transform="rotate(-90 50 50)"/>',
+                '<circle class="progress-bar positionRight" cx="50" cy="50" r="47.45" stroke="#009EF8" stroke-opacity="1" stroke-linecap="round" fill="none" stroke-width="5" transform="rotate(-90 50 50)"/>',
                 '</g>',
                 '<circle class="controls" cx="50" cy="50" r="45" stroke="none" fill="#000000" opacity="0.0" pointer-events="all"/>',
                 '<g class="control pause">',
@@ -137,8 +137,8 @@
                 
                 var audio = $(this).find('audio');
                 audio.attr('id', 'audio' + a);
-                template = template.replace('width="34"','width="'+ audio.data('size')  +'"');
-                template = template.replace('height="34"','height="'+ audio.data('size')  +'"');
+                template = template.replace('width="33"','width="'+ audio.data('size')  +'"');
+                template = template.replace('height="33"','height="'+ audio.data('size')  +'"');
                 template = template.replace('id="playable"', 'id="playable' + a + '"');
                 $(this).append(template);
                 

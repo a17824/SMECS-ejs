@@ -27,7 +27,6 @@
     <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
     <!-- Circle Audio Controls -->
-    <link rel="stylesheet" type="text/css" href="/public/circleAudioPlayer/circleAudioPlayer.css" >
     <link rel="stylesheet" href="/public/circleAudioPlayer/progres-bar.css">
 
 
@@ -224,16 +223,6 @@
                         alert("Alert Group NAME already in use. Choose a different Name.")
                 });
             });
-
-            //circle audio player
-            $('span.slot').each(function(i, d) {
-                //console.log('slot d: ' + d.id);
-                circleAudioButton(d.id);
-            });
-
-
-
-
         });
     </script>
 
@@ -441,8 +430,7 @@
                                                class="icheckbox_flat-green"
                                                name="radio" checked> <%= sounds[soundType][i] %>
 
-                                        <span class="slot" id="<%= sounds[soundType][i+1] %>"></span>
-                                        <span class="mediPlayer">
+                                        <span class="mediPlayer" style="position: absolute; right: 0px">
                                             <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
                                         </span>
 
@@ -456,14 +444,10 @@
                                                value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
                                                class="icheckbox_flat-green"
                                                name="radio"> <%= sounds[soundType][i] %>
-                                        <div class="navi"></div>
 
-                                        <div id="audio">
-                                            <audio controls controlsList="nodownload" id="myaudio" class="audioPosition">
-                                                <source src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3" type="audio/mpeg">
-                                                Your browser does not support the audio element.
-                                            </audio>
-                                        </div>
+                                        <span class="mediPlayer" style="position: absolute; right: 0px">
+                                            <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
+                                        </span>
                                     </div>
                                     <% } %>
                                     <div class="divider-dashed" ></div>
@@ -494,7 +478,6 @@
 <!-- Google Analytics -->
 
 <!-- Circular Audio Player -->
-<script type="text/javascript" src="/public/circleAudioPlayer/circleAudioPlayer.js"></script>
 <script src="/public/circleAudioPlayer/player.js"></script>
 
 </body>
