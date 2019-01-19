@@ -320,8 +320,8 @@ module.exports.showAlertsPost = function(req, res) {
                     else{   //Groups Buttons ON
                         var alertToUpdate1 = req.body.alertToUpdate;
                         models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alertTemp) {
-                            if(err)
-                                console.log('err 1 - ',err);
+                            if(err || !alertTemp)
+                                console.log('alert not found. Err 1 - ',err);
                             else {
                                 if (!alertTemp) {
                                     functions.alertTimeExpired(req,res);

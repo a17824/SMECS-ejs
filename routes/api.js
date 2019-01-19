@@ -76,7 +76,7 @@ routerApi.get('/reports/reportsGet', auth.auth, reports.reportsGet, function(req
 routerApi.get('/reports/alertInfo/:id', auth.auth, reports.alertInfoGet, function(req, res) {});
 
 /* Get number of open alerts ------------------------------------*/
-routerApi.get('/reports/openAlerts', auth.auth, reports.openAlertsGet, function(req, res) {});
+//routerApi.get('/reports/openAlerts', auth.auth, reports.openAlertsGet, function(req, res) {});
 
 /* Get procedure ------------------------------------*/
 routerApi.get('/reports/procedureGet/:id', auth.auth, reports.procedureGet, function(req, res) {});

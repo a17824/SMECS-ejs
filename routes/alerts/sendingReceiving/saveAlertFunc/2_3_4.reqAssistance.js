@@ -120,6 +120,58 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse, ac
 
 
 module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility) {
+
+    models.Alerts.findOne({'alertID': 26}, function (err, alertRequestAsst) {
+        if(err || !alertRequestAsst)
+            console.log('alert not found. Err 2 - ',err);
+        else {
+            console.log('alert yyyyyyyyyyyyyyyyy');
+            console.log(alert);
+            /*
+            let alertTemp1 = new models.AlertSentTemp({
+                alertGroupID: alertRequestAsst.group.groupID,
+                alertGroupName: alertRequestAsst.group.name,
+                groupSound: alertRequestAsst.group.mp3,
+                groupIcon: alertRequestAsst.group.icon,
+                groupColorBk: alertRequestAsst.group.color.bgValue,
+                groupColorTx: alertRequestAsst.group.color.textValue,
+                alertNameID: alertRequestAsst.alertID,
+                alertName: alertRequestAsst.alertName,
+                realDrillDemo: alert.realDrillDemo,
+                requestProcedureCompleted: alert[0].alertRequestProcedureCompleted,
+                requestWeAreSafe: alert[0].alertRequestWeAreSafe,
+                requestINeedHelp: alert[0].alertRequestForINeedHelp,
+                request911Call: alert[0].alertRequest911Call,
+                whoCanCall911: alert[0].whoCanCall911,
+                alertIcon: alert[0].icon,
+                placeholderNote: placeholderNote,
+                placeholderMissingChildLastPlaceSeen: placeholderMissingChildLastPlaceSeen,
+                placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
+                placeholderStudentWithGunSeated: placeholderStudentWithGunSeated,
+                placeholderStudentWithGunBehaviour: placeholderStudentWithGunBehaviour,
+                placeholderEvacuateWhereTo: placeholderEvacuateWhereTo,
+                alertRoad: alert[0].alertRoad,
+                roadIndex: 1
+
+            });
+            alertTemp1.save(function(err, resp) {
+                if (err) {
+                    console.log('err = ',err);
+                    if (rec.decoded)
+                        res.json({
+                            success: false,
+                            message: 'Something went wrong, please try again. If this problem persists please contact SMECS tech support team.'
+                        })
+                } else {
+                    callback(null, alertTemp1, alert);
+                }
+            });
+            */
+        }
+
+    });
+
+
     alert.sentSmecsAppUsersScope.forEach(function (user) {
         console.log(alert.alert.name + ' -> ' + user.utilityName + ' - > Request SMECS APP sent' );
     });

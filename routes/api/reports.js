@@ -4,12 +4,18 @@ var moment = require('moment');
 /* Send all alerts. -------------------------------*/
 module.exports.reportsGet = function (req, res) {
     models.AlertSentInfo.find({'status.statusString': "open"}, function (err, alert) {
-        if (err || !alert) console.log('no open alerts found. err - ',err);
+        if (err || !alert){
+            console.log('no open alerts found. err - ',err);
+            res.json({
+                success: 'false',
+                message: 'Something went wrong'
+            })
+        }
         else {
-            console.log('alert.length = ',alert.length);
             res.json({
                 success: 'true',
-                alerts: alert
+                alerts: alert,
+                openAlerts: alert.length
             });
         }
     });
@@ -17,10 +23,9 @@ module.exports.reportsGet = function (req, res) {
 
 /* Send spevific alert info ------------------------*/
 module.exports.alertInfoGet = function (req, res) {
-    models.AlertSentInfo.findOne({
-        '_id': req.params.id
-    }, function (err, alert) {
-        if (err) {
+    models.AlertSentInfo.findOne({'_id': req.params.id}, function (err, alert) {
+        if (err || !alert){
+            console.log('no alerts found. err - ',err);
             res.json({
                 success: 'false',
                 message: 'Something went wrong'
@@ -36,6 +41,7 @@ module.exports.alertInfoGet = function (req, res) {
 };
 
 /* Send number of opened alerts. -------------------------------*/
+/*
 module.exports.openAlertsGet = function (req, res) {
     models.AlertSentInfo.find({'status.statusString': 'open'}, function (err, alerts) {
         if (err) {
@@ -51,13 +57,14 @@ module.exports.openAlertsGet = function (req, res) {
         }
     });
 };
-
+*/
 /* Send procedure information -------------------------------*/
 module.exports.procedureGet = function (req, res) {
     models.Alerts.findOne({
         'alertID': parseInt(req.params.id)
     }, function (err, alert) {
-        if (err) {
+        if (err || !alert){
+            console.log('alert NOT found. err - ',err);
             res.json({
                 success: 'false',
                 message: 'Something went wrong'
@@ -74,7 +81,8 @@ module.exports.procedureGet = function (req, res) {
 /* Send procedure information -------------------------------*/
 module.exports.proceduresGet = function (req, res) {
     models.Alerts.find({}, function (err, alerts) {
-        if (err) {
+        if (err || !alert){
+            console.log('no alerts found. err - ',err);
             res.json({
                 success: 'false',
                 message: 'Something went wrong'
@@ -95,7 +103,8 @@ module.exports.alertReceiptPost = function (req, res) {
     var wrapped = moment(new Date());
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
-            if (err) {
+            if (err || !alert){
+                console.log('alertNot found. err - ',err);
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {
@@ -123,7 +132,8 @@ module.exports.alertViewedPost = function (req, res) {
     var success = false;
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
-            if (err) {
+            if (err || !alert){
+                console.log('alert notFound. err - ',err);
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {
@@ -150,7 +160,8 @@ module.exports.alertCalled911 = function (req, res) {
     var wrapped = moment(new Date());
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
-            if (err) {
+            if (err || !alert){
+                console.log('alert not found. err - ',err);
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {
