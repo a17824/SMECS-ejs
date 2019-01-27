@@ -305,7 +305,7 @@ module.exports.showAlertsPost = function(req, res) {
                         alertTemp1.save(function(err, resp) {
                             if (err) {
                                 console.log('err = ',err);
-                                if (rec.decoded)
+                                if (req.decoded)
                                     res.json({
                                         success: false,
                                         message: 'Something went wrong, please try again. If this problem persists please contact SMECS tech support team.'

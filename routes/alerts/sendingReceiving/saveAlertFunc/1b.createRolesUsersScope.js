@@ -115,7 +115,6 @@ module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
                         //save to AlertSentTemp all ROLES and USERS that will receive alert
                         models.AlertSentTemp.findById({'_id': alertTemp._id}, function(error, alertUpdate) {
                             if(error || arrayRoleID == null || arrayRoleName == null || alertUpdate == null){
-                                console.log('erro da primeira vez que se escolhe um alerta');
 
                                 if(req.decoded){ // run SMECS API
                                     models.Users.findOne({'email': req.decoded.user.email}, function (err, user) {

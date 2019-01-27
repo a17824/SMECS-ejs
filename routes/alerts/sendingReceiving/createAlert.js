@@ -378,7 +378,7 @@ function multiUtilities(req, res, alert, callBack) {
 
 
                 var arraySmecsAppToSent = [];
-                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update');
+                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update',req,res);
             }
 
             if (alert.alertNameID !== 26) {

@@ -97,7 +97,7 @@ module.exports.postReviewAlert = function(req, res, next) {
                                 console.log('err = ', err);
                             }else {
                                 var arraySmecsAppToSent =[];
-                                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, tempAlert.reqAssOn, tempAlert.reqAssOff, arraySmecsAppToSent,'notify','update');
+                                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, tempAlert.reqAssOn, tempAlert.reqAssOff, arraySmecsAppToSent,'notify','update',req,res);
 
                             }
                         });

@@ -191,7 +191,7 @@ module.exports.postReceivedAlert = function(req, res, next) {
                         console.log('err - ',err);
                     else{
                         var arraySmecsAppToSent =[];
-                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent,'notify','dontUpdate');
+                        reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent,'notify','dontUpdate',req,res);
                         res.send({redirect: '/alerts/received/receiveAlert/' + alertToUpdate1});
                     }
                 });

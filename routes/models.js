@@ -424,11 +424,8 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sentSmecsAppUsersScope: [{
         utilityID: Number,
         utilityName: String,
-        userFirstName: String,
-        userLastName: String,
         userEmail: String,
-        userPushToken: String,
-        userPhoto: String
+        userPushToken: String
     }],
     archived: { type: Boolean, default: false },
     softDeletedBy: { type: String, default: null},
@@ -482,11 +479,8 @@ var AlertSentTempSchema = new mongoose.Schema({
     sentSmecsAppUsersScope: [{
         utilityID: Number,
         utilityName: String,
-        userFirstName: String,
-        userLastName: String,
         userEmail: String,
-        userPushToken: String,
-        userPhoto: String
+        userPushToken: String
     }],
     ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
     placeholderNote: String,
