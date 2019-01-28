@@ -258,7 +258,7 @@ module.exports.createAlert= function(req, res) {
                     alertTemp.alertSent = true;
                     alertTemp.save(function (err) {
                         if(err)
-                            console.log('failed to update alertTemp.alertSent to = false. ERR = ',err);
+                            console.log('failed to update alertTemp.alertSent to = true. ERR = ',err);
                         else
                             console.log('success to update alertTemp.alertSent to = true');
                     });

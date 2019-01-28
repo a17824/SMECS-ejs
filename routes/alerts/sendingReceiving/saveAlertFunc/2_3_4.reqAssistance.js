@@ -3,7 +3,7 @@ var moment = require('moment');
 var reqAsst = require('./2_3_4.reqAssistance.js');
 var models = require('./../../../models');
 let whoReceiveAlert = require('./../saveAlertFunc/1b.createRolesUsersScope.js');
-
+let pushNotification = require('./../pushNotification.js');
 
 module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, actionNotification, updateTime,req,res) {
 
@@ -116,24 +116,13 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse, ac
 
 
 
-
+//REQUEST ASSISTANCE auto
 module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req,res) {
-    console.log('*****************************');
-    alert.sentSmecsAppUsersScope.forEach(function (user) { //external users
-        console.log('user = ',user);
-        console.log(alert.alert.name + ' -> ' + user.utilityName + ' - > Request SMECS APP sent' );
-    });
-    /********************************
-     * NOTIFICATION API HERE        *
-     * scope to sent is:            *
-     * sentSmecsAppUsersScope *
-     ********************************/
-
     models.Alerts.findOne({'alertID': 26}, function (err, alertRequestAsst) {
         if(err || !alertRequestAsst)
             console.log('alert not found. Err 2 - ',err);
         else {
-            //build automatically request assintance alert
+            //build automatically request assistance alert
             let alertTemp1 = new models.AlertSentTemp({
                 alertGroupID: alertRequestAsst.group.groupID,
                 alertGroupName: alertRequestAsst.group.name,
@@ -143,14 +132,15 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                 groupColorTx: alertRequestAsst.group.textValue,
                 alertNameID: alertRequestAsst.alertID,
                 alertName: alertRequestAsst.alertName,
-                realDrillDemo: alert.realDrillDemo,
                 requestProcedureCompleted: alertRequestAsst.alertRequestProcedureCompleted,
                 requestWeAreSafe: alertRequestAsst.alertRequestWeAreSafe,
                 requestINeedHelp: alertRequestAsst.alertRequestForINeedHelp,
                 request911Call: alertRequestAsst.alertRequest911Call,
                 whoCanCall911: alertRequestAsst.whoCanCall911,
                 alertIcon: alertRequestAsst.icon,
-                alertRoad: alertRequestAsst.alertRoad
+                alertRoad: alertRequestAsst.alertRoad,
+                realDrillDemo: alert.realDrillDemo,
+                alertSent: true
 
             });
             alertTemp1.save(function(err) {
@@ -164,85 +154,114 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                 } else {
                     console.log('AUTO alert temp successfully created');
                     console.log('alertTemp1 _id = ',alertTemp1._id);
+
+                    whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) { //get internal users that can receive request assistance alert
+                        if(err){
+                            console.log('err = ', err);
+                        }else {
+                            let alertTemp1 = result;
+                            if(alertTemp1.sentRoleIDScope < 1){
+                                console.log('No scopes or users to send this alert');
+                            }
+                            else {
+                                //GET USERS
+                                let sentTo = [];
+                                alertTemp1.sentTo.forEach(function (user) { //local users
+                                    let internalUsers = {
+                                        email: user.email,
+                                        pushToken: user.pushToken
+                                    };
+                                    sentTo.push(internalUsers);
+                                });
+                                alert.sentSmecsAppUsersScope.forEach(function (user) { //external users
+                                    if(user.utilityName === utility.utilityName){
+                                        console.log(alert.alert.name + ' -> ' + user.utilityName + ' - > ' + user.userEmail + ' - >Request SMECS APP sent' );
+                                        let externalUsers = {
+                                            email: user.userEmail,
+                                            pushToken: user.userPushToken
+                                        };
+                                        sentTo.push(externalUsers);
+                                    }
+                                });
+                                //end of Get Users
+
+                                //get user that will request assistance
+                                let wrapped = moment(new Date());
+                                let sentByApiEjs, userAuthEmail;
+                                if (req.decoded) {       // API user
+                                    sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
+                                    userAuthEmail = req.decoded.user.email;
+                                }else {
+                                    sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
+                                    userAuthEmail = req.user.email;
+                                }
+                                //end of get user that will request assistance
+
+                                let alert1 = new models.AlertSentInfo({
+                                    group: {
+                                        groupID: alertRequestAsst.group.groupID,
+                                        name: alertRequestAsst.group.name,
+                                        sound: alertRequestAsst.group.mp3,
+                                        icon: alertRequestAsst.group.icon,
+                                        color: {
+                                            bgValue: alertRequestAsst.group.color.bgValue,
+                                            textValue: alertRequestAsst.group.textValue
+                                        }
+                                    },
+                                    alert: {
+                                        alertID: alertRequestAsst.alertID,
+                                        name: alertRequestAsst.alertName,
+                                        icon: alertRequestAsst.icon
+                                    },
+                                    sentBy: sentByApiEjs,
+                                    sentDate: wrapped.format('YYYY-MM-DD'),
+                                    sentTime: wrapped.format('h:mm:ss a'),
+                                    sentRoleIDScope: alertTemp1.sentRoleIDScope,
+                                    sentRoleNameScope: alertTemp1.sentRoleNameScope,
+                                    sentTo: sentTo,
+                                    requestProcedureCompleted: alertTemp1.requestProcedureCompleted,
+                                    requestWeAreSafe: alertTemp1.requestWeAreSafe,
+                                    requestINeedHelp: alertTemp1.requestINeedHelp,
+                                    request911Call: alertTemp1.request911Call,
+                                    whoCanCall911: alertTemp1.whoCanCall911,
+                                    realDrillDemo: alertTemp1.realDrillDemo,
+                                    note: alert.note,
+                                    buildingID: alert.buildingID,
+                                    buildingName: alert.buildingName,
+                                    floorID: alert.floorID,
+                                    floorName: alert.floorName,
+                                    floorPhoto: alert._id + '_' + alert.floorPhoto,
+                                    sniperCoordinateX: alert.sniperCoordinateX,
+                                    sniperCoordinateY: alert.sniperCoordinateY,
+                                    multiSelectionNames: alert.multiSelectionNames,
+                                    multiSelectionIDs: alert.multiSelectionIDs,
+                                    requestAssistance: alert.requestAssistance,
+                                    sentSmecsAppUsersScope: alert.sentSmecsAppUsersScope,
+                                    latitude: alert.latitude,
+                                    longitude: alert.longitude,
+                                    alertRoad: alertTemp1.alertRoad
+                                });
+                                alert1.save(function(err, resp) {
+                                    if (err) {
+                                        console.log('err = ',err);
+
+                                    } else {
+                                        //send pushNotification
+                                        pushNotification.alert(alert1, 'newAlert', userAuthEmail);
+                                                /********************************
+                                                 * NOTIFICATION API HERE        *
+                                                 * scope to sent is:            *
+                                                 * sentSmecsAppUsersScope *
+                                                 ********************************/
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             });
-/*
-            let sentTo = [];
-            alert.sentTo.forEach(function (user) { //local users
-                let sentToArr = {
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    pushToken: user.pushToken
-                };
-                sentTo.push(sentToArr);
-            });
-            alert.sentSmecsAppUsersScope.forEach(function (user) { //external users
-                console.log('user = ',user);
-                console.log(alert.alert.name + ' -> ' + user.utilityName + ' - > Request SMECS APP sent' );
-                let sentToArr = {
-                    email: user.email,
-                    pushToken: user.pushToken
-                };
-                sentTo.push(sentToArr);
-            });
-
-            let wrapped = moment(new Date());
-            let sentByApiEjs; //get user that will request assistance
-            if (req.decoded)        // API user
-                sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
-            else
-                sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
-            let alert1 = new models.AlertSentInfo({
-                group: {
-                    groupID: alertRequestAsst.group.groupID,
-                    name: alertRequestAsst.group.name,
-                    sound: alertRequestAsst.group.mp3,
-                    icon: alertRequestAsst.group.icon,
-                    color: {
-                        bgValue: alertRequestAsst.group.color.bgValue,
-                        textValue: alertRequestAsst.group.textValue
-                    }
-                },
-                alert: {
-                    alertID: alertRequestAsst.alertID,
-                    name: alertRequestAsst.alertName,
-                    icon: alertRequestAsst.icon
-                },
-
-            });
-
-
-
-            alert1.save(function(err, resp) {
-                if (err) {
-                    console.log('err = ',err);
-
-                } else {
-                    //send pushNotification
-
-                }
-            });
-
-            whoReceiveAlert.getUsersToReceiveAlert(req, res, alert1, function (result,err) { //get school users that can receive request assistance alert
-                if(err){
-                    console.log('err = ', err);
-                }else {
-                    let alert2 = result;
-                    if(alert2.sentRoleIDScope < 1){
-                        console.log('No scopes or users to send this alert');
-                    }
-
-
-                }
-            });
-
-*/
-
         }
-
     });
-
 };
 module.exports.sendPushNotificationReqAssEmail = function(alert, utility, req) {
     console.log(alert.alert.name + ' -> ' + utility.utilityName + ' - > Request EMAIL sent');
