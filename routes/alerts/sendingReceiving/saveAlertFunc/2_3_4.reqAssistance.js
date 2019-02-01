@@ -11,8 +11,8 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
         var array = [];
         utils.forEach(function (utility,idx, arr) {
             models.Users.find({email: utility.smecsUsers, pushToken: { "$exists": true }}, function (err, users) {
-                if(err)
-                    console.log('err - ',err);
+                if(err || !users)
+                    console.log('No users to send Req Asst alert. err - ',err);
                 else {
                     users.forEach(function (user) {
                         var userWithPushToken = {
@@ -165,15 +165,19 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                             }
                             else {
                                 //GET USERS
+
+                                //local users
                                 let sentTo = [];
-                                alertTemp1.sentTo.forEach(function (user) { //local users
+                                alertTemp1.sentTo.forEach(function (user) {
                                     let internalUsers = {
                                         email: user.email,
                                         pushToken: user.pushToken
                                     };
                                     sentTo.push(internalUsers);
                                 });
-                                alert.sentSmecsAppUsersScope.forEach(function (user) { //external users
+
+                                //external users
+                                alert.sentSmecsAppUsersScope.forEach(function (user) {
                                     if(user.utilityName === utility.utilityName){
                                         console.log(alert.alert.name + ' -> ' + user.utilityName + ' - > ' + user.userEmail + ' - >Request SMECS APP sent' );
                                         let externalUsers = {

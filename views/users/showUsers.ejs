@@ -149,6 +149,7 @@
                                 <% var showUsers = 'tab-pane fade table-responsive' %>
                                 <% } %>
 
+                                    <!-- TAB School Staff -->
                                 <div role="tabpanel" class="<%= showUsers %>" id="tab_content1">
                                     <table id="datatable-buttons" class="table table-hover">
                                         <thead>
@@ -196,7 +197,7 @@
                                             <% } %>
 
                                             <td>
-                                                <% if (user.pushToken) { %>
+                                                <% if (user.pushToken.length > 0) { %>
                                                 <img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons">
                                                 <% } else { %>
                                                 <img  src="/miscPictures/redCross20.png">
@@ -262,6 +263,7 @@
                                 <% var showParents = 'tab-pane fade' %>
                                 <% } %>
 
+                                    <!-- TAB Parents -->
                                 <div role="tabpanel" class="<%= showParents %>" id="tab_content2">
                                     <table id="datatable" class="table table-hover">
                                         <thead>
@@ -301,7 +303,7 @@
                                                 <%= user.email %>
                                             </td>
                                             <td>
-                                                <% if (user.pushToken) { %>
+                                                <% if (user.pushToken.length > 0) { %>
                                                 <img  src="/miscPictures/greenCheckmarkWeb20.png">
                                                 <% } else { %>
                                                 <img  src="/miscPictures/redCross20.png">
@@ -356,6 +358,7 @@
                                 <% var showExternal = 'tab-pane fade' %>
                                 <% } %>
 
+                                    <!-- TAB External or Companies -->
                                 <div role="tabpanel" class="<%= showExternal %>" id="tab_content3" aria-labelledby="utilityWorkers-tab">
                                     <table id="datatable-fixed-header" class="table table-hover">
                                         <thead>
@@ -391,7 +394,7 @@
                                                 <% } %>
                                             </td>
                                             <td>
-                                                <% if (user.pushToken) { %>
+                                                <% if (user.pushToken.length > 0) { %>
                                                 <img  src="/miscPictures/greenCheckmarkWeb20.png">
                                                 <% } else { %>
                                                 <img  src="/miscPictures/redCross20.png">

@@ -9,7 +9,7 @@
 <body>
 
 <% alert.forEach(function(alert) { %>
-<% if (info.alertName == alert.alertName ) {%>
+<% if (info.alert.name == alert.alertName ) {%>
 <textarea class="ckeditor" cols="80" id="editor1" name="editor1" rows="30" disabled><%= alert.alertProcedure %></textarea>
 <script>
     var editor = CKEDITOR.inline( 'editor1', {

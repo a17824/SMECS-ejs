@@ -33,56 +33,69 @@ module.exports.receivedAlert = function(req, res) {
             async.waterfall([
                 function (callback) {
                     var canRequestAssistance = false;
+
                     models.Alerts.findOne({'alertID': results[0].alert.alertID}, function(err, alert){//check if Request Assistance is softDeleted
-                        if( err ) console.log("No Utility found");
+                        if(err || !alert) console.log("No Alert found");
                         else{
-                            if(results[0].alert.alertID == 14 ||
-                                results[0].alert.alertID == 26){
-                                if(alert.softDeleted == false){
+                            if(results[0].alert.alertID == 14){
+                                models.Alerts.findOne({'alertID': 26}, function(err, alert26){
+                                    if(err || !alert26) console.log("No alert26 found");
+                                    else{
 
-                                    // API EJS ----------
-                                    var userApiEjs;
-                                    if (req.decoded)        // API user
-                                        userApiEjs = req.decoded.user.userRoleID;
-                                    else
-                                        userApiEjs = req.user.userRoleID; // EJS user
-                                    //-------------------
+                                        if(alert26.softDeleted == false){//check if Request Assistance is softDeleted
 
-                                    //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
-                                    if(results[0].realDrillDemo == 'real'){
-                                        let role = alert.whoCanSendReceive.receiveReal;
-                                        userApiEjs.forEach(function (userAuthRole) {
-                                            for (var t = 0; t < role.length; t++) {
-                                                if(userAuthRole == role[t].roleID && role[t].checkbox == true){
-                                                    canRequestAssistance = true;
-                                                    break;
-                                                }
+                                            // API EJS ----------
+                                            var userApiEjs;
+                                            if (req.decoded)        // API user
+                                                userApiEjs = req.decoded.user.userRoleID;
+                                            else
+                                                userApiEjs = req.user.userRoleID; // EJS user
+                                            //-------------------
+
+                                            //check if user as rights to Request Assistance for Real Alerts and Test Alerts ---------
+                                            if(results[0].realDrillDemo == 'real'){
+                                                let role = alert26.whoCanSendReceive.sendReal;
+                                                userApiEjs.forEach(function (userAuthRole) {
+                                                    for (var t = 0; t < role.length; t++) {
+                                                        if(userAuthRole == role[t].roleID && role[t].checkbox == true){
+                                                            canRequestAssistance = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                })
                                             }
-                                        })
-                                    }
-                                    if(results[0].realDrillDemo == 'drill'){
-                                        let role = alert.whoCanSendReceive.receiveDrill;
-                                        userApiEjs.forEach(function (userAuthRole) {
-                                            for (var t = 0; t < role.length; t++) {
-                                                if(userAuthRole == role[t].roleID && role[t].checkbox == true){
-                                                    canRequestAssistance = true;
-                                                    break;
-                                                }
+                                            if(results[0].realDrillDemo == 'drill'){
+                                                let role = alert26.whoCanSendReceive.sendDrill;
+                                                userApiEjs.forEach(function (userAuthRole) {
+                                                    for (var t = 0; t < role.length; t++) {
+                                                        if(userAuthRole == role[t].roleID && role[t].checkbox == true){
+                                                            canRequestAssistance = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                })
                                             }
-                                        })
-                                    }
-                                    //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
+                                            //----------- end of check if user as rights to Request Assistance for Real Alerts and Test Alerts
+                                        }
+                                        var enableProcedureButton = false;
+                                        if(alert.alertProcedure)
+                                            enableProcedureButton = true;
 
-                                }
+                                        callback(null, canRequestAssistance, enableProcedureButton);
+                                    }
+                                });
                             }
-                            var enableProcedureButton = false;
+                            else {
+                                var enableProcedureButton = false;
+                                if(alert.alertProcedure)
+                                    enableProcedureButton = true;
 
-                            if(alert.alertProcedure)
-                                enableProcedureButton = true;
-
-                            callback(null, canRequestAssistance, enableProcedureButton);
+                                callback(null, canRequestAssistance, enableProcedureButton);
+                            }
                         }
                     });
+
+
                 }
             ], function (err, canRequestAssistance, enableProcedureButton) {
                 let flag = 'alertWithNoFloor';
