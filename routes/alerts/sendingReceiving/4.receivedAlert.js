@@ -37,7 +37,7 @@ module.exports.receivedAlert = function(req, res) {
                     models.Alerts.findOne({'alertID': results[0].alert.alertID}, function(err, alert){//check if Request Assistance is softDeleted
                         if(err || !alert) console.log("No Alert found");
                         else{
-                            if(results[0].alert.alertID == 14){
+                            if(results[0].alert.alertID == 14 || results[0].alert.alertID == 26){
                                 models.Alerts.findOne({'alertID': 26}, function(err, alert26){
                                     if(err || !alert26) console.log("No alert26 found");
                                     else{
@@ -106,6 +106,10 @@ module.exports.receivedAlert = function(req, res) {
                     }
                 }
 
+                let title = 'Received Alert';
+                if(results[0].alert.alertID == 26)
+                    title = 'Choose contact type(s) to Req. Assistance';
+
                 if(req.decoded){ //API user
                     res.json({
                         success: 'true',
@@ -123,7 +127,7 @@ module.exports.receivedAlert = function(req, res) {
 
                 }else{  //EJS user
                     res.render('alerts/receiving/received', {
-                        title: 'Received Alert',
+                        title: title,
                         userAuthRoleName: req.user.userRoleName,
                         userAuthEmail: req.user.email,
                         info: results[0],

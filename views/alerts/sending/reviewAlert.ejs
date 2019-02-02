@@ -340,91 +340,14 @@
 
 
 
-<!--ON/OFF switch button for back button/refresh -->
-<% if (info.alertNameID == 26 ) {%>
-
-<div>
-    <% var arrayLabels = ["smecs app", "send email", "call\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"]; %>
-
-
-    <% for (var x=0; x < info.requestAssistance.length; x++) { %>
-    <input type="checkbox" name="checkbox"  value="<%= info.requestAssistance[x].utilityName %>" checked onclick="return false;">
-    <label for="utilityName"><%= info.requestAssistance[x].utilityName %></label><br>
-
-    <% if (info.requestAssistance[x].reqSmecsApp.sentReqSmecsApp == true) {%> <!-- check for default contact-->
-
-    &emsp;&emsp;&emsp;<label for="utilityName">smecs app</label> &emsp;<!-- contact label for smecs App and email-->
-        <div class="onoffswitch" style="display:inline-block;">
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" checked>
-        <label class="onoffswitch-label" for="slider">
-            <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-        </label>
-        </div>
-        <br>
-    <% } %>
-    <% if (info.requestAssistance[x].reqSmecsApp.sentReqSmecsApp == false) {%> <!-- check for default contact-->
-    &emsp;&emsp;&emsp;<label for="utilityName">smecs app</label> &emsp;<!-- contact label for smecs App and email-->
-    <div class="onoffswitch" style="display:inline-block;">
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest">
-        <label class="onoffswitch-label" for="slider">
-            <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-        </label>
-    </div>
-    <br>
-    <% }%>
-
-        <% if (info.requestAssistance[x].reqEmail.sentReqEmail == true) {%> <!-- check for default contact-->
-
-    &emsp;&emsp;&emsp;<label for="utilityName">send email</label> &emsp;<!-- contact label for smecs App and email-->
-        <div class="onoffswitch" style="display:inline-block;">
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" checked>
-        <label class="onoffswitch-label" for="slider"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label>
-        </div>
-        <br>
-    <% } %>
-    <% if (info.requestAssistance[x].reqEmail.sentReqEmail == false) {%> <!-- check for default contact-->
-
-    &emsp;&emsp;&emsp;<label for="utilityName">send email</label> &emsp;<!-- contact label for smecs App and email-->
-    <div class="onoffswitch" style="display:inline-block;">
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest">
-        <label class="onoffswitch-label" for="slider">
-            <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-        </label>
-    </div>
-    <br>
-    <% }%>
-
-        <% if (info.requestAssistance[x].reqCall.sentReqCall == true) {%> <!-- check for default contact-->
-
-    &emsp;&emsp;&emsp;<label for="utilityName"><%= arrayLabels[2] %></label> &emsp;<!-- contact label for smecs App and email-->
-        <div class="onoffswitch" style="display:inline-block;">
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest" checked>
-        <label class="onoffswitch-label" for="slider"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label>
-        </div>
-        <br>
-    <% } %>
-    <% if (info.requestAssistance[x].reqCall.sentReqCall == false) {%> <!-- check for default contact-->
-    &emsp;&emsp;&emsp;<label for="utilityName"><%= arrayLabels[2] %></label> &emsp;<!-- contact label for smecs App and email-->
-    <div class="onoffswitch" style="display:inline-block;">
-        <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest">
-        <label class="onoffswitch-label" for="slider">
-            <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-        </label>
-    </div>
-    <br>
-    <% }%>
-
-
-    <% } %>
-
-</div>
-<% } %>
 
 
 <% if ( error_messages ) { %>
 <label for="err" style="color: red"><%= error_messages %></label><br>
 <% } %>
 <!-- END OFF Alert UTILITY FAILURE -->
+
+
 <input type="button" id="back" value="Back" >
 <!--<button class="backButton" id="back" onclick="goBack()">Back</button>
 <script>
@@ -433,7 +356,7 @@
     }
 </script> -->
 
-<input type="button" id="<%= info.id %>" value="Send Alert" ><br><br>
+<input type="button" id="<%= info.id %>" value="Next" ><br><br>
 <button class="receiveButton" id="exit" onclick="location.href='/alerts/sending/chooseAlert'">Exit</button><br><br>
 </body>
 </html>

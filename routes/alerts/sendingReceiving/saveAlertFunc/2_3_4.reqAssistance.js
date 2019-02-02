@@ -34,7 +34,14 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
                 if(err){
                     console.log('err = ', err);
                 }else {
+                    console.log('result');
+                    console.log(result);
+                    console.log('***********');
+                    console.log('arraySmecsAppToSent');
+                    console.log(arraySmecsAppToSent);
                     arraySmecsAppToSent = arraySmecsAppToSent.concat(result);
+                    console.log('------------');
+                    console.log(arraySmecsAppToSent);
                     alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
                     var boolTrue = true;
                     var boolFalse = false;

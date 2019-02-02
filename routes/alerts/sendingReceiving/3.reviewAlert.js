@@ -84,7 +84,7 @@ module.exports.postReviewAlert = function(req, res, next) {
             });
         },
         function (tempAlert, callback) {
-
+            /*
             // Alert Request Assistance
             if (tempAlert.alertNameID == 26 ){
 
@@ -104,6 +104,7 @@ module.exports.postReviewAlert = function(req, res, next) {
                     }
                 });
             }
+            */
             callback(null, tempAlert);
         }
 

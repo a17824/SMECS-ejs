@@ -1,35 +1,35 @@
 div.disable {
-    background-color: ghostwhite;
+    background-color: #eeeeee;
     border: solid 2px #ccc;
-    margin: auto 4em;
+    margin: auto 2em;
     padding: 1em;
-    width: 290px;
+    width: 250px;
 }
 div.enable {
     background-color: #fff;
     border: solid 2px #ccc;
-    margin: auto 4em;
+    margin: auto 2em;
     padding: 1em;
-    width: 290px;
+    width: 250px;
 }
 
 div.checkboxRadioboxDiv {
     margin: auto 3em;
-    padding: 1em;
+    /*padding: 1em;*/
     width: 560px;
 }
 
 div.labelsDivEnable {
-    margin: auto 3em;
-    padding: 1em;
+    margin: auto 2em;
+    /*padding: 1em;*/
     width: 560px;
-    color: #000000;
+    /*color: #000000;*/
 }
 div.labelsDivDisable {
-    margin: auto 3em;
-    padding: 1em;
+    margin: auto 2em;
+    /*padding: 1em;*/
     width: 550px;
-    color: #444444;
+    color: #999999;
 
 }
 
@@ -94,27 +94,28 @@ img.disable {
 }
 
 label.enable {
-    color: #000000;
+    /*color: #000000;*/
     font-weight: unset;
 }
 
 label.disable {
-    color: #444444;
+    color: #999999;
     font-weight: unset;
 }
 input.enable {
     color: #000000;
     cursor: auto;
     font-weight: unset;
-    width: 18em;
+    width: 11.5em;
 }
 input.disable {
     color: #444444;
-    background: ghostwhite;
+    background: #eeeeee;
+    border: solid 1px #cccccc;
     pointer-events: none;
     cursor: default;
     font-weight: unset;
-    width: 18em;
+    width: 11.5em;
 }
 
 a.enable {

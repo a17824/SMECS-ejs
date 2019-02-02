@@ -101,6 +101,19 @@ module.exports.create = function(req, res, tempAlert, callback) {
         mapBus: tempAlert.mapBus,
         alertRoad: tempAlert.alertRoad
     });
+    //REQ ASST ALERT
+    if(tempAlert.alertNameID == 26){
+        alert1.status.statusString = 'closed';
+        alert1.status.statusClosedDate = wrapped.format('YYYY-MM-DD');
+        alert1.status.statusClosedTime = wrapped.format('h:mm:ss a');
+        alert1.archived = false;
+        alert1.softDeletedBy = req.session.user.firstName + " " + req.session.user.lastName;
+        alert1.softDeletedDate = wrapped.format('YYYY-MM-DD');
+        alert1.softDeletedTime = wrapped.format('h:mm:ss');
+        alert1.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
+    }
+    //end of REQ ASST ALERT
+
     alert1.save();
     callback(alert1)
 };

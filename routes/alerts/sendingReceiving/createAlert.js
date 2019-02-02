@@ -190,7 +190,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
             }
         });
         if(flagWait == 0){
-           cb('3333');
+            cb('3333');
         }
         //cb
     }
@@ -254,7 +254,9 @@ module.exports.createAlert= function(req, res) {
 
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo
                     /*****  CALL HERE NOTIFICATION API  *****/
-                    pushNotification.alert(result, 'newAlert', email);
+                    if(alertTemp.alertNameID !== 26)
+                        pushNotification.alert(result, 'newAlert', email);
+
                     alertTemp.alertSent = true;
                     alertTemp.save(function (err) {
                         if(err)

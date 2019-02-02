@@ -675,23 +675,23 @@
                         <div class="x_content">
 
                             <form class="form-horizontal form-label-left">
-
+                                <% if (alert.alertID != 26) {%>
                                 <div class="form-group">
                                     <label class="control-label col-md-5 col-sm-5 col-xs-12" style="margin-top: -2px" for="checkboxProc">Procedure completed</label>
                                     <div class="col-md-7 col-sm-7 col-xs-12">
 
                                         <% if (alert.alertRequestProcedureCompleted == true) {%>
-                                        <input type="checkbox"
-                                               name="checkboxProc"
-                                               id="checkboxProc"
-                                               value="<%= alert.alertRequestProcedureCompleted %>" checked>
+                                            <input type="checkbox"
+                                                   name="checkboxProc"
+                                                   id="checkboxProc"
+                                                   value="<%= alert.alertRequestProcedureCompleted %>" checked>
                                         <% }else{%>
-                                        <input type="checkbox"
-                                               name="checkboxProc"
-                                               id="checkboxProc"
-                                               value="<%= alert.alertRequestProcedureCompleted %>">
+                                            <input type="checkbox"
+                                                   name="checkboxProc"
+                                                   id="checkboxProc"
+                                                   value="<%= alert.alertRequestProcedureCompleted %>">
                                         <% } %>
-                                            <label for="checkboxProc"></label>
+                                        <label for="checkboxProc"></label>
                                     </div>
                                 </div>
 
@@ -794,6 +794,7 @@
 
                                     </div>
                                 </div>
+                                    <% } %> <!-- for alert 26 -->
 
                             </form>
 

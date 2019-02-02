@@ -46,7 +46,7 @@ module.exports.homeReports = function(req, res, next) {
 module.exports.reportsArchived = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.AlertSentInfo.find().sort({"sentDate":-1}).sort({"sentTime":-1}).exec(callback);
+            models.AlertSentInfo.find().sort({"_id":-1}).sort({"sentTime":-1}).exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
@@ -69,7 +69,7 @@ module.exports.reportsArchived = function(req, res, next) {
 module.exports.reportsTrash = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.AlertSentInfo.find().sort({"sentDate":-1}).sort({"sentTime":-1}).exec(callback);
+            models.AlertSentInfo.find().sort({"_id":-1}).sort({"sentTime":-1}).exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
