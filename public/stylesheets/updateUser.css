@@ -128,3 +128,7 @@ a.disable {
     pointer-events: none;
     cursor: default;
 }
+
+.paddingTop {
+    margin-top: 10px;
+}

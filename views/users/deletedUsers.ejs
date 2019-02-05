@@ -1,86 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Deleted Users</title>
-    <link rel='stylesheet' href='/stylesheets/showStudents.css' />
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
-    <script type="text/javascript" src="/javascripts/tablesorter-master/jquery.tablesorter.js"></script>
+    <script>
+        // reload whole page if page is cached
+        window.onpageshow = function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+        // end of Reload whole page if page is cached
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Datatables -->
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
-    <script type = "text/javascript">
-        $(document).ready(function()
-                {
-                    $("#myTable").tablesorter();
-                }
-        );
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+
+    <script type="text/javascript">
+        //DELETE Confirmation
+        function YNconfirm(type) {
+            if ( type === 'room'){
+                type = 'room and their specific procedure'
+            }
+            if (confirm('ATTENTION: This user will be permanently deleted. Are you sure you want to erase the user: ' + type + '?'))
+                return true;
+            else
+                return false;
+        };
+
+
     </script>
 
 </head>
-<body>
-<h1><%= title %></h1>
-<!--<p><%= users %></p>-->
 
-<table id="myTable" class="tablesorter" style="width:100%;table-layout: fixed;">
-    <caption>
-        After 30 days a user has been in trash, it will be permanently deleted
-    </caption>
-    <thead>
-    <tr>
-        <th width="5px"></th>
-        <th align="center">Photo</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Privilege</th>
-        <th align="center">Deleted</th>
-        <th align="center">Restore User</th>
-        <th align="center">Erase</th>
-    </tr>
-    <tbody>
-    <% users.forEach(function(user) { %>
-    <% if (user.softDeleted !== null) { %>
-    <tr>
-        <td ></td>
-        <% if (user.photo == "" || user.photo == undefined) { %>
-        <td align="center">no photo</td>
-        <% } else { %>
-        <td align="center"><a href="/users/showPhoto/<%= user.id %>">show</a></td>
-        <% } %>
-        <td><%= user.firstName %></td>
-        <td><%= user.lastName %></td>
-        <td><%= user.email %></td>
-        <td><%= user.userRoleName %></td>
-        <td><%= user.userPrivilegeName %></td>
-        <td><%= user.softDeleted %></td>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
-        <td align="center">
-            <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-            <a href="/users/restoreUsers/<%= user.id %>"><button class="inTable">restore</button></a>
-            <% } else { %>
-            <a href="/users/restoreUsers/<%= user.id %>"><button class="inTable" disabled>restore</button></a>
-            <% } %>
-        </td>
-        <td align="center">
-            <% if (aclEraseUsers == null || aclEraseUsers.checkBoxValue == true) {%>
-                <a href="/users/deletedUsers/<%= user.id %>"><button class="inTable">erase</button></a>
-            <% } else { %>
-                <a href="/users/deletedUsers/<%= user.id %>"><button class="inTable" disabled>erase</button></a>
-            <% } %>
-        </td>
-    </tr>
-    <% } %>
-    <% }); %>
-    </tbody>
-</table><br>
-<div class="main-container">
-    <div class="fixer-container">
-        <ul class="list-of-floating-elements">
-            <form class="floated"></form>
-            <form action="/users/showUsers">
-                <input type="submit" value="Back">
-            </form>
-        </ul>
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Trash</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+
+
+                            <div align="center">
+                                <button class="btn btn-default" id="back" onclick="location.href='/users/showUsers'">Back</button>
+                            </div>
+
+
+
+                            <div class="table-responsive">
+                                <table id="datatable-buttons" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Photo</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th style="min-width: 70px">Role</th>
+                                        <th style="min-width: 70px">Privilege</th>
+                                        <th>Deleted</th>
+                                        <th align="center">Restore User</th>
+                                        <th align="center">Erase</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% users.forEach(function(user) { %>
+                                        <% if (user.softDeleted !== null) { %>
+                                            <tr>
+                                                <td ></td>
+                                                <% if (user.photo == "" || user.photo == undefined) { %>
+                                                    <td align="center">(photo n/a)</td>
+                                                <% } else { %>
+                                                    <td>
+                                                        <a href="/photos/choosePhoto/<%= user.id %>"><img src="/photosUsers/<%= user.photo %>"  class="avatarUsers"></a>
+                                                    </td>
+                                                <% } %>
+                                                <td><%= user.firstName %></td>
+                                                <td><%= user.lastName %></td>
+                                                <td><%= user.email %></td>
+                                                <td>
+                                                    <% if (user.userRoleName.length > 0) { %>
+                                                        <% for (var x = 0; x < user.userRoleName.length; x++) {%>
+                                                                <strong>.</strong> <%= user.userRoleName[x] %><br>
+                                                        <% } %>
+                                                    <% } %>
+                                                </td>
+                                                <td><strong>.</strong> <%= user.userPrivilegeName %></td>
+                                                <td><%= user.softDeleted %></td>
+
+                                                <td align="center">
+                                                    <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+                                                        <a href="/users/restoreUsers/<%= user.id %>"><button class="btn btn-success">restore</button></a>
+                                                    <% } else { %>
+                                                        <a href="/users/restoreUsers/<%= user.id %>"><button class="btn btn-success" disabled>restore</button></a>
+                                                    <% } %>
+                                                </td>
+                                                <td align="center">
+                                                    <% if (aclEraseUsers == null || aclEraseUsers.checkBoxValue == true) {%>
+                                                        <a href="/users/deletedUsers/<%= user.id %>" onclick="return(YNconfirm('<%= user.firstName %> <%= user.lastName %>'));"><button class="btn btn-danger">erase</button></a>
+                                                    <% } else { %>
+                                                        <a href="/users/deletedUsers/<%= user.id %>"><button class="btn btn-danger" disabled>erase</button></a>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                        <% } %>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+
+
+<!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Google Analytics -->
+
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

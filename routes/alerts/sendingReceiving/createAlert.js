@@ -244,7 +244,7 @@ module.exports.createAlert= function(req, res) {
         email = req.user.email;
 
     models.AlertSentTemp.findById({'_id': alertToUpdate}, function (err, alertTemp) {
-        if (!alertTemp) {
+        if (err || !alertTemp) {
             functions.alertTimeExpired(req,res);
         }
         else {
@@ -278,14 +278,20 @@ module.exports.createAlert= function(req, res) {
 
 module.exports.updateAlert= function(req, res) {
     let alertToUpdate = req.params.id;
+
     let flag = 'update';
     models.AlertSentTemp.findById(alertToUpdate, function (err, alertTemp) {
-        alertSentInfo.update(req, res, alertTemp,function (result) {  //update AlertSentInfo
+        if (err || !alertTemp) {
+            console.log('No alert found to updateAlert. err - ',err);
+        }
+        else {
+            alertSentInfo.update(req, res, alertTemp, function (result) {  //update AlertSentInfo
 
-            /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.alert(result, 'updateAlert');
-            redirectTo.redirectTo(req,res,alertTemp,flag);
-        });
+                /*****  CALL HERE NOTIFICATION API  *****/
+                pushNotification.alert(result, 'updateAlert');
+                redirectTo.redirectTo(req, res, alertTemp, flag);
+            });
+        }
     });
 };
 

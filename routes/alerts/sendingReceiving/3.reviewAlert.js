@@ -71,7 +71,7 @@ module.exports.postReviewAlert = function(req, res, next) {
     else
         alertToUpdate1 = req.body.alertToUpdate; //all other alerts
 
-
+    console.log('alertToUpdate = ');
     async.waterfall([
         function (callback) {
             models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {

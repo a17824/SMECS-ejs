@@ -1,10 +1,25 @@
-<html>
-<head>
-    <title>self registration</title>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/print.css" media="print">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <script>
 
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/print.css" media="print">
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        function myFunction() {
+            window.print();
+        }
+    </script>
+    <script>
         $(document).ready(function(){
             var selfRegistration_ID,email,pin, textToPrint;
             $("#<%= selfRegistration.id %>").click(function(){
@@ -49,46 +64,165 @@
             });
         });
     </script>
+
 </head>
-<body>
-<h1><%= title %></h1>
-<form action="/dashboard">
-    <input type="submit" value="Home"><br>
-</form>
-<form>
 
-    <label for="textToPrint"><b>Text to print:</b>(optional)</label><br>
-    <textarea class="print" id="textToPrint" cols="100" rows='4' placeholder="ex: Hello new parent!
-    Visit www.smecs.io and use the following email and pin to start your registration:" ><%= selfRegistration.text %></textarea><br><br>
-
-    <label for="email" class="print"><b>Email:</b></label>
-    <input type="email" class="print" id="email" size="40" value="<%= selfRegistration.email %>"><br><br>
-
-    <label for="pin" class="print"><b>Pin:</b></label>
-    <input type="newPin" class="print" id="newPin" size="5" value="<%= selfRegistration.pin %>"><br><br>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
 
+                <!-- menu profile quick info -->
+                <% include ./../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+
+                <div class="title_left">
+                    <h3><%= title %></h3>
+                </div>
+
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                            <button type="button"
+                                    id="<%= selfRegistration.id %>"
+                                    value="Save"
+                                    class="btn btn-success">Save
+                            </button>
+                            <button type="button"
+                                    onclick="myFunction()"
+                                    class="btn btn-primary">Print this page</button>
+                        <% } else { %>
+                            <button type="button"
+                                    id="<%= selfRegistration.id %>"
+                                    value="Save"
+                                    class="btn btn-success" disabled>Save
+                            </button>
+                                <button type="button"
+                                        onclick="myFunction()"
+                                        class="btn btn-primary" disabled>Print this page</button>
+                        <% } %>
+
+                        <a href="/users/showUsers"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="clearfix"></div>
 
 
 
-    <button onclick="myFunction()">Print this page</button>
 
-    <script>
-        function myFunction() {
-            window.print();
-        }
-    </script>
 
-    <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-    <input type="button" id="<%= selfRegistration.id %>" value="Save" ><br>
-    <% } else { %>
-    <input type="button" id="<%= selfRegistration.id %>" value="Save" disabled><br>
-    <% } %>
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
 
-</form>
-<form action="/users/showUsers">
-    <input type="submit" value="Back">
-</form>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Text to print:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea type="text"
+                                               class="form-control print"
+                                               placeholder="ex: Hello new parent!
+    Visit www.smecs.io and use the following email and pin to start your registration:"
+                                               id="textToPrint"
+                                               value="<%= selfRegistration.text %>"><%= selfRegistration.text %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12 print">Email:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control print"
+                                               id="email"
+                                               value="<%= selfRegistration.email %>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12 print">Pin:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control print"
+                                               id="newPin"
+                                               value="<%= selfRegistration.pin %>">
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /page content -->
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+
+
 
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

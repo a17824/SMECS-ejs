@@ -534,7 +534,7 @@ module.exports.update = function(req, res) {
         studentsIdArray){
 
         functions.redirectPage(req,res,'updateUser');
-        res.render('users/updateUser-new', {
+        res.render('users/updateUser', {
             title: 'UPDATE USER:',
             userAuthID: req.user.userPrivilegeID,
             users: user,

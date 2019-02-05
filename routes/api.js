@@ -31,8 +31,8 @@ routerApi.get('/alerts/sending/chooseAlert', auth.auth, chooseAlert.showAlerts, 
 routerApi.post('/alerts/sending/chooseAlert', auth.auth,  chooseAlert.showAlertsPost, function(req, res) {});
 
 /* Send Alert - Floor. -------------------------------*/
-routerApi.get('/alerts/sending/floor/:id', auth.auth, sendingAlert.showFloor, function(req, res) {});
-routerApi.post('/alerts/sending/floor', auth.auth, sendingAlert.postFloor, function(req, res) {});
+routerApi.get('/floor/:id', auth.auth, sendingAlert.showFloor, function(req, res) {});
+routerApi.post('/floor', auth.auth, sendingAlert.postFloor, function(req, res) {});
 
 /* Send Alert - FloorLocation. -------------------------------*/
 routerApi.get('/alerts/sending/floorLocation/:id', auth.auth, sendingAlert.showFloorLocation, function(req, res) {});

@@ -21,7 +21,7 @@ module.exports.defaultForm = function(req, res, next) {
 
     ],function(err, results){
 
-        res.render('parentsSelfRegistration/defaultForm',{
+        res.render('parentsSelfRegistration/defaultForm-new',{
             title:'Parent self registration',
             selfRegistration: results[0],
             userAuthID: req.user.userPrivilegeID,

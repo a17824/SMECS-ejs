@@ -40,6 +40,16 @@
 
 
     <script type="text/javascript">
+        //DELETE Confirmation
+        function YNconfirm(type) {
+            if ( type === 'room'){
+                type = 'room and their specific procedure'
+            }
+            if (confirm('ATTENTION: Users in trash will be permanently deleted after 30 days. Are you sure you want to trash the user: ' + type + '?'))
+                return true;
+            else
+                return false;
+        };
 
         $(document).ready(function () {
                 $('a[role="tab"]').on('shown.bs.tab', function (e) {
@@ -241,7 +251,7 @@
                                             </td>
                                             <td align="center">
                                                 <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                                                <a href="/users/delete/<%= user.id %>" onclick="return(YNconfirm('<%= user.firstName %> <%= user.lastName %>'));"><button class="btn btn-danger">trash</button></a>
                                                 <% } else { %>
                                                 <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
                                                 <% } %>
@@ -337,7 +347,7 @@
                                             </td>
                                             <td align="center">
                                                 <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                                                <a href="/users/delete/<%= user.id %>" onclick="return(YNconfirm('<%= user.firstName %> <%= user.lastName %>'));"><button class="btn btn-danger">trash</button></a>
                                                 <% } else { %>
                                                 <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
                                                 <% } %>
@@ -415,7 +425,7 @@
                                             </td>
                                             <td align="center">
                                                 <% if ((aclDeleteUsers == null || aclDeleteUsers.checkBoxValue == true) && (user.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger">trash</button></a>
+                                                <a href="/users/delete/<%= user.id %>" onclick="return(YNconfirm('<%= user.firstName %> <%= user.lastName %>'));"><button class="btn btn-danger">trash</button></a>
                                                 <% } else { %>
                                                 <a href="/users/delete/<%= user.id %>"><button class="btn btn-danger" disabled>trash</button></a>
                                                 <% } %>
