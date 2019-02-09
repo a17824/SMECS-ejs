@@ -82,9 +82,33 @@ module.exports.showSoftDeleted = function(req, res, next) {
 /* ------------ end of SHOW SoftDeleted USERS. */
 
 
+/* ADD USERS STEP0. ---------------------------------------------------*/
+module.exports.addStep0Post = function(req, res) {
+    let newUserTemp = new models.UsersAddTemp({});
+    newUserTemp.save(function (err) {
+        if (err) {
+            console.log('Err - NOT SAVED ON DATABASE' + err);
+            req.flash('error_messages', 'Something went wrong adding new user. Try again and if problem persists, please contact SMECS team');
+            res.redirect('/users/showUsers/');
+        }else{
+            return res.send({redirect: '/users/addUser/step1/' + newUserTemp._id})
+        }
+    });
+};
+/*-------------------------------------------end of adding Step0 user*/
+
+/* CANCEL USERS STEP0. ---------------------------------------------------*/
+module.exports.addStep0CancelPost = function(req, res) {
+    return res.send({redirect: '/users/showUsers/'})
+};
+/*-------------------------------------------end of cancel Step0 user*/
+
 /* ADD USERS STEP1. ---------------------------------------------------*/
 module.exports.addStep1 = function(req, res) {
     async.parallel([
+        function(callback){
+            models.UsersAddTemp.findById(req.params.id).exec(callback);
+        },
         function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
@@ -100,23 +124,15 @@ module.exports.addStep1 = function(req, res) {
             //res.send({redirect: '/users/showUsers/'});
         }
         else {
-            var usersAddUpdateTemp = new models.UsersAddTemp({});
-            usersAddUpdateTemp.save(function (err) {
-                if (err) {
-                    console.log('Err - NOT SAVED ON DATABASE' + err);
-                    return res.status(409).send('showAlert')
-                }else{
-                    res.render('users/addUserStep1', {
-                        title: 'ADD USER: Step 1',
-                        userAuthID: req.user.userPrivilegeID,
-                        user: usersAddUpdateTemp,
-                        roles2: results[0],
-                        aclAddUsers: results[1], //aclPermissions addUsers
-                        aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                        userAuthPhoto: req.user.photo
-                    });
-                }
+            res.render('users/addUserStep1', {
+                title: 'ADD USER: Step 1',
+                userAuthID: req.user.userPrivilegeID,
+                user: results[0],
+                roles2: results[1],
+                aclAddUsers: results[2], //aclPermissions addUsers
+                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
             });
         }
     })
@@ -176,7 +192,7 @@ module.exports.addStep2 = function(req, res) {
                 }
             }
 
-            res.render('users/addUserStep2', {
+            res.render('users/addUserStep2-new', {
                 title: 'ADD USER: Step 2',
                 userAuthID: req.user.userPrivilegeID,
                 parentRole: ifUserHasParentRole,

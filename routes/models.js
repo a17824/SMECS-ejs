@@ -305,6 +305,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
         sound: String,
         icon: String,
         color: {
+            name: String,
             bgValue: String,
             textValue: String
         }
@@ -453,6 +454,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     alertGroupName: String,
     groupSound: String,
     groupIcon: String,
+    groupColorName: String,
     groupColorBk: String,
     groupColorTx: String,
     alertNameID: Number,

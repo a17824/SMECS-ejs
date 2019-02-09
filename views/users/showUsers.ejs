@@ -67,8 +67,20 @@
                     });
                 });
 
-                $("#btSubmit").click(function () {
+                $("#newUser").click(function () {
 
+                    $.post("/users/addUser/step0",{
+
+                    },function(data){
+                        if(data==='done')
+                        {
+                            alert("login success");
+                        }
+                        window.location = data.redirect
+                    }).error(function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Add User failed.")
+                    });
                 });
             }
         );
@@ -107,7 +119,7 @@
                             <ul>
                                 <div align="center">
                                     <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/users/addUser/step1'">Add User</button>
+                                    <button class="btn btn-success" id="newUser" value="newUser">Add User</button>
                                     <% } else { %>
                                     <button class="btn btn-success" id="exit" onclick="location.href='/users/addUser/step1'" disabled>Add User</button>
                                     <% } %>
@@ -123,6 +135,19 @@
                                     <% } %>
                                 </div>
                             </ul>
+
+                            <ul>
+                                <div align="center" style="size: 100px">
+                                    <% if ( error_messages.length >= 1) { %>
+                                        <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                            <strong><%- error_messages %></strong>
+                                        </div>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+
                             <br>
                             <div class="" role="tabpanel" data-example-id="togglable-tabs">
                                 <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">

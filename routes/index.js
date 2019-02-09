@@ -89,9 +89,14 @@ router.get('/statistics/userStats', auth.simpleAuth, auth.requireLogin, statisti
 router.get('/users/showUsers', auth.simpleAuth, auth.requireLogin, users.show, function(req, res, next) {
 });
 
+/* ADD USERS STEP0. ---------------------------------------------------*/
+router.post('/users/addUser/step0', auth.simpleAuth, auth.requireLogin, users.addStep0Post, function(req, res) {
+});
+router.post('/users/addUser/cancel', auth.simpleAuth, auth.requireLogin, users.addStep0CancelPost, function(req, res) {
+});
 
 /* ADD USERS STEP1. ---------------------------------------------------*/
-router.get('/users/addUser/step1', auth.simpleAuth, auth.requireLogin, users.addStep1, function(req, res) {
+router.get('/users/addUser/step1/:id', auth.simpleAuth, auth.requireLogin, users.addStep1, function(req, res) {
 });
 router.post('/users/addUser/step1', auth.simpleAuth, auth.requireLogin, users.addStep1Post, function(req, res) {
 });
@@ -141,11 +146,12 @@ router.get('/users/deletedUsers/:id', auth.simpleAuth, auth.requireLogin, users.
 
 
 
-//--ADD or UPDATE PHOTO -------------------------------------
+//--ADD or UPDATE or BACK_button PHOTO -------------------------------------
 router.get('/photos/choosePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhoto, function (req, res){
 });
 router.post('/photos/choosePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.addUpdatePhotoPost, function (req, res){
 });
+
 
 // DELETE  PHOTO------------------
 router.get('/users/deletePhoto/:id', auth.simpleAuth, auth.requireLogin, photos.deletePhoto, function(req, res) {

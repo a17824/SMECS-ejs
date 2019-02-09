@@ -35,7 +35,7 @@ div.labelsDivDisable {
 
 ul.enable {
     list-style-type: none;
-    width: 15.3em;
+    width: 18em;
     margin: 0.3em 0;
     padding: 10px;
     background: #ffffff;
@@ -43,7 +43,7 @@ ul.enable {
 }
 ul.disable {
     list-style-type: none;
-    width: 15.3em;
+    width: 18em;
     margin: 0.3em 0;
     padding: 10px;
     background: #ffffff;
@@ -94,7 +94,7 @@ img.disable {
 }
 
 label.enable {
-    color: #000000;
+    /*color: #000000;*/
     font-weight: unset;
 }
 

@@ -60,6 +60,22 @@
                         alert("Add User failed.")
                 });
             });
+
+            $("#cancel").click(function () {
+
+                $.post("/users/addUser/cancel",{
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Add User failed.")
+                });
+            });
         });
     </script>
 </head>
@@ -95,23 +111,30 @@
                     <div class="x_panel">
                         <div class="x_content">
 
+                            <% console.log('user.userRoleID.length = ',user.userRoleID.length)%>
+                            <% if (user.userRoleID.length >= 1) {%>
+                                <% var step2Color = 'done' %>
+                            <% } else { %>
+                                    <% var step2Color = '' %>
+                            <% } %>
+
                             <div id="wizard" class="form_wizard wizard_horizontal">
                                 <ul class="wizard_steps">
                                     <li>
-                                        <a href="#step-1">
+                                        <a href="#step-1" class="selected">
                                             <span class="step_no">1</span>
                                             <span class="step_descr">
                                               Step 1<br />
-                                              <small>Step 1 description</small>
+                                              <small>selecting roles</small>
                                           </span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#step-2">
-                                            <span class="step_no">2</span>
+                                        <a href="#step-2" class="<%= step2Color %>">
+                                            <span class="step_no" >2</span>
                                             <span class="step_descr">
                                               Step 2<br />
-                                              <small>Step 2 description</small>
+                                              <small>name, email and pin</small>
                                           </span>
                                         </a>
                                     </li>
@@ -138,36 +161,58 @@
 
                                 <input type="hidden" id="userTempID"  value="<%= user._id %>">
 
-                                <b>User Role(s):</b>
-                                <div class="moveForward">
-                                <% roles2.forEach(function(role2) { %>
-                                <div class="checkbox">
-                                    <label for="roleName"><input class="checkbox" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
-                                </div>
-                                <% }); %><br>
-                                </div>
+                                <form class="form-horizontal form-label-left input_mask">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12 print">User Role(s):</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="checkbox">
+                                                <% roles2.forEach(function(role2) { %>
+                                                    <!-- back button/refresh write checkbox selected before -->
+                                                    <% if (user.userRoleID.length >= 1) {%>
+                                                        <% var check = 0;    %>
+                                                        <% for (var i=0; i < user.userRoleID.length; i++) { %>
+                                                            <% if (role2.roleID == user.userRoleID[i]) { %>
+                                                                <label for="roleName"><input class="" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>" checked><%= role2.roleName %></label><br>
+
+                                                                <% check = 1; %>
+                                                            <% }  %>
+                                                        <% } %>
+                                                        <% if (check == 0) {%>
+                                                            <label for="roleName"><input class="" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
+
+                                                        <% } %>
+
+                                                    <% } else { %>  <!-- frist time entering/loading this page -->
+                                                        <label for="roleName"><input class="" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
+                                                    <% } %>
+                                                <% }); %><br>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
-                                <div class="ln_solid"></div>
-                                <div class="centered-text">
 
-                                    <a href="/users/showUsers"><button  class="btn btn-default">cancel</button></a>
+                                    <div class="ln_solid"></div>
+                                    <div class="centered-text">
 
-                                    <% if (typeof aclAddUsers == 'undefined' || aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                                    <input type="button" id="next" value="next" class="btn btn-success">
-                                    <% } else { %>
-                                    <input type="button" id="next" value="next" class="btn btn-success" disabled>
-                                    <% } %>
-                                </div>
+                                        <input type="button" id="cancel" value="cancel" class="btn btn-default">
 
+                                        <% if (typeof aclAddUsers == 'undefined' || aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
+                                            <input type="button" id="next" value="next" class="btn btn-success">
+                                        <% } else { %>
+                                            <input type="button" id="next" value="next" class="btn btn-success" disabled>
+                                        <% } %>
+                                    </div>
+                                </form>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 </div>
 <!-- jQuery -->
 <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>

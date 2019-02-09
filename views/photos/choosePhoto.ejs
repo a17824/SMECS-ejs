@@ -92,18 +92,7 @@
 
                                         <% if (title === 'Add Photo' ) {%>
 
-                                        <!-- Back button -->
-                                        <div class="centered-text">
-                                            <% if(iPad){ %>
-                                            <div class="moveLittleRight2">
-                                                <a href="/users/showUsers" class="pull-bottom_Back"><button class="btn btn-primary">Back</button></a>
-                                            </div>
-                                            <% }else { %>
-                                            <div class="moveLittleRight3">
-                                                <a href="/users/showUsers" class="pull-bottom_Back"><button class="btn btn-primary">Back</button></a>
-                                            </div>
-                                            <% } %>
-                                        </div>
+
 
                                         <div class="centered-text">
                                         <a href="/users/deletePhoto/<%= user.id %>">
@@ -162,7 +151,20 @@
                                             <br><br><br><br><br><br><br><br>
                                             <div class="ln_solid"></div>
                                             <div class="centered-text">
-                                                <div class="moveLittleRight">
+
+
+                                                        <button  class="btn btn-primary" onclick="GoBackWithRefresh()">Back</button>
+                                                        <script>
+                                                            function GoBackWithRefresh() {
+                                                                if ('referrer' in document) {
+                                                                    window.location = document.referrer;
+                                                                    /* OR */
+                                                                    //location.replace(document.referrer);
+                                                                } else {
+                                                                    window.history.back();
+                                                                }
+                                                            }
+                                                        </script>
 
                                                 <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
                                                 <input type="submit" value="Next" class="btn btn-success">
@@ -172,7 +174,7 @@
 
                                                 <a href="/users/showUsers"><button  class="btn btn-default" disabled>cancel</button></a>
 
-                                                </div>
+
                                             </div>
                                         </form>
 

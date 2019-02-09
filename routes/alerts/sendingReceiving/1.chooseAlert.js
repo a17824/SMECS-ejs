@@ -281,6 +281,7 @@ module.exports.showAlertsPost = function(req, res) {
                             alertGroupName: req.body.alertGroupName,
                             groupSound: alert[0].group.mp3,
                             groupIcon: alert[0].group.icon,
+                            groupColorName: alert[0].group.color.name,
                             groupColorBk: alert[0].group.color.bgValue,
                             groupColorTx: alert[0].group.color.textValue,
                             alertNameID: req.body.alertID,
@@ -327,6 +328,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     functions.alertTimeExpired(req,res);
                                 }
                                 else {
+                                    alertTemp.groupColorName = alert[0].group.color.name;
                                     alertTemp.groupColorBk = alert[0].group.color.bgValue;
                                     alertTemp.groupColorTx = alert[0].group.color.textValue;
                                     alertTemp.groupSound = alert[0].group.mp3;

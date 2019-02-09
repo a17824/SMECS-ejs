@@ -47,6 +47,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
             sound: tempAlert.groupSound,
             icon: tempAlert.groupIcon,
             color: {
+                name: tempAlert.groupColorName,
                 bgValue: tempAlert.groupColorBk,
                 textValue: tempAlert.groupColorTx
             }

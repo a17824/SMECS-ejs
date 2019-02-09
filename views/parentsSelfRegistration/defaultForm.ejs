@@ -117,9 +117,9 @@
                                     value="Save"
                                     class="btn btn-success" disabled>Save
                             </button>
-                                <button type="button"
-                                        onclick="myFunction()"
-                                        class="btn btn-primary" disabled>Print this page</button>
+                            <button type="button"
+                                    onclick="myFunction()"
+                                    class="btn btn-primary" disabled>Print this page</button>
                         <% } %>
 
                         <a href="/users/showUsers"><button type="button" class="btn btn-default">Cancel</button></a>
@@ -155,19 +155,30 @@
                             <form class="form-horizontal form-label-left input_mask">
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Text to print:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
                                         <textarea type="text"
-                                               class="form-control print"
-                                               placeholder="ex: Hello new parent!
+                                                  rows="6"
+                                                  class="form-control print"
+                                                  placeholder="ex: Hello new parent!
     Visit www.smecs.io and use the following email and pin to start your registration:"
-                                               id="textToPrint"
-                                               value="<%= selfRegistration.text %>"><%= selfRegistration.text %></textarea>
+                                                  id="textToPrint"
+                                                  value="<%= selfRegistration.text %>"><%= selfRegistration.text %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12 print">School:</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text"
+                                               class="form-control print"
+                                               id="email"
+                                               value="stts-ma">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12 print">Email:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
                                         <input type="text"
                                                class="form-control print"
                                                id="email"
@@ -177,7 +188,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12 print">Pin:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
                                         <input type="text"
                                                class="form-control print"
                                                id="newPin"

@@ -61,6 +61,7 @@ module.exports.showFloor = function(req, res) {
                     userAuthGroupAlerts: results[4].appSettings.groupAlertsButtons, //for Back or Exit button
                     title: results[0].alertName,
                     alert: results[0],
+                    buildings: results[1],
                     floor: modelToUse
                 });
 
