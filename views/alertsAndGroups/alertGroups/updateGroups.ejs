@@ -100,7 +100,7 @@
                             'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
                             'name="radio" ' +
                             'class="icheckbox_flat-green" checked/> ' + soundArray[i] + '' +
-                            '<span class="mediPlayer" style="position: absolute; right: 0px"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
+                            '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
 
                         radioComplete.push(radioBtn);
                     }
@@ -109,7 +109,7 @@
                             'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
                             'name="radio" ' +
                             'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
-                            '<span class="mediPlayer" style="position: absolute; right: 0px"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
+                            '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
 
                         radioComplete.push(radioBtn);
                     }
@@ -462,7 +462,7 @@
                                                class="icheckbox_flat-green"
                                                name="radio"> <%= sounds[soundType][i] %>
 
-                                        <span class="mediPlayer" style="position: absolute; right: 0px">
+                                        <span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;">
                                             <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
                                         </span>
                                     </div>

@@ -22,9 +22,11 @@
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
     <script type="text/javascript" src="/public/icons/js/icons.js"></script>
 
-
     <!-- iCheck -->
     <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+    <!-- Circle Audio Controls -->
+    <link rel="stylesheet" href="/public/circleAudioPlayer/progres-bar.css">
 
 
     <script>
@@ -71,6 +73,8 @@
 
 
         $(document).ready(function(){
+            //circular audio player
+            $('.mediPlayer').mediaPlayer();
 
             //build radios depending on selected soundType
             $("#getSoundType").change(function () {
@@ -87,12 +91,12 @@
                         'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
                         'name="radio" ' +
                         'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
-                        '<div id="audio2"><audio controls controlsList="nodownload" style="position: relative; left: 150px; top: 10px"><source src="/public/sounds/' + soundArray[i+1] +'.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio></div></div><div class="divider-dashed"></div>');
-
+                        '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
 
                     radioComplete.push(radioBtn);
                 }
                 $("#buildRadio").html(radioComplete);
+                $('.mediPlayer').mediaPlayer();
             });
             //end of build radios depending on selected soundType
 
@@ -401,12 +405,9 @@
                                                name="radio"> <%= sounds[soundType][i] %>
                                         <div class="navi"></div>
 
-                                        <div id="audio">
-                                            <audio controls controlsList="nodownload" id="myaudio">
-                                                <source src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3" type="audio/mpeg">
-                                                Your browser does not support the audio element.
-                                            </audio>
-                                        </div>
+                                        <span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;">
+                                            <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
+                                        </span>
                                     </div>
 
                                     <div class="divider-dashed" ></div>
@@ -435,6 +436,10 @@
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.min.js"></script>
 <!-- Google Analytics -->
+
+<!-- Circular Audio Player -->
+<script src="/public/circleAudioPlayer/player.js"></script>
+
 
 </body>
 <!-- footer content -->

@@ -1,157 +1,263 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>PermissionsTable</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <script>
-        EnableSubmit = function(val)
-        {
-            var sbmt = document.getElementById("btSave");
-            if (val.onchange)
-            {
-                sbmt.disabled = false;
-            }
-            else
-            {
-                sbmt.disabled = false;
-            }
-        };
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Datatables -->
+  <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+  <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+  <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+  <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link href="/public/gentelella/vendors/bootstrap/dist/css/WhoCanSendAlerts.css" rel="stylesheet">
+  <!-- Custom Theme Style -->
+  <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+  <link href="/public/stylesheets/toolTips.css" rel="stylesheet">
+  <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
-        $(document).ready(function(){
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
-            $('.chk-all').on('change', function(){
-                $('.' + $(this).data('child')).prop('checked', this.checked);
-            });
 
-            var searchIDsNotChecked = {};
-            $("#btSave").click(function(event) {
-                event.preventDefault();
-                searchIDsNotChecked = $('input[name="aclPermissionsCheckBox"]:not(:checked)').map(function () {
-                    return $(this).val();
-                }).get();
-                var searchIDsChecked = $('input[name="aclPermissionsCheckBox"]:checked').map(function () {
-                    return $(this).val();
-                }).get();
-                console.log("NOT selected::::" + searchIDsNotChecked);
-                //console.log("selected::::" + searchIDsChecked);
-                $.ajax({
-                    url:'/permissions/showPermissionsTable',
-                    type:'post',
-                    data:{searchIDsNotChecked:searchIDsNotChecked, searchIDsChecked:searchIDsChecked},
-                    success:function(response){
-                        console.log(response);
-                    }
-                });
-            });
-        });
-    </script>
 
+  <script>
+      EnableSubmit = function(val)
+      {
+          var sbmt = document.getElementById("btSave");
+          if (val.onchange)
+          {
+              sbmt.disabled = false;
+          }
+          else
+          {
+              sbmt.disabled = false;
+          }
+      };
+
+      $(document).ready(function(){
+
+          $('.chk-all').on('change', function(){
+              $('.' + $(this).data('child')).prop('checked', this.checked);
+          });
+
+          var searchIDsNotChecked = {};
+          $("#btSave").click(function(event) {
+              event.preventDefault();
+              searchIDsNotChecked = $('input[name="aclPermissionsCheckBox"]:not(:checked)').map(function () {
+                  return $(this).val();
+              }).get();
+              var searchIDsChecked = $('input[name="aclPermissionsCheckBox"]:checked').map(function () {
+                  return $(this).val();
+              }).get();
+              console.log("NOT selected::::" + searchIDsNotChecked);
+              //console.log("selected::::" + searchIDsChecked);
+              $.ajax({
+                  url:'/permissions/showPermissionsTable',
+                  type:'post',
+                  data:{searchIDsNotChecked:searchIDsNotChecked, searchIDsChecked:searchIDsChecked},
+                  success:function(response){
+                      console.log(response);
+                  }
+              });
+          });
+      });
+  </script>
 
 </head>
-<body>
-<h1><%= title %></h1>
 
-<!--<p>
-<form action="/users/addUser">
-    <input type="submit" value="Add User"><br><br>
-</form>
-</p>-->
-<!--<p> </p>-->
-<form>
-    <input type="submit" name="btSave" id="btSave" value="SAVE" disabled="true" onclick="this.disabled=true"><br><br>
-</form>
+<body class="nav-md">
+<div class="container body">
+  <div class="main_container">
+    <div class="col-md-3 left_col">
+      <div class="left_col scroll-view">
 
+        <!-- menu profile quick info -->
+          <% include ../layout/menuProfile.ejs %>
+        <!-- /menu profile quick info -->
 
+        <br>
 
-<table id="myTable" class="table">
-    <caption></caption>
-    <thead>
-    <tr>
-        <td></td>
-        <% privilege.forEach(function(privilege) { %>
-        <th id="<%= privilege.privilegeName %>" scope="col"><b><%= privilege.privilegeName %></b></th>
-        <% }); %>
-    </tr>
-    </thead>
-    <tbody>
-    <% permissionsGroup.forEach(function(permissionsGroup) { %>
-    <tr>
+        <!-- sidebar menu -->
+          <% include ../layout/sideMenu.ejs %>
+        <!-- /sidebar menu -->
 
+      </div>
+    </div>
 
-        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= permissionsGroup.permissionsGroupName %></b></th>
-        <% privilege.forEach(function(privilege) { %>
-        <td headers="users " align="center" bgcolor="#f5f5f5">
-            <% if ((aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) && userAuthID < privilege.privilegeID) {%>
-            <input type="checkbox"
-                   name="multi"
-                   class="chk-all"
-                   data-child="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
-                   onClick="EnableSubmit(this)"/>
-            <% } else { %>
-            <input type="checkbox"
-                   name="multi"
-                   class="chk-all"
-                   data-child="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
-                   onClick="EnableSubmit(this)" disabled/>
-            <% } %>
-        </td>
-        <% }); %>
-    </tr>
-    <% permissions.forEach(function(permissions) { %>
-    <% if (permissionsGroup.permissionsGroupID == permissions.permissionsGroupID) { %>
-    <tr>
-        <th align="left" headers="users" id="<%= permissions.permissionsName %>"><%= permissions.permissionsName %></th>
-        <% privilege.forEach(function(privilege) { %>
-        <td headers="users <%= permissions.permissionsName %>  <%= privilege.privilegeName %>">
-            <% if ((aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) &&
-                    (userAuthID < privilege.privilegeID) &&
-                    (permissions.permissionsName != 'Show Permissions') &&
-                    (permissions.permissionsName != 'Add Permission')  &&
-                    (permissions.permissionsName != 'Modify Permission')  &&
-                    (permissions.permissionsName != 'Delete Permission')  &&
-                    (permissions.permissionsName != 'Show Privileges')  &&
-                    (permissions.permissionsName != 'Add Privilege')  &&
-                    (permissions.permissionsName != 'Modify Privilege')  &&
-                    (permissions.permissionsName != 'Delete Privilege')
-            ) {%>
-            <input type="checkbox"
-                   name="aclPermissionsCheckBox"
-                   value="<%= privilege.privilegeID %><%= permissions.permissionsID %>"
-                   class="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
-                    <% var checkBoxNumber = privilege.privilegeID+''+permissions.permissionsID %>
-                    <% aclPermissions.forEach(function(acl) { %>
-                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
-                   checked
+    <!-- top navigation -->
+      <% include ../layout/topNavigation.ejs %>
+    <!-- /top navigation -->
+
+    <div class="right_col" role="main">
+
+      <div class="page-title">
+        <div >
+          <h3 class="title_left"><%= title %></h3>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_content">
+              <ul>
+                <div align="center">
+
+                    <% if (aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) {%>
+                  <button class="btn btn-success" name="btSave" id="btSave" disabled="true" onclick="this.disabled=true">Save</button>
+                  <button class="btn btn-default" name="btCancel" id="btCancel" disabled="true" onclick="this.disabled=true">Cancel</button>
+                    <% } else { %>
+                  <button class="btn btn-success" name="btSave" id="btSave" disabled>Save</button>
+                  <button class="btn btn-default" name="btCancel" id="btCancel" disabled>Cancel</button>
                     <% } %>
-                    <% }); %>
-                   onClick="EnableSubmit(this)"/>
-            <% } else { %>
-            <input type="checkbox"
-                   name="aclPermissionsCheckBox"
-                   value="<%= privilege.privilegeID %><%= permissions.permissionsID %>"
-                   class="chk-all"
-                    <% var checkBoxNumber = privilege.privilegeID+''+permissions.permissionsID %>
-                    <% aclPermissions.forEach(function(acl) { %>
-                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
-                   checked
-                    <% } %>
-                    <% }); %>
-                   onClick="EnableSubmit(this)" disabled/>
-            <% } %>
-        </td>
-        <% }); %>
-    </tr>
-    <% } %>
-    <% }); %>
-    <% }); %>
-    </tbody>
-</table><br>
 
-<form action="/dashboard">
-    <input type="submit" value="Back">
-</form>
+
+                </div>
+              </ul>
+
+
+
+
+
+
+
+
+                <div class="table-responsive">
+                  <table id="" class="table table-bordered">
+                    <thead>
+                    <tr>
+                      <td></td>
+                      <% privilege.forEach(function(privilege) { %>
+                        <th id="<%= privilege.privilegeName %>" scope="col"><b><%= privilege.privilegeName %></b></th>
+                      <% }); %>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% permissionsGroup.forEach(function(permissionsGroup) { %>
+                      <tr>
+                        <th align="left" bgcolor="#f5f5f5">&nbsp<b><%= permissionsGroup.permissionsGroupName %></b></th>
+                        <% privilege.forEach(function(privilege) { %>
+                          <td headers="users " align="center" bgcolor="#f5f5f5">
+                            <% if ((aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) && userAuthID < privilege.privilegeID) {%>
+                              <input type="checkbox"
+                                     name="multi"
+                                     class="chk-all"
+                                     data-child="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
+                                     onClick="EnableSubmit(this)"/>
+                            <% } else { %>
+                              <input type="checkbox"
+                                     name="multi"
+                                     class="chk-all"
+                                     data-child="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
+                                     onClick="EnableSubmit(this)" disabled/>
+                            <% } %>
+                          </td>
+                        <% }); %>
+                      </tr>
+                      <% permissions.forEach(function(permissions) { %>
+                        <% if (permissionsGroup.permissionsGroupID == permissions.permissionsGroupID) { %>
+                          <tr>
+                            <th style="position: relative; padding-left: 30px" headers="users" id="<%= permissions.permissionsName %>"><%= permissions.permissionsName %></th>
+                            <% privilege.forEach(function(privilege) { %>
+                              <td headers="users <%= permissions.permissionsName %>  <%= privilege.privilegeName %>" align="center">
+                                <% if ((aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) &&
+                                        (userAuthID < privilege.privilegeID) &&
+                                        (permissions.permissionsName != 'Show Permissions') &&
+                                        (permissions.permissionsName != 'Add Permission')  &&
+                                        (permissions.permissionsName != 'Modify Permission')  &&
+                                        (permissions.permissionsName != 'Delete Permission')  &&
+                                        (permissions.permissionsName != 'Show Privileges')  &&
+                                        (permissions.permissionsName != 'Add Privilege')  &&
+                                        (permissions.permissionsName != 'Modify Privilege')  &&
+                                        (permissions.permissionsName != 'Delete Privilege')
+                                ) {%>
+                                  <input type="checkbox"
+                                         name="aclPermissionsCheckBox"
+                                         value="<%= privilege.privilegeID %><%= permissions.permissionsID %>"
+                                         class="<%= privilege.privilegeID %><%= permissionsGroup.permissionsGroupID %>"
+                                          <% var checkBoxNumber = privilege.privilegeID+''+permissions.permissionsID %>
+                                  <% aclPermissions.forEach(function(acl) { %>
+                                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                         checked
+                                            <% } %>
+                                          <% }); %>
+                                         onClick="EnableSubmit(this)"/>
+                                <% } else { %>
+                                  <input type="checkbox"
+                                         name="aclPermissionsCheckBox"
+                                         value="<%= privilege.privilegeID %><%= permissions.permissionsID %>"
+                                         class="chk-all"
+                                          <% var checkBoxNumber = privilege.privilegeID+''+permissions.permissionsID %>
+                                  <% aclPermissions.forEach(function(acl) { %>
+                                    <% if ( acl.checkBoxID == checkBoxNumber && acl.checkBoxValue == true) { %>
+                                         checked
+                                            <% } %>
+                                          <% }); %>
+                                         onClick="EnableSubmit(this)" disabled/>
+                                <% } %>
+                              </td>
+                            <% }); %>
+                          </tr>
+                        <% } %>
+                      <% }); %>
+                    <% }); %>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /TAB REAL SEND -->
+
+
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+  </div>
+
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+
+<!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+
 
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

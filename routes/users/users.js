@@ -34,7 +34,7 @@ module.exports.show = function(req, res, next) {
             functions.redirectTabBuildings(req, res, 'showBuilding');
 
             res.render('users/showUsers',{
-                title:'USERS',
+                title:'Users',
                 users: results[0],
                 roles: results[1],
                 privileges: results[2],

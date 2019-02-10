@@ -44,7 +44,7 @@ module.exports.show = function(req, res, next) {
         functions.redirectTabBuildings(req, res, 'showBuilding');
 
         res.render('students/showStudents',{
-            title:'STUDENTS',
+            title:'Students',
             students: results[0],
             aclAddStudent: results[1], //aclPermissions addStudent
             aclAddMultiStudent: results[2], //aclPermissions addMultiStudent
