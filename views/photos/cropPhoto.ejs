@@ -88,7 +88,7 @@
                                 <div id="wizard" class="form_wizard wizard_horizontal">
                                     <ul class="wizard_steps selected">
                                         <li>
-                                            <% var page = '/photos/choosePhoto/' + user._id; %>
+                                            <% var page = '/photos/choosePhoto/' + userToChangePhoto._id; %>
                                             <a href='<%= page %>' class="done">
                                                 <span class="step_no selected">1</span>
                                                 <span class="step_descr selected">
@@ -112,7 +112,7 @@
 
                                         <input type="hidden"
                                                id="userID"
-                                               value="<%= user._id %>">
+                                               value="<%= userToChangePhoto._id %>">
 
                                         <!-- image cropping -->
                                         <div class="container cropper">
@@ -120,11 +120,11 @@
                                                 <div class="col-md-9">
                                                     <% if(iPad){ %>
                                                     <div class="img-container center-crop">
-                                                        <img id="image" src="/temp/photosUsers/<%= user.photoTemp %>" alt="Picture">
+                                                        <img id="image" src="/temp/photosUsers/<%= userToChangePhoto.photoTemp %>" alt="Picture">
                                                     </div>
                                                     <% }else { %>
                                                     <div class="img-container center-crop2">
-                                                        <img id="image" src="/temp/photosUsers/<%= user.photoTemp %>" alt="Picture">
+                                                        <img id="image" src="/temp/photosUsers/<%= userToChangePhoto.photoTemp %>" alt="Picture">
                                                     </div>
                                                     <% } %>
                                                 </div>

@@ -112,6 +112,13 @@
         <!-- /top navigation -->
 
         <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div >
+                    <h3 class="title_left"><%= title %></h3>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
@@ -119,19 +126,19 @@
                             <ul>
                                 <div align="center">
                                     <% if (aclAddUsers == null || aclAddUsers.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="newUser" value="newUser">Add User</button>
+                                        <button class="btn btn-success" id="newUser" value="newUser">Add User</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/users/addUser/step1'" disabled>Add User</button>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/users/addUser/step1'" disabled>Add User</button>
                                     <% } %>
                                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'">Parent Self Registration</button>
+                                        <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'">Parent Self Registration</button>
                                     <% } else { %>
-                                    <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'" disabled>Parent Self Registration</button>
+                                        <button class="btn btn-primary" id="exit" onclick="location.href='/parentsSelfRegistration/defaultForm'" disabled>Parent Self Registration</button>
                                     <% } %>
                                     <% if (aclShowDeletedUsers == null || aclShowDeletedUsers.checkBoxValue == true) {%>
-                                    <button class="btn btn-danger" id="exit" onclick="location.href='/users/deletedUsers'">Trash</button>
+                                        <button class="btn btn-danger" id="exit" onclick="location.href='/users/deletedUsers'">Trash</button>
                                     <% } else { %>
-                                    <button class="btn btn-danger" id="exit" onclick="location.href='/users/deletedUsers'" disabled>Trash</button>
+                                        <button class="btn btn-danger" id="exit" onclick="location.href='/users/deletedUsers'" disabled>Trash</button>
                                     <% } %>
                                 </div>
                             </ul>

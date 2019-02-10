@@ -10,7 +10,29 @@
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
+    <script>
+        $(document).ready(function () {
+
+            let userType=$("#userType").val();
+
+            $("#back").click(function () {
+                console.log('userType = ',userType);
+                if(userType === 'Users')
+                    window.location = '/users/showUsers'
+                else
+                    window.location = '/students/showStudents'
+            });
+
+            $("#skip").click(function () {
+                window.location = '/loginParents'
+            });
+
+
+        });
+
+    </script>
 </head>
 
 <body class="nav-md">
@@ -54,9 +76,9 @@
                         <div class="x_panel">
                             <div class="x_title">
                                 <% if (title === 'Add Photo' ) {%>
-                                <h2><small>Add/update/delete photo</small></h2>
+                                    <h2><small>Add/update/delete photo</small></h2>
                                 <% }else {%>
-                                <h2 class="h2Size">Your registration is completed!<span class="spanSize"> You can add profile photo or just skip and finish</span></h2>
+                                    <h2 class="h2Size">Your registration is completed!<span class="spanSize"> You can add profile photo or just skip and finish</span></h2>
                                 <% } %>
                                 <div class="clearfix"></div>
                             </div>
@@ -95,88 +117,77 @@
 
 
                                         <div class="centered-text">
-                                        <a href="/users/deletePhoto/<%= user.id %>">
-                                            <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-                                            <button style="font-size: 13px" class="btn btn-danger btn-xs">I don't want a photo</button>
-                                            <% } else { %>
-                                            <button style="font-size: 13px" class="btn btn-danger btn-xs" disabled>Delete photo</button>
-                                            <% } %>
-                                        </a>
-                                        <% } else { %>
-                                            <div class="centered-text">
-                                            <div class="moveLittleRight4">
-                                        <a href="/loginParents" class="pull-right pull-bottom_Back"><button  class="btn btn-default">Skip photo and Finish</button></a>
-                                            </div>
-                                            </div>
-                                        <% } %>
-
-                                        <form action="/photos/choosePhoto/:id" enctype="multipart/form-data" method="post">
-
-                                            <input name="<%= user.id %>" type="hidden"/>
-
-                                            <div class="divChoose center-block">
-                                                <% if (user.photo === '' || user.photo == undefined) {%>
-                                                <img id="blah" class="imgChoose" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
-
-                                                <% } else { %>
-                                                <% if (userType === 'Users') {%>
-                                                <img id="blah" class="imgChoose" src="/photosUsers/<%= user.photo %>" /><br><br>
-                                                <% } else { %>
-                                                <img id="blah" class="imgChoose" src="/photosStudents/<%= user.photo %>" /><br><br>
-                                                <% } %>
-                                                <% } %>
-
-                                            <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-                                            <input type="file"
-                                                   onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
-                                                   name="upload"
-                                                   id="newPhoto"
-                                                   single="single"
-                                                   accept="image/*" required/><br>
-                                            <% } else { %>
-                                            <input type="file"
-                                                   onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
-                                                   name="upload"
-                                                   id="newPhoto"
-                                                   single="single"
-                                                   accept="image/*" required disabled/><br>
-                                            <% } %>
-
-
-
-
-
-                                            </div>
-
-                                            <br><br><br><br><br><br><br><br>
-                                            <div class="ln_solid"></div>
-                                            <div class="centered-text">
-
-
-                                                        <button  class="btn btn-primary" onclick="GoBackWithRefresh()">Back</button>
-                                                        <script>
-                                                            function GoBackWithRefresh() {
-                                                                if ('referrer' in document) {
-                                                                    window.location = document.referrer;
-                                                                    /* OR */
-                                                                    //location.replace(document.referrer);
-                                                                } else {
-                                                                    window.history.back();
-                                                                }
-                                                            }
-                                                        </script>
-
+                                            <a href="/users/deletePhoto/<%= userToChangePhoto.id %>">
                                                 <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-                                                <input type="submit" value="Next" class="btn btn-success">
+                                                    <button style="font-size: 13px" class="btn btn-danger btn-xs">I don't want a photo</button>
                                                 <% } else { %>
-                                                <input type="submit" value="Next" class="btn btn-success" disabled>
+                                                    <button style="font-size: 13px" class="btn btn-danger btn-xs" disabled>Delete photo</button>
                                                 <% } %>
+                                            </a>
+                                            <% } %>
 
-                                                <a href="/users/showUsers"><button  class="btn btn-default" disabled>cancel</button></a>
 
 
-                                            </div>
-                                        </form>
+                                            <form action="/photos/choosePhoto/:id" enctype="multipart/form-data" method="post">
+
+                                                <input name="<%= userToChangePhoto.id %>" type="hidden"/>
+
+                                                <div class="divChoose center-block">
+                                                    <% if (userToChangePhoto.photo === '' || userToChangePhoto.photo == undefined) {%>
+                                                        <img id="blah" class="imgChoose" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
+
+                                                    <% } else { %>
+                                                        <% if (userType === 'Users') {%>
+                                                            <img id="blah" class="imgChoose" src="/photosUsers/<%= userToChangePhoto.photo %>" /><br><br>
+                                                        <% } else { %>
+                                                            <img id="blah" class="imgChoose" src="/photosStudents/<%= userToChangePhoto.photo %>" /><br><br>
+                                                        <% } %>
+                                                    <% } %>
+
+                                                    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                                                        <input type="file"
+                                                               onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                                                               name="upload"
+                                                               id="newPhoto"
+                                                               single="single"
+                                                               accept="image/*" required/><br>
+                                                    <% } else { %>
+                                                        <input type="file"
+                                                               onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                                                               name="upload"
+                                                               id="newPhoto"
+                                                               single="single"
+                                                               accept="image/*" required disabled/><br>
+                                                    <% } %>
+
+
+
+
+
+                                                </div>
+
+                                                <br><br><br><br><br><br><br><br>
+                                                <div class="ln_solid"></div>
+                                                <div class="centered-text">
+
+                                                    <% if (title === 'Add Photo' ) {%>
+                                                        <input type="hidden" id="userType"  value="<%= userType %>">
+                                                        <button  class="btn btn-primary" id="back">Back</button>
+                                                    <% } else { %>
+                                                        <button  class="btn btn-default" id="skip">Skip photo and Finish</button>
+                                                    <% } %>
+
+                                                    <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                                                        <input type="submit" value="Next" class="btn btn-success">
+                                                    <% } else { %>
+                                                        <input type="submit" value="Next" class="btn btn-success" disabled>
+                                                    <% } %>
+
+                                                    <a href="/users/showUsers"><button  class="btn btn-default" disabled>cancel</button></a>
+
+
+                                                </div>
+                                            </form>
 
 
 

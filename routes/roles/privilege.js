@@ -27,7 +27,7 @@ module.exports.show = function(req, res, next) {
         functions.redirectTabBuildings(req, res, 'showBuilding');
 
         res.render('privilege/showPrivilege',{
-            title:'Privilege Privilege',
+            title:'Privileges',
             privilege: results[0],
             useIcons: results[1].usePrivilegeIcons,
             aclAddPrivilege: results[2],       //aclPermissions addPrivilege
@@ -60,7 +60,7 @@ module.exports.add = function(req, res) {
             // the stream is closed
             //console.log(array);
             res.render('privilege/addPrivilege',{
-                title:'Add Privilege Privilege',
+                title:'Add Privilege',
                 array: array,
                 privilege: results[0],
                 aclAddPrivilege: results[1],      //aclPermissions addPrivilege
@@ -128,7 +128,7 @@ module.exports.update = function(req, res) {
             // the stream is closed
             //console.log(array);
             res.render('privilege/updatePrivilege',{
-                title:'Update Privilege Privilege',
+                title:'Update Privilege',
                 array: array,
                 privilege: results[0],
                 aclModifyPrivilege: results[1],      //aclPermissions modifyPrivilege

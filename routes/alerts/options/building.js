@@ -32,7 +32,7 @@ module.exports.show = function(req, res, next) {
         functions.redirectPage(req, res, 'showUsers');
 
         res.render('BuildingFloorsRooms/showBuildingAndFloors',{
-            title:'Building & Floors',
+            title:'Buildings & Floors & Rooms',
             userAuthID: req.user.userPrivilegeID,
             building: results[0],
             floors: results[1],

@@ -36,6 +36,7 @@ function showTable(req, res, typeAclAlert, title){
         functions.redirectTabBuildings(req, res, 'showBuilding');
 
         res.render('alerts/showAlertPermissionsTable',{
+            title: 'Who can send/receive alerts',
             roles2Count: results[0],
             roles2: results[1],
             alertGroup: results[2],

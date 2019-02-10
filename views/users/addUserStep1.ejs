@@ -66,10 +66,6 @@
                 $.post("/users/addUser/cancel",{
 
                 },function(data){
-                    if(data==='done')
-                    {
-                        alert("login success");
-                    }
                     window.location = data.redirect
                 }).error(function(error){
                     if(error.responseText == 'showAlert')
@@ -105,33 +101,38 @@
         <!-- /top navigation -->
 
         <div class="right_col" role="main">
-            <div class="clearfix"></div>
+
+            <div class="page-title">
+                <div >
+                    <h3 class="title_left"><%= title %></h3>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_content">
 
-                            <% console.log('user.userRoleID.length = ',user.userRoleID.length)%>
                             <% if (user.userRoleID.length >= 1) {%>
                                 <% var step2Color = 'done' %>
                             <% } else { %>
-                                    <% var step2Color = '' %>
+                                <% var step2Color = 'disabled' %>
                             <% } %>
 
                             <div id="wizard" class="form_wizard wizard_horizontal">
-                                <ul class="wizard_steps">
+                                <ul class="wizard_steps anchor">
                                     <li>
                                         <a href="#step-1" class="selected">
                                             <span class="step_no">1</span>
                                             <span class="step_descr">
                                               Step 1<br />
-                                              <small>selecting roles</small>
+                                              <small>&ensp;choosing roles&ensp;</small>
                                           </span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#step-2" class="<%= step2Color %>">
-                                            <span class="step_no" >2</span>
+                                            <span class="step_no">2</span>
                                             <span class="step_descr">
                                               Step 2<br />
                                               <small>name, email and pin</small>
@@ -139,20 +140,11 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#step-3">
+                                        <a href="#step-3" class="disabled">
                                             <span class="step_no">3</span>
                                             <span class="step_descr">
                                               Step 3<br />
-                                              <small>Step 3 description</small>
-                                          </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#step-4">
-                                            <span class="step_no">4</span>
-                                            <span class="step_descr">
-                                              Step 4<br />
-                                              <small>Step 4 description</small>
+                                              <small>&thinsp;&ensp;privilege level&ensp;&thinsp;</small>
                                           </span>
                                         </a>
                                     </li>
@@ -163,7 +155,7 @@
 
                                 <form class="form-horizontal form-label-left input_mask">
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12 print">User Role(s):</label>
+                                        <label class="control-label col-md-5 col-sm-5 col-xs-12">User Role(s):</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="checkbox">
                                                 <% roles2.forEach(function(role2) { %>
@@ -183,8 +175,9 @@
                                                         <% } %>
 
                                                     <% } else { %>  <!-- frist time entering/loading this page -->
-                                                        <label for="roleName"><input class="" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
+                                                    <label for="roleName"><input class="" type="checkbox" name="checkbox" id="<%= role2.roleName %>" value="<%= role2.roleID %>"><%= role2.roleName %></label><br>
                                                     <% } %>
+
                                                 <% }); %><br>
                                             </div>
                                         </div>

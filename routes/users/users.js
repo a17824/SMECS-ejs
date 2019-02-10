@@ -125,7 +125,7 @@ module.exports.addStep1 = function(req, res) {
         }
         else {
             res.render('users/addUserStep1', {
-                title: 'ADD USER: Step 1',
+                title: 'ADD USER',
                 userAuthID: req.user.userPrivilegeID,
                 user: results[0],
                 roles2: results[1],
@@ -192,8 +192,8 @@ module.exports.addStep2 = function(req, res) {
                 }
             }
 
-            res.render('users/addUserStep2-new', {
-                title: 'ADD USER: Step 2',
+            res.render('users/addUserStep2', {
+                title: 'ADD USER',
                 userAuthID: req.user.userPrivilegeID,
                 parentRole: ifUserHasParentRole,
                 utilityUserRole: ifUserHasUtilityUserRole,
@@ -213,6 +213,7 @@ module.exports.addStep2Post = function(req, res) {
         function (callback) {
             var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
             var parentOf = req.body.parentOf;
+            var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
 
             models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
                 if (!user) {
@@ -222,15 +223,14 @@ module.exports.addStep2Post = function(req, res) {
                     res.send({redirect: '/users/showUsers/'});
                 }
                 else {
-                    if (req.body.pin != "oldPin") {
-                        var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
-                    } else{
-                        var hash = user.pin;
-                    }
+                    console.log('pin = ',req.body.pin);
+
                     user.firstName = req.body.firstName;
                     user.lastName = req.body.lastName;
                     user.email = req.body.email.toLowerCase();
-                    user.pin = hash;
+                    if (req.body.pin != "oldPin"){
+                        user.pin = hash; //req.body.pin;
+                    }
                     user.photo = req.body.photo;
                     user.companyName = req.body.companyName;
                     user.parentOfOld = parentOf;
@@ -268,7 +268,6 @@ module.exports.addStep2Post = function(req, res) {
     ], function (err, user) {
         models.Users.find({'email': user.email}, function (err, result) {
             if(result.length < 1){
-                console.log('user updated = ',user.studentsWithParents);
                 user.save();
                 return res.send({redirect: '/users/addUser/step3/' + user._id})
             }else{
@@ -322,8 +321,8 @@ module.exports.addStep3 = function(req, res) {
                     ifUserHasAnyOtherRole = 1;
                 }
             }
-            res.render('users/addUserStep3', {
-                title: 'ADD USER: Step 3',
+            res.render('users/addUserStep3-new', {
+                title: 'ADD USER',
                 userAuthID: req.user.userPrivilegeID,
                 principalRole: ifUserHasPrincipalRole,
                 parentRole: ifUserHasParentRole,
@@ -345,7 +344,7 @@ module.exports.addStep3Post = function(req, res) {
     async.waterfall([
         function (callback) {
             models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
-                var hash = bcrypt.hashSync(user.pin, bcrypt.genSaltSync(10));
+
                 if (!user) {
                     console.log(err);
                     console.log('TTL EXPIRED');
@@ -356,11 +355,11 @@ module.exports.addStep3Post = function(req, res) {
                     user.userPrivilegeID = req.body.userPrivilegeID;
                     user.userPrivilegeName = req.body.userPrivilegeName;
                     user.save();
-                    callback(null, user, hash);
+                    callback(null, user);
                 }
             });
         },
-        function (user, hash, callback) {
+        function (user, callback) {
 
             userType(user, user.userRoleID);
 
@@ -374,7 +373,7 @@ module.exports.addStep3Post = function(req, res) {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                pin: hash,
+                pin: user.pin,
                 parentOf: user.parentOf,
                 companyName: user.companyName,
                 contactName: user.contactName,

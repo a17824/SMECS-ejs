@@ -41,7 +41,7 @@ module.exports.addUpdatePhoto = function (req, res){
         models[userType].findById(req.params.id, function (err, user) {
             res.render('photos/choosePhoto',{
                 title: title,
-                user: user,
+                userToChangePhoto: user,
                 userType: userType,
                 iPad: iPad,
                 aclModifyUsers: aclType, //aclPermissions modifyUsers
@@ -225,7 +225,7 @@ module.exports.cropPhoto = function (req, res){
         models[userType].findById(req.params.id, function (err, user) {
             res.render('photos/cropPhoto',{
                 title: title,
-                user: user,
+                userToChangePhoto: user,
                 userType: userType,
                 iPad: iPad,
                 aclModifyUsers: aclType, //aclPermissions modifyUsers

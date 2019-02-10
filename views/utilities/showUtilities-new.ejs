@@ -61,23 +61,20 @@
         <!-- /top navigation -->
 
         <div class="right_col" role="main">
-            <div class="clearfix"></div>
 
             <div class="page-title">
                 <div class="title_left">
-                    <h3><%= title %></h3>
                 </div>
             </div>
-
-            <div class="clearfix"></div>
 
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_content">
 
-                                <div align="center">
-                                    <% if (aclAddUtilities == null || aclAddUtilities.checkBoxValue == true) {%>
+                            <div align="center">
+                                <% if (aclAddUtilities == null || aclAddUtilities.checkBoxValue == true) {%>
+                    <h3><%= title %></h3>
                                     <button class="btn btn-success" id="exit" onclick="location.href='/utilities/addUtilities'">Add Utility</button>
                                     <button class="btn btn-primary" id="exit" onclick="location.href='/utilities/showUtilitiesUsers'">Show Utility Users</button>
                                     <% } else { %>
