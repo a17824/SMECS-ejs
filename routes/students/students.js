@@ -71,7 +71,7 @@ module.exports.add = function(req, res) {
             parentOf: []
         };
         res.render('students/addStudent',{
-            title:'ADD STUDENT',
+            title:'Add Student',
             users: results[0],
             student: student,
             aclAddStudent: results[1], //aclPermissions addStudent
@@ -142,8 +142,8 @@ module.exports.addPost = function(req, res) {
 //  ADD MULTIPLE STUDENTS--------------
 module.exports.addMultiple = function (req, res){
     functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
-        res.render('students/addMultiStudents', {
-            title: 'ADD MULTIPLE STUDENTS',
+        res.render('students/addMultipleStudents', {
+            title: 'Multiple Students',
             aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
@@ -409,8 +409,8 @@ module.exports.delete = function(req, res) {
 // ADD MULTIPLE PHOTOS AND DELETE ALL OLD PHOTOS IN STUDENTS PHOTOS FOLDER--------------
 module.exports.addMultiplePhotos = function (req, res){
     functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
-        res.render('students/addMultiImage', {
-            title: 'ADD MULTIPLE PHOTOS',
+        res.render('students/addMultipleImage-new', {
+            title: 'Multiple photos',
             aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo

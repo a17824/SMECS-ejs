@@ -125,7 +125,7 @@ module.exports.addStep1 = function(req, res) {
         }
         else {
             res.render('users/addUserStep1', {
-                title: 'ADD USER',
+                title: 'Add user',
                 userAuthID: req.user.userPrivilegeID,
                 user: results[0],
                 roles2: results[1],
@@ -193,7 +193,7 @@ module.exports.addStep2 = function(req, res) {
             }
 
             res.render('users/addUserStep2', {
-                title: 'ADD USER',
+                title: 'Add user',
                 userAuthID: req.user.userPrivilegeID,
                 parentRole: ifUserHasParentRole,
                 utilityUserRole: ifUserHasUtilityUserRole,
@@ -322,7 +322,7 @@ module.exports.addStep3 = function(req, res) {
                 }
             }
             res.render('users/addUserStep3-new', {
-                title: 'ADD USER',
+                title: 'Add user',
                 userAuthID: req.user.userPrivilegeID,
                 principalRole: ifUserHasPrincipalRole,
                 parentRole: ifUserHasParentRole,
@@ -550,7 +550,7 @@ module.exports.update = function(req, res) {
 
         functions.redirectPage(req,res,'updateUser');
         res.render('users/updateUser', {
-            title: 'UPDATE USER:',
+            title: 'Update User:',
             userAuthID: req.user.userPrivilegeID,
             users: user,
             students: students,

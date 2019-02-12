@@ -1,8 +1,20 @@
-<html>
+
+<html lang="en">
 <head>
-    <title>add student</title>
-    <link rel='stylesheet' href='/stylesheets/updateUser.css' />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link rel='stylesheet' href='/public/stylesheets/updateStudent.css' />
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+
     <script>
 
         var choices, value2send;
@@ -51,12 +63,14 @@
                 firstName=$("#firstName").val();
                 lastName=$("#lastName").val();
                 photo=$("#photo").val();
-                busRide = document.getElementById("checkbox").checked;
+                busRide = document.getElementById("bus").checked;
 
 
                 var arrayUsers = [];
                 if (choices === undefined){
-                    arrayUsers = oldParentOf.split(",");
+                    console.log('arrayUsers 1 = ',arrayUsers);
+
+                    console.log('arrayUsers 2 = ',arrayUsers);
                     for (var a = 0; a < usersToRemove.length; a++) {
                         for (var i = 0; i < arrayUsers.length; i++) {
                             if (usersToRemove[a] == arrayUsers[i]){
@@ -104,9 +118,9 @@
                     // with: "Marty McFly"
                     var text = s;
                     text = text.replace(/Mc[a-z]/, function (k)
-                            {
-                                return 'Mc' + k[2].toUpperCase();
-                            }
+                        {
+                            return 'Mc' + k[2].toUpperCase();
+                        }
                     );
                 }
                 firstName = text;
@@ -117,9 +131,9 @@
                     s = s.replace(re, function(x){return x.toUpperCase();});
                     var text = s;
                     text = text.replace(/Mc[a-z]/, function (k)
-                            {
-                                return 'Mc' + k[2].toUpperCase();
-                            }
+                        {
+                            return 'Mc' + k[2].toUpperCase();
+                        }
                     );
                 }
                 lastName = text;
@@ -146,79 +160,206 @@
             });
         });
     </script>
+
+
 </head>
-<body>
-<h1><%= title %></h1>
-<form action="/dashboard">
-    <input type="submit" value="Home"><br>
-</form>
-<form>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
 
+                <!-- menu profile quick info -->
+                <% include ./../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
 
-    <label for="firstName"><b>First Name:</b></label><br>
-    <input type="text" id="firstName" size="40" placeholder="ex: Manuel" ><br><br>
-    <label for="lastName"><b>Last Name:</b></label><br>
-    <input type="text" id="lastName" size="40" placeholder="ex: Neves"><br><br>
+                <br>
 
-    <label for="studentID"><b>Student ID:</b></label><br>
-    <input type="number" id="studentID" size="40" placeholder="ex: 1234"><br><br>
-
-    <label for="busRide"><b>Student uses school bus:</b></label>
-    <input class="checkbox" type="checkbox" name="checkbox" id="checkbox" ><br><br>
-
-
-
-
-
-    <label for="students"><b>Parents:</b></label><br>
-    <div id="labelsDiv2" class="labelsDiv2">
-        <div id="smecsUserDiv" class="enable">
-            <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parents associate to this Student:</label><br>
-            <ul id="smecsUserUl" class="enable">
-                <% for (var a = 0; a < student.parentOf.length; a++) { %>
-                <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
-                    <input type="hidden" name="users[]" value="<%= student.parentOf[a]._id %>" />
-                    <%= student.parentOf[a].parentFirstName %> <%= student.parentOf[a].parentLastName %>
-                </li>
-                <% } %>
-            </ul>
-            <input
-                    class="enable"
-                    id="dataList" list="students"
-                    name="student"
-                    placeholder="type parent name"
-                    value="<%= users._id %>"
-                    onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
-            <dataList id="students">
-                <% users.forEach(function(user) { %>
-                <option data-value="<%= user._id %>" value="<%= user.firstName %> <%= user.lastName %>"></option>
-                <% }); %>
-            </dataList>
-
-            <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
-            <br><br>
-            If you want to add a new parent to dropdown list <a id="clickHere" class="enable"href="/users/addUserStep1">click here</a>.
+                <!-- sidebar menu -->
+                <% include ./../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
         </div>
+
+        <!-- top navigation -->
+        <% include ./../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3><%= title %></h3>
+                </div>
+
+
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
+                        <button type="button"
+                                id="btSubmit"
+                                value="Submit"
+                                class="btn btn-success">Save
+                        </button>
+
+                        <% } else { %>
+                        <button type="button"
+                                id="btSubmit"
+                                value="Submit"
+                                class="btn btn-success" disabled>Save
+                        </button>
+                        <% } %>
+
+                        <a href="/students/showStudents"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">First name <span class="required" style="color: red">*</span> :</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="firstName"
+                                               placeholder="ex: Manuel">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Last name <span class="required" style="color: red">*</span> :</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="lastName"
+                                               placeholder="ex: Neves">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Student ID <span class="required" style="color: red">*</span> :</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="studentID"
+                                               placeholder="ex: 1234...">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkboxSafe">Student uses school bus :</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="checkbox"
+                                                   name="bus"
+                                                   id="bus">
+                                        <label for="bus"></label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Parents :</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                        <div id="labelsDiv2" class="labelsDiv2">
+                                            <div id="smecsUserDiv" class="enable">
+                                                <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parents associate to this Student:</label><br>
+                                                <ul id="smecsUserUl" class="enable">
+                                                    <% for (var a = 0; a < student.parentOf.length; a++) { %>
+                                                        <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                                                            <input type="hidden" name="users[]" value="<%= student.parentOf[a]._id %>" />
+                                                            <%= student.parentOf[a].parentFirstName %> <%= student.parentOf[a].parentLastName %>
+                                                        </li>
+                                                    <% } %>
+                                                </ul>
+                                                <input
+                                                        class="enable"
+                                                        autocomplete="off"
+                                                        id="dataList" list="students"
+                                                        name="student"
+                                                        placeholder=" type parent name"
+                                                        value="<%= users._id %>"
+                                                        onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
+                                                <dataList id="students">
+                                                    <% users.forEach(function(user) { %>
+                                                        <option data-value="<%= user._id %>" value="<%= user.firstName %> <%= user.lastName %>"></option>
+                                                    <% }); %>
+                                                </dataList>
+
+                                                <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+                                                <br><br>
+                                                If you want to add a new parent to dropdown list <a id="clickHere" class="enable"href="/users/addUserStep1">click here</a>.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <!-- /page content -->
+
+
     </div>
+</div>
 
 
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
 
-
-
-
-
-    <input type="hidden" id="photo" >
-</form>
-<form>
-    <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
-    <input type="button" id="btSubmit" value="Submit" ><br>
-    <% } else { %>
-    <input type="button" id="btSubmit" value="Submit" disabled><br>
-    <% } %>
-</form>
-<form action="/students/showStudents">
-    <input type="submit" value="Back">
-</form>
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

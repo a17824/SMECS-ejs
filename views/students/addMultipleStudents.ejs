@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
+
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+        var _validFileExtensions = [".CSV", ".TXT"];
+        function ValidateSingleInput(oInput) {
+
+            if (oInput.type == "file") {
+                var sFileName = oInput.value;
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+
+                    if (!blnValid) {
+                        alert("Invalid file type. File extensions allowed: " + _validFileExtensions.join(", "));
+                        oInput.value = "";
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        var al = 0;
+        function progressBarSim() {
+            var bar = document.getElementById('progressBar');
+            var status = document.getElementById('status');
+            status.innerHTML = al+"%";
+            bar.value = al;
+            al++;
+            var sim = setTimeout("progressBarSim("+al+")",10);
+            if(al == 100){
+                status.innerHTML = "100%";
+                bar.value = 200;
+                clearTimeout(sim);
+                var finalMessage = document.getElementById('finalMessage');
+                finalMessage.innerHTML = "Process almost complete! please wait...";
+            }
+        }
+
+        $(document).ready(function () {
+
+        });
+    </script>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3><%= title %></h3>
+                    </div>
+
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="row">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2><small>Add/update/delete multiple students</small></h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    What SMECS will do is:<br>
+                                        .compare students from new CSV or TXT file with "actual students". Comparisons are made by students IDs and not by their names.<br>
+                                        .if "actual students" exist in new "CSV or TXT file", nothing is done (parents or any other student info is kept)<br>
+                                        .if "actual students" don't exist in new "CSV or TXT file", they are deleted. If student deleted had parents associated, that parent will be deleted as well if has no more students associated.<br>
+                                        <br>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                        Example of a Excel(.CSV) file:<br>
+                                        <img src="/miscPictures/excelStudentsExample.png">
+                                        <br><br>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                        Example of a Text(.TXT) file:<br>
+                                        <img  src="/miscPictures/textStudentsExample.png">
+                                        <br><br><br><br>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                <div class="form-group">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div align="center">
+                                            <form action="/students/addMultiStudents" enctype="multipart/form-data" method="post">
+                                                <input type="file" name="file1" onchange="ValidateSingleInput(this);" /><br>
+
+                                                <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+                                                <span id="status"></span>
+                                                <h3 id="finalMessage"></h3>
+
+                                                <div class="ln_solid"></div>
+
+                                                <div>
+                                                    <a href="/students/showStudents"><button  class="btn btn-default">cancel</button></a>
+                                                    <input type="submit" value="Upload" class="btn btn-success" onclick="progressBarSim()">
+                                                </div>
+
+
+                                            </form>
+
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /page content -->
+
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/customCropPhoto.js"></script>
+<!-- Google Analytics -->
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>

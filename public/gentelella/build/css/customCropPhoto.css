@@ -392,6 +392,7 @@ body .container.body .right_col {
         padding: 10px !important
     }
 }
+/*
 @media (max-width: 1200px) {
     .x_title h2 {
         width: 62%;
@@ -403,11 +404,13 @@ body .container.body .right_col {
         height: inherit
     }
 }
+
 @media (max-width: 1270px) and (min-width: 192px) {
     .x_title h2 small {
         display: none
     }
 }
+*/
 .left_col .mCSB_scrollTools {
     width: 6px
 }
