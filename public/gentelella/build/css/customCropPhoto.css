@@ -4364,3 +4364,30 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     display: block;
     margin-left: 34.5%
 }
+.progressBarDiv {
+    position:relative;
+    display: none;
+}
+.progressBarOnTop {
+    position:relative;
+
+    object-fit: contain;
+    height: 32px;
+    width: 106%;
+    margin-left: -10px;
+
+}
+
+.progressBarOnTopStatus {
+    position:relative;
+    top: -26px;
+    object-fit: contain;
+    color: green;
+    margin-left: 42%;
+
+}
+.finalMessage {
+    position:relative;
+font-size: 20px;
+    display: none;
+}

@@ -90,31 +90,42 @@ module.exports.postFloor = function(req, res) {
     let buildingID = '';
     let buildingName = '';
     let floorID = '';
+    let floorName = req.body.floorName;
+    let floorPhoto = req.body.floorPhoto;
 
+    console.log('req.body.buildingID = ',req.body.buildingID);
+    console.log('req.body.buildingName = ',req.body.buildingName);
 
-
-    if ( typeof req.body.buildingFloorID !== 'undefined' && req.body.buildingFloorID )
+    if ( typeof req.body.buildingID !== 'undefined' && req.body.buildingID )
     {
-        let arraySplit = req.body.buildingFloorID.split("_|_");
-        buildingID = arraySplit[0];
-        buildingName = arraySplit[1];
-        floorID = arraySplit[2];
-        console.log('floorID 000 = ',floorID);
+        buildingID = req.body.buildingID;
+        buildingName = req.body.buildingName;
     }
     else
     {
         buildingID = 'skipped by user';
         buildingName = 'skipped by user';
+    }
+
+    if ( typeof req.body.floorID !== 'undefined' && req.body.floorID )
+    {
+        let arraySplit = req.body.floorID.split("_|_");
+        floorID = arraySplit[2];
+    }
+    else
+    {
         floorID = 'skipped by user';
     }
-    var floorName = req.body.floorName;
-    var floorPhoto = req.body.floorPhoto;
 
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
             functions.alertTimeExpired(req,res);
         }
         else {
+
+            alert.buildingID = buildingID;
+            alert.buildingName = buildingName;
+
             //if user skip floor question or if floor photo don't exist on database or all/none/multiple/outside floor selected
             if ( floorID == null ||
                 floorID === 'skipped by user' ||
@@ -167,8 +178,7 @@ module.exports.postFloor = function(req, res) {
                     alert.sniperCoordinateY = undefined;
                 }
                 //---------------end of checkFloorPhotoExists
-                alert.buildingID = buildingID;
-                alert.buildingName = buildingName;
+
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;

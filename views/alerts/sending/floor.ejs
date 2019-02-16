@@ -77,9 +77,11 @@
             }
             /*----- end of unCheck radio button ----*/
 
-            var alert_ID, floorID,floorName, floorPhoto, alertNameID;
+            var alert_ID,buildingID,buildingName, floorID,floorName, floorPhoto, alertNameID;
             $("#<%= alert.id %>").click(function(){
                 alert_ID=$(this).attr('id');
+                buildingID = $('#building_select').val();
+                buildingName = $('#building_select :selected').text();
                 floorPhoto=$("input:radio[name='floorID']:checked").val();
                 floorName = $("input:radio[name='floorID']:checked + label").text();
                 floorID = $('input[name=floorID]:checked').attr('id');
@@ -92,7 +94,9 @@
                 $.post('/alerts/sending/floor',{
                     alertToUpdate: alert_ID,
                     alertNameID: alertNameID,
-                    buildingFloorID: floorID,
+                    buildingID: buildingID,
+                    buildingName: buildingName,
+                    floorID: floorID,
                     floorName: floorName,
                     floorPhoto: floorPhoto
                 },function(data){

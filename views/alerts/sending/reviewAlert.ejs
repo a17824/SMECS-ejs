@@ -143,14 +143,14 @@
                 info.floorPhoto !== 'skipped by user' &&
                 info.floorPhoto !== 'Outside Building') {%>
             <div id="div1" class="div1" style="height: 600px;">
-            <img style='height: 100%; width: 100%; object-fit: contain' src="/floorPlans/<%= info.floorPhoto %>">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="/floorPlans/<%= info.floorPhoto %>">
             </div>
         <% } %>
         <div id="div2" class="div2" >
             <img src="/floorPlans/red_sniper.png" >
         </div>
 
-</form>
+    </form>
 <% } %>
 
 <% if (info.request911Call == true ) {%>
@@ -198,6 +198,10 @@
 <% if ( flagFloor === 'floor' ) {%>
 
     <% if (info.floorName) {%>
+
+        <label for="floor"><b>Building:</b></label>
+        <input type="text" id="buildingLevel"  size="25" value="<%= info.buildingName %>" readonly ><br>
+
         <!-- Alert EVACUATE -->
         <% if (info.alertNameID == 7) {%>
             <label for="floor"><b>Evacuate to:</b></label>

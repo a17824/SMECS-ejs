@@ -317,6 +317,10 @@
 <% if ( flagFloor === 'floor' ) {%>
 
 <% if (info.floorName) {%>
+
+    <label for="building"><b>Building:</b></label>
+    <input type="text" id="buildingLevel"  size="25" value="<%= info.buildingName %>" readonly ><br>
+
     <!-- Alert EVACUATE -->
     <% if (info.alert.alertID == 7) {%>
         <label for="floor"><b>Evacuate to:</b></label>
