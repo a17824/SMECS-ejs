@@ -153,9 +153,23 @@
                     if(error.responseText == 'showAlert')
                         alert("Alert failed.")
                 });
-
-
             });
+
+            //back button
+            $("#back").click(function () {
+                alert_ID=$("#alert_ID").val();
+
+                $.post('/sendAlertBackButton', {
+                    alertToUpdate: alert_ID
+
+                }, function (data) {
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("App stop responding, call SMECS APP team for help .")
+                });
+            });
+            //end of back button
         });
     </script>
 </head>
@@ -323,22 +337,12 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
-<% if (!userAuthGroupAlerts && (
-                alert.alertNameID == 14 ||
-                alert.alertNameID == 18 ||
-                alert.alertNameID == 26 ||
-                alert.alertNameID == 29 )) {%>
-
-<form action="/alerts/sending/chooseAlert">
-    <input type="submit" value="Exit Alert" >
-</form>
+<% if (alert.roadIndexExit){ %>
+    <form action="/alerts/sending/chooseAlert">
+        <input type="submit" value="Exit Alert" >
+    </form>
 <% } else { %>
-<button class="backButton" onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
-<% }%>
+    <input type="button" id="back" value="Back" >
+<% } %>
 </body>
 </html>

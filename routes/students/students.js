@@ -409,7 +409,7 @@ module.exports.delete = function(req, res) {
 // ADD MULTIPLE PHOTOS AND DELETE ALL OLD PHOTOS IN STUDENTS PHOTOS FOLDER--------------
 module.exports.addMultiplePhotos = function (req, res){
     functions.aclSideMenu(req, res, function (acl) { //aclPermissions sideMenu
-        res.render('students/addMultipleImage-new', {
+        res.render('students/addMultipleImage', {
             title: 'Multiple photos',
             aclSideMenu: acl,  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,

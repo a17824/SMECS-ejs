@@ -197,7 +197,15 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
 
     waitForAlertRoadToEnd(function (waitForCallback) {
         console.log(waitForCallback);
+
+        // for back/exit button
+        if(alertTemp.roadIndex === '1')
+            alertTemp.roadIndexExit = true;
+        // endo of for back/exit button
+
+
         ++alertTemp.roadIndex;
+
         alertTemp.save(function (err) {
             if(err)
                 console.log('create.js module.exports.redirectTo alertTemp.save ERR = ',err)
@@ -248,9 +256,15 @@ module.exports.createAlert= function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+            // for back/exit button
+            alertTemp.roadIndexNumberToExit = alertTemp.roadIndex;
+            alertTemp.roadIndexExit = true;
+            // endo of for back/exit button
+
             if(alertTemp.realDrillDemo !== 'demo') {
                 alertTemp.latitude = req.body.latitude;
                 alertTemp.longitude = req.body.longitude;
+
 
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo
                     /*****  CALL HERE NOTIFICATION API  *****/
@@ -306,13 +320,30 @@ module.exports.updateRoadIndex= function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+
+
             if(floorLocation){ // if back button comes from floorLocation.ejs
                 --alertTemp.roadIndex;
+
+                // for back/exit button
+                if(alertTemp.roadIndex === alertTemp.roadIndexNumberToExit)
+                    alertTemp.roadIndexExit = true;
+                else
+                    alertTemp.roadIndexExit = false;
+                // end of for back/exit button
+
                 redirectTo.redirectTo(req,res,alertTemp,flag);
             }
             else {
                 --alertTemp.roadIndex;
                 --alertTemp.roadIndex;
+
+                // for back/exit button
+                if(alertTemp.roadIndex === alertTemp.roadIndexNumberToExit)
+                    alertTemp.roadIndexExit = true;
+                else
+                    alertTemp.roadIndexExit = false;
+                // end of for back/exit button
 
                 alertTemp.alertRoad.forEach(function (road) {
                     if (road.step == alertTemp.roadIndex && road.redirectAPI === 'createAlert') {

@@ -548,7 +548,9 @@ var AlertSentTempSchema = new mongoose.Schema({
         callFunction: Array,
         redirectAPI: String,
         redirectEJS: String
-    }]
+    }],
+    roadIndexNumberToExit: String,
+    roadIndexExit:{ type: Boolean, default: false }
 
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"

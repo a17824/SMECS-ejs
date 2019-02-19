@@ -94,10 +94,24 @@
                         console.log('process error');
                         window.location = data.redirect;
                     }
-
-
                 });
             });
+
+            //back button
+            $("#back").click(function () {
+                let alert_ID=$("#alert_ID").val();
+
+                $.post('/sendAlertBackButton', {
+                    alertToUpdate: alert_ID
+
+                }, function (data) {
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("App stop responding, call SMECS APP team for help .")
+                });
+            });
+            //end of back button
         });
     </script>
 </head>
@@ -134,22 +148,12 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
-<% if (!userAuthGroupAlerts && (alert.alertNameID == 4 ||
-        alert.alertNameID == 5 ||
-        alert.alertNameID == 16 ||
-        alert.alertNameID == 17 ||
-        alert.alertNameID == 19 )) {%>
-
-<form action="/alerts/sending/chooseAlert">
-    <input type="submit" value="Exit Alert" >
-</form>
+<% if (alert.roadIndexExit){ %>
+    <form action="/alerts/sending/chooseAlert">
+        <input type="submit" value="Exit Alert" >
+    </form>
 <% } else { %>
-<button class="backButton" onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
-<% }%>
+    <input type="button" id="back" value="Back" >
+<% } %>
 </body>
 </html>

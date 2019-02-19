@@ -80,9 +80,6 @@
                     floorLocation: true
 
                 }, function (data) {
-                    if (data === 'done') {
-                        alert("login success");
-                    }
                     window.location = data.redirect
                 }).error(function (error) {
                     if (error.responseText == 'showAlert')

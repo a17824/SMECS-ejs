@@ -228,6 +228,7 @@
 
                 });
             });
+
             //back button
             $("#back").click(function () {
                 let alert_ID=$("#alert_ID").val();
@@ -236,9 +237,6 @@
                     alertToUpdate: alert_ID
 
                 }, function (data) {
-                    if (data === 'done') {
-                        alert("login success");
-                    }
                     window.location = data.redirect
                 }).error(function (error) {
                     if (error.responseText == 'showAlert')
@@ -356,29 +354,12 @@
 
 </form>
 
-<% if (!userAuthGroupAlerts && (alert.alertNameID == 3 ||
-        alert.alertNameID == 8 ||
-        alert.alertNameID == 12 ||
-        alert.alertNameID == 13 ||
-        alert.alertNameID == 20 ||
-        alert.alertNameID == 21 ||
-        alert.alertNameID == 22 ||
-        alert.alertNameID == 25 ||
-        alert.alertNameID == 27 )) {%>
-
-<form action="/alerts/sending/chooseAlert">
-    <input type="submit" value="Exit Alert" >
-</form>
+<% if (alert.roadIndexExit){ %>
+    <form action="/alerts/sending/chooseAlert">
+        <input type="submit" value="Exit Alert" >
+    </form>
 <% } else { %>
-
     <input type="button" id="back" value="Back" >
-
-<!--<button class="backButton" onclick="goBack()">Back</button>
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script> -->
-<% }%>
+<% } %>
 </body>
 </html>

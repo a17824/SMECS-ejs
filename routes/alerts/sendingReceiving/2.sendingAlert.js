@@ -130,10 +130,7 @@ module.exports.postFloor = function(req, res) {
             if ( floorID == null ||
                 floorID === 'skipped by user' ||
                 floorPhoto === '' ||
-                /*floorID == 'allFloors' ||
-                floorID == 'multipleLocations' ||
-                floorID == 'outside' ||
-                alert.alertNameID == 7 ||*/
+
                 floorName === 'Other/Multiple Locations') { // or if is Evacuate alert
 
                 //checkFloorPhotoExists---------------------
@@ -152,26 +149,6 @@ module.exports.postFloor = function(req, res) {
                     alert.sniperCoordinateY = undefined;
                 }
 
-                /*if (floorID == 'allFloors'){ //if ANY FLOOR/ALL EXIT FLOORS are selected (for 'evacuation exit' of EVACUATE Alert)
-                    floorPhoto = 'Multiple floors';
-                    alert.sniperCoordinateX = undefined;
-                    alert.sniperCoordinateY = undefined;
-                }
-                if (floorID == 'multipleLocations'){ //if Multiple Locations are selected (Violence Alert)
-                    floorPhoto = 'Multiple Locations';
-                    alert.sniperCoordinateX = undefined;
-                    alert.sniperCoordinateY = undefined;
-                }
-                if (floorID == 'outside'){ //if Multiple Locations are selected (Violence Alert)
-                    floorPhoto = 'Outside Building';
-                    alert.sniperCoordinateX = undefined;
-                    alert.sniperCoordinateY = undefined;
-                }
-                if (alert.alertNameID == 7){ //or if is Evacuate alert
-                    floorPhoto = 'Outside Building';
-                    alert.sniperCoordinateX = undefined;
-                    alert.sniperCoordinateY = undefined;
-                }*/
                 if (alert.alertName === 'Other/Multiple Locations'){ //if ANY FLOOR/ALL EXIT FLOORS are selected (for 'evacuation exit' of EVACUATE Alert)
                     floorPhoto = 'Multiple floors';
                     alert.sniperCoordinateX = undefined;
@@ -182,6 +159,7 @@ module.exports.postFloor = function(req, res) {
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
+                alert.roadIndexExit = false; // for back/exit button
 
                 //if user goes back in browser and removes floor floor
 
@@ -196,6 +174,8 @@ module.exports.postFloor = function(req, res) {
                 alert.floorID = floorID;
                 alert.floorName = floorName;
                 alert.floorPhoto = floorPhoto;
+                alert.roadIndexExit = false; // for back/exit button
+
                 alert.save();
 
                 redirectAPI = 'floorMap';
@@ -337,6 +317,8 @@ module.exports.postNotes = function(req, res) {
                 alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }
 
+            alert.roadIndexExit = false; // for back/exit button
+
             /****************************          ALERT ROAD          ****************************/
             /** functions needed here are: studentMissingStudent, notesStudentWithGun, notesBus  **/
             redirectTo.redirectTo(req,res,alert,'GETtoPOST');
@@ -368,7 +350,7 @@ module.exports.showStudent = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-
+            console.log('alertTemp.previousStep = ',results[0].previousStep);
             if(req.decoded){ //API user
                 res.json({
                     success: true,
@@ -410,6 +392,8 @@ module.exports.postStudent = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+            alert.roadIndexExit = false; // for back/exit button
+
             /****************************      ALERT ROAD      ****************************/
             /** functions needed here are: student2, studentSaveFile                     **/
             redirectTo.redirectTo(req,res,alert,'GETtoPOST',studentName,studentPhoto);
@@ -485,6 +469,7 @@ module.exports.postMultiSelection = function(req, res) {
         else {
             alert.multiSelectionNames = req.body.checkboxesNames;
             alert.multiSelectionIDs = req.body.checkboxesIDs;
+            alert.roadIndexExit = false; // for back/exit button
 
             if (req.decoded && typeof req.body.checkboxesIDs !== 'undefined' && req.body.checkboxesIDs) {       // API user
                 alert.multiSelectionNames = req.body.checkboxesNames.split(',').map(String);
