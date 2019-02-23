@@ -299,12 +299,22 @@ module.exports.updateAlert= function(req, res) {
             console.log('No alert found to updateAlert. err - ',err);
         }
         else {
-            alertSentInfo.update(req, res, alertTemp, function (result) {  //update AlertSentInfo
 
+            //REAL and DRILL alerts
+            if (alertTemp.realDrillDemo !== 'demo'){
+                alertSentInfo.update(req, res, alertTemp, function (result) {  //update AlertSentInfo
+
+                    /*****  CALL HERE NOTIFICATION API  *****/
+                    pushNotification.alert(result, 'updateAlert');
+                    redirectTo.redirectTo(req, res, alertTemp, flag);
+                });
+            }
+
+            //DEMO alert
+            else {
                 /*****  CALL HERE NOTIFICATION API  *****/
-                pushNotification.alert(result, 'updateAlert');
                 redirectTo.redirectTo(req, res, alertTemp, flag);
-            });
+            }
         }
     });
 };

@@ -722,6 +722,7 @@ module.exports.updatePost = function(req, res) {
                 if(result.length < 1){
                     console.log('user updated');
                     user.save();
+                    pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
                     deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
                     functions.addParentInStudentDocument(user, studentsWithParents);
                     return res.send({redirect: '/users/showUsers'})
@@ -731,6 +732,7 @@ module.exports.updatePost = function(req, res) {
                         if (userID == userToAddUpdate_ID) {
                             console.log('user updated');
                             user.save();
+                            pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
                             deleteParentInStudentDocument(user, studentsWithParents, oldParentArray);
                             functions.addParentInStudentDocument(user, studentsWithParents);
                             //updateParentInStudentDocument(user);

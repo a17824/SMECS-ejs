@@ -174,7 +174,11 @@ module.exports.notifyUser = function(user, action) {
     message.postBody["data"] = {
         action: action,
         groupAlertsButtons: user.appSettings.groupAlertsButtons,
-        theme: user.appSettings.theme
+        theme: user.appSettings.theme,
+        userRoleName: user.userRoleName,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userPhoto: user.photo,
     };
     sendPush(message);
 };

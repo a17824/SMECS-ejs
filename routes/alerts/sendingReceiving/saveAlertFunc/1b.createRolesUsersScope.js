@@ -12,7 +12,7 @@ var async = require("async");
 
 module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
     let errorMesssageNoScope = 'In Real mode,';
-    if(alertTemp.realDrillDemo == 'drill')
+    if(alertTemp.realDrillDemo === 'drill')
         errorMesssageNoScope = 'In Drill mode,';
 
     async.parallel([

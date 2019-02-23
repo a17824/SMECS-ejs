@@ -110,6 +110,12 @@ module.exports.receivedAlert = function(req, res) {
                 if(results[0].alert.alertID == 26)
                     title = 'Choose contact type(s) to Req. Assistance';
 
+                let usersWithPushToken = [];
+                results[0].sentTo.forEach(function (user) {
+                    if(user.pushToken.length > 0)
+                        usersWithPushToken.push(user);
+                });
+
                 if(req.decoded){ //API user
                     res.json({
                         success: 'true',
@@ -122,7 +128,8 @@ module.exports.receivedAlert = function(req, res) {
                         utilities: results[4],
                         canRequestAssistance: canRequestAssistance,
                         enableProcedureButton: enableProcedureButton,
-                        flagFloor: flag
+                        flagFloor: flag,
+                        usersWithPushToken: usersWithPushToken
                     });
 
                 }else{  //EJS user

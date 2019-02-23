@@ -62,57 +62,14 @@ module.exports.reviewAlert = function(req, res) {
 };
 
 module.exports.postReviewAlert = function(req, res, next) {
-    var alertToUpdate1;
-    let redirectAPI; //API user
-    let redirectEJS; //EJS user
+    var alertToUpdate1 = req.body.alertToUpdate;
 
-    if(req.body.alertToUpdate == 0) //panic alert
-        alertToUpdate1 = req.params.id;
-    else
-        alertToUpdate1 = req.body.alertToUpdate; //all other alerts
+    models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
 
-    console.log('alertToUpdate = ');
-    async.waterfall([
-        function (callback) {
-            models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
+        /****************************       ALERT ROAD       ****************************/
+        /** functions needed here are: floor.saveFloorFile, student.updateStudentFile  **/
+        redirectTo.redirectTo(req,res,tempAlert,'GETtoPOST');
 
-                /****************************       ALERT ROAD       ****************************/
-                /** functions needed here are: floor.saveFloorFile, student.updateStudentFile  **/
-                redirectTo.redirectTo(req,res,tempAlert,'GETtoPOST');
-
-                callback(null, tempAlert);
-            });
-        },
-        function (tempAlert, callback) {
-            /*
-            // Alert Request Assistance
-            if (tempAlert.alertNameID == 26 ){
-
-                models.Utilities.find({'utilityID': tempAlert.multiSelectionIDs}, function (err, utils) {
-                    if (err)
-                        console.log('err - ', err);
-                    else {
-                        models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
-                            if(err){
-                                console.log('err = ', err);
-                            }else {
-                                var arraySmecsAppToSent =[];
-                                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, tempAlert.reqAssOn, tempAlert.reqAssOff, arraySmecsAppToSent,'notify','update',req,res);
-
-                            }
-                        });
-                    }
-                });
-            }
-            */
-            callback(null, tempAlert);
-        }
-
-    ], function (err, tempAlert) {
-
-        /****************************      ALERT ROAD      ****************************/
-        /** functions needed here are: updateAlert                                   **/
-        //redirectTo.redirectTo(req,res,tempAlert,'doNotRedirect');
     });
 };
 

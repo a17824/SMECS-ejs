@@ -99,5 +99,7 @@ routerApi.post('/updateNotes', auth.auth, updates.postUpdateNotes, function(req,
 /* Sending Alert BACK BUTTON pressed. -------------------------------*/
 routerApi.post('/sendAlertBackButton', auth.auth, createAlert.updateRoadIndex, function(req, res) {});
 
+/* Update User Info. -------------------------------*/
+routerApi.get('/updateUserInfo', auth.auth, appOptions.updateUserInfo, function(req, res) {});
 
 module.exports = routerApi;

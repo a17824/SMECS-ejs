@@ -356,22 +356,32 @@ module.exports.showAlertsPost = function(req, res) {
             });
         }
     ], function (err, alertTemp1) {
-        whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) {
-            if(err){
-                console.log('err = ', err);
-            }else {
-
-                var alertTemp1 = result;
-                if(alertTemp1.sentRoleIDScope < 1){
-                    console.log('No scopes or users to send this alert');
+        //REAL and DRILL modes
+        if(alertTemp1.realDrillDemo !== 'demo'){
+            whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) {
+                if(err){
+                    console.log('err = ', err);
                 }else {
-                    /****************************      ALERT ROAD      ****************************/
-                    /** functions needed here are: studentStep1, busMap                          **/
-                    redirectTo.redirectTo(req,res,alertTemp1,'GETtoPOST');
 
+                    var alertTemp1 = result;
+                    if(alertTemp1.sentRoleIDScope < 1){
+                        console.log('No scopes or users to send this alert');
+                    }else {
+                        /****************************      ALERT ROAD      ****************************/
+                        /** functions needed here are: studentStep1, busMap                          **/
+                        redirectTo.redirectTo(req,res,alertTemp1,'GETtoPOST');
+
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        //DEMO MODE
+         else {
+            /****************************      ALERT ROAD      ****************************/
+            /** functions needed here are: studentStep1, busMap                          **/
+            redirectTo.redirectTo(req,res,alertTemp1,'GETtoPOST');
+        }
     });
 
 };

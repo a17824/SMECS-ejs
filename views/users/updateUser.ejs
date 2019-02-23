@@ -433,15 +433,17 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Photo:</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <% if (users.photo === '' || users.photo == undefined) {%>
-                                                <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /><br><br>
-                                            <% } else { %>
-                                                <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (users.userPrivilegeID != 1 || userAuthID == 1)) {%>
-                                                    <a href="/photos/choosePhoto/<%= users.id %>"><img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" /></a>
+                                            <div id="container">
+                                                <% if (users.photo === '' || users.photo == undefined) {%>
+                                                <a href="/photos/choosePhoto/<%= users.id %>"><img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /></a>
                                                 <% } else { %>
-                                                    <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" />
+                                                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (users.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                                        <a href="/photos/choosePhoto/<%= users.id %>"><img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" /></a>
+                                                    <% } else { %>
+                                                        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" />
+                                                    <% } %>
                                                 <% } %>
-                                            <% } %>
+                                            </div>
                                         </div>
                                     </div>
                                 <% } %>
@@ -729,10 +731,10 @@
                                                value="<%= users.companyName %>" placeholder="ex: Gas Company" class="disable"><br>
                                         <div id="div1" style="display:none">
                                             <p>&thinsp;&thinsp;&thinsp;&thinsp;Contact Name:
-                                            <input type="text"
-                                                   id="contactNameText"
-                                                   size="40"
-                                                   value="<%= users.contactName %>" class="disable"></p>
+                                                <input type="text"
+                                                       id="contactNameText"
+                                                       size="40"
+                                                       value="<%= users.contactName %>" class="disable"></p>
                                         </div>
                                     </div>
                                 </div>

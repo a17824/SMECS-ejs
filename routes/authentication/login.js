@@ -134,6 +134,7 @@ module.exports.postLogin = function(req, res, next) {
                         userPrivilegeName: user.userPrivilegeName,
                         firstName: user.firstName,
                         lastName: user.lastName,
+                        userPhoto: user.photo,
                         email: user.email
                     });
                 }

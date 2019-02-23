@@ -7,6 +7,7 @@ var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
 var path = require('path'); //to get file extension
 var MobileDetect = require('mobile-detect');
+let pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
 
 //--ADD or UPDATE user photo -------------------------------------
 module.exports.addUpdatePhoto = function (req, res){
@@ -181,10 +182,16 @@ module.exports.deletePhoto = function(req, res) {
             }
         });
 
-        if(req.user.redirect == 'showUsers')
+        if(req.user.redirect == 'showUsers') {
+            pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
             res.redirect('/users/showUsers');
-        if(req.user.redirect == 'updateUser')
+        }
+
+        if(req.user.redirect == 'updateUser') {
+            pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
             res.redirect('/users/updateUser/' + user.id);
+        }
+
         if(req.user.redirect == 'showStudents')
             res.redirect('/students/showStudents');
     });
@@ -274,10 +281,15 @@ module.exports.cropPhotoPost = function (req, res){
                     }
                 });
                 if(req.user.userRoleID){
-                if(req.user.redirect == 'showUsers')
+                if(req.user.redirect == 'showUsers') {
                     res.send({redirect: '/users/showUsers'});
-                if(req.user.redirect == 'updateUser')
+                    pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
+                }
+
+                if(req.user.redirect == 'updateUser') {
                     res.send({redirect: '/users/updateUser/' + user.id});
+                    pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
+                }
                 if(req.user.redirect == 'registerParent')
                     res.send({redirect: '/login'});
                 if(req.user.redirect == 'showStudents')
@@ -287,6 +299,7 @@ module.exports.cropPhotoPost = function (req, res){
                     //res.render('login', {error: "Registration completed"});
                 }
                 console.log("success! saved " + user.photo);
+
             }
         });
     });
