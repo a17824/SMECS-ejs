@@ -143,11 +143,11 @@
                 info.floorPhoto !== 'skipped by user' &&
                 info.floorPhoto !== 'Outside Building') {%>
             <div id="div1" class="div1" style="height: 600px;">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="/floorPlans/<%= info.floorPhoto %>">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="/public/floorPlans/<%= info.floorPhoto %>">
             </div>
         <% } %>
         <div id="div2" class="div2" >
-            <img src="/floorPlans/red_sniper.png" >
+            <img src="/public/floorPlans/red_sniper.png" >
         </div>
 
     </form>
@@ -187,10 +187,10 @@
     <input type="text" id="student" value="<%= info.studentName %>" readonly><br><br>
 
     <% if (info.studentPhoto === 'photoNotAvailable.bmp' ) {%>
-        <img id="studentImage" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp"><br><br>
+        <img id="studentImage" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/public/photosNotAvailable/photoNotAvailable.bmp"><br><br>
     <% } %>
     <% if (info.studentPhoto !== 'photoNotAvailable.bmp' ) {%>
-        <img id="studentImage" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosStudents/<%= info.studentPhoto %>"><br><br>
+        <img id="studentImage" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/public/photosStudents/<%= info.studentPhoto %>"><br><br>
     <% } %>
 <% } %>
 

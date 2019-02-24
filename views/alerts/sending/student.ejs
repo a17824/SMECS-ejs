@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>LMissing Child Alert</title>
+    <title>Missing Child Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/missChild.css' />
     <script>
@@ -140,9 +140,9 @@
     </datalist><br><br>
 
     <% if (alert.studentPhoto && alert.studentPhoto != 'photoNotAvailable.bmp') { %>
-    <img id="studentImage" src="/photosStudents/<%= alert._id %><%= alert.studentPhoto %>"><br><br>
+    <img id="studentImage" src="/public/photosStudents/<%= alert._id %><%= alert.studentPhoto %>"><br><br>
     <%  } else { %>
-    <img id="studentImage" src="/photosNotAvailable/photoNotAvailable.BMP"><br><br>
+    <img id="studentImage" src="/public/photosNotAvailable/photoNotAvailable.bmp"><br><br>
     <% } %>
 
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
