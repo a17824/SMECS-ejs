@@ -124,6 +124,7 @@ module.exports.alertReceiptPost = function (req, res) {
     );
 };
 
+
 /* Receive the viewed for message delivered -------------------------------*/
 module.exports.alertViewedPost = function (req, res) {
     var wrapped = moment(new Date());
