@@ -93,8 +93,6 @@ module.exports.postFloor = function(req, res) {
     let floorName = req.body.floorName;
     let floorPhoto = req.body.floorPhoto;
 
-    console.log('req.body.buildingID = ',req.body.buildingID);
-    console.log('req.body.buildingName = ',req.body.buildingName);
 
     if ( typeof req.body.buildingID !== 'undefined' && req.body.buildingID )
     {
@@ -109,8 +107,13 @@ module.exports.postFloor = function(req, res) {
 
     if ( typeof req.body.floorID !== 'undefined' && req.body.floorID )
     {
-        let arraySplit = req.body.floorID.split("_|_");
-        floorID = arraySplit[2];
+        if(req.decoded) //API
+            floorID = req.body.floorID;
+        else {  //EJS
+            let arraySplit = req.body.floorID.split("_|_");
+            floorID = arraySplit[2];
+        }
+
     }
     else
     {
@@ -130,7 +133,6 @@ module.exports.postFloor = function(req, res) {
             if ( floorID == null ||
                 floorID === 'skipped by user' ||
                 floorPhoto === '' ||
-
                 floorName === 'Other/Multiple Locations') { // or if is Evacuate alert
 
                 //checkFloorPhotoExists---------------------
@@ -310,6 +312,9 @@ module.exports.postNotes = function(req, res) {
             var htmlTime = '</span></strong><span style="font-size:11px">';
             var htmlNote = '</span></div><span style="color:#333333">&nbsp;';
             var newNote = req.body.note;
+
+            if (typeof newNote == 'undefined' || newNote == '')
+                newNote = '(skipped note)';
 
             if(req.decoded){ // run SMECS API
                 alert.note = htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;

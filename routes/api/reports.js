@@ -105,6 +105,7 @@ module.exports.alertReceiptPost = function (req, res) {
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
             if (err || !alert){
                 console.log('alertNot found. err - ',err);
+                console.log('alert - ',alert);
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {
@@ -137,8 +138,15 @@ module.exports.alertViewedPost = function (req, res) {
                 console.log('alert notFound. err - ',err);
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
+
+
                 for (var i = 0; i < alert.sentTo.length; i++) {
                     if(alert.sentTo[i].email == email && alert.sentTo[i].viewed.viewedBoolean == false ){
+                        if(alert.sentTo[i].received.receivedBoolean == false ){
+                            alert.sentTo[i].received.receivedBoolean = true;
+                            alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
+                            alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
+                        }
                         alert.sentTo[i].viewed.viewedBoolean = true;
                         alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
@@ -181,3 +189,4 @@ module.exports.alertCalled911 = function (req, res) {
         }
     );
 };
+

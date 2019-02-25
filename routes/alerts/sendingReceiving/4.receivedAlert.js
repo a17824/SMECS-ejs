@@ -5,8 +5,13 @@ var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var functions = require('./../../functions');
 var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
+let reports = require('./../../api/reports.js');
 
 module.exports.receivedAlert = function(req, res) {
+    if (!req.decoded)   {     // EJS user
+        //reports.alertReceiptPost(req, res);
+        //reports.alertViewedPost(req, res);
+    }
 
     async.parallel([
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
@@ -196,6 +201,8 @@ module.exports.postReceivedAlert = function(req, res, next) {
         if(err){
             console.log('err - changing Alert STATUS');
         }else {
+
+
 
             // ALERT 14 REQUEST ASSISTANCE
             if ((alert.alert.alertID == 14 || alert.alert.alertID == 26) && exitButton == 'false') {

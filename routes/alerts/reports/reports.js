@@ -183,6 +183,36 @@ module.exports.reportsDetails = function(req, res) {
         if(req.params.id == '5b1eb1d86e727c382cbce0a6')
             page = 'home-reports/reportDetailsSimAllGreen';
 
+        //How many users with pushToken Alert was sent
+        let sentToLength = [];
+        results[0].sentTo.forEach(function (usersLength) {
+            if(usersLength.pushToken.length > 0)
+                sentToLength.push(usersLength);
+        });
+        let sentToNumber = sentToLength.length;
+        //end of How many users with pushToken Alert was sent
+
+        //How many users Received Alert
+        let receivedLength = [];
+        results[0].sentTo.forEach(function (usersLength) {
+            if(usersLength.received.receivedBoolean)
+                receivedLength.push(usersLength);
+        });
+        let receivedNumber = receivedLength.length;
+        //end of How many users Received Alert
+
+        //How many users Viewed Alert
+        let viewedLength = [];
+        results[0].sentTo.forEach(function (usersLength) {
+            if(usersLength.viewed.viewedBoolean)
+                viewedLength.push(usersLength);
+        });
+        let viewedNumber = viewedLength.length;
+        //end of How many users Viewed Alert
+
+        console.log('sentToNumber = ',sentToNumber);
+        console.log('receivedNumber = ',receivedNumber);
+        console.log('viewedNumber = ',viewedNumber);
 
         res.render(page,{
             title: 'REPORTS SENT',
@@ -190,7 +220,10 @@ module.exports.reportsDetails = function(req, res) {
             report: results[0],
             aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
+            userAuthPhoto: req.user.photo,
+            sentToNumber: sentToNumber,
+            receivedNumber: receivedNumber,
+            viewedNumber: viewedNumber
         });
     })
 

@@ -166,6 +166,8 @@ module.exports.update = function(req, res, tempAlert, callback) {
 
             // NOTES CHAT \\
             var htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
+            if (typeof newNote == 'undefined' || newNote == '')
+                newNote = '(skipped note)';
 
             if (req.decoded)        // API user
                 if(alert.note)
