@@ -325,6 +325,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
         lastName: String,
         pushToken: [String],
         email: String,
+        photo: String,
         called911: {
             called911Boolean: {type: Boolean, default: false},
             called911Date: String,

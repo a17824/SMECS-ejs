@@ -765,6 +765,7 @@ function init_gauge() {
     };
 
 
+
     if ($('#chart_gauge_01').length){
 
         var chart_gauge_01_elem = document.getElementById('chart_gauge_01');
@@ -772,12 +773,18 @@ function init_gauge() {
 
     }
 
-
+    //Sent to
+    let sentToAllNumber = parseInt(document.getElementById('sentToAllNumber').value);
+    let sentToWithPushTokenNumber = parseInt(document.getElementById('sentToWithPushTokenNumber').value);
+    if (sentToWithPushTokenNumber == 0){
+        sentToWithPushTokenNumber = 0.1;
+        sentToAllNumber = 999;
+    }
     if ($('#gauge-text').length){
 
-        chart_gauge_01.maxValue = 50;
+        chart_gauge_01.maxValue = sentToAllNumber;
         chart_gauge_01.animationSpeed = 32;
-        chart_gauge_01.set(48);
+        chart_gauge_01.set(sentToWithPushTokenNumber);
         chart_gauge_01.setTextField(document.getElementById("gauge-text"));
 
     }
@@ -789,12 +796,17 @@ function init_gauge() {
 
     }
 
-
+    //Received by
+    let receivedNumber = parseInt(document.getElementById('receivedNumber').value);
+    if (receivedNumber == 0){
+        receivedNumber = 0.1;
+        sentToWithPushTokenNumber = 999;
+    }
     if ($('#gauge-text2').length){
 
-        chart_gauge_02.maxValue = 48;
+        chart_gauge_02.maxValue = sentToWithPushTokenNumber;
         chart_gauge_02.animationSpeed = 32;
-        chart_gauge_02.set(46);
+        chart_gauge_02.set(receivedNumber);
         chart_gauge_02.setTextField(document.getElementById("gauge-text2"));
 
     }
@@ -806,12 +818,17 @@ function init_gauge() {
 
     }
 
-
+    //Viewed by
+    let viewedNumber = parseInt(document.getElementById('viewedNumber').value);
+    if (viewedNumber == 0){
+        viewedNumber = 0.1;
+        receivedNumber = 999;
+    }
     if ($('#gauge-text3').length){
 
-        chart_gauge_03.maxValue = 46;
+        chart_gauge_03.maxValue = receivedNumber;
         chart_gauge_03.animationSpeed = 32;
-        chart_gauge_03.set(40);
+        chart_gauge_03.set(viewedNumber);
         chart_gauge_03.setTextField(document.getElementById("gauge-text3"));
 
     }
@@ -823,12 +840,18 @@ function init_gauge() {
 
     }
 
+    //Procedure finished
+    let procedureDoneNumber = parseInt(document.getElementById('procedureDoneNumber').value);
+    if (procedureDoneNumber == 0){
+        procedureDoneNumber = 0.1;
+        viewedNumber = 999;
+    }
 
     if ($('#gauge-text4').length){
 
-        chart_gauge_04.maxValue = 40;
+        chart_gauge_04.maxValue = viewedNumber;
         chart_gauge_04.animationSpeed = 32;
-        chart_gauge_04.set(20);
+        chart_gauge_04.set(procedureDoneNumber);
         chart_gauge_04.setTextField(document.getElementById("gauge-text4"));
 
     }
@@ -840,12 +863,17 @@ function init_gauge() {
 
     }
 
-
+    //We are safe
+    let weAreSafeNumber = parseInt(document.getElementById('weAreSafeNumber').value);
+    if (weAreSafeNumber == 0){
+        weAreSafeNumber = 0.1;
+        viewedNumber = 999;
+    }
     if ($('#gauge-text4').length){
 
-        chart_gauge_05.maxValue = 40;
+        chart_gauge_05.maxValue = viewedNumber;
         chart_gauge_05.animationSpeed = 32;
-        chart_gauge_05.set(15);
+        chart_gauge_05.set(weAreSafeNumber);
         chart_gauge_05.setTextField(document.getElementById("gauge-text5"));
 
     }

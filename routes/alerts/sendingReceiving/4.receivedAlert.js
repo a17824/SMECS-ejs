@@ -5,13 +5,10 @@ var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var functions = require('./../../functions');
 var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
-let reports = require('./../../api/reports.js');
+let reportsApi = require('./../../api/reports.js');
+let reportsEJS = require('./../reports/reports.js');
 
 module.exports.receivedAlert = function(req, res) {
-    if (!req.decoded)   {     // EJS user
-        //reports.alertReceiptPost(req, res);
-        //reports.alertViewedPost(req, res);
-    }
 
     async.parallel([
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
@@ -35,6 +32,9 @@ module.exports.receivedAlert = function(req, res) {
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
+            if (!req.decoded)       // EJS user
+                reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
+
             async.waterfall([
                 function (callback) {
                     var canRequestAssistance = false;
@@ -121,38 +121,48 @@ module.exports.receivedAlert = function(req, res) {
                         usersWithPushToken.push(user);
                 });
 
-                if(req.decoded){ //API user
-                    res.json({
-                        success: 'true',
-                        userAuthRoleName: req.decoded.user.userRoleName,
-                        userAuthEmail: req.decoded.user.email,
-                        alertInfo: results[0],
-                        building: results[1],
-                        floor: results[2],
-                        room: results[3],
-                        utilities: results[4],
-                        canRequestAssistance: canRequestAssistance,
-                        enableProcedureButton: enableProcedureButton,
-                        flagFloor: flag,
-                        usersWithPushToken: usersWithPushToken
-                    });
+                reportsEJS.totalNumbers(results[0],function (result,err) {
+                    if(err) console.log('totalNumbers err - ',);
+                    else {
+                        if(req.decoded){ //API user
+                            res.json({
+                                success: 'true',
+                                userAuthRoleName: req.decoded.user.userRoleName,
+                                userAuthEmail: req.decoded.user.email,
+                                alertInfo: results[0],
+                                building: results[1],
+                                floor: results[2],
+                                room: results[3],
+                                utilities: results[4],
+                                canRequestAssistance: canRequestAssistance,
+                                enableProcedureButton: enableProcedureButton,
+                                flagFloor: flag,
+                                usersWithPushToken: usersWithPushToken,
+                                total: result
+                            });
 
-                }else{  //EJS user
-                    res.render('alerts/receiving/received', {
-                        title: title,
-                        userAuthRoleName: req.user.userRoleName,
-                        userAuthEmail: req.user.email,
-                        info: results[0],
-                        floor: results[2],
-                        utilities: results[4],
-                        canRequestAssistance: canRequestAssistance,
-                        enableProcedureButton: enableProcedureButton,
-                        aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                        userAuthPhoto: req.user.photo,
-                        flagFloor: flag
-                    });
-                }
+                        }else{  //EJS user
+                            res.render('alerts/receiving/received', {
+                                title: title,
+                                userAuthRoleName: req.user.userRoleName,
+                                userAuthEmail: req.user.email,
+                                info: results[0],
+                                floor: results[2],
+                                utilities: results[4],
+                                canRequestAssistance: canRequestAssistance,
+                                enableProcedureButton: enableProcedureButton,
+                                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                                userAuthPhoto: req.user.photo,
+                                flagFloor: flag,
+                                total: result
+                            });
+                        }
+                    }
+
+                });
+
+
             });
         }
     })

@@ -1,5 +1,6 @@
 var models = require('./../models');
 var moment = require('moment');
+let pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
 
 /* Send all alerts. -------------------------------*/
 module.exports.reportsGet = function (req, res) {
@@ -114,6 +115,8 @@ module.exports.alertReceiptPost = function (req, res) {
                         alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
                         alert.save();
+                        /*****  CALL HERE NOTIFICATION API  *****/
+                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
                         res.json({
                             success: true
                         });
@@ -127,7 +130,7 @@ module.exports.alertReceiptPost = function (req, res) {
 
 
 /* Receive the viewed for message delivered -------------------------------*/
-module.exports.alertViewedPost = function (req, res) {
+module.exports.alertViewedPost = function (req, res) {  //API
     var wrapped = moment(new Date());
     var email = req.decoded.user.email;
     var alertID = req.body.alertID;
@@ -150,17 +153,47 @@ module.exports.alertViewedPost = function (req, res) {
                         alert.sentTo[i].viewed.viewedBoolean = true;
                         alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
+
                         alert.save();
                         success = true;
+
+                        /*****  CALL HERE NOTIFICATION API  *****/
+                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+
                         break
                     }
                 }
-                res.json({success: success});
 
+
+
+                res.json({success: success});
             }
         }
     );
 };
+module.exports.receivedViewedAlert = function (req, alert) { //EJS
+    let email = req.user.email;
+    let wrapped = moment(new Date());
+    for (var i = 0; i < alert.sentTo.length; i++) {
+        if(alert.sentTo[i].email == email && alert.sentTo[i].viewed.viewedBoolean == false ){
+            if(alert.sentTo[i].received.receivedBoolean == false ){
+                alert.sentTo[i].received.receivedBoolean = true;
+                alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
+                alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
+            }
+            alert.sentTo[i].viewed.viewedBoolean = true;
+            alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
+            alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
+            alert.save();
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+            break
+        }
+    }
+
+};
+/* end of Receive the viewed for message delivered -------------------------------*/
+
 
 /* Receive the called 911 for message delivered -------------------------------*/
 module.exports.alertCalled911 = function (req, res) {
@@ -179,6 +212,8 @@ module.exports.alertCalled911 = function (req, res) {
                         alert.sentTo[i].called911.called911Date = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].called911.called911Time = wrapped.format('h:mm:ss a');
                         alert.save();
+                        /*****  CALL HERE NOTIFICATION API  *****/
+                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
                         res.json({
                             success: true
                         });

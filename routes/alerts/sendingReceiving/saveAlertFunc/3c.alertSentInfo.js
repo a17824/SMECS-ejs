@@ -1,7 +1,7 @@
 //Dependencies
 var models = require('./../../../models');
 var moment = require('moment');
-
+let pushNotification = require('./../pushNotification.js');
 
 /**
  * middleware for Express.
@@ -19,6 +19,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            photo: user.photo,
             pushToken: user.pushToken
         };
         sentTo.push(sentToArr);
@@ -137,6 +138,7 @@ module.exports.update = function(req, res, tempAlert, callback) {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
+                    photo: user.photo,
                     pushToken: user.pushToken
                 };
                 sentTo.push(sentToArr);
@@ -216,6 +218,9 @@ module.exports.update = function(req, res, tempAlert, callback) {
             alert.mapBus = tempAlert.mapBus;
         }
         alert.save();
+        /*****  CALL HERE NOTIFICATION API  *****/
+        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo'); //refresh notes on cellphones
+
         callback(alert)
     });
 };

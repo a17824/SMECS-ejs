@@ -262,8 +262,7 @@ module.exports.createAlert= function(req, res) {
             // endo of for back/exit button
 
             if(alertTemp.realDrillDemo !== 'demo') {
-                alertTemp.latitude = req.body.latitude;
-                alertTemp.longitude = req.body.longitude;
+
 
 
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo

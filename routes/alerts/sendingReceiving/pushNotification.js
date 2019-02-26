@@ -178,12 +178,34 @@ module.exports.notifyUser = function(user, action) {
         userRoleName: user.userRoleName,
         firstName: user.firstName,
         lastName: user.lastName,
-        userPhoto: user.photo,
+        userPhoto: user.photo
     };
     sendPush(message);
 };
 
+module.exports.refreshAlertInfo = function(alert, action) {
+    // ONESIGNAL
 
+    let allUsersWithPushToken = [];
+    alert.sentTo.forEach(function (user) {
+        user.pushToken.forEach(function (token) {
+            allUsersWithPushToken.push(token);
+        });
+    });
+
+    // we need to create a notification to send
+    let message = new OneSignal.Notification({
+        contents: {
+            en: 'refreshAlertInfo'
+        },
+        include_player_ids: allUsersWithPushToken
+    });
+    message.postBody["data"] = {
+        action: action,
+        alert: alert._id
+    };
+    sendPush(message);
+};
 
 /* FireBase - sending cellPhone notification
 function sendPush(message, userName, userAuthKey) {

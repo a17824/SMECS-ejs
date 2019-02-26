@@ -67,10 +67,17 @@
 
 
                 <!-- Gauges -->
+                <input type="hidden" id="sentToWithPushTokenNumber" value="<%= total.sentToWithPushTokenNumber %>">
+                <input type="hidden" id="sentToAllNumber" value="<%= total.sentToAllNumber %>">
+                <input type="hidden" id="receivedNumber" value="<%= total.receivedNumber %>">
+                <input type="hidden" id="viewedNumber" value="<%= total.viewedNumber %>">
+                <input type="hidden" id="procedureDoneNumber" value="<%= total.procedureDoneNumber %>">
+                <input type="hidden" id="weAreSafeNumber" value="<%= total.weAreSafeNumber %>">
+
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2 style="font-size: 28px">Gauges<a style="font-size: 12px">&emsp;Total alerts sent: 50</a></h2>
+                            <h2 style="font-size: 28px">Gauges<a style="font-size: 12px">&emsp;<%= total.sentToAllNumber %> users in this scope. <%= total.sentToWithPushTokenNumber %> users with SMECS installed </a></h2>
 
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -91,11 +98,11 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>Sent to</h4>
-                                            <canvas width="150" height="80" id="chart_gauge_01" class="" style="width: 160px; height: 100px;">48</canvas>
+                                            <canvas width="150" height="80" id="chart_gauge_01" class="" style="width: 160px; height: 100px;"></canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text" class="goal-value pull-right">50</span>
+                                                <span id="goal-text" class="goal-value pull-right"><%= total.sentToAllNumber %></span>
                                             </div>
                                         </div>
                                     </div>
@@ -109,11 +116,11 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>Received by</h4>
-                                            <canvas width="150" height="80" id="chart_gauge_02" class="" style="width: 160px; height: 100px;">46</canvas>
+                                            <canvas width="150" height="80" id="chart_gauge_02" class="" style="width: 160px; height: 100px;"></canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text2" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text2" class="goal-value pull-right">48</span>
+                                                <span id="goal-text2" class="goal-value pull-right"><%= total.sentToWithPushTokenNumber %></span>
                                             </div>
                                         </div>
                                     </div>
@@ -127,11 +134,11 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>Viewed by</h4>
-                                            <canvas width="150" height="80" id="chart_gauge_03" class="" style="width: 160px; height: 100px;">40</canvas>
+                                            <canvas width="150" height="80" id="chart_gauge_03" class="" style="width: 160px; height: 100px;"></canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text3" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text3" class="goal-value pull-right">46</span>
+                                                <span id="goal-text3" class="goal-value pull-right"><%= total.receivedNumber %></span>
                                             </div>
                                         </div>
                                     </div>
@@ -144,11 +151,11 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>Procedure finished</h4>
-                                            <canvas width="150" height="80" id="chart_gauge_04" class="" style="width: 160px; height: 100px;">20</canvas>
+                                            <canvas width="150" height="80" id="chart_gauge_04" class="" style="width: 160px; height: 100px;">2</canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text4" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text4" class="goal-value pull-right">40</span>
+                                                <span id="goal-text4" class="goal-value pull-right"><%= total.viewedNumber %></span>
                                             </div>
                                         </div>
                                     </div>
@@ -161,11 +168,11 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>We are safe</h4>
-                                            <canvas width="150" height="80" id="chart_gauge_05" class="" style="width: 160px; height: 100px;">15</canvas>
+                                            <canvas width="150" height="80" id="chart_gauge_05" class="" style="width: 160px; height: 100px;"></canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text5" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text5" class="goal-value pull-right">40</span>
+                                                <span id="goal-text5" class="goal-value pull-right"><%= total.viewedNumber %></span>
                                             </div>
                                         </div>
                                     </div>
@@ -230,9 +237,9 @@
                                         <table class="" width="100%">
                                             <tr>
                                                 <td align="left" style="color: #e76146">didn't receive alert:</td>
-                                                <td width="20" align="center">2</td>
+                                                <td width="20" align="center"><%= total.notReceivedNumber %></td>
                                                 <td width="140" align="center">users out of</td>
-                                                <td width="20" align="right">48</td>
+                                                <td width="20" align="right"><%= total.sentToWithPushTokenNumber %></td>
                                             </tr>
                                         </table>
                                     </h4>
@@ -241,31 +248,49 @@
                                     <div class="panel-body">
 
                                         <ul class="list-unstyled msg_list">
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/5b1594b03cc6e0004815bbfa.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
 
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                            <% total.notReceivedBy.forEach(function(user, idx, array) { %>
+                                                <%  if (idx !== array.length - 1) { %>
+                                                    <li class="imageSentUsers">
+                                                        <%  if (user.photo !== '') { %>
+                                                            <img style="position: relative; left: -5px" src="/public/photosUsers/<%= user.photo %>" class="avatarSentUsers" alt="Avatar" />
+                                                        <%  }else { %>
+                                                            <img style="position: relative; left: -5px" src="/public/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                        <%  } %>
+                                                        <span><span>&ensp;<%= user.firstName + ' ' + user.lastName %></span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+
+                                                        <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
                                     received: <span style="color: #e76146">no</span> &ensp;
                                     viewed: <span style="color: #e76146">no</span> &ensp;
                                     procedure done: <span style="color: #e76146">no</span> &ensp;
                                     we are safe: <span style="color: #e76146">no</span> &ensp;
                                 </span>
-                                            </li>
+                                                    </li>
 
-                                            <!-- last user, picture and name need to be manual position -->
-                                            <li class="imageSentUsers">
-                                                <img style="position: relative; left: -5px" src="/public/photosUsers/5b1592593cc6e0004815bbf6.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+                                                <% }else { %> <!--  last loop  -->
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <li class="imageSentUsers">
+                                                    <%  if (user.photo !== '') { %>
+                                                        <img style="position: relative; left: -5px" src="/public/photosUsers/<%= user.photo %>" class="avatarSentUsers" alt="Avatar" />
+                                                    <%  }else { %>
+                                                        <img style="position: relative; left: -5px" src="/public/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                    <%  } %>
+                                                    <span><span style="position: absolute; left: 62px">&ensp;<%= user.firstName + ' ' + user.lastName %> </span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
 
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
+                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
                                     received: <span style="color: #e76146">no</span> &ensp;
                                     viewed: <span style="color: #e76146">no</span> &ensp;
                                     procedure done: <span style="color: #e76146">no</span> &ensp;
                                     we are safe: <span style="color: #e76146">no</span> &ensp;
                                 </span>
-                                            </li>
-                                            <!-- end of last user, picture and name need to be manual position -->
+                                                    </li>
+                                                    <!-- end of last user, picture and name need to be manual position -->
+                                                <% } %>
+                                            <% }); %>
+
+
+
+
 
                                         </ul>
 

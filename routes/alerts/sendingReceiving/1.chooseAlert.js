@@ -275,7 +275,7 @@ module.exports.showAlertsPost = function(req, res) {
 
 
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
-
+                        console.log('req.body.latitude = ',req.body.latitude);
                         let alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,
@@ -299,6 +299,8 @@ module.exports.showAlertsPost = function(req, res) {
                             placeholderStudentWithGunSeated: placeholderStudentWithGunSeated,
                             placeholderStudentWithGunBehaviour: placeholderStudentWithGunBehaviour,
                             placeholderEvacuateWhereTo: placeholderEvacuateWhereTo,
+                            latitude: req.body.latitude,
+                            longitude: req.body.longitude,
                             alertRoad: alert[0].alertRoad,
                             roadIndex: 1
 
@@ -341,6 +343,8 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.alertIcon = alert[0].icon;
                                     alertTemp.placeholderNote = placeholderNote;
+                                    alertTemp.latitude = req.body.latitude;
+                                    alertTemp.longitude = req.body.longitude;
                                     alertTemp.alertRoad = alert[0].alertRoad;
                                     alertTemp.roadIndex = 1;
 
