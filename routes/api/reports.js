@@ -1,6 +1,7 @@
 var models = require('./../models');
 var moment = require('moment');
 let pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
+let timeDifFunc = require('./reports.js');
 
 /* Send all alerts. -------------------------------*/
 module.exports.reportsGet = function (req, res) {
@@ -149,23 +150,34 @@ module.exports.alertViewedPost = function (req, res) {  //API
                             alert.sentTo[i].received.receivedBoolean = true;
                             alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
                             alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
+
+                            //time user took to receive alert
+                            timeDifFunc.timeDif(alert.sentDate, alert.sentTime, alert.sentTo[i].received.receivedDate, alert.sentTo[i].received.receivedTime,function (result,err) {
+                                if(err || !result) console.log('timeDif err = ',err);
+                                else {
+                                    alert.sentTo[i].received.timeDif = result;
+                                }
+                            });
                         }
                         alert.sentTo[i].viewed.viewedBoolean = true;
                         alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
 
-                        alert.save();
-                        success = true;
 
-                        /*****  CALL HERE NOTIFICATION API  *****/
-                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
-
+                        //time user took to view after receiving alert
+                        timeDifFunc.timeDif(alert.sentTo[i].received.receivedDate, alert.sentTo[i].received.receivedTime, alert.sentTo[i].viewed.viewedDate, alert.sentTo[i].viewed.viewedTime,function (result,err) {
+                            if(err || !result) console.log('timeDif err = ',err);
+                            else {
+                                alert.sentTo[i].viewed.timeDif = result;
+                                alert.save();
+                                success = true;
+                                /*****  CALL HERE NOTIFICATION API  *****/
+                                pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+                            }
+                        });
                         break
                     }
                 }
-
-
-
                 res.json({success: success});
             }
         }
@@ -180,13 +192,30 @@ module.exports.receivedViewedAlert = function (req, alert) { //EJS
                 alert.sentTo[i].received.receivedBoolean = true;
                 alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
                 alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
+
+                //time user took to receive alert
+                timeDifFunc.timeDif(alert.sentDate, alert.sentTime, alert.sentTo[i].received.receivedDate, alert.sentTo[i].received.receivedTime,function (result,err) {
+                    if(err || !result) console.log('timeDif err = ',err);
+                    else {
+                        alert.sentTo[i].received.timeDif = result;
+                    }
+                });
             }
             alert.sentTo[i].viewed.viewedBoolean = true;
             alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
             alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
-            alert.save();
-            /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+
+            //time user took to view alert after receiving alert
+            timeDifFunc.timeDif(alert.sentTo[i].received.receivedDate, alert.sentTo[i].received.receivedTime, alert.sentTo[i].viewed.viewedDate, alert.sentTo[i].viewed.viewedTime,function (result,err) {
+                if(err || !result) console.log('timeDif err = ',err);
+                else {
+                    alert.sentTo[i].viewed.timeDif = result;
+                    console.log('alert.sentTo[i].received.timeDif = ',alert.sentTo[i].received.timeDif);
+                    alert.save();
+                    /*****  CALL HERE NOTIFICATION API  *****/
+                    pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+                }
+            });
             break
         }
     }
@@ -211,9 +240,18 @@ module.exports.alertCalled911 = function (req, res) {
                         alert.sentTo[i].called911.called911Boolean = true;
                         alert.sentTo[i].called911.called911Date = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].called911.called911Time = wrapped.format('h:mm:ss a');
-                        alert.save();
-                        /*****  CALL HERE NOTIFICATION API  *****/
-                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+
+                        //time user took to call911 after viewing alert
+                        timeDifFunc.timeDif(alert.sentTo[i].viewed.viewedDate, alert.sentTo[i].viewed.viewedTime, alert.sentTo[i].called911.called911Date, alert.sentTo[i].called911.called911Time,function (result,err) {
+                            if(err || !result) console.log('timeDif err = ',err);
+                            else {
+                                alert.sentTo[i].called911.timeDif = result;
+                                alert.save();
+                                /*****  CALL HERE NOTIFICATION API  *****/
+                                pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+                            }
+                        });
+
                         res.json({
                             success: true
                         });
@@ -225,3 +263,38 @@ module.exports.alertCalled911 = function (req, res) {
     );
 };
 
+module.exports.timeDif = function (startDate, startTime, endDate, endTime, callback) {
+    let dateStart = moment.utc(startDate, "YYYY-MM-DD");
+    let dateEnd = moment.utc(endDate, "YYYY-MM-DD");
+    let dateDif = moment.duration(dateEnd.diff(dateStart));
+
+    let timeStart = moment.utc(startTime, "HH:mm:ss a");
+    let timeEnd = moment.utc(endTime, "HH:mm:ss a");
+    let timeDif = moment.duration(timeEnd.diff(timeStart));
+
+    let final = '';
+
+    if(dateDif._data.years == 0){
+        if(dateDif._data.months == 0){
+            if(dateDif._data.days == 0){
+                if(timeDif._data.hours == 0){
+                    if(timeDif._data.minutes == 0){
+                        final = '+' + timeDif._data.seconds + ' sec';
+                    }else {
+                        final = '+' + timeDif._data.minutes + ' min';
+                    }
+                }else {
+                    final = '+' + timeDif._data.hours + ' hours';
+                }
+            }else {
+                final = '+' + dateDif._data.days + ' days';
+            }
+        }else {
+            final = '+' + dateDif._data.months + ' months';
+        }
+    }else {
+        final = '+' + dateDif._data.years + ' years';
+    }
+    //console.log('timeDif = ',final);
+    callback(final);
+};

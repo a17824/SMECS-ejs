@@ -7,6 +7,7 @@ var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
 let reportsApi = require('./../../api/reports.js');
 let reportsEJS = require('./../reports/reports.js');
+let timeDifFunc = require('./../../api/reports.js');
 
 module.exports.receivedAlert = function(req, res) {
 
@@ -168,41 +169,6 @@ module.exports.receivedAlert = function(req, res) {
     })
 };
 
-module.exports.procSafeHelp = function(req, res, next) {
-    var alertToUpdate1 = req.body.alertToUpdate;
-    var checkboxType = req.body.checkboxType;
-
-    // API EJS ----------
-    var userApiEjs;
-
-    if (req.decoded) {      // API user
-        userApiEjs = req.decoded.user.email;
-    }
-    else{
-        userApiEjs = req.user.email; // EJS user.
-    }
-    //-------------------
-
-    models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
-        if(err){console.log('err - changing Alert STATUS');
-        }else {
-            alert.sentTo.forEach(function (user) {
-                if (user.email == userApiEjs) {
-                    updateProcedureCompletedWeAreSafe(alert, user, checkboxType);
-                    alert.save(function (err) {
-                        if (err) console.log('err - ',err);
-                        else{
-                            if (req.decoded)
-                                res.json({success: true});
-                            console.log('save success');
-                        }
-                    });
-                }
-            });
-        }
-    });
-};
-
 module.exports.postReceivedAlert = function(req, res, next) {
     var alertToUpdate1 = req.body.alertToUpdate;
     var exitButton = req.body.exitButton;
@@ -248,23 +214,145 @@ module.exports.postReceivedAlert = function(req, res, next) {
     });
 };
 
-function updateProcedureCompletedWeAreSafe(alert, user, requestType) {
-    var wrapped = moment(new Date());
+
+module.exports.procSafeHelp = function(req, res, next) {
+    var alertToUpdate1 = req.body.alertToUpdate;
+    var checkboxType = req.body.checkboxType;
+
+    // API EJS ----------
+    var userApiEjs;
+
+    if (req.decoded) {      // API user
+        userApiEjs = req.decoded.user.email;
+    }
+    else{
+        userApiEjs = req.user.email; // EJS user.
+    }
+    //-------------------
+
+    models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
+        if(err){console.log('err - changing Alert STATUS');
+        }else {
+            alert.sentTo.forEach(function (user) {
+                if (user.email == userApiEjs) {
+                    updateProcedureCompletedWeAreSafe(alert, user, checkboxType, function (result, err) {
+                        if(err || !result) console.log('updateProcedureCompletedWeAreSafe err = ',err);
+                        else {
+                            alert.save(function (err) {
+                                if (err) console.log('err - ', err);
+                                else {
+
+                                    /*****  CALL HERE NOTIFICATION API  *****/
+                                    //if user has permission to see who completed procedure or we are safe
+                                    pushNotification.alert(alert, 'updateAlert'); //change closeAlert function? does it need new function?
+
+                                    /*****  CALL HERE NOTIFICATION API  *****/
+                                    pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+
+                                    if (req.decoded)
+                                        res.json({success: true});
+                                    console.log('save success');
+                                }
+                            });
+                        }
+
+                    });
+                }
+            });
+        }
+    });
+};
+
+
+module.exports.helpers = function(req, res) {
+    let alertToUpdate1 = req.body.alertToUpdate;
+    let whoNeedsHelp = req.body.whoNeedsHelp;
+    console.log('whoNeedsHelp = ',whoNeedsHelp);
+    let wrapped = moment(new Date());
+
+    let userToHelpAuth = '';
+    if(req.decoded)  //API
+        userToHelpAuth = req.decoded.user;
+    else
+        userToHelpAuth = req.user;
+
+    models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
+        if (err || !alert) console.log('helper err - ', err);
+        else {
+            for (let i = 0; i < alert.sentTo.length; i++) {
+                if (alert.sentTo[i].email === whoNeedsHelp) { //user that needs help
+                    let helperDate = wrapped.format('YYYY-MM-DD');
+                    let helperTime = wrapped.format('h:mm:ss a');
+
+                    alert.sentTo.forEach(function (userToHelp) {
+
+                        if(userToHelp.email === userToHelpAuth.email) {  //user that will help
+
+                            //time user took to offer help
+                            timeDifFunc.timeDif(userToHelp.viewed.viewedDate, userToHelp.viewed.viewedTime, helperDate, helperTime,function (result,err) {
+                                if(err || !result) console.log('timeDif err = ',err);
+                                else {
+                                    let userToHelp = {
+                                        firstName: userToHelpAuth.firstName,
+                                        lastName: userToHelpAuth.lastName,
+                                        pushToken: userToHelpAuth.pushToken,
+                                        email: userToHelpAuth.email,
+                                        photo: userToHelpAuth.photo,
+                                        date: helperDate,
+                                        time: helperTime,
+                                        timeDif: result
+                                    };
+                                    alert.sentTo[i].iNeedHelp.helpers.push(userToHelp);
+                                    alert.save();
+                                    /*****  CALL HERE NOTIFICATION API  *****/
+                                    pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+
+                                    if(req.decoded) {   //API
+                                        res.json({
+                                            success: true
+                                        });
+                                    }
+                                    else {
+                                        res.redirect('/reports/showReportsDetails/' + alertToUpdate1);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break
+                }
+            }
+        }
+
+    })
+};
+
+
+function updateProcedureCompletedWeAreSafe(alert, user, requestType, callback) {
+    let wrapped = moment(new Date());
 
     if(!user[requestType].boolean){
         user[requestType].boolean = true;
         user[requestType].date = wrapped.format('YYYY-MM-DD');
         user[requestType].time = wrapped.format('h:mm:ss a');
+
+        //time user took to complete procedure or WeAreSafe or iNeedHelp after viewing alert
+
+        timeDifFunc.timeDif(user.viewed.viewedDate, user.viewed.viewedTime, user[requestType].date, user[requestType].time,function (result,err) {
+            if(err || !result) console.log('timeDif err = ',err);
+            else {
+                user[requestType].timeDif = result;
+            }
+        });
+
     }else {
         user[requestType].boolean = false;
         user[requestType].date = undefined;
         user[requestType].time = undefined;
+        user[requestType].timeDif = undefined;
+        if(requestType === 'iNeedHelp')
+            user[requestType].helpers = undefined;
     }
     console.log('success - ' + requestType + ' for ' + user.firstName + ' ' + user.lastName + ' status changed to ' + user[requestType].boolean);
-
-
-    /*****  CALL HERE NOTIFICATION API  *****/
-    //if user has permission to see who completed procedure or we are safe
-    pushNotification.alert(alert, 'updateAlert'); //change closeAlert function? does it need new function?
-
+    callback('done');
 }

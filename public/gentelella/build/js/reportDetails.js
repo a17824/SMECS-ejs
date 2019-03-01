@@ -765,15 +765,11 @@ function init_gauge() {
     };
 
 
-
+    //Sent to
     if ($('#chart_gauge_01').length){
-
         var chart_gauge_01_elem = document.getElementById('chart_gauge_01');
         var chart_gauge_01 = new Gauge(chart_gauge_01_elem).setOptions(chart_gauge_settings);
-
     }
-
-    //Sent to
     let sentToAllNumber = parseInt(document.getElementById('sentToAllNumber').value);
     let sentToWithPushTokenNumber = parseInt(document.getElementById('sentToWithPushTokenNumber').value);
     if (sentToWithPushTokenNumber == 0){
@@ -781,103 +777,83 @@ function init_gauge() {
         sentToAllNumber = 999;
     }
     if ($('#gauge-text').length){
-
         chart_gauge_01.maxValue = sentToAllNumber;
         chart_gauge_01.animationSpeed = 32;
         chart_gauge_01.set(sentToWithPushTokenNumber);
         chart_gauge_01.setTextField(document.getElementById("gauge-text"));
-
-    }
-
-    if ($('#chart_gauge_02').length){
-
-        var chart_gauge_02_elem = document.getElementById('chart_gauge_02');
-        var chart_gauge_02 = new Gauge(chart_gauge_02_elem).setOptions(chart_gauge_settings);
-
     }
 
     //Received by
+    if ($('#chart_gauge_02').length){
+        var chart_gauge_02_elem = document.getElementById('chart_gauge_02');
+        var chart_gauge_02 = new Gauge(chart_gauge_02_elem).setOptions(chart_gauge_settings);
+    }
     let receivedNumber = parseInt(document.getElementById('receivedNumber').value);
     if (receivedNumber == 0){
         receivedNumber = 0.1;
         sentToWithPushTokenNumber = 999;
     }
     if ($('#gauge-text2').length){
-
         chart_gauge_02.maxValue = sentToWithPushTokenNumber;
         chart_gauge_02.animationSpeed = 32;
         chart_gauge_02.set(receivedNumber);
         chart_gauge_02.setTextField(document.getElementById("gauge-text2"));
-
-    }
-
-    if ($('#chart_gauge_03').length){
-
-        var chart_gauge_03_elem = document.getElementById('chart_gauge_03');
-        var chart_gauge_03 = new Gauge(chart_gauge_03_elem).setOptions(chart_gauge_settings);
-
     }
 
     //Viewed by
+    if ($('#chart_gauge_03').length){
+        var chart_gauge_03_elem = document.getElementById('chart_gauge_03');
+        var chart_gauge_03 = new Gauge(chart_gauge_03_elem).setOptions(chart_gauge_settings);
+    }
     let viewedNumber = parseInt(document.getElementById('viewedNumber').value);
     if (viewedNumber == 0){
         viewedNumber = 0.1;
         receivedNumber = 999;
     }
     if ($('#gauge-text3').length){
-
         chart_gauge_03.maxValue = receivedNumber;
         chart_gauge_03.animationSpeed = 32;
         chart_gauge_03.set(viewedNumber);
         chart_gauge_03.setTextField(document.getElementById("gauge-text3"));
-
     }
 
+    //Procedure finished
     if ($('#chart_gauge_04').length){
-
         var chart_gauge_04_elem = document.getElementById('chart_gauge_04');
         var chart_gauge_04 = new Gauge(chart_gauge_04_elem).setOptions(chart_gauge_settings);
 
     }
-
-    //Procedure finished
     let procedureDoneNumber = parseInt(document.getElementById('procedureDoneNumber').value);
+    let viewedNumberForProc = parseInt(document.getElementById('viewedNumber').value);
     if (procedureDoneNumber == 0){
         procedureDoneNumber = 0.1;
-        viewedNumber = 999;
+        viewedNumberForProc = 999;
     }
-
     if ($('#gauge-text4').length){
-
-        chart_gauge_04.maxValue = viewedNumber;
+        chart_gauge_04.maxValue = viewedNumberForProc;
         chart_gauge_04.animationSpeed = 32;
         chart_gauge_04.set(procedureDoneNumber);
         chart_gauge_04.setTextField(document.getElementById("gauge-text4"));
-
-    }
-
-    if ($('#chart_gauge_05').length){
-
-        var chart_gauge_05_elem = document.getElementById('chart_gauge_05');
-        var chart_gauge_05 = new Gauge(chart_gauge_05_elem).setOptions(chart_gauge_settings);
-
     }
 
     //We are safe
+    if ($('#chart_gauge_05').length){
+        var chart_gauge_05_elem = document.getElementById('chart_gauge_05');
+        var chart_gauge_05 = new Gauge(chart_gauge_05_elem).setOptions(chart_gauge_settings);
+    }
     let weAreSafeNumber = parseInt(document.getElementById('weAreSafeNumber').value);
+    let viewedNumberForSafe = parseInt(document.getElementById('viewedNumber').value);
     if (weAreSafeNumber == 0){
         weAreSafeNumber = 0.1;
-        viewedNumber = 999;
+        viewedNumberForSafe = 999;
     }
-    if ($('#gauge-text4').length){
 
-        chart_gauge_05.maxValue = viewedNumber;
+    if ($('#gauge-text5').length){
+        chart_gauge_05.maxValue = viewedNumberForSafe;
         chart_gauge_05.animationSpeed = 32;
         chart_gauge_05.set(weAreSafeNumber);
         chart_gauge_05.setTextField(document.getElementById("gauge-text5"));
-
     }
-
 }
 
 /* SPARKLINES */

@@ -86,7 +86,7 @@ module.exports.postFloor = function(req, res) {
     var redirectAPI; //API user
     var redirectEJS; //EJS user
 
-    var alertToUpdate1 = req.body.alertToUpdate;
+    let alertToUpdate1 = req.body.alertToUpdate;
     let buildingID = '';
     let buildingName = '';
     let floorID = '';

@@ -102,4 +102,7 @@ routerApi.post('/sendAlertBackButton', auth.auth, createAlert.updateRoadIndex, f
 /* Update User Info. -------------------------------*/
 routerApi.get('/updateUserInfo', auth.auth, appOptions.updateUserInfo, function(req, res) {});
 
+/* Helpers. -------------------------------*/
+routerApi.post('/iWillHelp', auth.auth, receiveAlert.helpers, function(req, res) {});
+
 module.exports = routerApi;

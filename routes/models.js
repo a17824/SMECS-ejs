@@ -329,32 +329,48 @@ var AlertSentInfoSchema = new mongoose.Schema({
         called911: {
             called911Boolean: {type: Boolean, default: false},
             called911Date: String,
-            called911Time: String
+            called911Time: String,
+            timeDif: String
         },
         received: {
             receivedBoolean: {type: Boolean, default: false},         //22
             receivedDate: String,
-            receivedTime: String
+            receivedTime: String,
+            timeDif: String
         },
         viewed: {
             viewedBoolean: {type: Boolean, default: false},         //22
             viewedDate: String,
-            viewedTime: String
+            viewedTime: String,
+            timeDif: String
         },
         procedureCompleted: {
             boolean: {type: Boolean, default: false},
             date: String,
-            time: String
+            time: String,
+            timeDif: String
         },
         weAreSafe: {
             boolean: {type: Boolean, default: false},
             date: String,
-            time: String
+            time: String,
+            timeDif: String
         },
         iNeedHelp: {
             boolean: {type: Boolean, default: false},
             date: String,
-            time: String
+            time: String,
+            timeDif: String,
+            helpers: [{
+                firstName: String,
+                lastName: String,
+                pushToken: [String],
+                email: String,
+                photo: String,
+                date: String,
+                time: String,
+                timeDif: String
+            }]
         }
     }],
     status: {

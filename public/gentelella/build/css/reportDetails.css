@@ -4316,7 +4316,70 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     content: ""; /* clears default height */
     margin-top: 10px; /* change this to whatever height you want it */
 }
+.lineSpace50{
+    line-height: 50%;
+}
 
+/* report details */
+.gaugeTbig {
+    font-size: 28px;
+}
+.gaugeTsmall {
+    font-size: 12px;
+}
+.gaugeCan {
+    width: 160px;
+    height: 100px;
+}
+.usersThat {
+    font-size: 28px;
+}
 
-
-
+.imgPositionLastLoop {
+    position: relative;
+    left: -5px
+}
+.namePos {
+    display: none;
+}
+.compYes {
+    color: #e76146;
+}
+.compNot {
+    color: #e76146;
+    font-size: 11px;
+    position: absolute;
+    right: 35px;
+}
+.compNot2 {
+    color: #f4a82e;
+    font-size: 11px;
+    position: absolute;
+    right: 35px;
+}
+.adjPos {
+    font-size: 11px;
+    position: absolute;
+    left: 70px;
+}
+.yes {
+    color: #18c09c;
+}
+.no {
+    color: #e76146;
+}
+.yesNo {
+    color: #f4a82e;
+}
+.accor1Td2 {
+    width: 20px;
+    text-align: center;
+}
+.accor1Td3 {
+    width: 140px;
+    text-align: center;
+}
+.accor1Td4 {
+    width: 20px;
+    text-align: right;
+}

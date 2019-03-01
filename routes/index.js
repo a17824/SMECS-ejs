@@ -522,6 +522,9 @@ router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin
 });
 
 
+// helpers -------------------------------
+router.post('/iWillHelp', auth.simpleAuth, auth.requireLogin, receiveAlert.helpers, function(req, res) {
+});
 
 
 
