@@ -327,8 +327,8 @@ module.exports.totalNumbers = function(alert, callback) {
     });
     total.iNeedHelpNumber = total.iNeedHelp.length;
     total.notINeedHelpNumber = total.notINeedHelp.length;
-    console.log('total.iNeedHelpNumber = ',total.iNeedHelpNumber);
-    console.log('total.iNeedHelp = ',total.iNeedHelp);
+    //console.log('total.iNeedHelpNumber = ',total.iNeedHelpNumber);
+    //console.log('total.iNeedHelp = ',total.iNeedHelp);
 
     //end of How many users iNeedHelp
 

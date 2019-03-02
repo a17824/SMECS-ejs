@@ -33,7 +33,7 @@ module.exports.receivedAlert = function(req, res) {
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
-            if (!req.decoded)       // EJS user
+
                 reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
 
             async.waterfall([
@@ -218,7 +218,8 @@ module.exports.postReceivedAlert = function(req, res, next) {
 module.exports.procSafeHelp = function(req, res, next) {
     var alertToUpdate1 = req.body.alertToUpdate;
     var checkboxType = req.body.checkboxType;
-
+    console.log('alertToUpdate1 = ',alertToUpdate1);
+console.log('checkboxType = ',checkboxType);
     // API EJS ----------
     var userApiEjs;
 
@@ -241,13 +242,14 @@ module.exports.procSafeHelp = function(req, res, next) {
                             alert.save(function (err) {
                                 if (err) console.log('err - ', err);
                                 else {
+                                    if(checkboxType === 'iNeedHelp') {
+                                        // needs to send push notification of user that needs help
+                                    }
+                                    //else {
+                                        /*****  CALL HERE NOTIFICATION API  *****/
+                                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+                                    //}
 
-                                    /*****  CALL HERE NOTIFICATION API  *****/
-                                    //if user has permission to see who completed procedure or we are safe
-                                    pushNotification.alert(alert, 'updateAlert'); //change closeAlert function? does it need new function?
-
-                                    /*****  CALL HERE NOTIFICATION API  *****/
-                                    pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
 
                                     if (req.decoded)
                                         res.json({success: true});
@@ -270,7 +272,7 @@ module.exports.helpers = function(req, res) {
     console.log('whoNeedsHelp = ',whoNeedsHelp);
     let wrapped = moment(new Date());
 
-    let userToHelpAuth = '';
+    let userToHelpAuth;
     if(req.decoded)  //API
         userToHelpAuth = req.decoded.user;
     else

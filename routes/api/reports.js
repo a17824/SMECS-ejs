@@ -99,10 +99,14 @@ module.exports.proceduresGet = function (req, res) {
 };
 
 /* Receive the receipt for message delivered -------------------------------*/
-module.exports.alertReceiptPost = function (req, res) {
-    var email = req.decoded.user.email;
-    var alertID = req.body.alertID;
-    var wrapped = moment(new Date());
+module.exports.alertReceiptPost = function (req, res, alertID) {
+    let email;
+    if(req.decoded)
+        email = req.decoded.user.email;
+    else
+        email = req.user.email;
+
+    let wrapped = moment(new Date());
 
     models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
             if (err || !alert){
@@ -118,9 +122,10 @@ module.exports.alertReceiptPost = function (req, res) {
                         alert.save();
                         /*****  CALL HERE NOTIFICATION API  *****/
                         pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
-                        res.json({
-                            success: true
-                        });
+
+                        if(req.decoded)
+                            //res.json({success: true});
+
                         break
                     }
                 }
@@ -129,62 +134,13 @@ module.exports.alertReceiptPost = function (req, res) {
     );
 };
 
-
-/* Receive the viewed for message delivered -------------------------------*/
-module.exports.alertViewedPost = function (req, res) {  //API
-    var wrapped = moment(new Date());
-    var email = req.decoded.user.email;
-    var alertID = req.body.alertID;
-    var success = false;
-
-    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
-            if (err || !alert){
-                console.log('alert notFound. err - ',err);
-                return res.json({success: false, message: 'Failed to locate user.'});
-            } else {
-
-
-                for (var i = 0; i < alert.sentTo.length; i++) {
-                    if(alert.sentTo[i].email == email && alert.sentTo[i].viewed.viewedBoolean == false ){
-                        if(alert.sentTo[i].received.receivedBoolean == false ){
-                            alert.sentTo[i].received.receivedBoolean = true;
-                            alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
-                            alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
-
-                            //time user took to receive alert
-                            timeDifFunc.timeDif(alert.sentDate, alert.sentTime, alert.sentTo[i].received.receivedDate, alert.sentTo[i].received.receivedTime,function (result,err) {
-                                if(err || !result) console.log('timeDif err = ',err);
-                                else {
-                                    alert.sentTo[i].received.timeDif = result;
-                                }
-                            });
-                        }
-                        alert.sentTo[i].viewed.viewedBoolean = true;
-                        alert.sentTo[i].viewed.viewedDate = wrapped.format('YYYY-MM-DD');
-                        alert.sentTo[i].viewed.viewedTime = wrapped.format('h:mm:ss a');
-
-
-                        //time user took to view after receiving alert
-                        timeDifFunc.timeDif(alert.sentTo[i].received.receivedDate, alert.sentTo[i].received.receivedTime, alert.sentTo[i].viewed.viewedDate, alert.sentTo[i].viewed.viewedTime,function (result,err) {
-                            if(err || !result) console.log('timeDif err = ',err);
-                            else {
-                                alert.sentTo[i].viewed.timeDif = result;
-                                alert.save();
-                                success = true;
-                                /*****  CALL HERE NOTIFICATION API  *****/
-                                pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
-                            }
-                        });
-                        break
-                    }
-                }
-                res.json({success: success});
-            }
-        }
-    );
-};
 module.exports.receivedViewedAlert = function (req, alert) { //EJS
-    let email = req.user.email;
+    let email;
+    if(req.decoded)
+        email = req.decoded.user.email;
+    else
+        email = req.user.email;
+
     let wrapped = moment(new Date());
     for (var i = 0; i < alert.sentTo.length; i++) {
         if(alert.sentTo[i].email == email && alert.sentTo[i].viewed.viewedBoolean == false ){

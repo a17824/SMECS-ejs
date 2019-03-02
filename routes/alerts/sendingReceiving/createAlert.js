@@ -10,7 +10,7 @@ var floor = require('./saveAlertFunc/3a.savefloorFile.js');
 let student = require('./saveAlertFunc/3b.student.js');
 let reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 let redirectTo = require('./createAlert');
-
+let reportsApi = require('./../../api/reports.js');
 
 /* Verify PIN. -------------------------------*/
 module.exports.verifyPinGet = function(req, res) {
@@ -266,18 +266,37 @@ module.exports.createAlert= function(req, res) {
 
 
                 alertSentInfo.create(req, res, alertTemp,function (result,err) {  //create AlertSentInfo
-                    /*****  CALL HERE NOTIFICATION API  *****/
-                    if(alertTemp.alertNameID !== 26)
-                        pushNotification.alert(result, 'newAlert', email);
-
-                    alertTemp.alertSent = true;
-                    alertTemp.save(function (err) {
-                        if(err)
-                            console.log('failed to update alertTemp.alertSent to = true. ERR = ',err);
-                        else
-                            console.log('success to update alertTemp.alertSent to = true');
-                    });
-                    redirectTo.redirectTo(req,res,alertTemp,flag);
+                    if(err || !result) console.log('something worng creating Alert. err - ', err);
+                    else {
+                        /*****  CALL HERE NOTIFICATION API  *****/
+                        if(alertTemp.alertNameID !== 26){
+                            pushNotification.alert(result, 'newAlert', email, function (result2,err2) {
+                                if(err2 || !result2) console.log('sending pushNotification. err - ', err2);
+                                else {
+                                    console.log('resultCreate = ',result2);
+                                    alertTemp.alertSent = true;
+                                    alertTemp.save(function (err3) {
+                                        if(err3)
+                                            console.log('failed to update alertTemp.alertSent to = true. ERR = ',err3);
+                                        else
+                                            reportsApi.alertReceiptPost(req, res, alertTemp._id); //mark alert as been received
+                                        console.log('success to update alertTemp.alertSent to = true');
+                                    });
+                                    redirectTo.redirectTo(req,res,alertTemp,flag);
+                                }
+                            });
+                        }
+                        else {
+                            alertTemp.alertSent = true;
+                            alertTemp.save(function (err) {
+                                if(err)
+                                    console.log('failed to update alertTemp.alertSent to = true. ERR = ',err);
+                                else
+                                    console.log('success to update alertTemp.alertSent to = true');
+                            });
+                            redirectTo.redirectTo(req,res,alertTemp,flag);
+                        }
+                    }
                 });
             }
             else {
@@ -304,8 +323,13 @@ module.exports.updateAlert= function(req, res) {
                 alertSentInfo.update(req, res, alertTemp, function (result) {  //update AlertSentInfo
 
                     /*****  CALL HERE NOTIFICATION API  *****/
-                    pushNotification.alert(result, 'updateAlert');
-                    redirectTo.redirectTo(req, res, alertTemp, flag);
+                    pushNotification.alert(result, 'updateAlert', 'email', function (result2,err2) {
+                        if(err2 || !result2) console.log('sending updateAlert. err - ', err2);
+                        else {
+                            redirectTo.redirectTo(req, res, alertTemp, flag);
+                        }
+                    });
+
                 });
             }
 

@@ -84,7 +84,7 @@ routerApi.get('/reports/proceduresGet', auth.auth, reports.proceduresGet, functi
 
 /* Post received alert ----------------------------------*/
 routerApi.post('/alertReceipt', auth.auth, reports.alertReceiptPost, function(req, res) {});
-routerApi.post('/alertViewed', auth.auth, reports.alertViewedPost, function(req, res) {});
+
 routerApi.post('/alertCalled911', auth.auth, reports.alertCalled911, function(req, res) {});
 routerApi.post('/alerts/received/procSafeHelp', auth.auth, receiveAlert.procSafeHelp, function(req, res) {});
 routerApi.post('/receivedAlert', auth.auth, receiveAlert.postReceivedAlert, function(req, res) {});

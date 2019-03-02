@@ -37,7 +37,7 @@ module.exports.alert= function(alert, action) {
 //end of FOR FIREBASE - Create message for cellPhone notification
 
 // FOR OneSignal - Create message for cellPhone notification
-module.exports.alert= function(alert, action, userAuthEmail) {
+module.exports.alert= function(alert, action, userAuthEmail, callback) {
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
     if (alert.realDrillDemo == 'drill')
@@ -75,7 +75,13 @@ module.exports.alert= function(alert, action, userAuthEmail) {
             };
 
             //let userName = user.firstName + ' ' + user.lastName;
-            sendPush(message);
+            sendPush(message, function (result,err) {
+                if(err || !result) console.log('timeDif err = ',err);
+                else {
+                    console.log('resultAlert = ',result);
+                    callback('doneAlert')
+                }
+            });
         }
     });
 };
@@ -119,7 +125,13 @@ module.exports.updateBadge= function(alerts) {
             };
 
             //let userName = user.firstName + ' ' + user.lastName;
-            sendPush(message);
+            sendPush(message,function (result,err) {
+                if(err || !result) console.log('updateBadge err = ',err);
+                else {
+                    console.log('result updateBadge = ',result)
+                }
+
+            });
         }
     });
 };
@@ -145,7 +157,13 @@ module.exports.icons = function(icons,action) {
                 action: action,
                 icons: icons
             };
-            sendPush(message);
+            sendPush(message,function (result,err) {
+                if(err || !result) console.log('icons err = ',err);
+                else {
+                    console.log('result icons = ',result)
+                }
+
+            });
         }
     });
 };
@@ -180,7 +198,13 @@ module.exports.notifyUser = function(user, action) {
         lastName: user.lastName,
         userPhoto: user.photo
     };
-    sendPush(message);
+    sendPush(message,function (result,err) {
+        if(err || !result) console.log('notifyUser err = ',err);
+        else {
+            console.log('result notifyUser = ',result)
+        }
+
+    });
 };
 
 module.exports.refreshAlertInfo = function(alert, action) {
@@ -204,7 +228,13 @@ module.exports.refreshAlertInfo = function(alert, action) {
         action: action,
         alert: alert._id
     };
-    sendPush(message);
+    sendPush(message,function (result,err) {
+        if(err || !result) console.log('refreshAlertInfo err = ',err);
+        else {
+            console.log('result refreshAlertInfo = ',result)
+        }
+
+    });
 };
 
 /* FireBase - sending cellPhone notification
@@ -225,8 +255,7 @@ function sendPush(message, userName, userAuthKey) {
 //end of FireBase - sending cellPhone notification
 
 //OneSignal - sending cellPhone notification
-function sendPush(message) {
-
+function sendPush(message, callback) {
     // first we need to create a client
     let myClient = new OneSignal.Client({
         //userAuthKey: userAuthKey,
@@ -234,12 +263,41 @@ function sendPush(message) {
     });
 
     myClient.sendNotification(message, function (err, httpResponse,data) {
-        if (err) {
+        //when a pushToken has incorrect format
+        if (err || data.errors) {
             //console.log("Couldn't send message to " + userName);
-            console.log(data, httpResponse.statusCode);
-        } else {
-            console.log('PUSH NOTIFICATION SENT');
-            //console.log(data, httpResponse.statusCode);
+            //console.log(data);
+            //console.log('include_player_ids222 = ',message.postBody.include_player_ids);
+            let usersArray = message.postBody.include_player_ids;
+            usersArray.forEach(function (user) {
+                let message2 = new OneSignal.Notification({
+                    contents: {
+                        en: 'refreshAlertInfo'
+                    },
+                    include_player_ids: [user]
+                });
+                message2.postBody["data"] = message.data;
+                myClient.sendNotification(message2, function (err, httpResponse,data) {
+                    if (err || data.errors) {
+                        console.log('user with bad token - ', data);
+                    }
+                    else{
+                        //console.log('sent to 1 user successfully - ', data);
+                    }
+                });
+            });
+
+
+            //console.log('include_player_ids = ',message.postBody.contents.include_player_ids.length);
+
+        }
+            //end of When a pushToken has incorrect format
+
+        // when pusharrays are OK
+        else {
+            console.log('PUSH NOTIFICATION SENT Correctly');
+            //console.log('pushResult = ',data, httpResponse.statusCode);
+            callback('doneSendPush');
         }
     });
 }

@@ -257,13 +257,17 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                                         console.log('err = ',err);
 
                                     } else {
-                                        //send pushNotification
-                                        pushNotification.alert(alert1, 'newAlert', userAuthEmail);
-                                                /********************************
-                                                 * NOTIFICATION API HERE        *
-                                                 * scope to sent is:            *
-                                                 * sentSmecsAppUsersScope *
-                                                 ********************************/
+                                        /********************************
+                                         * NOTIFICATION API HERE        *
+                                         * scope to sent is:            *
+                                         * sentSmecsAppUsersScope *
+                                         ********************************/
+                                        pushNotification.alert(alert1, 'newAlert', userAuthEmail, function (result2,err2) {
+                                            if (err2 || !result2) console.log('sending updateAlert. err - ', err2);
+                                            else {
+
+                                            }
+                                        });
                                     }
                                 });
                             }
