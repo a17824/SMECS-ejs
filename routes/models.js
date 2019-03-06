@@ -122,6 +122,7 @@ var StudentsSchema = new mongoose.Schema({
     studentID: { type: Number, unique: true },
     firstName: String,
     lastName: String,
+    photoTemp: String,
     photo: String,
     busRide: { type: Boolean, default: false},
     parentOf: [{

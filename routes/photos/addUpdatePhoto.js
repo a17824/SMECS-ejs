@@ -215,13 +215,16 @@ module.exports.cropPhoto = function (req, res){
             var title = 'Parent registration Step2';
         }
 
+        let userType,aclType,folder;
         if(req.session.user.redirect == 'showStudents'){ //if photo to update is from a Student
-            var userType = 'Students';
-            var aclType = results[2];
+            userType = 'Students';
+            aclType = results[2];
+            folder = 'photosStudents';
 
         }else {                                          //if photo to update is from a User
-            var userType = 'Users';
-            var aclType = results[0];
+            userType = 'Users';
+            aclType = results[0];
+            folder = 'photosUsers';
         }
 
         var iPad = false;
@@ -229,12 +232,15 @@ module.exports.cropPhoto = function (req, res){
         if(md.is('iPad') == true)
             iPad = true;
 
+
         models[userType].findById(req.params.id, function (err, user) {
+            console.log('user = ',user);
             res.render('photos/cropPhoto',{
                 title: title,
                 userToChangePhoto: user,
                 userType: userType,
                 iPad: iPad,
+                folder: folder,
                 aclModifyUsers: aclType, //aclPermissions modifyUsers
                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
@@ -246,8 +252,9 @@ module.exports.cropPhoto = function (req, res){
 };
 
 module.exports.cropPhotoPost = function (req, res){
-    var locationType = 'public/photosUsers/'; //if photo is from a user document
-    var userType = 'Users';
+    let locationType = 'public/photosUsers/'; //if photo is from a user document
+    let userType = 'Users';
+
     if(req.user.redirect == 'showStudents'){    //if photo is from a student document
         locationType = 'public/photosStudents/';
         userType = 'Students';

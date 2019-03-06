@@ -16,9 +16,7 @@
         $(document).ready(function () {
 
             let userType=$("#userType").val();
-
             $("#back").click(function () {
-                console.log('userType = ',userType);
                 if(userType === 'Users')
                     window.location = '/users/showUsers'
                 else
@@ -128,9 +126,9 @@
 
 
 
-                                            <form action="/photos/choosePhoto/:id" enctype="multipart/form-data" method="post">
-
+                                            <form id="myform" action="/photos/choosePhoto/:id" enctype="multipart/form-data" method="post">
                                                 <input name="<%= userToChangePhoto.id %>" type="hidden"/>
+
 
                                                 <div class="divChoose center-block">
                                                     <% if (userToChangePhoto.photo === '' || userToChangePhoto.photo == undefined) {%>
@@ -159,13 +157,9 @@
                                                                single="single"
                                                                accept="image/*" required disabled/><br>
                                                     <% } %>
-
-
-
-
-
                                                 </div>
-
+                                            </form>
+                                            
                                                 <br><br><br><br><br><br><br><br>
                                                 <div class="ln_solid"></div>
                                                 <div class="centered-text">
@@ -178,16 +172,16 @@
                                                     <% } %>
 
                                                     <% if (typeof aclModifyUsers == 'undefined' || aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
-                                                        <input type="submit" value="Next" class="btn btn-success">
+                                                        <input type="submit" form="myform" value="Next" class="btn btn-success">
                                                     <% } else { %>
-                                                        <input type="submit" value="Next" class="btn btn-success" disabled>
+                                                        <input type="submit" form="myform" value="Next" class="btn btn-success" disabled>
                                                     <% } %>
 
                                                     <a href="/users/showUsers"><button  class="btn btn-default" disabled>cancel</button></a>
 
 
                                                 </div>
-                                            </form>
+
 
 
 
