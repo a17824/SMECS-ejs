@@ -171,9 +171,7 @@
                 alertGroupName=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
                 icon=$("#selected-text").val();
-                let sound=$("input:radio[name='radio']:checked").val();
-                let lightModeType=$("#lightModeType").val();
-                let lightColor=$("input:radio[name='lightColor']:checked").val();
+                var sound=$("input:radio[name='radio']:checked").val();
 
                 //-----forms validation------------------------------------
                 if (alertGroupName == "" ) {
@@ -182,16 +180,6 @@
                 }
                 if (alertGroupID == "" ) {
                     alert("Group ID must be filled out");
-                    return false;
-                }
-
-                if (colorName === 'choose color') {
-                    alert("Please choose a Group Color");
-                    return false;
-                }
-
-                if (!lightColor) {
-                    alert("Please choose a Light Color");
                     return false;
                 }
 
@@ -209,9 +197,7 @@
                     colorName: colorName,
                     bgValue: bgValue,
                     icon: icon,
-                    sound: sound,
-                    lightModeType: lightModeType,
-                    lightColor: lightColor
+                    sound: sound
 
                 },function(data){
                     if(data==='done')
@@ -373,52 +359,7 @@
                     </div>
 
 
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2><small>SMECS Light</small></h2>
 
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <br />
-                            <form class="form-horizontal form-label-left input_mask">
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Flash mode:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-
-                                        <select id="lightModeType" class="form-control">
-                                            <% lightModes.forEach(function(mode) { %>
-                                                <option value="<%= mode %>"><%= mode %></option>
-                                            <% }); %>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Color:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <input
-                                                    type="radio"
-                                                    class="flat"
-                                                    id="lightColor"
-                                                    name="lightColor"
-                                                    value="false">
-                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >same as group color</label>&emsp;&emsp;
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="lightColor"
-                                                   name="lightColor"
-                                                   value="true">
-                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >random</label>
-                                    </div>
-                                </div>
-
-                            </form>
-                            <div class="ln_solid"></div>
-                        </div>
-                    </div>
 
 
 

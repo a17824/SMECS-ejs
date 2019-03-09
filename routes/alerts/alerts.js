@@ -59,6 +59,12 @@ module.exports.create = function(req, res) {
         var arraySort = [];
         var array = [];
 
+        let arrayRoles = [];
+        results[2].forEach(function (role) {
+            if(role.roleID !== 97)
+                arrayRoles.push(role);
+        });
+
         var streamSort = models.Alerts.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
@@ -82,7 +88,7 @@ module.exports.create = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 alertGroup: results[0],
                 alert: results[1],
-                roles: results[2],
+                roles: arrayRoles,
                 aclAddAlerts: results[3],      //aclPermissions addAlerts
                 aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
@@ -193,16 +199,20 @@ module.exports.update = function(req, res) {
             req.params.id != 18 &&
             req.params.id != 29 ){
             modelType = 'other';
-            console.log('modelType2 = ',modelType);
         }
-
-        console.log('modelType3 = ',modelType);
+        //console.log('modelType = ',modelType);
 
         //show hide AlertID select in EJS
         let showHideAlertID = 'hide';
         if (req.user.userPrivilegeID == 1)
             showHideAlertID = '';
 
+
+        let arrayRoles = [];
+        results[2].forEach(function (role) {
+            if(role.roleID !== 97)
+                arrayRoles.push(role);
+        });
 
         let streamSort = models.Alerts.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
@@ -227,7 +237,7 @@ module.exports.update = function(req, res) {
                     showHideAlertID: showHideAlertID,
                     alert: results[0],
                     alertGroup: results[1],
-                    roles: results[2],
+                    roles: arrayRoles,
 
                     modelType: modelType,
                     title2: title2,

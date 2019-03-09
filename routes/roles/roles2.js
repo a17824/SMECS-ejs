@@ -188,39 +188,23 @@ module.exports.updatePost = function(req, res) {
 
                 updateUsers();
                 updateWCSRAlerts();
+                updateWhoCanCall911();
+                updateLightRoles();
 
                 return res.send({redirect:'/roles2/showRoles2'})
             }
             //UPDATE USERS old roleID/roleName to new roleID/Name
             function updateUsers(){
-                models.Users.find({}, function(err, users) {
-                    if( err || !users) console.log("No Users found in database");
-                    else users.forEach( function(user) {
-                        for (var i=0; i < user.userRoleID.length; i++) {
-                            if (user.userRoleID[i] == oldRoleIdToUpdate){
-                                user.userRoleID[i] = parseInt(req.body.roleID);
-                                user.markModified("userRoleID");
-                                user.save(function (err) {
-                                    if (err && (err.code === 11000 || err.code === 11001)) {
-                                        return res.status(409).send('showAlert')
-                                    } else {
-                                        console.log('user role updated');
-                                    }
-                                });
-                            }
-                            if (user.userRoleName[i] == oldRoleNameToUpdate){
-                                user.userRoleName[i] = req.body.roleName;
-                                user.markModified("userRoleName");
-                                user.save(function (err) {
-                                    if (err && (err.code === 11000 || err.code === 11001)) {
-                                        return res.status(409).send('showAlert')
-                                    } else {
-                                        console.log('user role updated');
-                                    }
-                                });
-                            }
-                        }
-                    });
+                //Alerts Collection - add new role to all documents
+                models.Users.update({
+                    "userRoleID": oldRoleIdToUpdate
+
+                }, { "$set": {
+                        "userRoleID.$": req.body.roleID,
+                        "userRoleName.$": req.body.roleName
+                    }
+                }, {"multi": true} , function (err, result) {
+                    console.log(result);
                 });
             }
             //--------end UPDATE USERS old roleID/roleName to new roleID/Name
@@ -240,13 +224,43 @@ module.exports.updatePost = function(req, res) {
                         "whoCanSendReceive.receiveReal.$.roleID": req.body.roleID,
                         "whoCanSendReceive.receiveReal.$.roleName": req.body.roleName,
                         "whoCanSendReceive.receiveDrill.$.roleID": req.body.roleID,
-                        "whoCanSendReceive.receiveDrill.$.roleName": req.body.roleName,
+                        "whoCanSendReceive.receiveDrill.$.roleName": req.body.roleName
                     }
                 }, {"multi": true} , function (err, result) {
                     console.log(result);
                 });
             }
             //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
+
+            //UPDATE whoCanCall911 ALERTS --------
+            function updateWhoCanCall911(){
+                //Alerts Collection - add new role to all documents
+                models.Alerts.update({
+                    "whoCanCall911": oldRoleNameToUpdate
+
+                }, { "$set": {
+                        "whoCanCall911.$": req.body.roleName
+                    }
+                }, {"multi": true} , function (err, result) {
+                    console.log(result);
+                });
+            }
+            //--------end UPDATE whoCanCall911 ALERT
+
+            //UPDATE whoCanCall911 ALERTS --------
+            function updateLightRoles(){
+                //Alerts Collection - add new role to all documents
+                models.Room.update({
+                    "roomRoleName": oldRoleNameToUpdate
+
+                }, { "$set": {
+                        "roomRoleName.$": req.body.roleName
+                    }
+                }, {"multi": true} , function (err, result) {
+                    console.log(result);
+                });
+            }
+            //--------end UPDATE whoCanCall911 ALERT
         });
 
     });

@@ -10,10 +10,11 @@
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
-    <!-- color dropdown menu -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+    <!-- color dropdown menu -->
     <link rel='stylesheet' href='/public/stylesheets/alertGroup.css' />
-    <!--<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>-->
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- Icons menu -->
@@ -32,11 +33,13 @@
     <script>
         var iconSelect;
         var selectedText;
+        var savedIcon;
 
         window.onload = function(){
-
+            //icons
+            savedIcon = document.getElementById('savedIcon').value;
             selectedText = document.getElementById('selected-text');
-
+            savedIcon = savedIcon-1;
 
             document.getElementById('my-icon-select').addEventListener('changed', function(e){
                 selectedText.value = iconSelect.getSelectedValue();
@@ -54,7 +57,9 @@
 
             var icons = [];
             iconBuild(icons);
-            iconSelect.refresh(icons, 1);
+            iconSelect.refresh(icons, savedIcon);
+
+
         };
     </script>
 
@@ -62,9 +67,11 @@
         var color;
         var colorName;
         var bgValue;
+
         function GetSelectedItem(el)
         {
             var e = document.getElementById(el);
+
             color = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
             colorName = e.options[e.selectedIndex].text;
             bgValue = e.options[e.selectedIndex].value;
@@ -78,6 +85,7 @@
 
             //build radios depending on selected soundType
             $("#getSoundType").change(function () {
+                let soundInUse=$("#soundInUse").val();
 
                 var soundTypeId = this[this.selectedIndex].value;
                 var soundID = this[this.selectedIndex].id;
@@ -87,13 +95,26 @@
                 var radioComplete = [];
                 for (var i = 1; i < soundArray.length; i += 3) {
 
-                    var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
-                        'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
-                        'name="radio" ' +
-                        'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
-                        '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
+                    if( soundArray[i] == soundInUse) {
+                        var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
+                            'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
+                            'name="radio" ' +
+                            'class="icheckbox_flat-green" checked/> ' + soundArray[i] + '' +
+                            '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
 
-                    radioComplete.push(radioBtn);
+                        radioComplete.push(radioBtn);
+                    }
+                    else {
+                        var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
+                            'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
+                            'name="radio" ' +
+                            'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
+                            '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
+
+                        radioComplete.push(radioBtn);
+                    }
+
+
                 }
                 $("#buildRadio").html(radioComplete);
                 $('.mediPlayer').mediaPlayer();
@@ -103,8 +124,10 @@
             //dropdown rectangle color
             $(function() {
 
+
                 $.widget("custom.selectmenu", $.ui.selectmenu, {
                     _renderItem: function(ul, item) {
+
 
                         var li = $("<li>"),
                             wrapper = $("<div>");
@@ -131,6 +154,7 @@
 
                 colorBuild(function (result) {
                     var Color = result;
+
                     for (var i = 0; i < Color.Data.length; i++) {
                         $("#DropDownID").append($("<option></option>").val(Color.Data[i].RgbValue).html(Color.Data[i].ColorName));
                     }
@@ -138,7 +162,6 @@
 
             });
             //end off dropdown rectangle color
-
 
 
             var oldSortID = $("#oldSortID").val();
@@ -155,63 +178,53 @@
             }
             $('#sort_select').html(select_sort);
 
+            var oldAlertGroupID = $("#oldAlertGroupID").val();
             var select = '';
             var myArray = $("#inUseAlertGroupID").val().split(",").map(Number);
-            for (var i=1;i<=99;i++){
-                if(myArray.indexOf(i) == -1){
-                    select += '<option val=' + i + '>' + i + '</option>';
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1 || i == oldAlertGroupID){
+                    if(i == oldAlertGroupID){
+                        select += '<option val=' + i + ' selected="selected">' + i + '</option>';
+                    }else{
+                        select += '<option val=' + i + '>' + i + '</option>';
+                    }
                 }
             }
             $('#some_select').html(select);
 
-
-            var alertGroupID,alertGroupName,sortID,icon;
-            $("#btSubmit").click(function(){
+            var alertGroup1,oldAlertGroupName,oldAlertGroupID,alertGroupID,alertGroupName,sortID,icon;
+            $("#<%= alertGroup.id %>").click(function(){
+                alertGroup1=$(this).attr('id');
+                oldAlertGroupID=$("#oldAlertGroupID").val();
                 alertGroupID=$("#some_select").val();
+                oldAlertGroupName=$("#oldAlertGroupName").val();
                 alertGroupName=$("#alertGroupName").val();
                 sortID=$("#sort_select").val();
                 icon=$("#selected-text").val();
-                let sound=$("input:radio[name='radio']:checked").val();
-                let lightModeType=$("#lightModeType").val();
-                let lightColor=$("input:radio[name='lightColor']:checked").val();
+                var sound=$("input:radio[name='radio']:checked").val();
 
                 //-----forms validation------------------------------------
                 if (alertGroupName == "" ) {
-                    alert("Group Name must be filled out");
+                    alert("Alert Group Name must be filled out");
                     return false;
                 }
                 if (alertGroupID == "" ) {
-                    alert("Group ID must be filled out");
-                    return false;
-                }
-
-                if (colorName === 'choose color') {
-                    alert("Please choose a Group Color");
-                    return false;
-                }
-
-                if (!lightColor) {
-                    alert("Please choose a Light Color");
-                    return false;
-                }
-
-                if (!sound) {
-                    alert("Please choose a Sound");
+                    alert("Alert Group ID must be filled out");
                     return false;
                 }
                 //--------------------------------forms validation end-------
 
-                $.post("/alertGroups/addAlertGroups",{
-
-                    alertGroupID: alertGroupID,
-                    alertGroupName: alertGroupName,
+                $.post("/alertGroups/updateAlertGroups",{
+                    alertGroupToUpdate: alertGroup1,
+                    oldAlertGroupID: oldAlertGroupID,
+                    groupID: alertGroupID,
+                    oldAlertGroupName: oldAlertGroupName,
+                    name: alertGroupName,
                     sortID: sortID,
                     colorName: colorName,
                     bgValue: bgValue,
                     icon: icon,
-                    sound: sound,
-                    lightModeType: lightModeType,
-                    lightColor: lightColor
+                    sound: sound
 
                 },function(data){
                     if(data==='done')
@@ -223,7 +236,6 @@
                     if(error.responseText == 'showAlert')
                         alert("Alert Group NAME already in use. Choose a different Name.")
                 });
-
             });
         });
     </script>
@@ -258,33 +270,32 @@
         <div class="right_col" role="main">
 
             <div class="page-title">
+
                 <div class="title_left">
-                    <h3>Add Group</h3>
+                    <h3>Update Group</h3>
                 </div>
-
-
 
                 <div class="title_right">
 
                     <div class="pull-left">
-                        <% if (aclShowAlertGroups == null || aclShowAlertGroups.checkBoxValue == true) {%>
+                        <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
                         <button type="button"
-                                id="btSubmit"
+                                id="<%= alertGroup.id %>"
                                 value="Submit"
                                 onClick="GetSelectedItem('DropDownID');"
                                 class="btn btn-success">Save
                         </button>
-
-                        <!-- <button type="submit" class="btn btn-success">Submit</button> -->
                         <% } else { %>
                         <button type="button"
-                                id="btSubmit"
+                                id="<%= alertGroup.id %>"
                                 value="Submit"
                                 onClick="GetSelectedItem('DropDownID');"
                                 class="btn btn-success" disabled>Save
                         </button>
                         <% } %>
+
                         <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Cancel</button></a>
+
                     </div>
 
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -294,6 +305,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="clearfix"></div>
@@ -319,21 +331,26 @@
                                         <input type="text"
                                                class="form-control"
                                                placeholder="Parents chat"
-                                               id="alertGroupName">
+                                               id="alertGroupName"
+                                               value="<%= alertGroup.name %>">
+
+                                        <input type="hidden"
+                                               id="oldAlertGroupName"
+                                               value="<%= alertGroup.name %>">
                                     </div>
                                 </div>
 
-
+                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="hidden" id="oldSortID" value="<%= alertGroup.sortID %>">
                                         <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
                                         <select id='sort_select' class="form-control"></select>
                                     </div>
                                 </div>
 
-                                <input type="hidden" id="inUseAlertGroupID" value="<%= array %>">
                                 <% if (userAuthID == 1) {%>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group ID:</label>
@@ -344,24 +361,27 @@
                                 <% } else { %>
                                 <select id='some_select' style="display:none;"></select>
                                 <% } %>
+                                <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.groupID %>">
 
 
                                 <% if (alertGroup.groupID !== 1) {%>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select name="DropDownID" id="DropDownID" >
-                                            <option value="" selected disabled hidden>choose color</option>
+                                        <select name="DropDownID" id="DropDownID">
+                                            <option style="alignment: center" value="<%= alertGroup.color.bgValue %>" id="red7" selected disabled hidden><%= alertGroup.color.name %></option>
                                         </select>
                                     </div>
                                 </div>
                                 <% } %>
 
+
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon: </label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group icon: </label>
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div id="my-icon-select"></div>
                                         <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
                                     </div>
 
                                 </div>
@@ -373,52 +393,7 @@
                     </div>
 
 
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2><small>SMECS Light</small></h2>
 
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <br />
-                            <form class="form-horizontal form-label-left input_mask">
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Flash mode:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-
-                                        <select id="lightModeType" class="form-control">
-                                            <% lightModes.forEach(function(mode) { %>
-                                                <option value="<%= mode %>"><%= mode %></option>
-                                            <% }); %>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Color:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <input
-                                                    type="radio"
-                                                    class="flat"
-                                                    id="lightColor"
-                                                    name="lightColor"
-                                                    value="false">
-                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >same as group color</label>&emsp;&emsp;
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="lightColor"
-                                                   name="lightColor"
-                                                   value="true">
-                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >random</label>
-                                    </div>
-                                </div>
-
-                            </form>
-                            <div class="ln_solid"></div>
-                        </div>
-                    </div>
 
 
 
@@ -435,12 +410,17 @@
                             <br />
                             <form class="form-horizontal form-label-left">
 
+                                <input type="hidden" id="soundOld" value="<%= alertGroup.sound.name %>">
+
                                 <div class="form-group">
+
+                                    <span id="cir2"></span>
+
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Sound Type:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select class="form-control" id="getSoundType">
                                             <% for (var i = 0; i < sounds[1].length; i++) { %>
-                                            <% if( sounds[0][i] == 0) { %>
+                                            <% if( sounds[0][i] == alertGroup.sound.soundID) { %>
                                             <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>" selected="selected"><%= sounds[1][i] %></option>
                                             <% }else{ %>
                                             <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>"><%= sounds[1][i] %></option>
@@ -451,24 +431,42 @@
                                 </div>
                                 <div class="clearfix"></div>
                                 <div class="divider-dashed"></div>
-                                <div id="buildRadio">
-                                    <% var soundType = 2 %>
-                                    <% for (var i = 1; i < sounds[soundType].length; i += 3) { %>
 
+                                <input type="hidden" id="soundInUse" value="<%= alertGroup.sound.name %>">
+
+                                <div id="buildRadio">
+                                    <% var soundType = alertGroup.sound.soundID + 1 %>
+                                    <% for (var i = 1; i < sounds[soundType].length; i += 3) { %>
+                                    <% if( sounds[soundType][i] == alertGroup.sound.name) { %>
+
+                                    <div class="wrapper">
+
+                                        <input type="radio"
+                                               style="margin-bottom: 5px"
+                                               value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
+                                               class="icheckbox_flat-green"
+                                               name="radio" checked> <%= sounds[soundType][i] %>
+
+                                        <span class="mediPlayer" style="position: absolute; right: 0px">
+                                            <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
+                                        </span>
+
+                                    </div>
+
+                                    <% }else{ %>
                                     <div class="wrapper">
                                         <div class="navi"></div>
                                         <input type="radio"
                                                style="margin-bottom: 5px"
-                                               value="1,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>, <%= sounds[soundType][i+1] %>"
+                                               value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
                                                class="icheckbox_flat-green"
                                                name="radio"> <%= sounds[soundType][i] %>
-                                        <div class="navi"></div>
 
                                         <span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;">
                                             <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
                                         </span>
                                     </div>
-
+                                    <% } %>
                                     <div class="divider-dashed" ></div>
                                     <% } %>
                                 </div>
@@ -498,7 +496,6 @@
 
 <!-- Circular Audio Player -->
 <script src="/public/circleAudioPlayer/player.js"></script>
-
 
 </body>
 <!-- footer content -->

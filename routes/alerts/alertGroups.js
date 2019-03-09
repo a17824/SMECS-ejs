@@ -15,6 +15,7 @@ module.exports.add = function(req, res) {
             }).exec(callback);
         },
         function(callback){buildIconsColorSound.soundBuild(function(sound){callback(null, sound);});},  //sounds
+        function(callback){buildIconsColorSound.lightMode(function(lightMode){callback(null, lightMode);});},  //lightMode
         function(callback){aclPermissions.showAlertGroups(req, res, callback);}, //aclPermissions showAlertGroups
         function(callback){aclPermissions.addAlertGroup(req, res, callback);},  //aclPermissions addAlertGroup
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
@@ -48,9 +49,10 @@ module.exports.add = function(req, res) {
                 userAuthID: req.user.userPrivilegeID,
                 alertGroup: results[0],
                 sounds: results[1],
-                aclShowAlertGroups: results[2],     //aclPermissions showAddAlertGroup
-                aclAddAlertGroup: results[3],      //aclPermissions addAddAlertGroup
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                lightModes: results[2],
+                aclShowAlertGroups: results[3],     //aclPermissions showAddAlertGroup
+                aclAddAlertGroup: results[4],      //aclPermissions addAddAlertGroup
+                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -89,6 +91,10 @@ module.exports.addPost = function(req, res) {
                 soundType: soundType,
                 name: soundName,
                 mp3: soundMp3
+            },
+            light: {
+                mode: req.body.lightModeType,
+                colorRandom: req.body.lightColor
             }
         });
         alertGroup1.save(function (err) {
@@ -111,6 +117,7 @@ module.exports.update = function(req, res) {
 
         },
         function(callback){buildIconsColorSound.soundBuild(function(sound){callback(null, sound);});},  //sounds
+        function(callback){buildIconsColorSound.lightMode(function(lightMode){callback(null, lightMode);});},  //lightMode
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
@@ -144,8 +151,9 @@ module.exports.update = function(req, res) {
                 array: array,
                 alertGroup: results[0],
                 sounds: results[1],
-                aclModifyAlertGroup: results[2],      //aclPermissions modifyAlertGroup
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                lightModes: results[2],
+                aclModifyAlertGroup: results[3],      //aclPermissions modifyAlertGroup
+                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -172,6 +180,7 @@ module.exports.updatePost = function(req, res) {
         var soundName = soundArray[2];
         var soundMp3 = soundArray[3];
 
+
         models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
 
             alertGroup.groupID = req.body.groupID;
@@ -185,6 +194,8 @@ module.exports.updatePost = function(req, res) {
             alertGroup.sound.soundType = soundType;
             alertGroup.sound.name = soundName;
             alertGroup.sound.mp3 = soundMp3;
+            alertGroup.light.mode = req.body.lightModeType;
+            alertGroup.light.colorRandom = req.body.lightColor;
 
             alertGroup.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {
@@ -204,7 +215,10 @@ module.exports.updatePost = function(req, res) {
                                 alert.group.color.name = req.body.colorName;
                                 alert.group.color.bgValue = req.body.bgValue;
                                 alert.group.color.textValue = textValue;
+                                alert.group.light.mode = req.body.lightModeType;
+                                alert.group.light.colorRandom = req.body.lightColor;
                                 alert.group.mp3 = soundMp3;
+
                                 alert.save(function (err) {
                                     if (err && (err.code === 11000 || err.code === 11001)) {
                                         console.log(err);

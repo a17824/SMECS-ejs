@@ -94,3 +94,14 @@ module.exports.soundBuild = function(callback) {
     sound.push(misc);
     callback(sound);
 };
+
+
+
+module.exports.lightMode = function(callback) {
+    var lightMode = [
+        'always on',
+        'blinking',
+        'strips'
+    ];
+    callback(lightMode);
+};

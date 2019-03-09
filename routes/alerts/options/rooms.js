@@ -3,6 +3,7 @@ var models = require('./../../models');
 var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
 var functions = require('../../functions');
+var MobileDetect = require('mobile-detect');
 
 /* ADD Room. -------------------------------*/
 module.exports.add = function(req, res) {
@@ -16,12 +17,26 @@ module.exports.add = function(req, res) {
         function(callback){
             models.Building.find(function(error, building) {}).exec(callback);
         },
+        function(callback){
+            models.Roles2.find().sort({"roleID":1}).exec(callback);
+        },
         function(callback){aclPermissions.addFloor(req, res, callback);},  //aclPermissions addFloor
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        let iPad = false;
+        let md = new MobileDetect(req.headers['user-agent']);
+        if(md.is('iPad') == true)
+            iPad = true;
+
         var arraySort = [];
         var array = [];
+
+        let arrayRoles = [];
+        results[3].forEach(function (role) {
+            if(role.roleID < 96)
+                arrayRoles.push(role.roleName);
+        });
 
         var streamSort = models.Room.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
@@ -45,8 +60,10 @@ module.exports.add = function(req, res) {
                     room: results[0],
                     floors: results[1],
                     buildings: results[2],
-                    aclAddFloor: results[3],      //aclPermissions addFloor
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    roles: arrayRoles,
+                    iPad: iPad,
+                    aclAddFloor: results[4],      //aclPermissions addFloor
+                    aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -89,7 +106,9 @@ module.exports.addPost = function(req, res) {
                     },
                     roomID: req.body.roomID,
                     sortID: req.body.sortID,
-                    roomName: req.body.roomName
+                    roomName: req.body.roomName,
+                    smecsLightAllRoles: req.body.smecsLight,
+                    roomRoleName: req.body.roomRoleName
                 });
                 room1.save(function (err) {
                     if (err) {
@@ -144,18 +163,34 @@ module.exports.update = function(req, res) {
         function(callback) {
             models.Building.find().sort({"sortID": 1}).exec(callback);
         },
+        function(callback){
+            models.Roles2.find().sort({"roleID":1}).exec(callback);
+        },
         function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
         function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        var streamSort = models.Room.find().sort({"sortID":1}).cursor();
+
+        let iPad = false;
+        let md = new MobileDetect(req.headers['user-agent']);
+        if(md.is('iPad') == true)
+            iPad = true;
+
+        let arrayRoles = [];
+        results[3].forEach(function (role) {
+            if(role.roleID < 96)
+                arrayRoles.push(role.roleName);
+        });
+
+
+        let streamSort = models.Room.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
             // handle the error
         }).on('close', function () {
-            var stream = models.Room.find().sort({"roomID":1}).cursor();
+            let stream = models.Room.find().sort({"roomID":1}).cursor();
             stream.on('data', function (doc2) {
                 array.push(doc2.roomID);
 
@@ -173,9 +208,11 @@ module.exports.update = function(req, res) {
                     room: results[0],
                     floors: results[1],
                     buildings: results[2],
-                    aclShowFloors: results[3],      //aclPermissions showFloors
-                    aclModifyFloor: results[4],      //aclPermissions modifyFloor
-                    aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    roles: arrayRoles,
+                    iPad: iPad,
+                    aclShowFloors: results[4],      //aclPermissions showFloors
+                    aclModifyFloor: results[5],      //aclPermissions modifyFloor
+                    aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -222,6 +259,8 @@ module.exports.updatePost = function(req, res) {
                         roomToUpdate.roomID = req.body.roomID;
                         roomToUpdate.sortID = req.body.sortID;
                         roomToUpdate.roomName = req.body.roomName;
+                        roomToUpdate.smecsLightAllRoles = req.body.smecsLight;
+                        roomToUpdate.roomRoleName = req.body.roomRoleName;
 
                         roomToUpdate.save(function (err) {
                             if (err) {

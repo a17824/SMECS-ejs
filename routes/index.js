@@ -39,6 +39,7 @@ var procedureR = require('./alerts/sendingReceiving/procedureR');
 
 var functions = require('./functions');
 var showAlertsAndGroups = require('./alerts/showAlertsAndGroups');
+let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicButtons');
 
 
 
@@ -771,6 +772,11 @@ router.post('/redirectTabProcedure', auth.simpleAuth, auth.requireLogin, functio
 
 
 router.post('/icons', auth.simpleAuth, auth.requireLogin, functions.useIcons, function(req, res) {});
+
+
+/* SHOW Lights and PanicButtons. */
+router.get('/showLightsPanicButtons', auth.simpleAuth, auth.requireLogin, showLightsAndPanicButtons.show, function(req, res, next) {
+});
 
 
 

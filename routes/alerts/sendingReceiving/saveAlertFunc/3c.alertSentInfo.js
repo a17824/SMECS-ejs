@@ -51,12 +51,15 @@ module.exports.create = function(req, res, tempAlert, callback) {
                 name: tempAlert.groupColorName,
                 bgValue: tempAlert.groupColorBk,
                 textValue: tempAlert.groupColorTx
-            }
+            },
+            light: tempAlert.groupLight
         },
         alert: {
             alertID: tempAlert.alertNameID,
             name: tempAlert.alertName,
-            icon: tempAlert.alertIcon
+            icon: tempAlert.alertIcon,
+            light: tempAlert.light,
+            lightSound: tempAlert.lightSound
         },
         sentBy: sentByApiEjs,
         sentDate: wrapped.format('YYYY-MM-DD'),

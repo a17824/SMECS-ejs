@@ -331,6 +331,7 @@
                                             <% } %>
                                             <th>Floor Name</th>
                                             <th>Building Name</th>
+                                            <th>Light ON for</th>
                                             <th class="text-center">Update</th>
                                             <th class="text-center">Delete</th>
                                         </tr>
@@ -345,6 +346,15 @@
                                             <% } %>
                                             <td><%= room.Floor.name %></td>
                                             <td><%= room.Building.name %></td>
+                                            <td >
+                                                <% if (room.roomRoleName.length > 0) { %>
+                                                    <% for (var x = 0; x < room.roomRoleName.length; x++) {%>
+                                                        <strong>.</strong> <%= room.roomRoleName[x] %><br>
+                                                    <% } %>
+                                                <% } else { %>
+                                                        <strong>.</strong> All roles
+                                                <% } %>
+                                            </td>
                                             <td align="center">
                                                 <% if (aclModifyFloor == null || aclModifyFloor.checkBoxValue == true) {%>
                                                 <a href="/room/update/<%= room.id %>"><button class="btn btn-warning">update</button></a>

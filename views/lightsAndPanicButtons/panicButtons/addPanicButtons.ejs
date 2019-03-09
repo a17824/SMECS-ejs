@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Show Alerts</title>
+    <title>Add Alerts</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script type="text/javascript" src="/javascripts/tablesorter-master/jquery-latest.js"></script>
@@ -13,16 +13,16 @@
                     $("#myTable").tablesorter();
                 }
         );
-        $("#roomLink").live("click", function () {
+        $("#alertLink").live("click", function () {
             $.ajax({
-                url: '/rooms/showRooms',
+                url: '/alerts/addAlerts',
                 type: 'GET',
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
 
                 error: function(error){
                     if(error.responseText == 'showAlert')
-                        alert("Room not deleted.")
+                        alert("Alert NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
                 }
             });
         });
@@ -32,13 +32,6 @@
 <body>
 <h1><%= title %></h1>
 
-<form action="/options/createRoom">
-    <% if (aclAddRoom == null || aclAddRoom.checkBoxValue == true) {%>
-    <input type="submit" value="Add Room"><br><br>
-    <% } else { %>
-    <input type="submit" value="Create Alert" disabled><br><br>
-    <% } %>
-</form>
 
 <table id="myTable" class="tablesorter">
     <caption>
@@ -46,51 +39,54 @@
     </caption>
     <thead>
     <tr>
-        <th>Floor</th>
-        <th>Room</th>
+        <th>Alert Group</th>
+        <th>Alert Name</th>
         <% if (userAuthID == 1) {%>
-        <th>Room ID</th>
+        <th>Alert ID</th>
         <% } %>
-        <th>Update</th>
+        <th>Procedure</th>
+        <th>Add Alert</th>
+        <% if (userAuthID == 1) {%>
         <th>Delete</th>
+        <% } %>
     </tr>
     <tbody>
-    <% floor.forEach(function(floor) { %>
-    <% room.forEach(function(room) { %>
-    <% if(floor.floorName == room.floorName) { %>
-
+    <% alert.forEach(function(alert) { %>
+    <% if (alert.softDeleted == true) { %>
     <tr>
-
-        <td><%= room.floorName %></td>
-        <td><%= room.roomName %></td>
+        <td><%= alert.group.name %></td>
+        <td><%= alert.alertName %></td>
         <% if (userAuthID == 1) {%>
-        <td><%= room.roomID %></td>
+        <td><%= alert.alertID %></td>
         <% } %>
         <td>
-            <% if (aclModifyRoom == null || aclModifyRoom.checkBoxValue == true) {%>
-            <a href="/options/updateRoom/<%= room.id %>"><button class="inTable">update</button></a>
+            <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
+            <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable">show</button></a>
             <% } else { %>
-            <a href="/options/updateRoom/<%= room.id %>"><button class="inTable" disabled>update</button></a>
+            <a href="/alerts/procedure/<%= alert.id %>"><button class="inTable" disabled>show</button></a>
             <% } %>
         </td>
         <td>
-            <% if (aclDeleteRoom == null || aclDeleteRoom.checkBoxValue == true) {%>
-            <a href="/options/deleteRoom/<%= room.id %>" id="roomLink"><button class="inTable">delete</button></a>
+            <% if (aclAddAlert == null || aclAddAlert.checkBoxValue == true) {%>
+            <a href="/alerts/restoreAlerts/<%= alert.id %>"><button class="inTable">add</button></a>
             <% } else { %>
-            <a href="/options/deleteRoom/<%= room.id %>" id="roomLink"><button class="inTable" disabled>delete</button></a>
+            <a href="/alerts/restoreAlerts/<%= alert.id %>"><button class="inTable" disabled>add</button></a>
             <% } %>
         </td>
+        <% if (userAuthID == 1) {%>
+        <td>
+            <a href="/alerts/addAlerts/<%= alert.id %>" id="alertLink"><button class="inTable">Delete</button></a>
+        </td>
+        <% } %>
     </tr>
-
     <% } %>
-    <% }); %>
     <% }); %>
     </tbody>
 </table><br>
 
 
 
-<form action="/dashboard">
+<form action="/alertGroups/showAlertGroups">
     <input type="submit" value="Back">
 </form>
 </body>

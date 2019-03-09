@@ -284,6 +284,7 @@ module.exports.showAlertsPost = function(req, res) {
                             groupColorName: alert[0].group.color.name,
                             groupColorBk: alert[0].group.color.bgValue,
                             groupColorTx: alert[0].group.color.textValue,
+                            groupLight: alert[0].group.light,
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
                             realDrillDemo: req.body.alertMode,
@@ -293,6 +294,8 @@ module.exports.showAlertsPost = function(req, res) {
                             request911Call: alert[0].alertRequest911Call,
                             whoCanCall911: alert[0].whoCanCall911,
                             alertIcon: alert[0].icon,
+                            light: alert[0].alertLight,
+                            lightSound: alert[0].alertLightSound,
                             placeholderNote: placeholderNote,
                             placeholderMissingChildLastPlaceSeen: placeholderMissingChildLastPlaceSeen,
                             placeholderMissingChildClothesWearing: placeholderMissingChildClothesWearing,
@@ -334,6 +337,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.groupColorBk = alert[0].group.color.bgValue;
                                     alertTemp.groupColorTx = alert[0].group.color.textValue;
                                     alertTemp.groupSound = alert[0].group.mp3;
+                                    alertTemp.groupLight = alert[0].group.light;
                                     alertTemp.alertNameID = req.body.alertID;
                                     alertTemp.alertName = req.body.alertName;
                                     alertTemp.requestProcedureCompleted = alert[0].alertRequestProcedureCompleted;
@@ -342,6 +346,8 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.request911Call = alert[0].alertRequest911Call;
                                     alertTemp.whoCanCall911 = alert[0].whoCanCall911;
                                     alertTemp.alertIcon = alert[0].icon;
+                                    alertTemp.light = alert[0].alertLight;
+                                    alertTemp.lightSound = alert[0].alertLightSound;
                                     alertTemp.placeholderNote = placeholderNote;
                                     alertTemp.latitude = req.body.latitude;
                                     alertTemp.longitude = req.body.longitude;

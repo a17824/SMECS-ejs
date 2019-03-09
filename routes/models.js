@@ -189,6 +189,10 @@ var AlertsGroupSchema = new mongoose.Schema({
         soundType: String,
         name: String,
         mp3: String
+    },
+    light: {
+        mode: String,   //always on, blinking, strips, etc.
+        colorRandom: { type: Boolean, default: false }  // true = random; false = same as group color
     }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
@@ -209,6 +213,10 @@ var AlertsSchema = new mongoose.Schema({
             name: String,
             bgValue: String,
             textValue: String
+        },
+        light: {
+            mode: String,   //always on, blinking, strips, etc.
+            colorRandom: { type: Boolean, default: false }  // true = random; false = same as group color
         }
     },
     sortID: { type: Number, unique: true },
@@ -238,11 +246,11 @@ var AlertsSchema = new mongoose.Schema({
     alertRequestForINeedHelp: { type: Boolean, default: true },
     alertRequestSendEmail: { type: Boolean, default: false },
     alertAutoDrill: { type: Boolean, default: false },
-    alertLight: { type: Boolean, default: true },
-    alertLightSound: { type: Boolean, default: true },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,
+    alertLight: { type: Boolean, default: true },
+    alertLightSound: { type: Boolean, default: true },
     whoCanSendReceive: {
         sendReal: [{
             roleID: Number,
@@ -309,12 +317,18 @@ var AlertSentInfoSchema = new mongoose.Schema({
             name: String,
             bgValue: String,
             textValue: String
+        },
+        light: {
+            mode: String,   //always on, blinking, strips, etc.
+            colorRandom: { type: Boolean, default: false }  // true = random; false = same as group color
         }
     },
     alert: {
         alertID: Number,
         name: String,          //stranger, evacuate
-        icon: String
+        icon: String,
+        light: { type: Boolean, default: true },
+        lightSound: { type: Boolean, default: true }
     },
     sentBy: String,
     sentDate: String,
@@ -475,9 +489,15 @@ var AlertSentTempSchema = new mongoose.Schema({
     groupColorName: String,
     groupColorBk: String,
     groupColorTx: String,
+    groupLight: {
+        mode: String,   //always on, blinking, strips, etc.
+        colorRandom: { type: Boolean, default: false }  // true = random; false = same as group color
+    },
     alertNameID: Number,
     alertName: String,
     alertIcon: String,
+    light: { type: Boolean, default: true },
+    lightSound: { type: Boolean, default: true },
     sentBy: String,
     sentTime: String,
     notePlaceholder: String,
@@ -670,7 +690,9 @@ var RoomSchema = new mongoose.Schema({
     },
     roomID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
-    roomName: String
+    roomName: String,
+    smecsLightAllRoles: { type: Boolean, default: true },
+    roomRoleName: [String]
 
 }, {collection:"Room"}); //stops Mongoose of giving plurals to our collections names
 var Room;
@@ -760,3 +782,27 @@ var IconsSchema = new mongoose.Schema({
 }, {collection:"Icons"}); //stops Mongoose of giving plurals to our collections names
 var Icons;
 module.exports.Icons = mongoose.model("Icons", IconsSchema);
+
+
+// DEFINE Light COLLECTION IN MONGOdb
+var LightSchema = new mongoose.Schema({
+    nameID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
+    name: String,
+    smecsLightAllRoles: { type: Boolean, default: true },
+    roomRoleName: [String]
+
+}, {collection:"Light"}); //stops Mongoose of giving plurals to our collections names
+var Light;
+module.exports.Light = mongoose.model("Light", LightSchema);
+
+
+// DEFINE Light COLLECTION IN MONGOdb
+var PanicButtonSchema = new mongoose.Schema({
+    nameID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
+    name: String
+
+}, {collection:"PanicButton"}); //stops Mongoose of giving plurals to our collections names
+var PanicButton;
+module.exports.Light = mongoose.model("PanicButton", PanicButtonSchema);

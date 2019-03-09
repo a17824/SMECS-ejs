@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Datatables -->
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/showAlertsAndGroups.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $('a[role="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("id") // activated tab
+                //alert(target);
+
+                $.post("/redirectTabAlertGroups", {
+                    tab: target
+
+                }, function (data) {
+                    window.location = data.redirect
+                });
+            });
+
+            $("#alertGroupLink").on("click", function () {
+                $.ajax({
+                    url: '/alertGroups/showAlertGroups',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+
+                    error: function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Alert Group NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
+                    }
+                });
+            });
+
+            $("#alertLink").on("click", function () {
+                $.ajax({
+                    url: '/alerts/showAlerts',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+
+                    error: function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Alert not deleted.")
+                    }
+                });
+            });
+
+            $("#btSubmit").click(function () {
+
+            });
+            }
+        );
+    </script>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div >
+                    <h3 class="title_left"><%= title %></h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <ul>
+                                <div align="center">
+
+                                    <% if (aclAddAlertGroup == null || aclAddAlertGroup.checkBoxValue == true) {%>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/alertGroups/addAlertGroups'">Add Group</button>
+                                    <% } else { %>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/alertGroups/addAlertGroups'" disabled>Add Group</button>
+                                    <% } %>
+
+                                    <% if (userAuthID == 1) {%>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/alerts/createAlert'">Create Alert</button>
+                                    <% } %>
+                                    <% if (aclAddAlert == null || aclAddAlert.checkBoxValue == true) {%>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/alerts/addAlerts'">Add Alert</button>
+                                    <% } else { %>
+                                    <button class="btn btn-success" id="exit" onclick="location.href='/alerts/addAlerts'" disabled>Add Alert</button>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+                            <ul>
+                                <div align="center" style="size: 100px">
+                                    <% if ( error_messages.length >= 1) { %>
+                                    <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                    <strong><%- error_messages %></strong>
+                                    </div>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+                            <br>
+                            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+
+                                    <% if (redirectTab == 'showGroups') {%>
+                                    <% var activeGroups = 'active' %>
+                                    <% }else {%>
+                                    <% var activeGroups = '' %>
+                                    <% } %>
+                                    <% if (redirectTab == 'showAlerts') {%>
+                                    <% var activeAlerts = 'active' %>
+                                    <% }else {%>
+                                    <% var activeAlerts = '' %>
+                                    <% } %>
+
+                                    <li role="presentation" class="<%= activeGroups %>"><a href="#tab_content1" id="showGroups" role="tab" data-toggle="tab" aria-expanded="true">Groups</a>
+                                    </li>
+                                    <li role="presentation" class="<%= activeAlerts %>"><a href="#tab_content2" role="tab" id="showAlerts" data-toggle="tab" aria-expanded="false">Alerts</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="myTabContent" class="tab-content">
+
+                                <% if (redirectTab == 'showGroups') {%>
+                                <% var showGroups = 'tab-pane fade active in table-responsive' %>
+                                <% } else {%>
+                                <% var showGroups = 'tab-pane fade table-responsive' %>
+                                <% } %>
+
+                                <div role="tabpanel" class="<%= showGroups %>" id="tab_content1">
+                                    <table id="datatable-buttons" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Group Name</th>
+                                            <% if (userAuthID == 1) {%>
+                                            <th>Alert Group ID</th>
+                                            <% } %>
+                                            <th>Group Color</th>
+                                            <th>Group Sound</th>
+                                            <th>
+                                                <% if(useGroupIcons == true) { %>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconGroup" checked/>
+                                                <% }else {%>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconGroup"/>
+                                                <% } %>
+                                            </th>
+                                            <th>Update</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <% alertGroup.forEach(function(alertGroup) { %>
+                                        <tr>
+                                            <td><%= alertGroup.sortID %></td>
+                                            <td><%= alertGroup.name %></td>
+                                            <% if (userAuthID == 1) {%>
+                                            <td><%= alertGroup.groupID %></td>
+                                            <% } %>
+                                            <% if (alertGroup.groupID == 1) {%>
+                                            <td>N/A</td>
+                                            <% } else { %>
+                                            <td><%= alertGroup.color.name %></td>
+                                            <% } %>
+                                            <td><%= alertGroup.sound.name %></td>
+                                            <td>
+                                                <% if(useGroupIcons == true) { %>
+                                                <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups" alt="Avatar">
+                                                <% }else {%>
+                                                <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups grayOut" alt="Avatar">
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
+                                                <a href="/alertGroups/updateAlertGroups/<%= alertGroup.id %>"><button class="btn btn-warning">update</button></a>
+                                                <% } else { %>
+                                                <a href="/alertGroups/updateAlertGroups/<%= alertGroup.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (aclDeleteAlertGroup == null || aclDeleteAlertGroup.checkBoxValue == true) {%>
+                                                <a href="/alertGroups/showAlertGroups/<%= alertGroup.id %>" id="alertGroupLink"><button class="btn btn-danger">delete</button></a>
+                                                <% } else { %>
+                                                <a href="/alertGroups/showAlertGroups/<%= alertGroup.id %>" id="alertGroupLink"><button class="btn btn-danger" disabled>delete</button></a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+
+                                        <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+
+                                <% if (redirectTab == 'showAlerts') {%>
+                                <% var showAlerts = 'tab-pane fade active in' %>
+                                <% } else {%>
+                                <% var showAlerts = 'tab-pane fade' %>
+                                <% } %>
+
+                                <div role="tabpanel" class="<%= showAlerts %>" id="tab_content2">
+                                    <table id="datatable" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <% if (userAuthID == 1) {%>
+                                                <th>Alert ID</th>
+                                            <% } %>
+                                            <th>Alert Name</th>
+                                            <th>Group Number & Name</th>
+                                            <% if (userAuthID == 1) {%>
+                                                <th>Road</th>
+                                                <th>Alert Road</th>
+                                            <% } %>
+                                            <th title="Puts Icons on CellPhone alert buttons">
+                                                <% if(useAlertsIcons == true) { %>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts" checked/>
+                                                <% }else {%>
+                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts"/>
+                                                <% } %>
+                                            </th>
+                                            <th title="Tells if this Alert has Scheduled drills">Auto Drills</th>
+                                            <th title="When sending this Alert notification, it will also send an email">Send Email</th>
+                                            <th title="Uses Alert Light in Classrooms">Light</th>
+                                            <th title="Light in Classrooms will emmit a sound">Light Sound</th>
+                                            <th title="Everyone that receives this Alert will need to
+submit if they completed all asked in Procedure">Request<br>Procedure<br>Completed</th>
+                                            <th title="If somebody needs assistance/help,
+this will allow them to ask for help">Request<br>We Are Safe</th>
+                                            <th>Allow teacher<br>request help</th>
+                                            <th>Request<br>911 Call</th>
+                                            <th>Procedure</th>
+                                            <th>Update</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <% alertGroup.forEach(function(alertGroup) { %>
+                                        <% alert.forEach(function(alert) { %>
+                                        <% if(alertGroup.name == alert.group.name) { %>
+                                        <% if (alert.softDeleted == false) { %>
+                                        <tr>
+                                            <td><%= alert.sortID %></td>
+                                            <% if (userAuthID == 1) {%>
+                                                <td><%= alert.alertID %></td>
+                                            <% } %>
+                                            <td><%= alert.alertName %></td>
+                                            <td><%= alertGroup.sortID %>-<%= alert.group.name %></td>
+                                            <% if (userAuthID == 1) {%>
+                                                <td>
+                                                    <a href="/alerts/showRoad/<%= alert.id %>"><button class="btn btn-warning">change</button></a>
+                                                </td>
+                                                <td>
+                                                    <% if (alert.alertRoad) { %>
+
+                                                        <% for (var x = 0; x < alert.alertRoad.length; x++) {%>
+                                                            <strong>.</strong><%= alert.alertRoad[x].step %>[<span class="rFun"><%= alert.alertRoad[x].callFunction %></span>]<br>
+                                                            (<span class="rAPI"><%= alert.alertRoad[x].redirectAPI %></span>,<span class="rEJS"><%= alert.alertRoad[x].redirectEJS %></span>)<br>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <img  src="/miscPictures/redCross20.png">
+                                                    <% } %>
+                                                </td>
+                                            <% } %>
+                                            <td>
+                                                <% if(useAlertsIcons == true) { %>
+                                                <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts" alt="Avatar">
+                                                <% }else {%>
+                                                <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts grayOut" alt="Avatar">
+                                                <% } %>
+                                            </td>
+
+                                            <% if (alert.alertAutoDrill == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertRequestSendEmail == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertLight == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertLightSound == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertRequestProcedureCompleted == true) { %>
+                                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                            <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertRequestWeAreSafe == true) { %>
+                                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                            <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <% if (alert.alertRequestWeAreSafe == true) { %>
+                                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                            <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+
+                                            <td >
+                                                <% if (alert.alertRequest911Call) { %>
+                                                <% for (var x = 0; x < alert.whoCanCall911.length; x++) {%>
+                                                        <strong>.</strong> <%= alert.whoCanCall911[x] %><br>
+                                                <% } %>
+                                                <% } else { %>
+                                                <img  src="/miscPictures/redCross20.png">
+                                                <% } %>
+                                            </td>
+
+                                            <td>
+                                                <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
+                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info">show</button></a>
+                                                <% } else { %>
+                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info" disabled>show</button></a>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (aclModifyAlert == null || aclModifyAlert.checkBoxValue == true) {%>
+                                                <a href="/alerts/updateAlerts/<%= alert.alertID %>"><button class="btn btn-warning">update</button></a>
+                                                <% } else { %>
+                                                <a href="/alerts/updateAlerts/<%= alert.alertID %>"><button class="btn btn-warning" disabled>update</button></a>
+                                                <% } %>
+                                            </td>
+
+                                            <td>
+                                                <% if (aclDeleteAlert == null || aclDeleteAlert.checkBoxValue == true) {%>
+                                                    <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger">remove</button></a>
+                                                <% } else { %>
+                                                    <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger" disabled>remove</button></a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                        <% } %>
+                                        <% }); %>
+                                        <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+
+<!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>

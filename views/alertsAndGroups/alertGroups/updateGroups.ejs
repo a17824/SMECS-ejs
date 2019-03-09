@@ -203,6 +203,9 @@
                 icon=$("#selected-text").val();
                 var sound=$("input:radio[name='radio']:checked").val();
 
+                let lightModeType=$("#lightModeType").val();
+                let lightColor=$("input:radio[name='lightColor']:checked").val();
+
                 //-----forms validation------------------------------------
                 if (alertGroupName == "" ) {
                     alert("Alert Group Name must be filled out");
@@ -224,7 +227,9 @@
                     colorName: colorName,
                     bgValue: bgValue,
                     icon: icon,
-                    sound: sound
+                    sound: sound,
+                    lightModeType: lightModeType,
+                    lightColor: lightColor
 
                 },function(data){
                     if(data==='done')
@@ -279,19 +284,19 @@
 
                     <div class="pull-left">
                         <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
-                        <button type="button"
-                                id="<%= alertGroup.id %>"
-                                value="Submit"
-                                onClick="GetSelectedItem('DropDownID');"
-                                class="btn btn-success">Save
-                        </button>
+                            <button type="button"
+                                    id="<%= alertGroup.id %>"
+                                    value="Submit"
+                                    onClick="GetSelectedItem('DropDownID');"
+                                    class="btn btn-success">Save
+                            </button>
                         <% } else { %>
-                        <button type="button"
-                                id="<%= alertGroup.id %>"
-                                value="Submit"
-                                onClick="GetSelectedItem('DropDownID');"
-                                class="btn btn-success" disabled>Save
-                        </button>
+                            <button type="button"
+                                    id="<%= alertGroup.id %>"
+                                    value="Submit"
+                                    onClick="GetSelectedItem('DropDownID');"
+                                    class="btn btn-success" disabled>Save
+                            </button>
                         <% } %>
 
                         <a href="/alertGroups/showAlertGroups"><button type="button" class="btn btn-default">Cancel</button></a>
@@ -352,28 +357,34 @@
                                 </div>
 
                                 <% if (userAuthID == 1) {%>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group ID:</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select id='some_select' class="form-control"></select>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Group ID:</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <select id='some_select' class="form-control"></select>
+                                        </div>
                                     </div>
-                                </div>
                                 <% } else { %>
-                                <select id='some_select' style="display:none;"></select>
+                                    <select id='some_select' style="display:none;"></select>
                                 <% } %>
                                 <input type="hidden" id="oldAlertGroupID" value="<%= alertGroup.groupID %>">
 
 
-                                <% if (alertGroup.groupID !== 1) {%>
+
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Color:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <select name="DropDownID" id="DropDownID">
-                                            <option style="alignment: center" value="<%= alertGroup.color.bgValue %>" id="red7" selected disabled hidden><%= alertGroup.color.name %></option>
-                                        </select>
+                                        <% if (alertGroup.groupID == 1) {%>
+                                            <select name="DropDownID" id="DropDownID" disabled>
+                                                <option style="alignment: center" value="<%= alertGroup.color.bgValue %>" id="red7" selected disabled hidden><%= alertGroup.color.name %></option>
+                                            </select>
+                                        <% } else {%>
+                                            <select name="DropDownID" id="DropDownID">
+                                                <option style="alignment: center" value="<%= alertGroup.color.bgValue %>" id="red7" selected disabled hidden><%= alertGroup.color.name %></option>
+                                            </select>
+                                        <% } %>
                                     </div>
                                 </div>
-                                <% } %>
+
 
 
                                 <div class="form-group">
@@ -393,7 +404,73 @@
                     </div>
 
 
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>SMECS Light</small></h2>
 
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Flash mode:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                        <select id="lightModeType" class="form-control">
+                                            <% lightModes.forEach(function(mode) { %>
+                                            <%if (mode == alertGroup.light.mode) { %>
+                                                <option value="<%= mode %>" selected><%= mode %></option>
+                                            <% }else {%>
+                                                <option value="<%= mode %>"><%= mode %></option>
+                                            <% } %>
+                                            <% }); %>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Color:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                        <%if (alertGroup.light.colorRandom) { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="lightColor"
+                                                    name="lightColor"
+                                                    value="false">
+                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >same as group color</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="lightColor"
+                                                   name="lightColor"
+                                                   value="true" checked>
+                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >random</label>
+                                        <% }else { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="lightColor"
+                                                    name="lightColor"
+                                                    value="false" checked>
+                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >same as group color</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="lightColor"
+                                                   name="lightColor"
+                                                   value="true">
+                                            <label for="req911" style="font-weight:normal; position: relative; top: 4px" >random</label>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
 
 
 
@@ -420,11 +497,11 @@
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <select class="form-control" id="getSoundType">
                                             <% for (var i = 0; i < sounds[1].length; i++) { %>
-                                            <% if( sounds[0][i] == alertGroup.sound.soundID) { %>
-                                            <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>" selected="selected"><%= sounds[1][i] %></option>
-                                            <% }else{ %>
-                                            <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>"><%= sounds[1][i] %></option>
-                                            <% } %>
+                                                <% if( sounds[0][i] == alertGroup.sound.soundID) { %>
+                                                    <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>" selected="selected"><%= sounds[1][i] %></option>
+                                                <% }else{ %>
+                                                    <option id="<%= sounds[i+2] %>" value="<%= sounds[0][i] %>"><%= sounds[1][i] %></option>
+                                                <% } %>
                                             <% } %>
                                         </select>
                                     </div>
@@ -437,37 +514,37 @@
                                 <div id="buildRadio">
                                     <% var soundType = alertGroup.sound.soundID + 1 %>
                                     <% for (var i = 1; i < sounds[soundType].length; i += 3) { %>
-                                    <% if( sounds[soundType][i] == alertGroup.sound.name) { %>
+                                        <% if( sounds[soundType][i] == alertGroup.sound.name) { %>
 
-                                    <div class="wrapper">
+                                            <div class="wrapper">
 
-                                        <input type="radio"
-                                               style="margin-bottom: 5px"
-                                               value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
-                                               class="icheckbox_flat-green"
-                                               name="radio" checked> <%= sounds[soundType][i] %>
+                                                <input type="radio"
+                                                       style="margin-bottom: 5px"
+                                                       value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
+                                                       class="icheckbox_flat-green"
+                                                       name="radio" checked> <%= sounds[soundType][i] %>
 
-                                        <span class="mediPlayer" style="position: absolute; right: 0px">
+                                                <span class="mediPlayer" style="position: absolute; right: 0px">
                                             <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
                                         </span>
 
-                                    </div>
+                                            </div>
 
-                                    <% }else{ %>
-                                    <div class="wrapper">
-                                        <div class="navi"></div>
-                                        <input type="radio"
-                                               style="margin-bottom: 5px"
-                                               value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
-                                               class="icheckbox_flat-green"
-                                               name="radio"> <%= sounds[soundType][i] %>
+                                        <% }else{ %>
+                                            <div class="wrapper">
+                                                <div class="navi"></div>
+                                                <input type="radio"
+                                                       style="margin-bottom: 5px"
+                                                       value="<%= alertGroup.sound.soundID %>,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>,<%= sounds[soundType][i+1] %>"
+                                                       class="icheckbox_flat-green"
+                                                       name="radio"> <%= sounds[soundType][i] %>
 
-                                        <span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;">
+                                                <span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;">
                                             <audio class="listen" preload="none" data-size="250" src="/public/sounds/<%= sounds[soundType][i+1] %>.mp3"></audio>
                                         </span>
-                                    </div>
-                                    <% } %>
-                                    <div class="divider-dashed" ></div>
+                                            </div>
+                                        <% } %>
+                                        <div class="divider-dashed" ></div>
                                     <% } %>
                                 </div>
                             </form>
