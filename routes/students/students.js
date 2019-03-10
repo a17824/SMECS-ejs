@@ -183,14 +183,12 @@ module.exports.addMultiplePost = function (req, res){
 
             saveBusTransportation (function (result, err) { //STEP 1/3
                 var busTransportation = result;
-                if(err){
-                    console.log('err = ', err);
-                }else {
+                if(err){console.log('err = ', err);}
+                else {
                     //console.log('result = ', result); //callback('now is the time to run something else...')
                     removeStudentsAndCopyNewStudents (function (result, err) { //STEP 2/3
-                        if(err){
-                            console.log('err = ', err);
-                        }else{
+                        if(err){console.log('err = ', err);}
+                        else{
                             //console.log('result = ', result); //callback('now is the time to run something else...')
                             addDeleteStudentsParents(res,busTransportation); //STEP 3/3
 
@@ -376,6 +374,7 @@ module.exports.delete = function(req, res) {
                     for (var z = 0; z < user.parentOf.length; z++) {
                         if(user.parentOf[z].studentID == student.studentID){
                             user.parentOf = undefined;
+                            user.parentOf = false;
                             updateUserRole(user);
                             console.log('success - removing user child');
                             break;
@@ -476,6 +475,7 @@ module.exports.addMultiplePhotosPost = function (req, res){
                             if ( result[x].studentID == file_name_no_ext ) {
 
                                 result[x].photo = result[x].id + '_' + file_name; //save uploaded file name to user.photo
+                                updateParentPhotoInUsersDocument(result[x].studentID,result[x].photo);
                                 result[x].save();
                                 console.log("success! saved " + file_name);
                                 fs.copySync(temp_path, new_location + result[x].id + '_' + file_name); // save file
@@ -736,7 +736,21 @@ function addDeleteStudentsParents(res,busTransportation) {
 
 
                                         }
-                                    }else{
+                                    }else{ //update user new student photo name
+                                        console.log('user = ',user);
+                                        user.parentOf.forEach(function(student){
+                                            if (err) {console.log('error removing photo from parent');}
+                                            else {
+                                                if(student.studentID == child.studentID){
+                                                    student.studentPhoto = "";
+                                                }
+                                            }
+
+                                        });
+                                        user.save(function (err) {
+                                            if (err) {console.log('error removing student removed from user parentOf database = ');}
+                                            else {console.log('2) successfully saved');}
+                                        });
                                         console.log('4) ' + user.firstName + ' ' + user.lastName + ' added to ' +
                                             child.studentFirstName + ' ' + child.studentLastName + ' as his/her parent.');
                                     }
@@ -779,6 +793,17 @@ function restoreBusTransportation(busTransportation) {
             console.log('no students were updated with "busTransportation"');
         }else{
             console.log('success updating Students with BusTransportation');
+        }
+    });
+}
+
+
+function updateParentPhotoInUsersDocument(studentID,studentPhoto){
+    models.Users.update({'parentOf.studentID': studentID}, {'parentOf.$.studentPhoto': studentPhoto}, {multi: true}, function (err, user) {
+        if(err)
+            console.log('err - ',err);
+        else{
+            console.log('success updating photo in user parentOf');
         }
     });
 }

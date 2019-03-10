@@ -27,49 +27,49 @@
         $(document).ready(function () {
 
 
-            $('a[role="tab"]').on('shown.bs.tab', function (e) {
-                var target = $(e.target).attr("id") // activated tab
-                //alert(target);
+                $('a[role="tab"]').on('shown.bs.tab', function (e) {
+                    var target = $(e.target).attr("id") // activated tab
+                    //alert(target);
 
-                $.post("/redirectTabAlertGroups", {
-                    tab: target
+                    $.post("/redirectTabAlertGroups", {
+                        tab: target
 
-                }, function (data) {
-                    window.location = data.redirect
+                    }, function (data) {
+                        window.location = data.redirect
+                    });
                 });
-            });
 
-            $("#alertGroupLink").on("click", function () {
-                $.ajax({
-                    url: '/alertGroups/showAlertGroups',
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
+                $("#deleteLight").on("click", function () {
+                    $.ajax({
+                        url: '/alertGroups/showAlertGroups',
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
 
-                    error: function(error){
-                        if(error.responseText == 'showAlert')
-                            alert("Alert Group NAME or ID already already in use. Choose a different Name or number between 0 and 99.")
-                    }
+                        error: function(error){
+                            if(error.responseText == 'showAlert')
+                                alert("Light not deleted")
+                        }
+                    });
                 });
-            });
 
-            $("#alertLink").on("click", function () {
-                $.ajax({
-                    url: '/alerts/showAlerts',
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
+                $("#deletePanicButton").on("click", function () {
+                    $.ajax({
+                        url: '/alerts/showAlerts',
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
 
-                    error: function(error){
-                        if(error.responseText == 'showAlert')
-                            alert("Alert not deleted.")
-                    }
+                        error: function(error){
+                            if(error.responseText == 'showAlert')
+                                alert("PanicButton not deleted.")
+                        }
+                    });
                 });
-            });
 
-            $("#btSubmit").click(function () {
+                $("#btSubmit").click(function () {
 
-            });
+                });
             }
         );
     </script>
@@ -114,19 +114,22 @@
                             <ul>
                                 <div align="center">
 
-                                    <% if (aclAddAlertGroup == null || aclAddAlertGroup.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/alertGroups/addAlertGroups'">Add Group</button>
+                                    <% if (aclModifyAlert == null || aclModifyAlert.checkBoxValue == true) {%>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''">Add Light</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/alertGroups/addAlertGroups'" disabled>Add Group</button>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add Light</button>
                                     <% } %>
 
-                                    <% if (userAuthID == 1) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/alerts/createAlert'">Create Alert</button>
-                                    <% } %>
-                                    <% if (aclAddAlert == null || aclAddAlert.checkBoxValue == true) {%>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/alerts/addAlerts'">Add Alert</button>
+                                    <% if (aclModifyAlert == null || aclModifyAlert.checkBoxValue == true) {%>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''">Light Wireless password</button>
                                     <% } else { %>
-                                    <button class="btn btn-success" id="exit" onclick="location.href='/alerts/addAlerts'" disabled>Add Alert</button>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Light Wireless password</button>
+                                    <% } %>
+
+                                    <% if (aclModifyAlert == null || aclModifyAlert.checkBoxValue == true) {%>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''">Add PanicButton</button>
+                                    <% } else { %>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add PanicButton</button>
                                     <% } %>
 
                                 </div>
@@ -134,10 +137,10 @@
                             <ul>
                                 <div align="center" style="size: 100px">
                                     <% if ( error_messages.length >= 1) { %>
-                                    <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
-                                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-                                    <strong><%- error_messages %></strong>
-                                    </div>
+                                        <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                            <strong><%- error_messages %></strong>
+                                        </div>
                                     <% } %>
 
                                 </div>
@@ -146,89 +149,83 @@
                             <div class="" role="tabpanel" data-example-id="togglable-tabs">
                                 <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
 
-                                    <% if (redirectTab == 'showGroups') {%>
-                                    <% var activeGroups = 'active' %>
+                                    <% if (redirectTab == 'showLights') {%>
+                                        <% var activeLights = 'active' %>
                                     <% }else {%>
-                                    <% var activeGroups = '' %>
+                                        <% var activeLights = '' %>
                                     <% } %>
-                                    <% if (redirectTab == 'showAlerts') {%>
-                                    <% var activeAlerts = 'active' %>
+                                    <% if (redirectTab == 'showPanicButtons') {%>
+                                        <% var activePanicButtons = 'active' %>
                                     <% }else {%>
-                                    <% var activeAlerts = '' %>
+                                        <% var activePanicButtons = '' %>
                                     <% } %>
 
-                                    <li role="presentation" class="<%= activeGroups %>"><a href="#tab_content1" id="showGroups" role="tab" data-toggle="tab" aria-expanded="true">Groups</a>
+                                    <li role="presentation" class="<%= activeLights %>"><a href="#tab_content1" id="showLights" role="tab" data-toggle="tab" aria-expanded="true">Lights</a>
                                     </li>
-                                    <li role="presentation" class="<%= activeAlerts %>"><a href="#tab_content2" role="tab" id="showAlerts" data-toggle="tab" aria-expanded="false">Alerts</a>
+                                    <li role="presentation" class="<%= activePanicButtons %>"><a href="#tab_content2" role="tab" id="showPanicButtons" data-toggle="tab" aria-expanded="false">PanicButtons</a>
                                     </li>
                                 </ul>
                             </div>
                             <div id="myTabContent" class="tab-content">
 
-                                <% if (redirectTab == 'showGroups') {%>
-                                <% var showGroups = 'tab-pane fade active in table-responsive' %>
+                                <% if (redirectTab == 'showLights') {%>
+                                    <% var showLights = 'tab-pane fade active in table-responsive' %>
                                 <% } else {%>
-                                <% var showGroups = 'tab-pane fade table-responsive' %>
+                                    <% var showLights = 'tab-pane fade table-responsive' %>
                                 <% } %>
 
-                                <div role="tabpanel" class="<%= showGroups %>" id="tab_content1">
+                                <div role="tabpanel" class="<%= showLights %>" id="tab_content1">
                                     <table id="datatable-buttons" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Group Name</th>
+                                            <th>Name</th>
                                             <% if (userAuthID == 1) {%>
-                                            <th>Alert Group ID</th>
+                                                <th>Light ID</th>
                                             <% } %>
-                                            <th>Group Color</th>
-                                            <th>Group Sound</th>
-                                            <th>
-                                                <% if(useGroupIcons == true) { %>
-                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconGroup" checked/>
-                                                <% }else {%>
-                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconGroup"/>
-                                                <% } %>
-                                            </th>
+                                            <th>Connected</th>
+                                            <th>Model</th>
+                                            <th>Sound</th>
+                                            <th>Mic</th>
+                                            <th>Screen Display</th>
+                                            <th>Power/Level</th>
+                                            <th>Connection Type</th>
+                                            <th>Location</th>
                                             <th>Update</th>
                                             <th>Delete</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <% alertGroup.forEach(function(alertGroup) { %>
-                                        <tr>
-                                            <td><%= alertGroup.sortID %></td>
-                                            <td><%= alertGroup.name %></td>
-                                            <% if (userAuthID == 1) {%>
-                                            <td><%= alertGroup.groupID %></td>
-                                            <% } %>
-                                            <% if (alertGroup.groupID == 1) {%>
-                                            <td>N/A</td>
-                                            <% } else { %>
-                                            <td><%= alertGroup.color.name %></td>
-                                            <% } %>
-                                            <td><%= alertGroup.sound.name %></td>
-                                            <td>
-                                                <% if(useGroupIcons == true) { %>
-                                                <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups" alt="Avatar">
-                                                <% }else {%>
-                                                <img src="/icons/<%= alertGroup.icon %>.png" class="avatarIcons groups grayOut" alt="Avatar">
+                                        <% lights.forEach(function(light) { %>
+                                            <tr>
+                                                <td><%= light.sortID %></td>
+                                                <td><%= light.name %></td>
+                                                <% if (userAuthID == 1) {%>
+                                                    <td><%= light.nameID %></td>
                                                 <% } %>
-                                            </td>
-                                            <td>
-                                                <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
-                                                <a href="/alertGroups/updateAlertGroups/<%= alertGroup.id %>"><button class="btn btn-warning">update</button></a>
-                                                <% } else { %>
-                                                <a href="/alertGroups/updateAlertGroups/<%= alertGroup.id %>"><button class="btn btn-warning" disabled>update</button></a>
-                                                <% } %>
-                                            </td>
-                                            <td>
-                                                <% if (aclDeleteAlertGroup == null || aclDeleteAlertGroup.checkBoxValue == true) {%>
-                                                <a href="/alertGroups/showAlertGroups/<%= alertGroup.id %>" id="alertGroupLink"><button class="btn btn-danger">delete</button></a>
-                                                <% } else { %>
-                                                <a href="/alertGroups/showAlertGroups/<%= alertGroup.id %>" id="alertGroupLink"><button class="btn btn-danger" disabled>delete</button></a>
-                                                <% } %>
-                                            </td>
-                                        </tr>
+                                                <td><%= light.model.connection.connected %></td>
+                                                <td><%= light.model.name %></td>
+                                                <td><%= light.model.sound %></td>
+                                                <td><%= light.model.mic %></td>
+                                                <td><%= light.model.screenDisplay.hasScreen %></td>
+                                                <td><%= light.model.power.type %>: <%= light.model.power.level %></td>
+                                                <td><%= light.model.connection.type %></td>
+                                                <td><%= light.location %></td>
+                                                <td>
+                                                    <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
+                                                        <a href=".../<%= light.id %>"><button class="btn btn-warning">update</button></a>
+                                                    <% } else { %>
+                                                        <a href=".../<%= light.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if (aclDeleteAlertGroup == null || aclDeleteAlertGroup.checkBoxValue == true) {%>
+                                                        <a href="" id="deleteLight"><button class="btn btn-danger">delete</button></a>
+                                                    <% } else { %>
+                                                        <a href="" id="deleteLight"><button class="btn btn-danger" disabled>delete</button></a>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
 
                                         <% }); %>
                                         </tbody>
@@ -238,162 +235,59 @@
 
 
 
-                                <% if (redirectTab == 'showAlerts') {%>
-                                <% var showAlerts = 'tab-pane fade active in' %>
+                                <% if (redirectTab == 'showPanicButtons') {%>
+                                    <% var showPanicButtons = 'tab-pane fade active in' %>
                                 <% } else {%>
-                                <% var showAlerts = 'tab-pane fade' %>
+                                    <% var showPanicButtons = 'tab-pane fade' %>
                                 <% } %>
 
-                                <div role="tabpanel" class="<%= showAlerts %>" id="tab_content2">
+                                <div role="tabpanel" class="<%= showPanicButtons %>" id="tab_content2">
                                     <table id="datatable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Name</th>
                                             <% if (userAuthID == 1) {%>
-                                                <th>Alert ID</th>
+                                                <th>Light ID</th>
                                             <% } %>
-                                            <th>Alert Name</th>
-                                            <th>Group Number & Name</th>
-                                            <% if (userAuthID == 1) {%>
-                                                <th>Road</th>
-                                                <th>Alert Road</th>
-                                            <% } %>
-                                            <th title="Puts Icons on CellPhone alert buttons">
-                                                <% if(useAlertsIcons == true) { %>
-                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts" checked/>
-                                                <% }else {%>
-                                                Icon <input type="checkbox" style="position: relative; top: 3px" class="iconAlerts"/>
-                                                <% } %>
-                                            </th>
-                                            <th title="Tells if this Alert has Scheduled drills">Auto Drills</th>
-                                            <th title="When sending this Alert notification, it will also send an email">Send Email</th>
-                                            <th title="Uses Alert Light in Classrooms">Light</th>
-                                            <th title="Light in Classrooms will emmit a sound">Light Sound</th>
-                                            <th title="Everyone that receives this Alert will need to
-submit if they completed all asked in Procedure">Request<br>Procedure<br>Completed</th>
-                                            <th title="If somebody needs assistance/help,
-this will allow them to ask for help">Request<br>We Are Safe</th>
-                                            <th>Allow teacher<br>request help</th>
-                                            <th>Request<br>911 Call</th>
-                                            <th>Procedure</th>
+                                            <th>Model</th>
+                                            <th>Who has it?</th>
+                                            <th>Wireless ssid: password</th>
+                                            <th>Power Level</th>
                                             <th>Update</th>
-                                            <th>Remove</th>
+                                            <th>Delete</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <% alertGroup.forEach(function(alertGroup) { %>
-                                        <% alert.forEach(function(alert) { %>
-                                        <% if(alertGroup.name == alert.group.name) { %>
-                                        <% if (alert.softDeleted == false) { %>
-                                        <tr>
-                                            <td><%= alert.sortID %></td>
-                                            <% if (userAuthID == 1) {%>
-                                                <td><%= alert.alertID %></td>
-                                            <% } %>
-                                            <td><%= alert.alertName %></td>
-                                            <td><%= alertGroup.sortID %>-<%= alert.group.name %></td>
-                                            <% if (userAuthID == 1) {%>
+                                        <% panicButtons.forEach(function(button) { %>
+                                            <tr>
+                                                <td><%= button.sortID %></td>
+                                                <td><%= button.name %></td>
+                                                <% if (userAuthID == 1) {%>
+                                                    <td><%= button.nameID %></td>
+                                                <% } %>
+                                                <td><%= button.model.name %></td>
+                                                <td><%= button.whoHasIt %></td>
+                                                <% button.forEach(function(wireless) { %>
+                                                    <td><%= wireless.ssid %>: <%= wireless.encryptionPass %></td>
+                                                <% }); %>
+                                                <td><%= button.model.powerLevel %></td>
                                                 <td>
-                                                    <a href="/alerts/showRoad/<%= alert.id %>"><button class="btn btn-warning">change</button></a>
-                                                </td>
-                                                <td>
-                                                    <% if (alert.alertRoad) { %>
-
-                                                        <% for (var x = 0; x < alert.alertRoad.length; x++) {%>
-                                                            <strong>.</strong><%= alert.alertRoad[x].step %>[<span class="rFun"><%= alert.alertRoad[x].callFunction %></span>]<br>
-                                                            (<span class="rAPI"><%= alert.alertRoad[x].redirectAPI %></span>,<span class="rEJS"><%= alert.alertRoad[x].redirectEJS %></span>)<br>
-                                                        <% } %>
+                                                    <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
+                                                        <a href=".../<%= button.id %>"><button class="btn btn-warning">update</button></a>
                                                     <% } else { %>
-                                                        <img  src="/miscPictures/redCross20.png">
+                                                        <a href=".../<%= button.id %>"><button class="btn btn-warning" disabled>update</button></a>
                                                     <% } %>
                                                 </td>
-                                            <% } %>
-                                            <td>
-                                                <% if(useAlertsIcons == true) { %>
-                                                <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts" alt="Avatar">
-                                                <% }else {%>
-                                                <img src="/icons/<%= alert.icon %>.png" class="avatarIcons alerts grayOut" alt="Avatar">
-                                                <% } %>
-                                            </td>
+                                                <td>
+                                                    <% if (aclDeleteAlertGroup == null || aclDeleteAlertGroup.checkBoxValue == true) {%>
+                                                        <a href="" id="deleteLight"><button class="btn btn-danger">delete</button></a>
+                                                    <% } else { %>
+                                                        <a href="" id="deleteLight"><button class="btn btn-danger" disabled>delete</button></a>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
 
-                                            <% if (alert.alertAutoDrill == true) { %>
-                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                                <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <% if (alert.alertRequestSendEmail == true) { %>
-                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                                <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <% if (alert.alertLight == true) { %>
-                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                                <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <% if (alert.alertLightSound == true) { %>
-                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                                <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <% if (alert.alertRequestProcedureCompleted == true) { %>
-                                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                            <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <% if (alert.alertRequestWeAreSafe == true) { %>
-                                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                            <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <% if (alert.alertRequestWeAreSafe == true) { %>
-                                            <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                            <% } else { %>
-                                            <td><img  src="/miscPictures/redCross20.png"></td>
-                                            <% } %>
-
-                                            <td >
-                                                <% if (alert.alertRequest911Call) { %>
-                                                <% for (var x = 0; x < alert.whoCanCall911.length; x++) {%>
-                                                        <strong>.</strong> <%= alert.whoCanCall911[x] %><br>
-                                                <% } %>
-                                                <% } else { %>
-                                                <img  src="/miscPictures/redCross20.png">
-                                                <% } %>
-                                            </td>
-
-                                            <td>
-                                                <% if (aclShowProcedure == null || aclShowProcedure.checkBoxValue == true) {%>
-                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info">show</button></a>
-                                                <% } else { %>
-                                                <a href="/alerts/procedure/<%= alert.id %>"><button class="btn btn-info" disabled>show</button></a>
-                                                <% } %>
-                                            </td>
-                                            <td>
-                                                <% if (aclModifyAlert == null || aclModifyAlert.checkBoxValue == true) {%>
-                                                <a href="/alerts/updateAlerts/<%= alert.alertID %>"><button class="btn btn-warning">update</button></a>
-                                                <% } else { %>
-                                                <a href="/alerts/updateAlerts/<%= alert.alertID %>"><button class="btn btn-warning" disabled>update</button></a>
-                                                <% } %>
-                                            </td>
-
-                                            <td>
-                                                <% if (aclDeleteAlert == null || aclDeleteAlert.checkBoxValue == true) {%>
-                                                    <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger">remove</button></a>
-                                                <% } else { %>
-                                                    <a href="/alerts/delete/<%= alert.id %>" id="alertLink"><button class="btn btn-danger" disabled>remove</button></a>
-                                                <% } %>
-                                            </td>
-                                        </tr>
-                                        <% } %>
-                                        <% } %>
-                                        <% }); %>
                                         <% }); %>
                                         </tbody>
                                     </table>

@@ -157,7 +157,7 @@ module.exports.update = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('roles2/updateRole2',{
+            res.render('roles2/updateRole-new',{
                 title:'Update Role',
                 userAuthID: req.user.userPrivilegeID,
                 arraySort: arraySort,

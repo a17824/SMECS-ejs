@@ -785,24 +785,53 @@ module.exports.Icons = mongoose.model("Icons", IconsSchema);
 
 
 // DEFINE Light COLLECTION IN MONGOdb
-var LightSchema = new mongoose.Schema({
+var LightsSchema = new mongoose.Schema({
     nameID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
     name: String,
-    smecsLightAllRoles: { type: Boolean, default: true },
-    roomRoleName: [String]
+    model: {
+        mac: String,
+        name: String,
+        sound: { type: Boolean, default: false },
+        mic: { type: Boolean, default: false },
+        screenDisplay: {
+            hasScreen: {type: Boolean, default: false},
+            size: String   //small, medium, large,
+        },
+        connection: {
+            type: String,   //USB, Cat5, wireless
+            connected: {type: Boolean, default: false},
+        },
+        power: {
+            type: String,   //batteries, AC, POE
+            level: String
+        }
+    },
+    location: String    //room where is installed
 
-}, {collection:"Light"}); //stops Mongoose of giving plurals to our collections names
-var Light;
-module.exports.Light = mongoose.model("Light", LightSchema);
+
+}, {collection:"Lights"}); //stops Mongoose of giving plurals to our collections names
+var Lights;
+module.exports.Lights = mongoose.model("Lights", LightsSchema);
 
 
 // DEFINE Light COLLECTION IN MONGOdb
-var PanicButtonSchema = new mongoose.Schema({
+var PanicButtonsSchema = new mongoose.Schema({
     nameID: { type: Number, unique: true },
     sortID: { type: Number, unique: true },
-    name: String
+    name: String,
+    whoHasIt: String,
+    wireless: [{
+        ssid: String,
+        encryptionType: String,
+        encryptionPass: String
+    }],
+    model: {
+        mac: String,
+        name: String,
+        powerLevel: String
+    }
 
-}, {collection:"PanicButton"}); //stops Mongoose of giving plurals to our collections names
-var PanicButton;
-module.exports.Light = mongoose.model("PanicButton", PanicButtonSchema);
+}, {collection:"PanicButtons"}); //stops Mongoose of giving plurals to our collections names
+var PanicButtons;
+module.exports.PanicButtons = mongoose.model("PanicButtons", PanicButtonsSchema);
