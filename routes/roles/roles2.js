@@ -157,7 +157,7 @@ module.exports.update = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(array);
-            res.render('roles2/updateRole-new',{
+            res.render('roles2/updateRole2',{
                 title:'Update Role',
                 userAuthID: req.user.userPrivilegeID,
                 arraySort: arraySort,
@@ -262,10 +262,7 @@ module.exports.updatePost = function(req, res) {
             }
             //--------end UPDATE whoCanCall911 ALERT
         });
-
     });
-
-
 };
 /*-------------------------end of update roles2*/
 
@@ -273,75 +270,105 @@ module.exports.updatePost = function(req, res) {
 module.exports.delete = function(req, res) {
     var roleToDelete = req.params.id;
     models.Roles2.findOne({'_id': roleToDelete}, function(err, roles) {
-        models.Users.findOne({ userRoleID: roles.roleID }, function (err, result) {
-            if (err) { console.log(err) };
-
-            if (result) {
-                console.log("Role NOT deleted");
-                //return res.status(409).send(' ALERT! ' + roles.roleName + ' Role not deleted because there are Users using this role. Please change Users under this role to other role and then delete this role.')
-                req.flash('error_messages', ' Attention! ' + roles.roleName + ' Role not deleted because there are Users using this role.. <br> Please change Users under this role to other role and then delete this role.');
-                res.redirect('/roles2/showRoles2');
-            }
-            else {
-                //delete WhoCanSenReceive Alerts-----
-                function deleteWCSRAlert(callback) {
-                    var deleteRole = {
-                        roleID: roles.roleID,
-                        roleName: roles.roleName
-                    };
-                    models.Alerts.updateMany({}, { $pull: {
-                            "whoCanSendReceive.sendReal": deleteRole,
-                            "whoCanSendReceive.receiveReal": deleteRole,
-                            "whoCanSendReceive.sendDrill": deleteRole,
-                            "whoCanSendReceive.receiveDrill": deleteRole
-                        }}, function(err, alerts) {
-                        console.log('alerts with delete role = ',alerts);
-                    });
-                }//----end delete WhoCanSenReceive Alerts
-
-                //delete role from "whoCanCall911" Array (Alerts.whoCanCall911)-----
-                function deleteWhoCanCall911(callback) {
-                    models.Alerts.find({}, function(err, alert){
-                        for (var i = 0; i < alert.length; i++) {
-                            if (alert[i].alertRequest911Call) {
-                                for (var a = 0; a < alert[i].whoCanCall911.length; a++) {
-                                    if (alert[i].whoCanCall911[a] == roles.roleName) {
-                                        var array = alert[i].whoCanCall911;
-                                        array.splice( a, 1 );
-                                        alert[i].whoCanCall911 = array;
-                                        console.log("user role deleted from Alert whoCanCall911 array");
-                                        if (alert[i].whoCanCall911.length < 1 ){ //put radio button off if array is empty
-                                            alert[i].alertRequest911Call = 'false';
-                                        }
-                                        alert[i].save();
-                                    }
-                                }
-                            }
-                        }
-                        callback(null);
-                    });
-                }//----end role from "whoCanCall911" Array (Alerts.whoCanCall911)
-
-                function deleteUserRole(callback) {
-                    models.Roles2.remove({'_id': roleToDelete}, function(err) {
-                        console.log("role deleted");
-                        return res.redirect('/roles2/showRoles2');
-
-                    });
+        if (err) { console.log('error finding role. err= ',err) }
+        else{
+            models.Users.findOne({ userRoleID: roles.roleID }, function (err2, result) {
+                if (err2 || result) {
+                    console.log("Role NOT deleted");
+                    //return res.status(409).send(' ALERT! ' + roles.roleName + ' Role not deleted because there are Users using this role. Please change Users under this role to other role and then delete this role.')
+                    req.flash('error_messages', ' Attention! ' + roles.roleName + ' Role not deleted because there are Users using this role.. <br> Please change Users under this role to other role and then delete this role.');
+                    res.redirect('/roles2/showRoles2');
                 }
-
-                async.waterfall([
-                    deleteWCSRAlert,
-                    deleteWhoCanCall911,
-                    deleteUserRole
-                ], function (error) {
-                    if (error) {
-                        //handle readFile error or processFile error here
-                    }
-                });
-
-            }
-        });
+                else {
+                    deleteWCSRAlert(roles);
+                    deleteWhoCanCall911(roles);
+                    deleteRooms(roles);
+                    deleteUserRole(roleToDelete);
+                    res.redirect('/roles2/showRoles2');
+                }
+            });
+        }
     });
 };
 /* ------------ end of DELETE ROLE2. */
+
+//delete WhoCanSenReceive Alerts-----
+function deleteWCSRAlert(roles) {
+    var deleteRole = {
+        roleID: roles.roleID,
+        roleName: roles.roleName
+    };
+    models.Alerts.updateMany({}, { $pull: {
+            "whoCanSendReceive.sendReal": deleteRole,
+            "whoCanSendReceive.receiveReal": deleteRole,
+            "whoCanSendReceive.sendDrill": deleteRole,
+            "whoCanSendReceive.receiveDrill": deleteRole
+        }}, function(err, alerts) {
+        if(err){
+            console.log('err finding whoCanSendReceive...= ',err);}
+        else {
+            if(!alerts) {console.log('role not found in alerts whoCanSendReceive... ')}
+            else {console.log('alerts with delete role = ',alerts);}
+        }
+    });
+}//----end delete WhoCanSenReceive Alerts
+
+//delete role from "whoCanCall911" Array (Alerts.whoCanCall911)-----
+function deleteWhoCanCall911(roles) {
+    models.Alerts.find({}, function(err, alert){
+        if(err){console.log('err deleteWhoCanCall911 = ',err);}
+        else {
+            for (var i = 0; i < alert.length; i++) {
+                if (alert[i].alertRequest911Call) {
+                    for (var a = 0; a < alert[i].whoCanCall911.length; a++) {
+                        if (alert[i].whoCanCall911[a] == roles.roleName) {
+                            var array = alert[i].whoCanCall911;
+                            array.splice(a, 1);
+                            alert[i].whoCanCall911 = array;
+                            console.log("user role deleted from Alert whoCanCall911 array");
+                            if (alert[i].whoCanCall911.length < 1) { //put radio button off if array is empty
+                                alert[i].alertRequest911Call = 'false';
+                            }
+                            alert[i].save(function (err) {
+                                if(err){console.log('err saving deleteWhoCanCall911 = ',err);}
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    });
+}//----end role from "whoCanCall911" Array (Alerts.whoCanCall911)
+
+//delete role from "Rooms" Array (Alerts.whoCanCall911)-----
+function deleteRooms(roles) {
+    models.Room.find({}, function(err, room){
+        if(err){console.log('err room role = ',err);}
+        else {
+            for (let i = 0; i < room.length; i++) {
+                if (room[i].roomRoleName) {
+                    for (let a = 0; a < room[i].roomRoleName.length; a++) {
+                        if (room[i].roomRoleName[a] == roles.roleName) {
+                            let array = room[i].roomRoleName;
+                            array.splice(a, 1);
+                            room[i].roomRoleName = array;
+                            if (room[i].roomRoleName.length < 1) { //put radio button off if array is empty
+                                room[i].smecsLightAllRoles = 'true';
+                            }
+                            room[i].save(function (err) {
+                                if(err){console.log('err saving roomRoleName = ',err);}
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    });
+}//----end role from "room" Array (roomRoleName)
+
+function deleteUserRole(roleToDelete) {
+    models.Roles2.remove({'_id': roleToDelete}, function(err) {
+        if(err){console.log('err deleteUserRole = ',err);}
+        else {console.log("role deleted");}
+    });
+}

@@ -1,12 +1,23 @@
-<html>
-<head>
-    <title>add role</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link rel='stylesheet' href='/public/stylesheets/updateStudent.css' />
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- icons -->
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/public/iconselect.js-1.0/css/lib/control/iconselect.css" >
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/control/iconselect.js"></script>
     <script type="text/javascript" src="/public/iconselect.js-1.0/lib/iscroll.js"></script>
     <script type="text/javascript" src="/public/icons/js/icons.js"></script>
+
 
     <script>
         var iconSelect;
@@ -20,22 +31,20 @@
             });
 
             iconSelect = new IconSelect("my-icon-select",
-                {'selectedIconWidth':23,
-                    'selectedIconHeight':23,
+                {'selectedIconWidth':30,
+                    'selectedIconHeight':30,
                     'selectedBoxPadding':1,
                     'iconsWidth':48,
                     'iconsHeight':48,
                     'boxIconSpace':1,
-                    'vectoralIconNumber':8,
-                    'horizontalIconNumber':6});
+                    'vectoralIconNumber':7,
+                    'horizontalIconNumber':7});
 
             var icons = [];
             iconBuild(icons);
             iconSelect.refresh(icons, 1);
         };
-    </script>
 
-    <script>
         $(document).ready(function(){
             var oldSortID = $("#oldSortID").val();
             var select_sort = '';
@@ -56,7 +65,7 @@
             var myArray = $("#inUseRoleID").val().split(",").map(Number);
             for (i=1;i<=99;i++){
                 if(myArray.indexOf(i) == -1){
-                select += '<option val=' + i + '>' + i + '</option>';
+                    select += '<option val=' + i + '>' + i + '</option>';
                 }
             }
             $('#some_select').html(select);
@@ -103,51 +112,172 @@
             });
         });
     </script>
+
+
 </head>
-<body>
-<h1><%= title %></h1>
 
-<form action="/dashboard">
-    <input type="submit" value="Home"><br>
-</form>
-<form>
-    <label for="sortID"><b>Sort ID:</b></label><br>
-    <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
-    <select id='sort_select'></select><br><br>
-
-    <label for="roleName"><b>Role Name:</b></label><br>
-    <input type="text" id="roleName" size="40" placeholder="ex: Teacher"><br><br>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
 
-    <label for="icon"><b>Icon:</b></label><br>
-    <div id="my-icon-select"></div><br>
-    <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                <!-- menu profile quick info -->
+                <% include ./../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3><%= title %></h3>
+                </div>
 
 
-    <input type="hidden" id="inUseRoleID" value="<%= array %>">
+                <div class="title_right">
 
-    <% if (userAuthID == 1) {%>
-    <label for="roleID"><b>Role ID:</b></label><br>
-    <select id='some_select'></select><br><br>
-    <% } else { %>
-    <select id='some_select' style="display:none;"></select>
-    <% } %>
+                    <div class="pull-left">
+                        <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
+                            <button type="button"
+                                    id="btSubmit"
+                                    value="Submit"
+                                    class="btn btn-success">Save
+                            </button>
 
-    <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
-    <input type="button" id="btSubmit" value="Submit" ><br>
-    <% } else { %>
-    <input type="button" id="btSubmit" value="Submit" disabled><br>
-    <% } %>
+                        <% } else { %>
+                            <button type="button"
+                                    id="btSubmit"
+                                    value="Submit"
+                                    class="btn btn-success" disabled>Save
+                            </button>
+                        <% } %>
+
+                        <a href="/roles2/showRoles2"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
 
 
-</form>
-<form action="/roles2/showRoles2">
-    <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
-    <input type="submit" value="Back" ><br>
-    <% } else { %>
-    <input type="submit" value="Back" disabled><br>
-    <% } %>
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-</form>
+
+
+
+
+            <input type="hidden" id="oldRoleName" value="<%= roles2.roleName %>">
+
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Role Name:</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <input type="text" id="roleName" class="form-control" placeholder="ex: Teacher">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+                                        <select id='sort_select' class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="inUseRoleID" value="<%= array %>">
+                                <% if (userAuthID == 1) {%>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Role ID</label>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <select id='some_select' class="form-control"></select>
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <select id='some_select' style="display:none;"></select>
+                                <% } %>
+                                <input type="hidden" id="oldRoleID" value="<%= roles2.roleID %>">
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div id="my-icon-select"></div>
+                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                                    </div>
+                                </div>
+
+
+
+
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <!-- /page content -->
+
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
+
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>
