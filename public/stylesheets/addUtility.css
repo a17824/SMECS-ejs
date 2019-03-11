@@ -1,14 +1,26 @@
+div.disable2 {
+    background-color: ghostwhite;
+    border: solid 1px #ccc;
+    margin: auto 0em;
+    padding: 1em;
+    width: 292px;
+    position:fixed;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    overflow:hidden;
+}
 div.disable {
     background-color: ghostwhite;
     border: solid 1px #ccc;
     margin: auto 0em;
     padding: 1em;
     width: 292px;
-
+    position:fixed;
     list-style: none;
     opacity: 0;
     visibility: hidden;
-
+    overflow:hidden;
     -webkit-transition: opacity 600ms, visibility 600ms;
     transition: opacity 600ms, visibility 600ms;
 
@@ -19,12 +31,14 @@ div.enable {
     margin: auto 0em;
     padding: 1em;
     width: 292px;
-
+    overflow:hidden;
     visibility: visible;
     -webkit-transition: opacity 600ms, visibility 600ms;
     transition: opacity 600ms, visibility 600ms;
 
 }
+
+
 
 
 ul.enable {

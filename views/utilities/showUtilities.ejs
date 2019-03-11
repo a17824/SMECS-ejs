@@ -19,6 +19,15 @@
             }
         };
         // end of Reload whole page if page is cached
+
+
+        //DELETE Confirmation
+        function YNconfirm(type) {
+            if (confirm('ATTENTION: Are you sure you want to delete the utility: ' + type + '?'))
+                return true;
+            else
+                return false;
+        };
     </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -86,66 +95,69 @@
 
 
                             <div class="table-responsive">
-                            <table id="datatable-buttons" class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Utility Name</th>
-                                    <% if (userAuthID == 1) {%>
-                                    <th>ID</th>
-                                    <% } %>
-                                    <th>Contact Name</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>SMECS app</th>
-                                    <th>SMECS user</th>
-                                    <th>Default Contact</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-                                </tr>
-                                <tbody>
-                                <% utility.forEach(function(utility) { %>
-                                <tr>
-                                    <td><%= utility.sortID %></td>
-                                    <td><%= utility.utilityName %></td>
-                                    <% if (userAuthID == 1) {%>
-                                    <td><%= utility.utilityID %></td>
-                                    <% } %>
-                                    <td><%= utility.contactName %></td>
-                                    <td><%= utility.phone %></td>
-                                    <td><%= utility.email %></td>
-                                    <% if (utility.smecsApp) {%>
-                                    <td>Yes</td>
-                                    <% } else { %>
-                                    <td>No</td>
-                                    <% } %>
-
-                                    <td><%= utility.defaultContact %></td>
-
-                                    <% if (utility.smecsUsers.length < 1 ) {%>
-                                    <td></td>
-                                    <% } else { %>
-                                    <td><a href="/utilities/users/<%= utility.id %>"><button class="btn btn-info"><%= utility.smecsUsers.length %> users</button></a></td>
-                                    <% } %>
-
-                                    <td>
-                                        <% if (aclModifyUtilities == null || aclModifyUtilities.checkBoxValue == true) {%>
-                                        <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="btn btn-warning">update</button></a>
-                                        <% } else { %>
-                                        <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                <table id="datatable-buttons" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Utility Name</th>
+                                        <% if (userAuthID == 1) {%>
+                                            <th>ID</th>
                                         <% } %>
-                                    </td>
-                                    <td>
-                                        <% if (aclDeleteUtilities == null || aclDeleteUtilities.checkBoxValue == true) {%>
-                                        <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="btn btn-danger">delete</button></a>
-                                        <% } else { %>
-                                        <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="btn btn-danger" disabled>delete</button></a>
-                                        <% } %>
-                                    </td>
-                                </tr>
-                                <% }); %>
-                                </tbody>
-                            </table>
+                                        <th>Contact Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>SMECS app</th>
+                                        <th>Default Contact</th>
+                                        <th>SMECS user</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <tbody>
+                                    <% utility.forEach(function(utility) { %>
+                                        <tr>
+                                            <td><%= utility.sortID %></td>
+                                            <td><%= utility.utilityName %></td>
+                                            <% if (userAuthID == 1) {%>
+                                                <td><%= utility.utilityID %></td>
+                                            <% } %>
+                                            <td><%= utility.contactName %></td>
+                                            <td><%= utility.phone %></td>
+                                            <td><%= utility.email %></td>
+                                            <% if (utility.smecsApp) {%>
+                                                <td>Yes</td>
+                                            <% } else { %>
+                                                <td>No</td>
+                                            <% } %>
+
+                                            <td><%= utility.defaultContact %></td>
+
+                                            <td>
+                                                <% if (utility.smecsUsers.length < 1 ) {%>
+
+                                                <% } else { %>
+                                                    <a href="/utilities/users/<%= utility.id %>"><button class="btn btn-info"><%= utility.smecsUsers.length %> users</button></a>
+                                                <% } %>
+                                            </td>
+
+
+                                            <td>
+                                                <% if (aclModifyUtilities == null || aclModifyUtilities.checkBoxValue == true) {%>
+                                                    <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="btn btn-warning">update</button></a>
+                                                <% } else { %>
+                                                    <a href="/utilities/updateUtilities/<%= utility.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (aclDeleteUtilities == null || aclDeleteUtilities.checkBoxValue == true) {%>
+                                                    <a href="/utilities/deleteUtilities/<%= utility.id %>" onclick="return(YNconfirm('<%= utility.utilityName %>'));"><button class="btn btn-danger">delete</button></a>
+                                                <% } else { %>
+                                                    <a href="/utilities/deleteUtilities/<%= utility.id %>"><button class="btn btn-danger" disabled>delete</button></a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

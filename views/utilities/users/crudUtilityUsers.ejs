@@ -185,7 +185,8 @@
         <% allUtilUsers.forEach(function(user) { %>
         <% if (user.softDeleted == null) { %>
         <option value="<%= user.email %>_|_<%= user.companyName %>_|_<%= user.contactName %>" >
-            Company: <%= user.companyName %> - Contact: <%= user.contactName %> | Email: <%= user.email %></option>
+            Company: <%= user.companyName %> - Contact: <%= user.contactName %> | Email: <%= user.email %>
+        </option>
         <% } %>
         <% }); %>
     </select>

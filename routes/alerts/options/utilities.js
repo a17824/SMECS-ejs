@@ -53,6 +53,12 @@ module.exports.add = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+
+        //show hide AlertID select in EJS
+        let showHideAlertID = 'hide';
+        if (req.user.userPrivilegeID == 1)
+            showHideAlertID = '';
+
         var arraySort = [];
         var array = [];
 
@@ -64,30 +70,33 @@ module.exports.add = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(arraySort);
+
+            var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
+            stream.on('data', function (doc) {
+                array.push(doc.utilityID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log(array);
+                res.render('utilities/addUtilities',{
+                    title:'Add Utility',
+                    arraySort: arraySort,
+                    array: array,
+                    userAuthID: req.user.userPrivilegeID,
+                    utility: results[0],
+                    utilityUsers: results[1],
+                    showHideAlertID: showHideAlertID,
+                    aclShowUtilities: results[2],     //aclPermissions showAddUtilities
+                    aclAddUtilities: results[3],      //aclPermissions addAddUtilities
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            })
         });
 
-        var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.utilityID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('utilities/addUtilities',{
-                title:'Add Utility',
-                arraySort: arraySort,
-                array: array,
-                userAuthID: req.user.userPrivilegeID,
-                utility: results[0],
-                utilityUsers: results[1],
-                aclShowUtilities: results[2],     //aclPermissions showAddUtilities
-                aclAddUtilities: results[3],      //aclPermissions addAddUtilities
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        })
+
     })
 };
 module.exports.addPost = function(req, res) {
@@ -122,15 +131,19 @@ module.exports.update = function(req, res) {
             }).exec(callback);
         },
         function(callback){
-            models.UtilityUsers.find(function(error, utility) {
-
-            }).exec(callback);
+            models.Users.find({userRoleID: 99}).exec(callback);
         },
         function(callback){aclPermissions.showUtilities(req, res, callback);},  //aclPermissions showUtilities
         function(callback){aclPermissions.modifyUtilities(req, res, callback);},  //aclPermissions modifyUtilities
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+
+        //show hide AlertID select in EJS
+        let showHideAlertID = 'hide';
+        if (req.user.userPrivilegeID == 1)
+            showHideAlertID = '';
+
         var arraySort = [];
         var array = [];
 
@@ -142,30 +155,33 @@ module.exports.update = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(arraySort);
+
+            var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
+            stream.on('data', function (doc) {
+                array.push(doc.utilityID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log(array);
+                res.render('utilities/updateUtilities',{
+                    title:'Update Utility',
+                    userAuthID: req.user.userPrivilegeID,
+                    arraySort: arraySort,
+                    array: array,
+                    utility: results[0],
+                    utilityUsers: results[1],
+                    showHideAlertID: showHideAlertID,
+                    aclShowUtilities: results[2],      //aclPermissions ShowUtilities
+                    aclModifyUtilities: results[3],      //aclPermissions modifyUtilities
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            })
         });
 
-        var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.utilityID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('utilities/updateUtilities',{
-                title:'Update Utility',
-                userAuthID: req.user.userPrivilegeID,
-                arraySort: arraySort,
-                array: array,
-                utility: results[0],
-                utilityUsers: results[1],
-                aclShowUtilities: results[2],      //aclPermissions ShowUtilities
-                aclModifyUtilities: results[3],      //aclPermissions modifyUtilities
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        })
+
     })
 };
 module.exports.updatePost = function(req, res) {

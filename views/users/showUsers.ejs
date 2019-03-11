@@ -42,9 +42,6 @@
     <script type="text/javascript">
         //DELETE Confirmation
         function YNconfirm(type) {
-            if ( type === 'room'){
-                type = 'room and their specific procedure'
-            }
             if (confirm('ATTENTION: Users in trash will be permanently deleted after 30 days. Are you sure you want to trash the user: ' + type + '?'))
                 return true;
             else
