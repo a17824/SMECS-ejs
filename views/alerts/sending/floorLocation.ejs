@@ -4,35 +4,38 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/stylesheets/sendAlert.css' />
     <script>
-
-        var posx;var posy;
-
-        function capmouse(e){
-            // captures the mouse position
-            posx = 0; posy = 0;
-            if (!e){var e = window.event;}
-            if (e.pageX || e.pageY){
-                posx = e.pageX;
-                posy = e.pageY;
-            }
-            else {
-                if (e.clientX || e.clientY){
-                    posx = e.clientX;
-                    posy = e.clientY;
-                }
-            }
-        }
-        var x = '';
-        var y = '';
-        function showP(){
-            document.getElementById("div2").className="div3";
-            document.getElementById("div2").style.top =(posy-31)+'px';
-            document.getElementById("div2").style.left=(posx-32)+'px';
-            x = (posx-32+240)+'px';
-            y = (posy-31+40)+'px';
-        }
-
         $(document).ready(function(){
+            //mouse position related to div2
+            let divPos = {};
+            let offset = $("#div1").offset();
+
+            let yPercent,xPercent;
+
+            $(document).mousemove(function(e){
+                divPos = {
+                    left: e.pageX - offset.left,
+                    top: e.pageY - offset.top
+                };
+
+                yPercent = divPos.top/document.getElementById('div1').offsetHeight*100;
+                xPercent = divPos.left/document.getElementById('div1').offsetWidth*100;
+            });
+            //end of mouse position related to div2
+
+            //put sniper visible and on place
+            let x = '';
+            let y = '';
+            $("#showP").click(function(){
+                document.getElementById("div2").className="div3";
+                document.getElementById("div2").style.top =(divPos.top+200-31)+'px';   //200px is the css top px; 31 is to center red cross
+                document.getElementById("div2").style.left=(divPos.left+200-32)+'px';
+
+                y = yPercent;   //value to save on database
+                x = xPercent;
+                console.log('divPos.top , divPos.left = ',divPos.top + ' , ' + divPos.left);
+                console.log('divPosPercentage = ',y + ' , ' + x);
+            })
+
             var alert_ID, alertNameID, coordinateX, coordinateY;
             $("#<%= alert.id %>").click(function(){
                 alert_ID=$(this).attr('id');
@@ -91,7 +94,7 @@
     </script>
 
 </head>
-<body onmousemove="capmouse(event)">
+<body>
 
 <% if (alert.testModeON == true ) {%>
 <h2 style="color: #34A7C1"> TEST MODE ON </h2>
@@ -110,8 +113,8 @@
     <% floor.forEach(function(floor) { %>
     <% if (alert.floorName == floor.floorName ) {%>
     <input type="hidden" id="floorPhoto" value="<%= floor.floorPlan %>">
-    <div id="div1" class="div1" style="height: 600px;">
-        <img style='height: 100%; width: 100%; object-fit: contain' src="/public/floorPlans/<%= floor.floorPlan %>" onclick="showP()">
+    <div id="div1" class="div1">
+        <img id="showP" style='width: 100%; top:0px; left:0px; object-fit: contain' src="/public/floorPlans/<%= floor.floorPlan %>">
     </div>
     <% } %>
     <% }); %>

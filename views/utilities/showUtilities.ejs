@@ -123,12 +123,13 @@
                                             <td><%= utility.contactName %></td>
                                             <td><%= utility.phone %></td>
                                             <td><%= utility.email %></td>
-                                            <% if (utility.smecsApp) {%>
-                                                <td>Yes</td>
+                                            <td>
+                                            <% if (utility.smecsApp) { %>
+                                                <img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons">
                                             <% } else { %>
-                                                <td>No</td>
+                                                <img  src="/miscPictures/redCross20.png">
                                             <% } %>
-
+                                            </td>
                                             <td><%= utility.defaultContact %></td>
 
                                             <td>

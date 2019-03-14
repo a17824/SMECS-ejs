@@ -392,7 +392,7 @@
                                                 <option disabled selected id="userList"> -- select a user from dropdown list -- </option>
                                                 <% utilityUsers.forEach(function(user) { %>
                                                     <% if (user.softDeleted == null) { %>
-                                                        <option value="<%= user.email %>" ><%= user.email %>&emsp; (<%= user.note %>)</option>
+                                                        <option value="<%= user.email %>" ><%= user.email %>&emsp; (<%= user.companyName %>)</option>
                                                     <% } %>
                                                 <% }); %>
                                             </select>

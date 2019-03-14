@@ -248,9 +248,9 @@ router.get('/utilities/eraseUtilityUser/:id', auth.simpleAuth, auth.requireLogin
 
 
 /* CRUD Utility Users. ----------------------------------------------------------------------*/
-router.get('/utilities/users/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.showUtilityUsers, function(req, res) {
+router.get('/utilities/users/:id', auth.simpleAuth, auth.requireLogin, utilities.showUtilityUsers, function(req, res) {
 });
-router.post('/utilities/users', auth.simpleAuth, auth.requireLogin, utilityUsers.updateUtilityUsersPost, function(req, res) {
+router.post('/utilities/users', auth.simpleAuth, auth.requireLogin, utilities.updateUtilityUsersPost, function(req, res) {
 });
 /* CRUD 911 User Roles. ----------------------------------------------------------------------*/
 router.get('/roles911/:id', auth.simpleAuth, auth.requireLogin, alerts.show911UserRoles, function(req, res) {

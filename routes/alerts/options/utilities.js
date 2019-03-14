@@ -10,9 +10,6 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.Utilities.find().sort({"sortID":1}).exec(callback);
         },
-        function(callback){
-            models.UtilityUsers.find().exec(callback);
-        },
         function(callback){aclPermissions.addUtilities(req, res, callback);},   //aclPermissions addUtilities
         function(callback){aclPermissions.modifyUtilities(req, res, callback);},   //aclPermissions modifyUtilities
         function(callback){aclPermissions.deleteUtilities(req, res, callback);},   //aclPermissions deleteUtilities
@@ -24,11 +21,10 @@ module.exports.show = function(req, res, next) {
             title:'Utilities Failures',
             userAuthID: req.user.userPrivilegeID,
             utility: results[0],
-            utilityUsers: results[1],
-            aclAddUtilities: results[2], //aclPermissions addUtilities
-            aclModifyUtilities: results[3], //aclPermissions modifyUtilities
-            aclDeleteUtilities: results[4], //aclPermissions deleteUtilities
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclAddUtilities: results[1], //aclPermissions addUtilities
+            aclModifyUtilities: results[2], //aclPermissions modifyUtilities
+            aclDeleteUtilities: results[3], //aclPermissions deleteUtilities
+            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -44,9 +40,7 @@ module.exports.add = function(req, res) {
             }).exec(callback);
         },
         function(callback){
-            models.UtilityUsers.find(function(error, utility) {
-
-            }).exec(callback);
+            models.Users.find({userRoleID: 99}).exec(callback);
         },
         function(callback){aclPermissions.showUtilities(req, res, callback);}, //aclPermissions showUtilities
         function(callback){aclPermissions.addUtilities(req, res, callback);},  //aclPermissions addUtilities
@@ -218,3 +212,47 @@ module.exports.delete = function(req, res) {
         });
 };
 /* ------------ end of DELETE UTILITY. */
+
+
+/* SHOW/UPDATE/DELETE UTILITy USERS. */
+module.exports.showUtilityUsers = function(req, res, next) {
+    async.parallel([
+        function(callback){
+            models.Utilities.findById(req.params.id).exec(callback);
+        },
+        function(callback){
+            models.Users.find({userRoleID: 99}).exec(callback);
+        },
+        function(callback){aclPermissions.addUtilities(req, res, callback);},   //aclPermissions addUtilities
+        function(callback){aclPermissions.modifyUtilities(req, res, callback);},   //aclPermissions modifyUtilities
+        function(callback){aclPermissions.deleteUtilities(req, res, callback);},   //aclPermissions deleteUtilities
+        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+
+    ],function(err, results){
+        //console.log(results[2]);
+        res.render('utilities/users/crudUtilityUsers-new',{
+            title: results[0].utilityName,
+            utility: results[0],
+            allUtilUsers: results[1],
+            userAuthID: req.user.userPrivilegeID,
+            aclAddUtilities: results[2], //aclPermissions addUtilities
+            aclModifyUtilities: results[3], //aclPermissions modifyUtilities
+            aclDeleteUtilities: results[4], //aclPermissions deleteUtilities
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+            userAuthPhoto: req.user.photo
+        });
+    })
+};
+module.exports.updateUtilityUsersPost = function(req, res) {
+    var utilityToUpdate1 = req.body.utilityToUpdate;
+    models.Utilities.findById({'_id': utilityToUpdate1}, function(err, utility){
+        utility.smecsUsers = req.body.smecsUsers;
+        if (utility.smecsUsers === undefined || utility.smecsUsers.length < 1){ //put radio button off if array is empty
+            utility.smecsApp = 'false';
+        }
+        utility.save();
+        return res.send({redirect:'/utilities/showUtilities'})
+    });
+};
+/*-------------------------end of SHOW/UPDATE/DELETE UtilityUsers*/

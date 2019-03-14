@@ -2,7 +2,7 @@
 <head>
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <link rel='stylesheet' href='/stylesheets/receiveAlert.css' />
+    <link rel='stylesheet' href='/public/stylesheets/receiveAlert.css' />
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw&callback=initMap"
             type="text/javascript"></script>
@@ -16,23 +16,30 @@
     <!-- Alert that requires FLOOR -->
     <% if ( flagFloor === 'floor' ) {%>
 
-    <script>
-        var x, y;
-        function showP(){
-            x=$("#x").val();
-            y=$("#y").val();
+        <script>
+            var xPercentage, yPercentage;
+            function showP(){
+                yPercentage=$("#y").val();
+                xPercentage=$("#x").val();
+                //console.log('yPercentage,xPercentage = ',yPercentage + ' , ' + xPercentage);
 
-            if(x == "" ){    //if user didn't chose to touch/click floor map
-                document.getElementById("div2").className="div4";
+                let y,x;
+                y = yPercentage*document.getElementById('div1').offsetHeight/100
+                x = xPercentage*document.getElementById('div1').offsetWidth/100
+                //console.log('y,x = ',y + ' , ' + x);
+                console.log('css = ', document.getElementById('div1').offsetTop);
+
+                if(x == "" ){    //if user didn't chose to touch/click floor map
+                    document.getElementById("div2").className="div4";
+                }
+                else{ // put sniper cross .png visible
+                    document.getElementById("div2").className="div3";
+                    document.getElementById("div2").style.top = (y+150-31)+'px'; //150px is the css top px; 31 is to center red cross
+                    document.getElementById("div2").style.left= (x+500-32)+'px';
+                }
             }
-            else{ // put sniper cross .png visible
-                document.getElementById("div2").className="div3";
-                document.getElementById("div2").style.top = y;
-                document.getElementById("div2").style.left= x;
-            }
-        }
-        window.onload = showP;
-    </script>
+            window.onload = showP;
+        </script>
     <% } %>
     <!-- end of Alert that requires FLOOR -->
 
@@ -192,8 +199,8 @@
             info.floorPhoto !== info._id + '_skipped by user' &&
             info.floorPhoto !== info._id + '_Outside Building') {%>
 
-    <div id="div1" class="div1" style="height: 600px;">
-        <img style='height: 100%; width: 100%; object-fit: contain' src="/public/alertSentInfo/floorsPhotos/<%= info.floorPhoto %>">
+    <div id="div1" class="div1">
+        <img style='width: 100%; top:0px; object-fit: contain' src="/public/alertSentInfo/floorsPhotos/<%= info.floorPhoto %>">
     </div>
     <% } %>
     <div id="div2" class="div2" >

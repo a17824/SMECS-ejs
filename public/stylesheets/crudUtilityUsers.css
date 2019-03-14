@@ -80,6 +80,7 @@ img.disable {
 label.enable {
     color: #000000;
     font-weight: bold;
+    font-family:"Verdana",sans-serif;
 }
 label.disable {
     color: #444444;

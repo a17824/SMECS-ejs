@@ -106,13 +106,14 @@ caption {
 
 .div1 {
     position:absolute;
-    top:80px;
-    left:100px;
+    top:200px;
+    left:200px;
+    width: 50%;
+    height: 50%;
     visibility:visible;
     z-index:5
 }
 .div2 {
-
     visibility:hidden;
     z-index:1;
 }
@@ -124,4 +125,5 @@ caption {
     font-family:monospace;
     font-size:20px;
     font-weight:900;
-    color:black;}
+    color:black;
+}

@@ -2,7 +2,7 @@
 <head>
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <link rel='stylesheet' href='/stylesheets/receiveAlert.css' />
+    <link rel='stylesheet' href='/public/stylesheets/reviewAlert.css' />
 
 
     <% var latidtude2 %>
@@ -10,18 +10,36 @@
     <% if ( flagFloor === 'floor' ) {%>
 
         <script>
-            var x, y;
+            let yPercentage,xPercentage;
+            let divStartTop, divStartLeft;
+            let redCrossCenterTop, redCrossCenterLeft;
+
             function showP(){
-                x=$("#x").val();
-                y=$("#y").val();
+                yPercentage = $("#y").val(); // percentage of red cross
+                xPercentage = $("#x").val();
+
+                divStartTop = document.getElementById('div1').offsetTop; // where div starts
+                divStartLeft = document.getElementById('div1').offsetLeft;
+
+                redCrossCenterTop = 31;
+                redCrossCenterLeft = 32;
+
+                //console.log('yPercentage,xPercentage = ',yPercentage + ' , ' + xPercentage);
+
+                let y,x;
+                y = yPercentage*document.getElementById('div1').offsetHeight/100    // transform  % position to px position
+                x = xPercentage*document.getElementById('div1').offsetWidth/100
+
+                //console.log('y,x = ',y + ' , ' + x);
+                //console.log('css = ', document.getElementById('div1').offsetLeft);
 
                 if(x == "" ){    //if user didn't chose to touch/click floor map
                     document.getElementById("div2").className="div4";
                 }
                 else{ // put sniper cross .png visible
                     document.getElementById("div2").className="div3";
-                    document.getElementById("div2").style.top = y;
-                    document.getElementById("div2").style.left= x;
+                    document.getElementById("div2").style.top = ( y + divStartTop - redCrossCenterTop )+'px'; //200px is the css top px; 31 is to center red cross
+                    document.getElementById("div2").style.left= ( x + divStartLeft - redCrossCenterLeft )+'px';
                 }
             }
             window.onload = showP;
@@ -31,69 +49,48 @@
 
 
     <script>
-            $(document).ready(function(){
+        $(document).ready(function(){
 
-                <!-- Alert that requires GPS -->
-                var destLatitude, destLongitude;
-                navigator.geolocation.getCurrentPosition(function(location) {
-                    destLatitude = location.coords.latitude;
-                    destLongitude = location.coords.longitude;
-                   });
-
-
-
-                // Alert UTILITY FAILURE OR REQUEST ASSISTANCE
-                var alert_ID, alertNameID, alertName, requestAssistance, utilityName, smecsApp, email, call;
-                $("#<%= info.id %>").click(function() {
-                    requestAssistance = $(this).attr('id');
-
-                    if (requestAssistance != 'proc' && requestAssistance != 'exit') {
-
-                        alert_ID = $("#alert_ID").val();
-                        alertNameID = $("#alertNameID").val();
-                        alertName = $("#alertName").val();
-                        utilityName = $(this).attr('name');
-                        smecsApp = $('#' + requestAssistance + '_smecsApp').is(':checked');
-                        email = $('#' + requestAssistance + '_email').is(':checked');
-                        call = $('#' + requestAssistance + '_call').is(':checked');
+            <!-- Alert that requires GPS -->
+            var destLatitude, destLongitude;
+            navigator.geolocation.getCurrentPosition(function(location) {
+                destLatitude = location.coords.latitude;
+                destLongitude = location.coords.longitude;
+            });
 
 
-                        //-----forms validation------------------------------------
+
+            // Alert UTILITY FAILURE OR REQUEST ASSISTANCE
+            var alert_ID, alertNameID, alertName, requestAssistance, utilityName, smecsApp, email, call;
+            $("#<%= info.id %>").click(function() {
+                requestAssistance = $(this).attr('id');
+
+                if (requestAssistance != 'proc' && requestAssistance != 'exit') {
+
+                    alert_ID = $("#alert_ID").val();
+                    alertNameID = $("#alertNameID").val();
+                    alertName = $("#alertName").val();
+                    utilityName = $(this).attr('name');
+                    smecsApp = $('#' + requestAssistance + '_smecsApp').is(':checked');
+                    email = $('#' + requestAssistance + '_email').is(':checked');
+                    call = $('#' + requestAssistance + '_call').is(':checked');
 
 
-                        //--------------------------------forms validation end-------
-                        $.post('/alerts/sending/reviewAlert', {
-                            alertToUpdate: alert_ID,
-                            alertNameID: alertNameID,
-                            alertName: alertName,
-                            utilityID: requestAssistance,
-                            utilityName: utilityName,
-                            raSmecsApp: smecsApp,
-                            raEmail: email,
-                            raCall: call,
-                            latitude: destLatitude,
-                            longitude: destLongitude
+                    //-----forms validation------------------------------------
 
-                        }, function (data) {
-                            if (data === 'done') {
-                                alert("login success");
-                            }
-                            window.location = data.redirect
-                        }).error(function (error) {
-                            if (error.responseText == 'showAlert')
-                                alert("App stop responding, call SMECS APP team for help .")
-                        });
-                    }
 
-                });
-                // END OF Alert UTILITY FAILURE OR REQUEST ASSISTANCE
-
-                //back button
-                $("#back").click(function () {
-                    let alert_ID=$("#alert_ID").val();
-
-                    $.post('/sendAlertBackButton', {
-                        alertToUpdate: alert_ID
+                    //--------------------------------forms validation end-------
+                    $.post('/alerts/sending/reviewAlert', {
+                        alertToUpdate: alert_ID,
+                        alertNameID: alertNameID,
+                        alertName: alertName,
+                        utilityID: requestAssistance,
+                        utilityName: utilityName,
+                        raSmecsApp: smecsApp,
+                        raEmail: email,
+                        raCall: call,
+                        latitude: destLatitude,
+                        longitude: destLongitude
 
                     }, function (data) {
                         if (data === 'done') {
@@ -104,10 +101,31 @@
                         if (error.responseText == 'showAlert')
                             alert("App stop responding, call SMECS APP team for help .")
                     });
+                }
+
+            });
+            // END OF Alert UTILITY FAILURE OR REQUEST ASSISTANCE
+
+            //back button
+            $("#back").click(function () {
+                let alert_ID=$("#alert_ID").val();
+
+                $.post('/sendAlertBackButton', {
+                    alertToUpdate: alert_ID
+
+                }, function (data) {
+                    if (data === 'done') {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function (error) {
+                    if (error.responseText == 'showAlert')
+                        alert("App stop responding, call SMECS APP team for help .")
                 });
             });
+        });
 
-        </script>
+    </script>
 
 
 
@@ -126,7 +144,7 @@
 <h1><%= info.alertName %></h1>
 
 <% if (info.testModeON == true ) {%>
-<h2 style="color: #34A7C1"> TEST MODE ON </h2>
+    <h2 style="color: #34A7C1"> TEST MODE ON </h2>
 <% } %>
 
 <!-- Alert that requires FLOOR -->
@@ -142,8 +160,8 @@
                 info.floorPhoto !== 'Multiple Locations' &&
                 info.floorPhoto !== 'skipped by user' &&
                 info.floorPhoto !== 'Outside Building') {%>
-            <div id="div1" class="div1" style="height: 600px;">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="/public/floorPlans/<%= info.floorPhoto %>">
+            <div id="div1" class="div1">
+                <img style='width: 100%; top:0px; object-fit: contain' src="/public/floorPlans/<%= info.floorPhoto %>">
             </div>
         <% } %>
         <div id="div2" class="div2" >
@@ -237,34 +255,34 @@
 
 <!-- Alert BUS TRANSPORTATION -->
 <% if (info.alertNameID == 12 ) {%>
-<label for="busAccidentNoInjuries"><b>No injuries:</b></label>
-<% if (info.busAccidentNoInjuries) { %>
-<input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" checked disabled>
-<% }else { %>
-<input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" disabled>
-<% } %>
-<br><br>
+    <label for="busAccidentNoInjuries"><b>No injuries:</b></label>
+    <% if (info.busAccidentNoInjuries) { %>
+        <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" checked disabled>
+    <% }else { %>
+        <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" disabled>
+    <% } %>
+    <br><br>
 
-<p id="demo2"></p>
-<input type="hidden" id="demo" value="">
+    <p id="demo2"></p>
+    <input type="hidden" id="demo" value="">
 
-<script>
+    <script>
 
-</script>
+    </script>
 
-<!-- <iframe src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d378757.6250705166!2d-71.4861799315366!3d42.12794243510983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m5!1s0x89e37f3cc09fed65%3A0x97b42ec0b39147df!2sSt+Theresa+of+Avila+School%2C+Boston%2C+MA!3m2!1d42.2780798!2d-71.157955!4m3!3m2!1d41.9224861!2d-71.293221!5e0!3m2!1sen!2sus!4v1481423770414" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
-<br><br>
-
-
-<iframe width="600" height="450" frameborder="0" style="border:0"
-    src="https://www.google.com/maps/embed/v1/directions?origin=...&destination=...&key=..." allowfullscreen></iframe>
+    <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d378757.6250705166!2d-71.4861799315366!3d42.12794243510983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m5!1s0x89e37f3cc09fed65%3A0x97b42ec0b39147df!2sSt+Theresa+of+Avila+School%2C+Boston%2C+MA!3m2!1d42.2780798!2d-71.157955!4m3!3m2!1d41.9224861!2d-71.293221!5e0!3m2!1sen!2sus!4v1481423770414" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+    <br><br>
 
 
+    <iframe width="600" height="450" frameborder="0" style="border:0"
+        src="https://www.google.com/maps/embed/v1/directions?origin=...&destination=...&key=..." allowfullscreen></iframe>
 
 
 
 
--->
+
+
+    -->
 <% } %>
 
 
@@ -283,19 +301,19 @@
 
 
 <% if (info.alertNameID == 27 ) {%>
-<label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
+    <label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
 
-<label for="busRadio"><b>Bus is:</b> <%= info.busDelayedAhead %></label><br><br>
+    <label for="busRadio"><b>Bus is:</b> <%= info.busDelayedAhead %></label><br><br>
 
-<label for="busTime"><b>Time <%= info.busDelayedAhead %>:</b> <%= info.busTimeChanged %></label><br><br>
+    <label for="busTime"><b>Time <%= info.busDelayedAhead %>:</b> <%= info.busTimeChanged %></label><br><br>
 
 
-<label for="email"><b>Send email notification:</b></label>
-<% if (info.busTimeChangedEmail == true ) {%>
-<input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" checked onclick="return false;"><br><br>
-<% } else {%>
-<input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" onclick="return false;"><br><br>
-<% } %>
+    <label for="email"><b>Send email notification:</b></label>
+    <% if (info.busTimeChangedEmail == true ) {%>
+        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" checked onclick="return false;"><br><br>
+    <% } else {%>
+        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" onclick="return false;"><br><br>
+    <% } %>
 <% } %>
 
 
@@ -320,12 +338,12 @@
 
 <!-- Alert Medical Emergencies -->
 <% if (info.alertNameID == 18 ) {%>
-<label for="situation"><b>Number of injured parties:</b></label>
-<input type="text" id="parties"  size="1" value="<%= info.medicalInjuredParties %>" readonly ><br><br>
+    <label for="situation"><b>Number of injured parties:</b></label>
+    <input type="text" id="parties"  size="1" value="<%= info.medicalInjuredParties %>" readonly ><br><br>
 <% } %>
 
 <% if (info.alertNameID == 29 ) {%>
-<label for="situation"><b>Day(s) school will be closed:</b> <%= info.daysClosed %></label><br><br>
+    <label for="situation"><b>Day(s) school will be closed:</b> <%= info.daysClosed %></label><br><br>
 <% } %>
 
 <!-- Alert UTILITY FAILURE  && MEDICAL EMERGENCIES && REQUEST ASSISTANCE-->
@@ -340,7 +358,7 @@
     <% for (var i=0; i < info.multiSelectionNames.length; i++) {%>
         <input type="checkbox" name="checkbox"  value="<%= info.multiSelectionNames[i] %>" checked onclick="return false;">
         <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
-<% } %>
+    <% } %>
 <% } %>
 
 
@@ -348,7 +366,7 @@
 
 
 <% if ( error_messages ) { %>
-<label for="err" style="color: red"><%= error_messages %></label><br>
+    <label for="err" style="color: red"><%= error_messages %></label><br>
 <% } %>
 <!-- END OFF Alert UTILITY FAILURE -->
 
