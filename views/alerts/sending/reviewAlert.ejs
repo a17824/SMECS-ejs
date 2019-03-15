@@ -13,21 +13,21 @@
             let yPercentage,xPercentage;
             let divStartTop, divStartLeft;
             let redCrossCenterTop, redCrossCenterLeft;
+            let y,x;
 
             function showP(){
-                yPercentage = $("#y").val(); // percentage of red cross
-                xPercentage = $("#x").val();
+                yPercentage = $("#y").val();    // percentage of the location of red cross. mongo ex:-> sniperCoordinateY:"36.93931398416886"
+                xPercentage = $("#x").val();    // mongo ex:-> sniperCoordinateX:"76.80555555555556"
 
-                divStartTop = document.getElementById('div1').offsetTop; // where div starts
-                divStartLeft = document.getElementById('div1').offsetLeft;
+                divStartTop = document.getElementById('div1').offsetTop; // where div starts. CSS ex:-> top:200px;
+                divStartLeft = document.getElementById('div1').offsetLeft;  // CSS ex:-> left:400px;
 
-                redCrossCenterTop = 31;
+                redCrossCenterTop = 32; // depends on size of red cross picture. Center red cross picture to touch/click
                 redCrossCenterLeft = 32;
 
                 //console.log('yPercentage,xPercentage = ',yPercentage + ' , ' + xPercentage);
 
-                let y,x;
-                y = yPercentage*document.getElementById('div1').offsetHeight/100    // transform  % position to px position
+                y = yPercentage*document.getElementById('div1').offsetHeight/100    // transform percentage position to px position (related to div1 size)
                 x = xPercentage*document.getElementById('div1').offsetWidth/100
 
                 //console.log('y,x = ',y + ' , ' + x);
@@ -37,9 +37,9 @@
                     document.getElementById("div2").className="div4";
                 }
                 else{ // put sniper cross .png visible
-                    document.getElementById("div2").className="div3";
-                    document.getElementById("div2").style.top = ( y + divStartTop - redCrossCenterTop )+'px'; //200px is the css top px; 31 is to center red cross
-                    document.getElementById("div2").style.left= ( x + divStartLeft - redCrossCenterLeft )+'px';
+                    document.getElementById("div2").className="div3";   //put red cross picture visible
+                    document.getElementById("div2").style.top = ( divStartTop + y - redCrossCenterTop )+'px';  // red cross location final location
+                    document.getElementById("div2").style.left= ( divStartLeft + x - redCrossCenterLeft )+'px';
                 }
             }
             window.onload = showP;
@@ -159,9 +159,10 @@
                 info.floorPhoto !== 'Multiple floors' &&
                 info.floorPhoto !== 'Multiple Locations' &&
                 info.floorPhoto !== 'skipped by user' &&
-                info.floorPhoto !== 'Outside Building') {%>
+                info.floorPhoto !== info._id + '_Outside Building' &&
+                info.floorPhoto !== info._id + '_undefined') {%>
             <div id="div1" class="div1">
-                <img style='width: 100%; top:0px; object-fit: contain' src="/public/floorPlans/<%= info.floorPhoto %>">
+                <img class="img1" src="/public/floorPlans/<%= info.floorPhoto %>">
             </div>
         <% } %>
         <div id="div2" class="div2" >

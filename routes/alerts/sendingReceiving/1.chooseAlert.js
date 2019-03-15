@@ -275,7 +275,7 @@ module.exports.showAlertsPost = function(req, res) {
 
 
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
-                        console.log('req.body.latitude = ',req.body.latitude);
+
                         let alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,

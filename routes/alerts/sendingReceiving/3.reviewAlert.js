@@ -65,11 +65,14 @@ module.exports.postReviewAlert = function(req, res, next) {
     var alertToUpdate1 = req.body.alertToUpdate;
 
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, tempAlert) {
-
-        /****************************       ALERT ROAD       ****************************/
-        /** functions needed here are: floor.saveFloorFile, student.updateStudentFile  **/
-        redirectTo.redirectTo(req,res,tempAlert,'GETtoPOST');
-
+        if (!tempAlert) {
+            functions.alertTimeExpired(req,res);
+        }
+        else {
+            /****************************       ALERT ROAD       ****************************/
+            /** functions needed here are: floor.saveFloorFile, student.updateStudentFile  **/
+            redirectTo.redirectTo(req,res,tempAlert,'GETtoPOST');
+        }
     });
 };
 

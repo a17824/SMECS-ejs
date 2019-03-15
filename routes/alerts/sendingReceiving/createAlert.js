@@ -140,7 +140,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
     let redirectAPI = ''; //API user
     let redirectEJS = ''; //EJS user
 
-    console.log('1111111');
+    console.log('1111111 alertTemp');
     let flagWait = 0;
 
     function waitForAlertRoadToEnd(cb){

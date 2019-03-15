@@ -105,15 +105,19 @@ caption {
     position:fixed;
 }
 
+.img1 {
+    width: 100%;
+    top: 0px;
+    object-fit: contain;
+}
 
 .div1 {
     position:absolute;
-    top:200px;
-    left:400px;
-    width: 70%;
-    height: 70%;
+    top:200px;      /*  div1 start position in relation to main window*/
+    left:400px;     /*  div1 start */
+    width: 70%;     /*  div1 percentage size in relation to main window size */
     visibility:visible;
-    z-index:5
+    z-index:5;
 }
 .div2 {
 
@@ -128,7 +132,8 @@ caption {
     font-family:monospace;
     font-size:20px;
     font-weight:900;
-    color:black;}
+    color:black;
+}
 .div4 {
     position:absolute;
     visibility:hidden;
@@ -136,7 +141,9 @@ caption {
     font-family:monospace;
     font-size:20px;
     font-weight:900;
-    color:black;}
+    color:black;
+
+}
 
 
 

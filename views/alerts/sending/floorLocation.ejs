@@ -5,35 +5,41 @@
     <link rel='stylesheet' href='/stylesheets/sendAlert.css' />
     <script>
         $(document).ready(function(){
-            //mouse position related to div2
-            let divPos = {};
-            let offset = $("#div1").offset();
-
             let yPercent,xPercent;
+            let divStartTop, divStartLeft;
+            let redCrossCenterTop, redCrossCenterLeft;
+            let y,x; //final values to save on database
 
-            $(document).mousemove(function(e){
+            let divPos = {};
+            let offset = $("#div1").offset();   //mouse position related to div1
+            $(document).mousemove(function(e){  //mouse position related to div1
                 divPos = {
-                    left: e.pageX - offset.left,
-                    top: e.pageY - offset.top
+                    top: e.pageY - offset.top,
+                    left: e.pageX - offset.left
                 };
 
-                yPercent = divPos.top/document.getElementById('div1').offsetHeight*100;
+                yPercent = divPos.top/document.getElementById('div1').offsetHeight*100; // transform px position to percentage position (related to div1 size)
                 xPercent = divPos.left/document.getElementById('div1').offsetWidth*100;
             });
             //end of mouse position related to div2
 
             //put sniper visible and on place
-            let x = '';
-            let y = '';
             $("#showP").click(function(){
-                document.getElementById("div2").className="div3";
-                document.getElementById("div2").style.top =(divPos.top+200-31)+'px';   //200px is the css top px; 31 is to center red cross
-                document.getElementById("div2").style.left=(divPos.left+200-32)+'px';
+                redCrossCenterTop = 32; // depends on size of red cross picture. Center red cross picture to touch/click
+                redCrossCenterLeft = 32;
+
+                divStartTop = document.getElementById('div1').offsetTop; // where div starts. CSS ex:-> top:200px;
+                divStartLeft = document.getElementById('div1').offsetLeft;  // CSS ex:-> left:200px;
+
+                document.getElementById("div2").className="div3";   //put red cross picture visible
+                document.getElementById("div2").style.top = ( divStartTop + divPos.top - redCrossCenterTop )+'px';  // red cross location final location
+                document.getElementById("div2").style.left= ( divStartLeft + divPos.left - redCrossCenterLeft )+'px';
 
                 y = yPercent;   //value to save on database
                 x = xPercent;
-                console.log('divPos.top , divPos.left = ',divPos.top + ' , ' + divPos.left);
-                console.log('divPosPercentage = ',y + ' , ' + x);
+
+                //console.log('divPos.top , divPos.left = ',divPos.top + ' , ' + divPos.left);
+                //console.log('divPosPercentage = ',y + ' , ' + x);
             })
 
             var alert_ID, alertNameID, coordinateX, coordinateY;
@@ -114,7 +120,7 @@
     <% if (alert.floorName == floor.floorName ) {%>
     <input type="hidden" id="floorPhoto" value="<%= floor.floorPlan %>">
     <div id="div1" class="div1">
-        <img id="showP" style='width: 100%; top:0px; left:0px; object-fit: contain' src="/public/floorPlans/<%= floor.floorPlan %>">
+        <img id="showP" class="img1" src="/public/floorPlans/<%= floor.floorPlan %>">
     </div>
     <% } %>
     <% }); %>
