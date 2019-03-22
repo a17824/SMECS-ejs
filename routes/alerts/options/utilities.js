@@ -16,7 +16,9 @@ module.exports.show = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        functions.redirectTabUsers(req, res, 'showUsers');
+
+        functions.redirectPage(req, res, 'showUtilities');
+
         res.render('utilities/showUtilities',{
             title:'Utilities Failures',
             userAuthID: req.user.userPrivilegeID,
@@ -132,72 +134,77 @@ module.exports.update = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        if (!results[0]) {
+            console.log('err = ',err);
+        }
+        else {
+            //show hide AlertID select in EJS
+            let showHideAlertID = 'hide';
+            if (req.user.userPrivilegeID == 1)
+                showHideAlertID = '';
 
-        //show hide AlertID select in EJS
-        let showHideAlertID = 'hide';
-        if (req.user.userPrivilegeID == 1)
-            showHideAlertID = '';
+            var arraySort = [];
+            var array = [];
 
-        var arraySort = [];
-        var array = [];
-
-        var streamSort = models.Utilities.find().sort({"sortID":1}).cursor();
-        streamSort.on('data', function (doc) {
-            arraySort.push(doc.sortID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(arraySort);
-
-            var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
-            stream.on('data', function (doc) {
-                array.push(doc.utilityID);
+            var streamSort = models.Utilities.find().sort({"sortID":1}).cursor();
+            streamSort.on('data', function (doc) {
+                arraySort.push(doc.sortID);
             }).on('error', function (err) {
                 // handle the error
             }).on('close', function () {
                 // the stream is closed
-                //console.log(array);
-                res.render('utilities/updateUtilities',{
-                    title:'Update Utility',
-                    userAuthID: req.user.userPrivilegeID,
-                    arraySort: arraySort,
-                    array: array,
-                    utility: results[0],
-                    utilityUsers: results[1],
-                    showHideAlertID: showHideAlertID,
-                    aclShowUtilities: results[2],      //aclPermissions ShowUtilities
-                    aclModifyUtilities: results[3],      //aclPermissions modifyUtilities
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                    userAuthPhoto: req.user.photo
-                });
-            })
-        });
+                //console.log(arraySort);
 
-
+                var stream = models.Utilities.find().sort({"utilityID":1}).cursor();
+                stream.on('data', function (doc) {
+                    array.push(doc.utilityID);
+                }).on('error', function (err) {
+                    // handle the error
+                }).on('close', function () {
+                    // the stream is closed
+                    //console.log(array);
+                    res.render('utilities/updateUtilities',{
+                        title:'Update Utility',
+                        userAuthID: req.user.userPrivilegeID,
+                        arraySort: arraySort,
+                        array: array,
+                        utility: results[0],
+                        utilityUsers: results[1],
+                        showHideAlertID: showHideAlertID,
+                        aclShowUtilities: results[2],      //aclPermissions ShowUtilities
+                        aclModifyUtilities: results[3],      //aclPermissions modifyUtilities
+                        aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                        userAuthPhoto: req.user.photo
+                    });
+                })
+            });
+        }
     })
 };
 module.exports.updatePost = function(req, res) {
     var utilityToUpdate1 = req.body.utilityToUpdate;
     models.Utilities.findById({'_id': utilityToUpdate1}, function(err, utility){
-        utility.utilityID = req.body.utilityID;
-        utility.utilityName = req.body.utilityName;
-        utility.contactName = req.body.contactName;
-        utility.phone = req.body.phone;
-        utility.email = req.body.email;
-        utility.smecsApp = req.body.smecsApp;
-        utility.defaultContact =  req.body.defaultContact;
-        utility.smecsUsers = req.body.smecsUsers;
-        utility.sortID = req.body.sortID;
-        utility.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }else{
-                return res.send({redirect:'/utilities/showUtilities'})
-            }
-        });
+        if (!utility || err) {console.log('updatePost - no utility found. err - ',err);}
+        else {
+            utility.utilityID = req.body.utilityID;
+            utility.utilityName = req.body.utilityName;
+            utility.contactName = req.body.contactName;
+            utility.phone = req.body.phone;
+            utility.email = req.body.email;
+            utility.smecsApp = req.body.smecsApp;
+            utility.defaultContact =  req.body.defaultContact;
+            utility.smecsUsers = req.body.smecsUsers;
+            utility.sortID = req.body.sortID;
+            utility.save(function (err) {
+                if (err && (err.code === 11000 || err.code === 11001)) {
+                    console.log(err);
+                    return res.status(409).send('showAlert')
+                }else{
+                    return res.send({redirect:'/utilities/showUtilities'})
+                }
+            });
+        }
     });
 
 };
@@ -229,30 +236,38 @@ module.exports.showUtilityUsers = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        //console.log(results[2]);
-        res.render('utilities/users/crudUtilityUsers-new',{
-            title: results[0].utilityName,
-            utility: results[0],
-            allUtilUsers: results[1],
-            userAuthID: req.user.userPrivilegeID,
-            aclAddUtilities: results[2], //aclPermissions addUtilities
-            aclModifyUtilities: results[3], //aclPermissions modifyUtilities
-            aclDeleteUtilities: results[4], //aclPermissions deleteUtilities
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
+        if (!results[0]) {
+            console.log('err = ',err);
+        }
+        else {
+            res.render('utilities/crudUtilityUsers',{
+                title: results[0].utilityName,
+                utility: results[0],
+                allUtilUsers: results[1],
+                userAuthID: req.user.userPrivilegeID,
+                aclAddUtilities: results[2], //aclPermissions addUtilities
+                aclModifyUtilities: results[3], //aclPermissions modifyUtilities
+                aclDeleteUtilities: results[4], //aclPermissions deleteUtilities
+                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+        }
     })
 };
 module.exports.updateUtilityUsersPost = function(req, res) {
     var utilityToUpdate1 = req.body.utilityToUpdate;
     models.Utilities.findById({'_id': utilityToUpdate1}, function(err, utility){
-        utility.smecsUsers = req.body.smecsUsers;
-        if (utility.smecsUsers === undefined || utility.smecsUsers.length < 1){ //put radio button off if array is empty
-            utility.smecsApp = 'false';
+        if (!utility || err) {console.log('updateUtilityUsersPost - no utility found. err - ',err);}
+        else {
+            utility.smecsUsers = req.body.smecsUsers;
+            if (utility.smecsUsers === undefined || utility.smecsUsers.length < 1){ //put radio button off if array is empty
+                utility.smecsApp = 'false';
+            }
+            utility.save();
+            return res.send({redirect:'/utilities/showUtilities'})
         }
-        utility.save();
-        return res.send({redirect:'/utilities/showUtilities'})
+
     });
 };
 /*-------------------------end of SHOW/UPDATE/DELETE UtilityUsers*/

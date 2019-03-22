@@ -200,6 +200,17 @@
                         alert("Email already in use. Choose a different Email .")
                 });
             });
+            $("#cancel").click(function () {
+
+                $.post("/users/addUser/cancel",{
+
+                },function(data){
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Add User failed.")
+                });
+            });
         });
     </script>
 </head>
@@ -725,7 +736,7 @@
                                 <div class="ln_solid"></div>
                                 <div class="centered-text">
 
-                                    <a href="/users/showUsers"><button  class="btn btn-default">cancel</button></a>
+                                    <a id="cancel"><button  class="btn btn-default">cancel</button></a>
 
                                     <a href="/users/addUser/step1/<%= user._id %>"><button  class="btn btn-default">back</button></a>
 

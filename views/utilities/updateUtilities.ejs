@@ -19,7 +19,9 @@
         var choices;
         function selectUser(select)
         {
+            console.log('select = ',select);
             var option = select.options[select.selectedIndex];
+            console.log('option = ',option);
             if(option.id != 'userList') {
                 var ul = select.parentNode.getElementsByTagName('ul')[0];
                 choices = ul.getElementsByTagName('input');
@@ -231,6 +233,21 @@
                 }).error(function(error){
                     if(error.responseText == 'showAlert')
                         alert("Utility Name already in use. Choose a different Name .")
+                });
+            });
+            $("#newUser").click(function () {
+
+                $.post("/users/addUser/step0",{
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Add User failed.")
                 });
             });
         });
@@ -449,7 +466,7 @@
                                             </select>
                                             <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
                                             <br><br>
-                                            If you want to insert a new user to dropdown list <a id="clickHere" class="enable" href="/utilities/addUtilitiesUsers">click here</a>.
+                                            If you want to insert a new user to dropdown list <a id="newUser" class="enable" href="">click here</a>.
                                         </div>
 
                                     </div>

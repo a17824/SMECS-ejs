@@ -6,33 +6,43 @@
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link rel='stylesheet' href='/stylesheets/crudUtilityUsers.css' />
+    <link rel='stylesheet' href='/public/stylesheets/crudUtilityUsers.css' />
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
-    <link type="text/css" href="/selectMenu/themes/base/jquery.ui.theme.css" rel="stylesheet" />
-    <link type="text/css" href="/selectMenu/themes/base/jquery.ui.selectmenu.css" rel="stylesheet" />
+    <link type="text/css" href="/public/selectMenu/themes/base/jquery.ui.theme.css" rel="stylesheet" />
+    <link type="text/css" href="/public/selectMenu/themes/base/jquery.ui.selectmenu.css" rel="stylesheet" />
 
-    <script type="text/javascript" src="/selectMenu/ui/jquery.ui.core.js"></script>
-    <script type="text/javascript" src="/selectMenu/ui/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="/selectMenu/ui/jquery.ui.position.js"></script>
-    <script type="text/javascript" src="/selectMenu/ui/jquery.ui.selectmenu.js"></script>
+    <script type="text/javascript" src="/public/selectMenu/ui/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="/public/selectMenu/ui/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="/public/selectMenu/ui/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="/public/selectMenu/ui/jquery.ui.selectmenu.js"></script>
 
 
 
     <script type = "text/javascript">
 
-        var choices;
-        function selectUser(select)
+        var choices,option;
+        function selectUser(select,opt)
         {
-            var option = select.options[select.selectedIndex];
-            var ul = select.parentNode.getElementsByTagName('ul')[0];
-            choices = ul.getElementsByTagName('input');
+            if(opt === '1'){
+                option = select.options[select.selectedIndex];
+                console.log('option = ',option);
+            }
+            else {
+                //var test = $('#speedD').val();
+                //console.log('test = ', test);
+            }
 
             var arr = option.value.split("_|_").map(function (val){
                 return val
             });
+
+            var ul = select.parentNode.getElementsByTagName('ul')[0];
+            choices = ul.getElementsByTagName('input');
+
+
 
             for (var i = 0; i < choices.length; i++) {
                 if (choices[i].value == arr[0]){
@@ -123,27 +133,23 @@
                         smecsUsers: arrayUsers
 
                     },function(data){
+                        window.location = data.redirect
+                    })
+                });
+
+                $("#newUser").click(function () {
+
+                    $.post("/users/addUser/step0",{
+
+                    },function(data){
                         if(data==='done')
                         {
                             alert("login success");
                         }
                         window.location = data.redirect
-                    })
-
-                    $("#newUser").click(function () {
-
-                        $.post("/users/addUser/step0",{
-
-                        },function(data){
-                            if(data==='done')
-                            {
-                                alert("login success");
-                            }
-                            window.location = data.redirect
-                        }).error(function(error){
-                            if(error.responseText == 'showAlert')
-                                alert("Add User failed.")
-                        });
+                    }).error(function(error){
+                        if(error.responseText == 'showAlert')
+                            alert("Add User failed.")
                     });
                 });
             }
@@ -191,19 +197,19 @@
 
 
                 <!-- menu profile quick info -->
-                <% include ./../../layout/menuProfile.ejs %>
+                <% include ./../layout/menuProfile.ejs %>
                 <!-- /menu profile quick info -->
 
                 <br>
 
                 <!-- sidebar menu -->
-                <% include ./../../layout/sideMenu.ejs %>
+                <% include ./../layout/sideMenu.ejs %>
                 <!-- /sidebar menu -->
             </div>
         </div>
 
         <!-- top navigation -->
-        <% include ./../../layout/topNavigation.ejs %>
+        <% include ./../layout/topNavigation.ejs %>
         <!-- /top navigation -->
 
         <!-- page content -->
@@ -221,18 +227,16 @@
                     <div class="pull-left">
                         <% if (aclAddUtilities == null || aclAddUtilities.checkBoxValue == true) {%>
                             <button type="button"
-                                    id="btSubmit"
+                                    id="<%= utility.id %>"
                                     value="Submit"
-                                    onClick="GetSelectedItem('DropDownID');"
                                     class="btn btn-success">Save
                             </button>
 
                             <!-- <button type="submit" class="btn btn-success">Submit</button> -->
                         <% } else { %>
                             <button type="button"
-                                    id="btSubmit"
+                                    id="<%= utility.id %>"
                                     value="Submit"
-                                    onClick="GetSelectedItem('DropDownID');"
                                     class="btn btn-success" disabled>Save
                             </button>
                         <% } %>
@@ -293,7 +297,7 @@
                                             </ul>
 
 
-                                            <select name="speedD" id="speedD" class="enable" id="smecsUserSelect" onchange="selectUser(this);">
+                                            <select name="speedD" id="speedD" class="enable" onchange="selectUser(this,'1');">
                                                 <!–– <option selected disabled hidden> -- select a user -- </option> ––>
                                                 <option disabled selected value> -- select a user from dropdown list -- </option>
                                                 <% allUtilUsers.forEach(function(user) { %>
@@ -304,7 +308,7 @@
                                                     <% } %>
                                                 <% }); %>
                                             </select>
-                                            <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+                                            <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0),'2');">
                                             <br><br>
                                             If you want to insert a new user to dropdown list <a id="newUser" class="enable"href="">click here</a>.
 
@@ -347,7 +351,7 @@
 </body>
 <!-- footer content -->
 <footer class="adjustPos">
-    <% include ./../../layout/footer.ejs %>
+    <% include ./../layout/footer.ejs %>
 </footer>
 <!-- /footer content -->
 </html>

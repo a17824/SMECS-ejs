@@ -5,7 +5,7 @@ var schedule = require('node-schedule');
 var users = require('./users/users');
 var students = require('./students/students');
 var parentsSelfRegistration = require('./parentsSelfRegistration/parentsSelfRegistration');
-var utilityUsers = require('./users/utilityUsers');
+
 var roles2 = require('./roles/roles2');
 var privilege = require('./roles/privilege');
 var permissions = require('./permissions/permissions');
@@ -212,36 +212,36 @@ router.get('/students/deletePhoto/:id', auth.simpleAuth, auth.requireLogin, stud
 
 
 /* SHOW active Utility Users. */
-router.get('/utilities/showUtilitiesUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.show, function(req, res, next) {
-});
+//router.get('/utilities/showUtilitiesUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.show, function(req, res, next) {
+//});
 
 /* ADD Utility Users. ---------------------------------------------------*/
-router.get('/utilities/addUtilitiesUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.add, function(req, res) {
-});
-router.post('/utilities/addUtilitiesUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.addPost, function(req, res) {
-});
+//router.get('/utilities/addUtilitiesUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.add, function(req, res) {
+//});
+//router.post('/utilities/addUtilitiesUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.addPost, function(req, res) {
+//});
 
 /* UPDATE Utility Users. ----------------------------------------------------------------------*/
-router.get('/utilities/updateUtilityUser/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.update, function(req, res) {
-});
-router.post('/utilities/updateUtilityUser', auth.simpleAuth, auth.requireLogin, utilityUsers.updatePost, function(req, res) {
-});
+//router.get('/utilities/updateUtilityUser/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.update, function(req, res) {
+//});
+//router.post('/utilities/updateUtilityUser', auth.simpleAuth, auth.requireLogin, utilityUsers.updatePost, function(req, res) {
+//});
 
 /* SHOW SoftDelete Utility Users. */
-router.get('/utilities/deletedUtilityUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.showSoftDeleted, function(req, res, next) {
-});
+//router.get('/utilities/deletedUtilityUsers', auth.simpleAuth, auth.requireLogin, utilityUsers.showSoftDeleted, function(req, res, next) {
+//});
 
 /* SoftDelete Utility Users. */
-router.get('/utilities/softDelete/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.softDelete, function(req, res) {
-});
+//router.get('/utilities/softDelete/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.softDelete, function(req, res) {
+//});
 
 /* Restore SoftDeleted USERS. */
-router.get('/utilities/restoreUtilityUser/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.restoreUser, function(req, res) {
-});
+//router.get('/utilities/restoreUtilityUser/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.restoreUser, function(req, res) {
+//});
 
 /* ERASE USERS. */
-router.get('/utilities/eraseUtilityUser/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.erase, function(req, res) {
-});
+//router.get('/utilities/eraseUtilityUser/:id', auth.simpleAuth, auth.requireLogin, utilityUsers.erase, function(req, res) {
+//});
 
 
 

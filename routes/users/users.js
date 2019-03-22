@@ -99,7 +99,11 @@ module.exports.addStep0Post = function(req, res) {
 
 /* CANCEL USERS STEP0. ---------------------------------------------------*/
 module.exports.addStep0CancelPost = function(req, res) {
-    return res.send({redirect: '/users/showUsers/'})
+    let locationType = '/users/showUsers/';
+    if(req.user.redirect === 'showUtilities'){    //if photo is from a student document
+        locationType = '/utilities/showUtilities/';
+    }
+    return res.send({redirect: locationType})
 };
 /*-------------------------------------------end of cancel Step0 user*/
 
@@ -140,7 +144,7 @@ module.exports.addStep1 = function(req, res) {
 module.exports.addStep1Post = function(req, res) {
     var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
     models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
-        if (!user) {
+        if (!user || err) {
             console.log(err);
             console.log('TTL EXPIRED');
             req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
@@ -321,7 +325,7 @@ module.exports.addStep3 = function(req, res) {
                     ifUserHasAnyOtherRole = 1;
                 }
             }
-            res.render('users/addUserStep3-new', {
+            res.render('users/addUserStep3', {
                 title: 'Add user',
                 userAuthID: req.user.userPrivilegeID,
                 principalRole: ifUserHasPrincipalRole,

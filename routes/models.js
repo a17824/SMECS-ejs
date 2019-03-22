@@ -136,19 +136,7 @@ var StudentsSchema = new mongoose.Schema({
 var Students;
 module.exports.Students = mongoose.model("Students", StudentsSchema);
 
-// DEFINE Utility Users COLLECTION IN MONGOdb
-var UtilityUsersSchema = new mongoose.Schema({
-    privilegeID: { type: Number, default: 9},
-    email: { type: String, unique: true },
-    pin: String,
-    note: String,
-    softDeleted: { type: String, default: null},
-    resetPasswordToken: String,
-    resetPasswordExpires: Date
 
-}, {collection:"UtilityUsers"}); //stops Mongoose of giving plurals to our collections names
-var UtilityUsers;
-module.exports.UtilityUsers = mongoose.model("UtilityUsers", UtilityUsersSchema);
 
 // DEFINE PermissionsGroup COLLECTION IN MONGOdb
 var PermissionsGroupSchema = new mongoose.Schema({
