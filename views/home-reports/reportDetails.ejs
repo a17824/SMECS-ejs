@@ -23,29 +23,34 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
     <script>
+        //helpers
+        function reply_click(whoNeedsHelpEmail)
+        {
+            let alert_ID = $("#alertID").val();
+            let whoNeedsHelp = whoNeedsHelpEmail;
+
+            $.post('/iWillHelp', {
+                alertToUpdate: alert_ID,
+                whoNeedsHelp: whoNeedsHelp
+
+            }, function (data) {
+                window.location = data.redirect
+                //$("#needHelp").addClass('in');
+
+            }).error(function (error) {
+                if (error.responseText == 'showAlert')
+                    alert("Sending Help wasn't successful, call SMECS APP team for help .")
+            });
+        }
+
         $(document).ready(function(){
+
             var richNote = $("#richNote").val();
             //var note = document.getElementById('richNote').value;
             richDiv.innerHTML = richNote;
 
-            //helpers
-            $("#iWillHelp").click(function () {
-                let alert_ID=$("#alertID").val();
-                let whoNeedsHelp=$("#iWillHelp").attr('name');
-                console.log('whoNeedsHelp = ',whoNeedsHelp);
 
-                $.post('/iWillHelp', {
-                    alertToUpdate: alert_ID,
-                    whoNeedsHelp: whoNeedsHelp
 
-                }, function (data) {
-                    //window.location = data.redirect
-                }).error(function (error) {
-                    if (error.responseText == 'showAlert')
-                        alert("Sending Help wasn't successful, call SMECS APP team for help .")
-                });
-            });
-            //end of back button
         });
     </script>
 </head>
@@ -541,7 +546,8 @@
                                         </table>
                                     </h4>
                                 </a>
-                                <div id="needHelp" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <% console.log('classNames2 = ',classNames);%>
+                                <div id="needHelp" class="<%= classNames %>" role="tabpanel" aria-labelledby="headingTwo">
                                     <div class="panel-body">
 
                                         <table class="table table-striped">
@@ -570,7 +576,7 @@
 
                                                     <td>
                                                         <% if (user.iNeedHelp.helpers.length > 0) { %>
-                                                            <% user.iNeedHelp.helpers.forEach(function(helper) { %>
+                                                            <% user.iNeedHelp.helpers.forEach(function(helper, idx, array) { %>
                                                                 <p class="image">
                                                                     <%  if (helper.photo !== '') { %>
                                                                         <img src="/public/photosUsers/<%= helper.photo %>" class="avatarParents" alt="Avatar"/> <%=' ' + helper.firstName + ' ' + helper.lastName + ' ' + helper.timeDif %>
@@ -578,11 +584,15 @@
                                                                     <img src="/public/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"/> <%=' ' + helper.firstName + ' ' + helper.lastName + ' ' + helper.timeDif %>
                                                                     <%  } %>
                                                                 </p>
+                                                                <%  if (idx === array.length - 1) { %> <!--  last loop  -->
+                                                                <div class="ln_solidHalf"></div>
+                                                                <%  } %>
                                                             <% }); %>
                                                         <%  } %>
-                                                        <p>
-                                                            <input type="button" class="btn btn-success btn-xs" id="iWillHelp" name="<%= user.email %>" value="I'm on my way to help" >
-                                                        </p>
+
+
+                                                            <input type="button" class="btn btn-success btn-xs" id="<%= user.email %>" name="<%= user.email %>" value="I'm on my way to help" onClick="reply_click(this.id)">
+
                                                     </td>
 
 

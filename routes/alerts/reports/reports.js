@@ -171,6 +171,12 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
 
 
 module.exports.reportsDetails = function(req, res) {
+    let classNames;
+    if(req.params.fromWhere === 'reportsPage') //reportsPage
+        classNames = 'panel-collapse collapse';
+    else //helpersPage
+        classNames = 'panel-collapse collapse in';
+
     async.parallel([
         function(callback){
             models.AlertSentInfo.findById(req.params.id).exec(callback);
@@ -178,7 +184,7 @@ module.exports.reportsDetails = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
-        if(err || !results) console.log('something wrong with results. err - ', err);
+        if(err || !results) console.log('reportsDetails: something wrong with results. err - ', err);
         else {
             if (!req.decoded)       // EJS user
                 reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
@@ -194,6 +200,7 @@ module.exports.reportsDetails = function(req, res) {
             reportsEJS.totalNumbers(results[0],function (result,err) {
                 if(err) console.log('totalNumbers err - ',);
                 else {
+                    console.log('classNames = ',classNames);
                     res.render(page,{
                         title: 'REPORTS SENT',
                         userAuthID: req.user.userPrivilegeID,
@@ -201,7 +208,8 @@ module.exports.reportsDetails = function(req, res) {
                         aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo,
-                        total: result
+                        total: result,
+                        classNames: classNames
                     });
                 }
             });

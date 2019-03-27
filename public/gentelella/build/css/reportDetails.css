@@ -5,6 +5,7 @@
 /* profile background color*/
 /* bottom right side background color (to fix)*/
 /* line space for NOTES */
+/* this is for I need help button */
 
 html , body{
 
@@ -2219,6 +2220,13 @@ button,
     background-color: #ffffff;
     height: 1px;
     margin: 20px 0
+}
+.ln_solidHalf { /* this is for I need help button */
+    border-top: 1px solid #e5e5e5;
+    color: #ffffff;
+    background-color: #ffffff;
+    height: 1px;
+    margin: 10px 0
 }
 span.section {
     display: block;

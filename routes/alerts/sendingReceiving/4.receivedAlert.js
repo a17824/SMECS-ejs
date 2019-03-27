@@ -315,7 +315,7 @@ module.exports.helpers = function(req, res) {
                                         });
                                     }
                                     else {
-                                        res.redirect('/reports/showReportsDetails/' + alertToUpdate1);
+                                        return res.send({redirect:'/reports/showReportsDetails/' + alertToUpdate1 + '/helpersPage'});
                                     }
                                 }
                             });

@@ -519,7 +519,7 @@ router.get('/reports/showArchived', auth.simpleAuth, auth.requireLogin, reports.
 router.get('/reports/showTrashReports', auth.simpleAuth, auth.requireLogin, reports.reportsTrash, function(req, res, next) {
 });
 // show Reports DETAILS-------------------------------
-router.get('/reports/showReportsDetails/:id', auth.simpleAuth, auth.requireLogin, reports.reportsDetails, function(req, res) {
+router.get('/reports/showReportsDetails/:id/:fromWhere', auth.simpleAuth, auth.requireLogin, reports.reportsDetails, function(req, res) {
 });
 
 
