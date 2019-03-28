@@ -1518,7 +1518,7 @@ ul.msg_list li {
     display: -ms-flexbox;
     display: flex;
     margin: 6px 6px 0;
-    width: 96% !important
+    width: 100% !important
 }
 ul.msg_list li:last-child {
     margin-bottom: 6px;
@@ -4351,13 +4351,16 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     display: none;
 }
 .compYes {
-    color: #e76146;
+    color: #18c09c;
+    font-size: 11px;
+    position: absolute;
+    right: 20px;
 }
 .compNot {
     color: #e76146;
     font-size: 11px;
     position: absolute;
-    right: 35px;
+    right: 20px;
 }
 .compNot2 {
     color: #f4a82e;

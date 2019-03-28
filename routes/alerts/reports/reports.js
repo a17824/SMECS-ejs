@@ -195,7 +195,9 @@ module.exports.reportsDetails = function(req, res) {
             if(req.params.id == '5b1eb1d86e727c382cbce0a6')
                 page = 'home-reports/reportDetailsSimAllGreen';
 
-
+            let alertWith911 = false;
+            if(results[0].request911Call)
+                alertWith911 = true;
 
             reportsEJS.totalNumbers(results[0],function (result,err) {
                 if(err) console.log('totalNumbers err - ',);
@@ -209,7 +211,8 @@ module.exports.reportsDetails = function(req, res) {
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo,
                         total: result,
-                        classNames: classNames
+                        classNames: classNames,
+                        alertWith911: alertWith911
                     });
                 }
             });
@@ -245,7 +248,11 @@ module.exports.totalNumbers = function(alert, callback) {
         weAreSafe: [],
         notINeedHelp: [],
         iNeedHelpNumber: Number,
-        notINeedHelpNumber: Number
+        notINeedHelpNumber: Number,
+        completedAllStepsBy: [],
+        notCompletedAllStepsBy: [],
+        completedAllStepsNumber: Number,
+        notCompletedAllStepsNumber: Number
     };
 
 
@@ -337,8 +344,22 @@ module.exports.totalNumbers = function(alert, callback) {
     total.notINeedHelpNumber = total.notINeedHelp.length;
     //console.log('total.iNeedHelpNumber = ',total.iNeedHelpNumber);
     //console.log('total.iNeedHelp = ',total.iNeedHelp);
-
     //end of How many users iNeedHelp
+
+    //How many users CompleteAllSteps Alert
+    alert.sentTo.forEach(function (user) {
+        if( user.pushToken.length > 0 && user.received.receivedBoolean) {
+            if (user.viewed.viewedBoolean && user.procedureCompleted.boolean && user.weAreSafe.boolean) {
+                total.completedAllStepsBy.push(user);
+            }
+
+            else
+                total.notCompletedAllStepsBy.push(user);
+        }
+    });
+    total.completedAllStepsNumber = total.completedAllStepsBy.length;
+    total.notCompletedAllStepsNumber = total.notCompletedAllStepsBy.length;
+    //end of How many users CompleteAllSteps Alert
 
     callback(total)
 };

@@ -42,10 +42,11 @@
                     alert("Sending Help wasn't successful, call SMECS APP team for help .")
             });
         }
+        //end of helpers
 
         $(document).ready(function(){
 
-            var richNote = $("#richNote").val();
+            let richNote = $("#richNote").val();
             //var note = document.getElementById('richNote').value;
             richDiv.innerHTML = richNote;
 
@@ -615,10 +616,10 @@
                                     <h4 class="panel-title">
                                         <table class="" width="100%">
                                             <tr>
-                                                <td align="left" style="color: #18c09c">completed all steps:</td>
-                                                <td width="20" align="center">15</td>
-                                                <td width="140" align="center">users out of</td>
-                                                <td width="20" align="right">40</td>
+                                                <td class="yes">completed all steps:</td>
+                                                <td class="accor1Td2"><%= total.completedAllStepsNumber %></td>
+                                                <td class="accor1Td3">users out of</td>
+                                                <td class="accor1Td4"><%= total.viewedNumber %></td>
                                             </tr>
                                         </table>
                                     </h4>
@@ -628,105 +629,32 @@
 
 
                                         <ul class="list-unstyled msg_list">
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/5b1594b03cc6e0004815bbfa.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
 
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+3min</span> &ensp;
-                                </span>
-                                            </li>
+                                            <% total.completedAllStepsBy.forEach(function(user, idx, array) { %>
+                                                <% var imgPos = 'avatarSentUsers' %>
+                                                <% var namePos = '' %>
+                                                <%  if (idx === array.length - 1) { %> <!--  last loop  -->
+                                                <!-- last user, picture and name need to be manual position -->
+                                                <% imgPos = 'avatarSentUsers imgPositionLastLoop' %>
+                                                <% namePos = 'namePos' %>
+                                                <%  } %>
 
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/5b15947e3cc6e0004815bbf9.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Laura Ledo</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+1min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+3min</span> &ensp;
-                                </span>
-                                            </li>
-
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/5b1591373cc6e0004815bbf2.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Janice Clark</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
-                                </span>
-                                            </li>
-
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/5b1591b13cc6e0004815bbf4.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Madeline Connley</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+3min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
-                                </span>
-                                            </li>
-
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/590776839344e21c2f0894ad.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Meghan Boyle</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px;"><i><b>completed</b></i></span></span>
-
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
-                                </span>
-                                            </li>
-
-                                            <li class="imageSentUsers">
-                                                <img src="/public/photosUsers/58587741da3d90fc25acedee.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
-
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+2min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
-                                </span>
-                                            </li>
-
-                                            <% for(var i=1; i<9; i++){ %>
                                                 <li class="imageSentUsers">
-                                                    <img src="/photosNotAvailable/user.png" class="avatarSentUsers" />
-                                                    <span><span>&ensp;Joanna Imbaro<%= i %></span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 35px"><i><b>completed</b></i></span></span>
+                                                    <% if (user.photo !== '') { %>
+                                                        <img src="/public/photosUsers/<%= user.photo %>" class="<%= imgPos %>" alt="Avatar" />
+                                                    <% }else { %>
+                                                        <img src="/public/photosNotAvailable/user.png" class="<%= imgPos %>" alt="Avatar" />
+                                                    <% } %>
+                                                    <span><span class="<%= namePos %>">&ensp;</span><span><%= user.firstName + ' ' + user.lastName %></span><span class="time compYes"><i><b>completed</b></i></span></span>
 
-                                                    <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+3min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
-                                </span>
+                                                    <span class="message adjPos"><br>
+                                                        received: <span class="yes"><%= user.received.receivedTime %></span> &ensp;
+                                                        viewed: <span class="yes"><%= user.viewed.timeDif %></span> &ensp;
+                                                        procedure done: <span class="yes"><%= user.procedureCompleted.timeDif %></span> &ensp;
+                                                        we are safe: <span class="yes"><%= user.weAreSafe.timeDif %></span> &ensp;
+                                                    </span>
                                                 </li>
-                                            <% } %>
-
-                                            <!-- last user, picture and name need to be manual position -->
-                                            <li class="imageSentUsers">
-                                                <img style="position: relative; left: -5px" src="/public/photosUsers/58587741da3d90fc25acedee.BMP" class="avatarSentUsers" />
-                                                <span><span style="position: absolute; left: 62px">&ensp;Mary Kate</span><span class="time" style="color: #18c09c; font-size: 11px; position: absolute; right: 37px;"><i><b>completed</b></i></span></span>
-
-                                                <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
-                                    received: <span style="color: #18c09c">11:37am</span> &ensp;
-                                    viewed: <span style="color: #18c09c">+3min</span> &ensp;
-                                    procedure done: <span style="color: #18c09c">+4min</span> &ensp;
-                                    we are safe: <span style="color: #18c09c">+4min</span> &ensp;
-                                </span>
-                                            </li>
-                                            <!-- end of last user, picture and name need to be manual position -->
+                                            <% }); %>
 
                                         </ul>
                                     </div>
@@ -743,6 +671,7 @@
 
 
                 <!-- Call 911 -->
+                <%  if (alertWith911) { %>
                 <div class="x_panel tile overflow_hidden">
                     <div class="x_title">
                         <h2 style="font-size: 28px">Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
@@ -860,6 +789,7 @@
 
                     </div>
                 </div>
+                <% } %>
                 <!-- Call 911 -->
 
 
