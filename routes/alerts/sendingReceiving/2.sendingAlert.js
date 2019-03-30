@@ -398,6 +398,7 @@ module.exports.postStudent = function(req, res) {
         }
         else {
             alert.roadIndexExit = false; // for back/exit button
+            alert.alertWith.student = true;
 
             /****************************      ALERT ROAD      ****************************/
             /** functions needed here are: student2, studentSaveFile                     **/

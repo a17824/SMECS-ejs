@@ -390,6 +390,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
     sniperCoordinateX: String,
     sniperCoordinateY: String,
     note: String,
+    materialSpill: String,
     resolution: String,
     buildingID: String,
     buildingName: String,
@@ -461,7 +462,15 @@ var AlertSentInfoSchema = new mongoose.Schema({
         callFunction: Array,
         redirectAPI: String,
         redirectEJS: String
-    }]
+    }],
+    alertWith: {
+        student: {type: Boolean, default: false},
+        mapBus: {type: Boolean, default: false},
+        busAccidentNoInjuries: {type: Boolean, default: false},
+        busEarlyLate: {type: Boolean, default: false},
+        earlyDismissal: {type: Boolean, default: false},
+        materialSpill: {type: Boolean, default: false}
+    }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names
@@ -513,6 +522,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
     placeholderNote: String,
     note: String,
+    materialSpill: String,
     buildingID: String,
     buildingName: String,
     floorName: String,                 //read from FloorLevels database (radio buttons)
@@ -576,7 +586,15 @@ var AlertSentTempSchema = new mongoose.Schema({
         redirectEJS: String
     }],
     roadIndexNumberToExit: String,
-    roadIndexExit:{ type: Boolean, default: false }
+    roadIndexExit:{ type: Boolean, default: false },
+    alertWith: {
+        student: {type: Boolean, default: false},
+        mapBus: {type: Boolean, default: false},
+        busAccidentNoInjuries: {type: Boolean, default: false},
+        busEarlyLate: {type: Boolean, default: false},
+        earlyDismissal: {type: Boolean, default: false},
+        materialSpill: {type: Boolean, default: false}
+    }
 
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"

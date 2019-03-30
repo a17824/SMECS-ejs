@@ -114,6 +114,7 @@
                 var alert_ID=$(this).attr('id');
                 var alertNameID=$("#alertNameID").val();
                 var note=$("#note").val();
+                var materialSpill=$("#materialSpill").val();
                 var lastTimeSeen=$("#timeSelect").val();
                 var lastPlaceSeen=$("#lastPlaceSeen").val();
                 var clothesWearing=$("#clothesWearing").val();
@@ -199,6 +200,7 @@
                         alertToUpdate: alert_ID,
                         alertNameID: alertNameID,
                         note: note,
+                        materialSpill: materialSpill,
                         lastTimeSeen: time,
                         busMorningAfternoon: radioBusDay,
                         busDelayedAhead: delayedAhead,
@@ -340,11 +342,13 @@
     <% } %>
 
     <% if (alert.alertNameID == 6) {%>
-        <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
+            <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
+            <textarea id="materialSpill" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+
     <% } else { %>
-        <label for="note"><b>Note:</b>(optional)</label><br>
-    <% }%>
-    <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+            <label for="note"><b>Note:</b>(optional)</label><br>
+            <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+        <% }%>
 
 
 

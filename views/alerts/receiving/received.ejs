@@ -271,7 +271,7 @@
 <br>
 
 <!-- Alert BUS TRANSPORTATION -->
-<% if (info.alert.alertID == 12 ) {%>
+<% if (info.alertWith.busAccidentNoInjuries) {%>
 <label for="busAccidentNoInjuries"><b>No injuries:</b></label>
 <% if (info.busAccidentNoInjuries) { %>
 <input class="checkbox" type="checkbox" name="busAccidentNoInjuries" id="busAccidentNoInjuries" value="<%= info.busAccidentNoInjuries %>" checked disabled>
@@ -316,11 +316,7 @@
 <br>
 
 <!-- Alert that requires STUDENT -->
-<% if (info.alert.alertID == 4 ||
-        info.alert.alertID == 5 ||
-        info.alert.alertID == 16 ||
-        info.alert.alertID == 17 ||
-        info.alert.alertID == 19  ) {%>
+<% if (info.alertWith.student) {%>
 
 <label for="studentName"><b>Student name:</b></label>
 <input type="text" id="student" value="<%= info.studentName %>" readonly><br><br>
@@ -375,7 +371,7 @@
 
 
 <!-- Alert Early dismissal -->
-<% if (info.alert.alertID == 25 ) {%>
+<% if (info.alertWith.earlyDismissal) {%>
     <label for="busRadio"><b>Day of early dismissal:</b> <%= info.earlyDismissalDate %></label><br><br>
 
     <label for="busTime"><b>Dismissal time:</b> <%= info.earlyDismissalTime %></label><br><br>
@@ -391,7 +387,7 @@
 
 
 <!-- Alert Bus Transportation changed -->
-<% if (info.alert.alertID == 27 ) {%>
+<% if (info.alertWith.busEarlyLate) {%>
 <label for="busRadio"><b>Time of day:</b> <%= info.busMorningAfternoon %></label><br><br>
 
 <label for="busRadio"><b>Bus is:</b> <%= info.busDelayedAhead %></label><br><br>
@@ -410,9 +406,9 @@
 
 
 <!-- Alert HAZARDOUS MATERIALS SPILL -->
-<% if (info.alert.alertID == 6) {%>
+<% if (info.alertWith.materialSpill) {%>
 <label for="note"><b>Description of type of material, odor, etc.:</b></label><br>
-<textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
+<textarea id="note" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
 <% } else {%>
 
 <label for="note"><b>Note:</b></label><br>
@@ -422,7 +418,7 @@
 
 
 
-<% if (info.alert.alertID == 12 ) {%>
+<% if (info.alertWith.mapBus) {%>
 <!-- Drawing google map -->
 <iframe width="600" height="450" frameborder="0" style="border:0"
         allowfullscreen></iframe>

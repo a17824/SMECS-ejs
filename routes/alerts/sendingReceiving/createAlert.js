@@ -184,6 +184,8 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                         busEarlyLate(req, res, alertTemp);
                     if(road.callFunction[i] === 'earlyDismissal')
                         earlyDismissal(req, res, alertTemp);
+                    if (road.callFunction[i] === 'materialSpill')
+                        materialSpill(req, res, alertTemp);
                 }
                 redirectAPI = road.redirectAPI;
                 redirectEJS = road.redirectEJS + alertTemp._id;
@@ -403,6 +405,7 @@ function studentStep1(req, res, alertTemp1) {
 }
 function busMap(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
+    alertTemp1.alertWith.mapBus = true;
 }
 function multiSchoolClosed(req, res, alertTemp1) {
     //console.log(typeof req.body.daysClosed);
@@ -463,6 +466,7 @@ function multiUtilities(req, res, alert, callBack) {
 }
 function notesBus(req, res, alertTemp1) {
     alertTemp1.busAccidentNoInjuries = req.body.busAccidentNoInjuries;
+    alertTemp1.alertWith.busAccidentNoInjuries = true;
 }
 function student2(req, res, alertTemp1, studentName, studentPhoto) {
     alertTemp1.studentName = studentName;
@@ -485,6 +489,7 @@ function busEarlyLate(req, res, alertTemp1) {
     alertTemp1.busDelayedAhead = req.body.busDelayedAhead;
     alertTemp1.busTimeChanged = req.body.busTime;
     alertTemp1.busTimeChangedEmail = req.body.busSendEmail;
+    alertTemp1.alertWith.busEarlyLate = true;
 }
 function earlyDismissal(req, res, alertTemp1) {
     //console.log(typeof req.body.earlyDismissalTime);
@@ -492,4 +497,9 @@ function earlyDismissal(req, res, alertTemp1) {
     alertTemp1.earlyDismissalDate = req.body.earlyDismissalDate;
     alertTemp1.earlyDismissalTime = req.body.earlyDismissalTime;
     alertTemp1.busTimeChangedEmail = req.body.busSendEmail;
+    alertTemp1.alertWith.earlyDismissal = true;
+}
+function materialSpill(req, res, alertTemp1) {
+    alertTemp1.materialSpill = req.body.materialSpill;
+    alertTemp1.alertWith.materialSpill = true;
 }

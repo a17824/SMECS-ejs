@@ -131,7 +131,7 @@ module.exports.showAlerts = function(req, res) {
         roleX = req.decoded.user.userRoleID;
     else
         roleX = req.user.userRoleID;
-
+    
     async.parallel([
         function(callback2){
             models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}

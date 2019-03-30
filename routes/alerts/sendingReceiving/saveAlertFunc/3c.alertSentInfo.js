@@ -73,6 +73,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
         request911Call: tempAlert.request911Call,
         whoCanCall911: tempAlert.whoCanCall911,
         note: tempAlert.note,
+        materialSpill: tempAlert.materialSpill,
         realDrillDemo: tempAlert.realDrillDemo,
         buildingID: tempAlert.buildingID,
         buildingName: tempAlert.buildingName,
@@ -104,7 +105,8 @@ module.exports.create = function(req, res, tempAlert, callback) {
         latitude: tempAlert.latitude,
         longitude: tempAlert.longitude,
         mapBus: tempAlert.mapBus,
-        alertRoad: tempAlert.alertRoad
+        alertRoad: tempAlert.alertRoad,
+        alertWith: tempAlert.alertWith
     });
     //REQ ASST ALERT
     if(tempAlert.alertNameID == 26){
@@ -188,7 +190,7 @@ module.exports.update = function(req, res, tempAlert, callback) {
                     alert.note = tempAlert.note;
             }
             // end of NOTES CHAT
-
+            alert.materialSpill = tempAlert.materialSpill;
             alert.buildingID = tempAlert.buildingID;
             alert.buildingName = tempAlert.buildingName;
             alert.floorID = tempAlert.floorID;
@@ -219,6 +221,7 @@ module.exports.update = function(req, res, tempAlert, callback) {
             alert.latitude = tempAlert.latitude;
             alert.longitude = tempAlert.longitude;
             alert.mapBus = tempAlert.mapBus;
+            alert.alertWith = tempAlert.alertWith
         }
         alert.save();
         /*****  CALL HERE NOTIFICATION API  *****/

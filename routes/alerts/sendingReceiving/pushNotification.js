@@ -2,6 +2,8 @@
 //var FCM = require('fcm-node'); //for Firebase
 let OneSignal = require('onesignal-node'); //for OneSignal
 let models = require('./../../models');
+let jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+let config = require('../../api/config');
 
 /*****  CALL HERE NOTIFICATION API  ****
  *  var 'action' can be:                *
@@ -170,6 +172,11 @@ module.exports.icons = function(icons,action) {
 //end of Create message for cellPhone notification
 
 module.exports.notifyUser = function(user, action) {
+
+    let token = jwt.sign({user: user}, config.secret, {
+        //expiresIn: 1440 // expires in 24 hours
+    });
+
     /* FIREBASE
     var message = {
         to: user.pushToken, // required fill with device token
@@ -196,7 +203,8 @@ module.exports.notifyUser = function(user, action) {
         userRoleName: user.userRoleName,
         firstName: user.firstName,
         lastName: user.lastName,
-        userPhoto: user.photo
+        userPhoto: user.photo,
+        token: token
     };
     sendPush(message,function (result,err) {
         if(err || !result) console.log('notifyUser err = ',err);
