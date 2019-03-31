@@ -186,6 +186,8 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                         earlyDismissal(req, res, alertTemp);
                     if (road.callFunction[i] === 'materialSpill')
                         materialSpill(req, res, alertTemp);
+                    if (road.callFunction[i] === 'evacuateTo')
+                        evacuateTo(req, res, alertTemp);
                 }
                 redirectAPI = road.redirectAPI;
                 redirectEJS = road.redirectEJS + alertTemp._id;
@@ -408,12 +410,12 @@ function busMap(req, res, alertTemp1) {
     alertTemp1.alertWith.mapBus = true;
 }
 function multiSchoolClosed(req, res, alertTemp1) {
-    //console.log(typeof req.body.daysClosed);
-    //console.log('daysClosed = ',req.body.daysClosed);
     alertTemp1.daysClosed = req.body.daysClosed;
+    alertTemp1.alertWith.multiSchoolClosed = true;
 }
 function multiMedical(req, res, alertTemp1) {
     alertTemp1.medicalInjuredParties = req.body.medicalInjuredParties;
+    alertTemp1.alertWith.multiMedical = true;
 }
 function multiUtilities(req, res, alert, callBack) {
     models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
@@ -456,6 +458,8 @@ function multiUtilities(req, res, alert, callBack) {
                 reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update',req,res);
             }
 
+            alert.alertWith.multiUtilities = true;
+
             if (alert.alertNameID !== 26) {
                 console.log('requestAssistance = ',alert.requestAssistance);
                 alert.save();
@@ -479,27 +483,32 @@ function studentMissingStudent(req, res, alertTemp1) {
     alertTemp1.missingChildLastTimeSeen = req.body.lastTimeSeen;
     alertTemp1.missingChildLastPlaceSeen = req.body.lastPlaceSeen;
     alertTemp1.missingChildClothesWearing = req.body.clothesWearing;
+    alertTemp1.alertWith.missingStudent = true;
 }
 function notesStudentWithGun(req, res, alertTemp1) {
     alertTemp1.studentWithGunSeated = req.body.seat;
     alertTemp1.studentWithGunBehaviour = req.body.studentBehaviour;
+    alertTemp1.alertWith.notesStudentWithGun = true;
 }
 function busEarlyLate(req, res, alertTemp1) {
     alertTemp1.busMorningAfternoon = req.body.busMorningAfternoon;
     alertTemp1.busDelayedAhead = req.body.busDelayedAhead;
     alertTemp1.busTimeChanged = req.body.busTime;
-    alertTemp1.busTimeChangedEmail = req.body.busSendEmail;
+    alertTemp1.busTimeChangedEmail = req.body.busSendEmailBusEarlyLate;
     alertTemp1.alertWith.busEarlyLate = true;
 }
 function earlyDismissal(req, res, alertTemp1) {
     //console.log(typeof req.body.earlyDismissalTime);
-    //console.log('earlyDismissalDate = ',req.body.earlyDismissalDate);
+    console.log('busSendEmail = ',req.body.busSendEmailEarlyDismissal);
     alertTemp1.earlyDismissalDate = req.body.earlyDismissalDate;
     alertTemp1.earlyDismissalTime = req.body.earlyDismissalTime;
-    alertTemp1.busTimeChangedEmail = req.body.busSendEmail;
+    alertTemp1.busTimeChangedEmail = req.body.busSendEmailEarlyDismissal;
     alertTemp1.alertWith.earlyDismissal = true;
 }
 function materialSpill(req, res, alertTemp1) {
     alertTemp1.materialSpill = req.body.materialSpill;
     alertTemp1.alertWith.materialSpill = true;
+}
+function evacuateTo(req, res, alertTemp1) {
+    alertTemp1.alertWith.evacuateTo = true;
 }

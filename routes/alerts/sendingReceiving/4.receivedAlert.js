@@ -104,13 +104,6 @@ module.exports.receivedAlert = function(req, res) {
 
                 }
             ], function (err, canRequestAssistance, enableProcedureButton) {
-                let flag = 'alertWithNoFloor';
-                for (let i=0; i < results[0].alertRoad.length; i++) {
-                    if (results[0].alertRoad[i].redirectAPI === 'floor'){
-                        flag = 'floor';
-                        break
-                    }
-                }
 
                 let title = 'Received Alert';
                 if(results[0].alert.alertID == 26)
@@ -137,7 +130,6 @@ module.exports.receivedAlert = function(req, res) {
                                 utilities: results[4],
                                 canRequestAssistance: canRequestAssistance,
                                 enableProcedureButton: enableProcedureButton,
-                                flagFloor: flag,
                                 usersWithPushToken: usersWithPushToken,
                                 total: result
                             });
@@ -155,7 +147,6 @@ module.exports.receivedAlert = function(req, res) {
                                 aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo,
-                                flagFloor: flag,
                                 total: result
                             });
                         }

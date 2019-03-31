@@ -14,7 +14,7 @@
 
 
     <!-- Alert that requires FLOOR -->
-    <% if ( flagFloor === 'floor' ) {%>
+    <% if ( info.alertWith.floor ) {%>
 
         <script>
             let yPercentage,xPercentage;
@@ -197,7 +197,7 @@
 
 
 <!-- Alert that requires FLOOR -->
-<% if ( flagFloor === 'floor' ) {%>
+<% if (info.alertWith.floor) {%>
 
 <input type="hidden" id="x" size="40" value="<%= info.sniperCoordinateX %>">
 <input type="hidden" id="y" size="40" value="<%= info.sniperCoordinateY %>">
@@ -330,7 +330,7 @@
 <% } %>
 
 <!-- Alert that requires FLOOR -->
-<% if ( flagFloor === 'floor' ) {%>
+<% if (info.alertWith.floor) {%>
 
 <% if (info.floorName) {%>
 
@@ -338,7 +338,7 @@
     <input type="text" id="buildingLevel"  size="25" value="<%= info.buildingName %>" readonly ><br>
 
     <!-- Alert EVACUATE -->
-    <% if (info.alert.alertID == 7) {%>
+    <% if (info.alertWith.evacuateTo) {%>
         <label for="floor"><b>Evacuate to:</b></label>
     <% }else { %>
         <label for="floor"><b>Floor:</b></label>
@@ -348,7 +348,7 @@
 <% } %>
 
 <!-- Alert MISSING CHILD -->
-<% if (info.alert.alertID == 4 ) {%>
+<% if (info.alertWith.missingStudent) {%>
 <label for="lastTimeSeen"><b>Last time seen:</b></label>
 <input type="text" id="lastTime" size="5" value="<%= info.missingChildLastTimeSeen %>" readonly><br><br>
 
@@ -360,7 +360,7 @@
 <% } %>
 
 <!-- Alert STUDENT WITH A GUN -->
-<% if (info.alert.alertID == 5) {%>
+<% if (info.alertWith.notesStudentWithGun) {%>
 <label for="seat"><b>He/she is seated:</b></label><br>
 <textarea id="seat" rows="2"  cols="33" placeholder="n/a" readonly><%= info.studentWithGunSeated %></textarea><br><br>
 
@@ -430,22 +430,20 @@
 
 
 <!-- Alert Medical Emergencies -->
-<% if (info.alert.alertID == 18 ) {%>
+<% if (info.alertWith.multiMedical) {%>
 <label for="situation"><b>Number of injured parties:</b></label>
 <input type="text" id="parties"  size="1" value="<%= info.medicalInjuredParties %>" readonly ><br><br>
 <% } %>
 
-<% if (info.alert.alertID == 29 ) {%>
+<!-- Alert School closed -->
+<% if (info.alertWith.multiSchoolClosed) {%>
 <label for="situation"><b>Day(s) school will be closed:</b> <%= info.daysClosed %></label><br><br>
 <% } %>
 
 
 
 <!-- Alert MultiSelection -->
-<% if (info.alert.alertID == 14 ||
-        info.alert.alertID == 18 ||
-        info.alert.alertID == 26 ||
-        info.alert.alertID == 29 ) {%>
+<% if (info.alertWith.multiSelection) {%>
 <label for="situation"><b>Situation:</b></label><br>
 
 <!-- checkBox of Multiselection -->
@@ -460,9 +458,8 @@
 
 
 
-<!-- REQUEST ASSISTANCE -->
-<% if (info.alert.alertID == 14 ||
-        info.alert.alertID == 26 ) {%>
+<!-- Utilities Failures & REQUEST ASSISTANCE -->
+<% if (info.alertWith.multiUtilities) {%>
 
 <% if (canRequestAssistance == true) {%>
 
@@ -641,7 +638,7 @@
 <% if (canRequestAssistance == true && flagDisableRequestButton == 1) {%>
 <input type="button" id="request" value="Send Request Assistance" ><br><br>
 <%} else { %>
-<% if (info.alert.alertID == 14 || info.alert.alertID == 26) {%>
+    <% if (info.alertWith.multiUtilities) {%>
 <input type="button" id="request" value="Send Request Assistance" disabled><br><br>
 <%}%>
 <%}%>

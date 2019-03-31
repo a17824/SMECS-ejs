@@ -128,6 +128,7 @@ module.exports.postFloor = function(req, res) {
 
             alert.buildingID = buildingID;
             alert.buildingName = buildingName;
+            alert.alertWith.floor = true;
 
             //if user skip floor question or if floor photo don't exist on database or all/none/multiple/outside floor selected
             if ( floorID == null ||
@@ -476,6 +477,7 @@ module.exports.postMultiSelection = function(req, res) {
             alert.multiSelectionNames = req.body.checkboxesNames;
             alert.multiSelectionIDs = req.body.checkboxesIDs;
             alert.roadIndexExit = false; // for back/exit button
+            alert.alertWith.multiSelection = true;
 
             if (req.decoded && typeof req.body.checkboxesIDs !== 'undefined' && req.body.checkboxesIDs) {       // API user
                 alert.multiSelectionNames = req.body.checkboxesNames.split(',').map(String);

@@ -464,12 +464,21 @@ var AlertSentInfoSchema = new mongoose.Schema({
         redirectEJS: String
     }],
     alertWith: {
+        notes: {type: Boolean, default: false},
+        floor: {type: Boolean, default: false},
         student: {type: Boolean, default: false},
         mapBus: {type: Boolean, default: false},
         busAccidentNoInjuries: {type: Boolean, default: false},
         busEarlyLate: {type: Boolean, default: false},
         earlyDismissal: {type: Boolean, default: false},
-        materialSpill: {type: Boolean, default: false}
+        materialSpill: {type: Boolean, default: false},
+        multiMedical: {type: Boolean, default: false},
+        multiSchoolClosed: {type: Boolean, default: false},
+        multiSelection: {type: Boolean, default: false},
+        multiUtilities: {type: Boolean, default: false},
+        notesStudentWithGun: {type: Boolean, default: false},
+        missingStudent: {type: Boolean, default: false},
+        evacuateTo: {type: Boolean, default: false}
     }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
@@ -588,12 +597,21 @@ var AlertSentTempSchema = new mongoose.Schema({
     roadIndexNumberToExit: String,
     roadIndexExit:{ type: Boolean, default: false },
     alertWith: {
+        notes: {type: Boolean, default: false},
+        floor: {type: Boolean, default: false},
         student: {type: Boolean, default: false},
         mapBus: {type: Boolean, default: false},
         busAccidentNoInjuries: {type: Boolean, default: false},
         busEarlyLate: {type: Boolean, default: false},
         earlyDismissal: {type: Boolean, default: false},
-        materialSpill: {type: Boolean, default: false}
+        materialSpill: {type: Boolean, default: false},
+        multiMedical: {type: Boolean, default: false},
+        multiSchoolClosed: {type: Boolean, default: false},
+        multiSelection: {type: Boolean, default: false},
+        multiUtilities: {type: Boolean, default: false},
+        notesStudentWithGun: {type: Boolean, default: false},
+        missingStudent: {type: Boolean, default: false},
+        evacuateTo: {type: Boolean, default: false}
     }
 
 

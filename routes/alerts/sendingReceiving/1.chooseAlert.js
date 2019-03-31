@@ -131,7 +131,7 @@ module.exports.showAlerts = function(req, res) {
         roleX = req.decoded.user.userRoleID;
     else
         roleX = req.user.userRoleID;
-    
+
     async.parallel([
         function(callback2){
             models.Alerts.find({softDeleted: false, 'whoCanSendReceive.sendReal': {$elemMatch: {roleID: roleX, checkbox: true}}
@@ -274,6 +274,7 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 29){placeholderNote = 'ex: flood.';}
 
 
+
                     if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
 
                         let alertTemp1 = new models.AlertSentTemp({
@@ -308,6 +309,14 @@ module.exports.showAlertsPost = function(req, res) {
                             roadIndex: 1
 
                         });
+
+                        // Alert With... (this is needed for review and received pages)
+                        for (let i=0; i < alertTemp1.alertRoad.length; i++) {
+                            if (alertTemp1.alertRoad[i].redirectAPI === 'notes'){
+                                alertTemp1.alertWith.notes = true;
+                            }
+                        }
+
                         alertTemp1.save(function(err, resp) {
                             if (err) {
                                 console.log('err = ',err);

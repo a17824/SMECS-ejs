@@ -124,11 +124,15 @@
                 var earlyDismissalDate=$("#dateinput").val();
                 var earlyDismissalTime=$("#earlyDismissalTime").val();
 
+                if(alertNameID == 25) {
+                    var busSendEmailEarlyDismissal = document.getElementById("checkbox").checked;
+                }
+
                 if(alertNameID == 27) {
                     var busTime = $("#busTimeSelect").val();
                     var radioBusDay = $("input[name='radioBusDay']:checked").val();
                     var delayedAhead = $("input[name='radioBusAheadDelayed']:checked").val();
-                    var busSendEmail = document.getElementById("checkbox").checked;
+                    var busSendEmailBusEarlyLate = document.getElementById("checkbox2").checked;
                 }
 
                 if(alertNameID == 4){
@@ -205,7 +209,8 @@
                         busMorningAfternoon: radioBusDay,
                         busDelayedAhead: delayedAhead,
                         busTime: busTime2,
-                        busSendEmail: busSendEmail,
+                        busSendEmailBusEarlyLate: busSendEmailBusEarlyLate,
+                        busSendEmailEarlyDismissal: busSendEmailEarlyDismissal,
                         earlyDismissalDate: earlyDismissalDate,
                         earlyDismissalTime: earlyDismissalTime,
                         lastPlaceSeen: lastPlaceSeen,
@@ -292,9 +297,9 @@
 
         <label for="email"><b>Send email notification:</b></label>
         <% if (alert.busTimeChangedEmail == true) {%>
-            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>" checked><br><br>
+            <input class="checkbox" type="checkbox" name="checkbox" id="checkbox" value="<%= alert.busTimeChangedEmail %>" checked><br><br>
         <% }else{%>
-            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>"><br><br>
+            <input class="checkbox" type="checkbox" name="checkbox" id="checkbox" value="<%= alert.busTimeChangedEmail %>"><br><br>
         <% } %>
     <% } %>
 
@@ -322,9 +327,9 @@
 
         <label for="email"><b>Send email notification:</b></label>
         <% if (alert.busTimeChangedEmail == true) {%>
-            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>" checked><br><br>
+            <input class="checkbox" type="checkbox" name="checkbox2" id="checkbox2" value="<%= alert.busTimeChangedEmail %>" checked><br><br>
         <% }else{%>
-            <input class="checkbox" type="checkbox" name="checkbox" id=checkbox value="<%= alert.busTimeChangedEmail %>"><br><br>
+            <input class="checkbox" type="checkbox" name="checkbox2" id="checkbox2" value="<%= alert.busTimeChangedEmail %>"><br><br>
         <% } %>
     <% } %>
 
