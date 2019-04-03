@@ -329,12 +329,6 @@ var AlertSentInfoSchema = new mongoose.Schema({
         pushToken: [String],
         email: String,
         photo: String,
-        called911: {
-            called911Boolean: {type: Boolean, default: false},
-            called911Date: String,
-            called911Time: String,
-            timeDif: String
-        },
         received: {
             receivedBoolean: {type: Boolean, default: false},         //22
             receivedDate: String,
@@ -354,6 +348,12 @@ var AlertSentInfoSchema = new mongoose.Schema({
             timeDif: String
         },
         weAreSafe: {
+            boolean: {type: Boolean, default: false},
+            date: String,
+            time: String,
+            timeDif: String
+        },
+        called911: {
             boolean: {type: Boolean, default: false},
             date: String,
             time: String,

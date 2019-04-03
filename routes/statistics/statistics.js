@@ -9,7 +9,7 @@ var MobileDetect = require('mobile-detect');
  module.exports.globalStats = function(req, res, next) {
         async.parallel([
             function(callback){
-                models.UtilityUsers.find().exec(callback);
+                models.Users.find().exec(callback);
             },
             function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
@@ -24,7 +24,7 @@ var MobileDetect = require('mobile-detect');
 
             res.render('statistics/globalStats',{
                 userAuthEmail: req.user.email,
-                utilityUsers: results[0],
+                users: results[0],
                 iPad: iPad,
                 aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,

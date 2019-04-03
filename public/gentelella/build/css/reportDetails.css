@@ -4394,3 +4394,11 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     width: 20px;
     text-align: right;
 }
+.alertWithStudent {
+    position: relative;
+    top: -1px
+}
+.alertWithStudentPhoto {
+    position: relative;
+    top: -2px
+}

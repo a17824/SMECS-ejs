@@ -252,7 +252,11 @@ module.exports.totalNumbers = function(alert, callback) {
         completedAllStepsBy: [],
         notCompletedAllStepsBy: [],
         completedAllStepsNumber: Number,
-        notCompletedAllStepsNumber: Number
+        notCompletedAllStepsNumber: Number,
+        called911By: [],
+        notCalled911By: [],
+        called911Number: Number,
+        notCalled911Number: Number,
     };
 
 
@@ -360,6 +364,22 @@ module.exports.totalNumbers = function(alert, callback) {
     total.completedAllStepsNumber = total.completedAllStepsBy.length;
     total.notCompletedAllStepsNumber = total.notCompletedAllStepsBy.length;
     //end of How many users CompleteAllSteps Alert
+
+
+    //How many users Called911
+    alert.sentTo.forEach(function (user) {
+        if( user.pushToken.length > 0 && user.received.receivedBoolean && user.viewed.viewedBoolean) {
+            if (user.called911.boolean) {
+                total.called911By.push(user);
+            }
+
+            else
+                total.notCalled911By.push(user);
+        }
+    });
+    total.called911Number = total.called911By.length;
+    total.notCalled911Number = total.notCalled911By.length;
+    //end of How many users Called911
 
     callback(total)
 };

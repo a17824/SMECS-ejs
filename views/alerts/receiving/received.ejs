@@ -81,7 +81,7 @@
             // end of Google map direction map
 
 
-            //Request procedureCompleted, weAreSafe!, or I need help
+            //Request procedureCompleted, weAreSafe!, I need help or Call911
             $('#checkboxProc').on('change',function () {
                 $.post("/alerts/received/procSafeHelp", {
                     alertToUpdate: alert_ID,
@@ -98,6 +98,12 @@
                 $.post("/alerts/received/procSafeHelp", {
                     alertToUpdate: alert_ID,
                     checkboxType: 'iNeedHelp'
+                }, function (data) {window.location = data.redirect});
+            });
+            $("#button911").click(function() {
+                $.post("/alerts/received/procSafeHelp", {
+                    alertToUpdate: alert_ID,
+                    checkboxType: 'called911'
                 }, function (data) {window.location = data.redirect});
             });
             //end of Request procedureCompleted, weAreSafe!, or I need help
@@ -217,7 +223,7 @@
     </div>
     <% } %>
     <div id="div2" class="div2" >
-        <img src="/floorPlans/red_sniper.png" >
+        <img src="/public/floorPlans/red_sniper.png">
     </div>
 </form>
 <% } %>
@@ -288,7 +294,11 @@
 <% for (var x=0; x < userAuthRoleName.length; x++) { %>
 <% if (info.whoCanCall911[i] == userAuthRoleName[x] ) {%>
 <label style="color: red">This Alert request a 911 call</label>
-<button class="callButton">Call 911</button><br>
+<% if (info.sentTo[i].called911.boolean) { %>
+    <button class="callButton" id="button911" disabled>Call 911</button><br>
+<% }else { %>
+    <button class="callButton" id="button911">Call 911</button><br>
+<% } %>
 <label for="read"><b>People that called 911: </b></label>
 <input type="text" id="read" size="1" value="5" readonly ><br>
 <% flagBreak = 1 %>

@@ -539,10 +539,10 @@
                                     <h4 class="panel-title">
                                         <table class="" width="100%">
                                             <tr>
-                                                <td align="left" style="color: #f4a82e">need help:</td>
-                                                <td width="20" align="center"><%= total.iNeedHelpNumber %></td>
-                                                <td width="140" align="center">users out of</td>
-                                                <td width="20" align="right"><%= total.viewedNumber %></td>
+                                                <td class="yesNo">need help:</td>
+                                                <td class="accor1Td2"><%= total.iNeedHelpNumber %></td>
+                                                <td class="accor1Td3">users out of</td>
+                                                <td class="accor1Td4"><%= total.viewedNumber %></td>
                                             </tr>
                                         </table>
                                     </h4>
@@ -592,7 +592,7 @@
                                                         <%  } %>
 
 
-                                                            <input type="button" class="btn btn-success btn-xs" id="<%= user.email %>" name="<%= user.email %>" value="I'm on my way to help" onClick="reply_click(this.id)">
+                                                        <input type="button" class="btn btn-success btn-xs" id="<%= user.email %>" name="<%= user.email %>" value="I'm on my way to help" onClick="reply_click(this.id)">
 
                                                     </td>
 
@@ -672,123 +672,72 @@
 
                 <!-- Call 911 -->
                 <%  if (alertWith911) { %>
-                <div class="x_panel tile overflow_hidden">
-                    <div class="x_title">
-                        <h2 style="font-size: 28px">Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
+                    <div class="x_panel tile overflow_hidden">
+                        <div class="x_title">
+                            <h2 style="font-size: 28px">Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
 
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </ul>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </ul>
 
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
 
-                        <!-- start accordion -->
-                        <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
-                            <div class="panel">
-                                <a class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    <h4 class="panel-title">
-                                        <table class="" width="100%">
-                                            <tr>
-                                                <td width="35" align="left">Role:</td>
-                                                <td align="left">&emsp;Principal</td>
-                                                <td width="20" align="center">0</td>
-                                                <td width="200" align="center">users called out of</td>
-                                                <td width="20" align="right">1</td>
-                                            </tr>
-                                        </table>
-                                    </h4>
-                                </a>
-                                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-
-                                </div>
-                            </div>
-                            <div class="panel">
-                                <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <h4 class="panel-title">
-                                        <table class="" width="100%">
-                                            <tr>
-                                                <td width="35" align="left">Role:</td>
-                                                <td align="left">&emsp;Staff</td>
-                                                <td width="20" align="center" style="color: #18c09c">3</td>
-                                                <td width="200" align="center" style="color: #18c09c">users called out of</td>
-                                                <td width="20" align="right" style="color: #18c09c">16</td>
-                                            </tr>
-                                        </table>
-                                    </h4>
-                                </a>
-                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                    <div class="panel-body">
-                                        <table class="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th width="20">Photo</th>
-                                                <th>Name</th>
-                                                <th>Time</th>
-                                                <th>Duration</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>
-                                                    <p class="imageSentUsers">
-                                                        <img src="/photosUsers/5b1592593cc6e0004815bbf6.BMP" class="avatarSentUsers">
-                                                    </p>
-                                                </td>
-                                                <td>Susan Hayes</td>
-                                                <td>9:31 am</td>
-                                                <td>10 min </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p class="imageSentUsers">
-                                                        <img src="/photosUsers/5b15954a3cc6e0004815bbfc.BMP" class="avatarSentUsers" alt="Avatar">
-                                                    </p>
-                                                </td>
-                                                <td>Meghan Davis</td>
-                                                <td>9:35 am</td>
-                                                <td>7 min </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p class="imageSentUsers">
-                                                        <img src="/photosUsers/5b1594b03cc6e0004815bbfa.BMP" class="avatarSentUsers" alt="Avatar">
-                                                    </p>
-                                                </td>
-                                                <td>Rosetta Mark</td>
-                                                <td>9:41 am</td>
-                                                <td>7 min </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                            <!-- start accordion -->
+                            <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+                                <div class="panel">
+                                    <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td class="">who called 911:</td>
+                                                    <td class="accor1Td2"><%= total.called911Number %></td>
+                                                    <td class="accor1Td3">users out of</td>
+                                                    <td class="accor1Td4"><%= total.viewedNumber %></td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th width="20">Photo</th>
+                                                    <th>Name</th>
+                                                    <th>Call time</th>
+                                                    <th>Call duration</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <% total.called911By.forEach(function(user) { %>
+                                                    <tr>
+                                                        <td>
+                                                            <p class="imageSentUsers">
+                                                                <%  if (user.photo !== '') { %>
+                                                                    <img src="/public/photosUsers/<%= user.photo %>" class="avatarSentUsers" alt="Avatar" />
+                                                                <%  }else { %>
+                                                                    <img src="/public/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                                <%  } %>
+                                                            </p>
+                                                        </td>
+                                                        <td><%= user.firstName %> <%= user.lastName %></td>
+                                                        <td><%= user.called911.time %></td>
+                                                        <td>10 min </td>
+                                                    </tr>
+                                                <% }); %>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel">
-                                <a class="panel-heading collapsed" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    <h4 class="panel-title">
-                                        <table class="" width="100%">
-                                            <tr>
-                                                <td width="35" align="left">Role:</td>
-                                                <td align="left">&emsp;Office Staff</td>
-                                                <td width="20" align="center">0</td>
-                                                <td width="200" align="center">users called out of</td>
-                                                <td width="20" align="right">11</td>
-                                            </tr>
-                                        </table>
-                                    </h4>
-                                </a>
-                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                            <!-- end of accordion -->
 
-                                </div>
-                            </div>
+
                         </div>
-                        <!-- end of accordion -->
-
-
                     </div>
-                </div>
                 <% } %>
                 <!-- Call 911 -->
 
@@ -895,7 +844,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="Red" readonly>
+                                           value="<%= report.group.name %>" readonly>
                                 </div>
                             </div>
 
@@ -905,7 +854,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="Stranger/Trespasser in Building" readonly>
+                                           value="<%= report.alert.name %>" readonly>
                                 </div>
                             </div>
 
@@ -915,7 +864,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="drill" readonly>
+                                           value="<%= report.realDrillDemo %>" readonly>
                                 </div>
                             </div>
 
@@ -925,7 +874,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="open" readonly>
+                                           value="<%= report.status.statusString %>" readonly>
                                 </div>
                             </div>
 
@@ -935,7 +884,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="Pedro Reis" readonly>
+                                           value="<%= report.sentBy %>" readonly>
                                 </div>
                             </div>
 
@@ -945,77 +894,118 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="2018-06-05 / 5:52:42 pm" readonly>
+                                           value="<%= report.sentDate %> / <%= report.sentTime %>" readonly>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time closed</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text"
-                                           class="form-control"
-                                           id="alertName"
-                                           value="in progress..." readonly>
+                            <%  if (report.status.statusString === 'closed' ) { %>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Date/Time closed</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="alertName"
+                                               value="<%= report.status.statusClosedDate %> / <%= report.status.statusClosedTime %>" readonly>
+                                    </div>
                                 </div>
-                            </div>
-
+                            <%  } %>
 
                             <div class="divider-dashed"></div>
 
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Student name</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <ul class="form-control" readonly="">
-                                        <p class="imageSentStudents" style="position: relative; top: 0px">
-                                            Adam O'Donovan &ensp;<img style="position: relative; top: -4px" src="/photosStudents/5b155cf47f23e42ee0527318_111486.BMP" class="avatarSentStudents" alt="Avatar">
-                                        </p>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Current behaviour</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <textarea id="behaviour"
-                                                  class="form-control"
-                                                  placeholder="n/a" readonly>normal</textarea>
-                                </div>
-                            </div>
-
-                            <input type="hidden" id="richNote" value="<%= report.note %>">
-                            <!-- /* showReportDetails - box for NOTES */ file: ...vendors\boots..\dist\css\reportDetails.css -->
-                            <!-- /* line space for NOTES */ file: ...build\css\reportDetails.css -->
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <div type="text"
-                                         class="form-control"
-                                         id="richDiv">
+                            <% if (report.alertWith.student) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Student name</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <ul class="form-control" readonly="">
+                                            <p class="imageSentStudents alertWithStudent">
+                                                <%= report.studentName %> &ensp;<img src="/public/alertSentInfo/studentsPhotos/<%= report.studentPhoto %>" class="avatarSentStudents alertWithStudentPhoto" alt="Avatar">
+                                            </p>
+                                        </ul>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">He/she is seated</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <textarea id="behaviour"
-                                                  class="form-control"
-                                                  placeholder="n/a" readonly>second row, first seat</textarea>
+                                <% if (report.alertWith.missingStudent) {%>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Last time seen</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="lastTimeSeen"
+                                                   value="<%= report.missingChildLastTimeSeen %>" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Last place seen</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="lastTimeSeen"
+                                                   value="<%= report.missingChildLastPlaceSeen %>" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Clothes wearing</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <textarea id="clothesWearing"
+                                                      class="form-control" readonly><%= report.missingChildClothesWearing %>
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                <%  } %>
+
+                                <% if (report.alertWith.notesStudentWithGun) {%>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">He/she is seated</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <textarea id="behaviour"
+                                                      class="form-control"
+                                                      placeholder="n/a" readonly><%= report.studentWithGunSeated %>
+                                            </textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Current behaviour</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <textarea id="behaviour"
+                                                      class="form-control"
+                                                      placeholder="n/a" readonly><%= report.studentWithGunBehaviour %>
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                <%  } %>
+                            <%  } %>
+
+                            <% if (report.alertWith.notes) {%>
+                                <input type="hidden" id="richNote" value="<%= report.note %>">
+                                <!-- /* showReportDetails - box for NOTES */ file: ...vendors\boots..\dist\css\reportDetails.css -->
+                                <!-- /* line space for NOTES */ file: ...build\css\reportDetails.css -->
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <div type="text"
+                                             class="form-control"
+                                             id="richDiv">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            <%  } %>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
-                                <div class="col-md-9 col-sm-9 col-xs-12">
+                            <% if (report.alertWith.floor) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
 
-                                    <a href="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" data-lightbox="image-1" data-title="2nd Floor">
-                                        <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
-                                    </a>
+                                        <a href="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" data-lightbox="image-1" data-title="2nd Floor">
+                                            <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
+                                        </a>
 
 
+                                    </div>
                                 </div>
-                            </div>
+                            <%  } %>
 
                         </form>
 

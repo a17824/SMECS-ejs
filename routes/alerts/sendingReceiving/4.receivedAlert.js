@@ -34,7 +34,7 @@ module.exports.receivedAlert = function(req, res) {
         }
         else {
 
-                reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
+            reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
 
             async.waterfall([
                 function (callback) {
@@ -207,12 +207,12 @@ module.exports.postReceivedAlert = function(req, res, next) {
 
 
 module.exports.procSafeHelp = function(req, res, next) {
-    var alertToUpdate1 = req.body.alertToUpdate;
-    var checkboxType = req.body.checkboxType;
-    console.log('alertToUpdate1 = ',alertToUpdate1);
-console.log('checkboxType = ',checkboxType);
+    console.log('111111111111111111111111111111');
+    let alertToUpdate1 = req.body.alertToUpdate;
+    let checkboxType = req.body.checkboxType;
+
     // API EJS ----------
-    var userApiEjs;
+    let userApiEjs;
 
     if (req.decoded) {      // API user
         userApiEjs = req.decoded.user.email;
@@ -233,13 +233,16 @@ console.log('checkboxType = ',checkboxType);
                             alert.save(function (err) {
                                 if (err) console.log('err - ', err);
                                 else {
+                                    if(checkboxType === 'called911') {
+                                        // needs to send push notification of user that called 911
+                                    }
                                     if(checkboxType === 'iNeedHelp') {
                                         // needs to send push notification of user that needs help
                                     }
-                                    //else {
-                                        /*****  CALL HERE NOTIFICATION API  *****/
-                                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
-                                    //}
+
+                                    /*****  CALL HERE NOTIFICATION API  *****/
+                                    pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
+
 
 
                                     if (req.decoded)
@@ -255,6 +258,7 @@ console.log('checkboxType = ',checkboxType);
         }
     });
 };
+
 
 
 module.exports.helpers = function(req, res) {

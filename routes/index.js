@@ -760,6 +760,7 @@ router.post('/alerts/received/procSafeHelp', auth.simpleAuth, auth.requireLogin,
 router.post('/alerts/received/receivedAlert', auth.simpleAuth, auth.requireLogin, receiveAlert.postReceivedAlert, function(req, res) {});
 
 
+
 /* All Procedures -------------------------------*/
 router.get('/alerts/receiving/procedureR/:id', auth.simpleAuth, auth.requireLogin, procedureR.procedure, function(req, res) {});
 
