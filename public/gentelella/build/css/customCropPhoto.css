@@ -4287,11 +4287,22 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     top: 1px;
 
     max-width: 360px;
-    max-height: 200px
+    max-height: 100px
 }
 .imgChoose {
     position:relative;
     object-fit: contain;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px
+}
+.imgChooseNew {
+    position:relative;
+    object-fit: contain;
+    max-width: 360px;
+    max-height: 200px;
     height: 100%;
     width: 100%;
     border: 1px solid #ddd;

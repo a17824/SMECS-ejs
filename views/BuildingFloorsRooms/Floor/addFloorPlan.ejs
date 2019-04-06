@@ -11,6 +11,37 @@
     <link href="/public/gentelella/build/css/customCropPhoto.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+
+    <script>
+        function validateFileType(putImg){
+            let fileName = document.getElementById("newPhoto").value;
+            let idxDot = fileName.lastIndexOf(".") + 1;
+            let extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile=="jpg" || extFile=="png"){
+                document.getElementById('blah').src = window.URL.createObjectURL(putImg.files[0])
+            }else{
+                document.getElementById('newPhoto').value = '';
+                alert("Only jpg and png files are allowed!");
+
+            }
+        }
+
+        $(document).ready(function(){
+            /*
+            var file = document.getElementById('newPhoto');
+            file.onchange = function(e) {
+                var ext = this.value.match(/\.([^\.]+)$/)[1];
+                if(ext !== 'png' && ext !== 'jpg') {
+                        alert('Not allowed');
+                        this.value = '';
+                }
+            };
+            */
+        });
+    </script>
+
 </head>
 
 <body class="nav-md">
@@ -64,53 +95,57 @@
                                 <!-- Back button -->
                                 <div class="centered-text">
                                     <% if(iPad){ %>
-                                    <div class="moveLittleRight2">
-                                        <a href="/buildingFloorRoom/show" class="pull-bottom_Back"><button class="btn btn-default">Cancel</button></a>
-                                    </div>
+                                        <div class="moveLittleRight2">
+                                            <a href="/buildingFloorRoom/show" class="pull-bottom_Back"><button class="btn btn-default">Cancel</button></a>
+                                        </div>
                                     <% }else { %>
-                                    <div class="moveLittleRight3">
-                                        <a href="/buildingFloorRoom/show" class="pull-bottom_Back2"><button class="btn btn-default">Cancel</button></a>
-                                    </div>
+                                        <div class="moveLittleRight3">
+                                            <a href="/buildingFloorRoom/show" class="pull-bottom_Back2"><button class="btn btn-default">Cancel</button></a>
+                                        </div>
                                     <% } %>
                                 </div>
 
-                                        <form action="/floor/addFloorPlan/:id" enctype="multipart/form-data" method="post">
-                                            <input name="<%= floor.id %>" type="hidden"/>
-                                            <div class="divChooseBigger center-block">
-                                                <% if (floor.floorPlan === '' || floor.floorPlan == undefined) {%>
-                                                <img id="blah" class="imgChoose" src="/photosNotAvailable/floorPlan-notAvailableWeb.jpg" alt="your image" /><br><br>
-                                                <% } else { %>
-                                                <img id="blah" class="imgChoose" src="/floorPlans/<%= floor.floorPlan %>" /><br><br>
-                                                <% } %>
-                                            <input type="file"
-                                                   onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
-                                                   name="upload"
-                                                   id="newPhoto"
-                                                   single="single"
-                                                   accept="image/*" required/><br>
-                                            </div>
+                                <form action="/floor/addFloorPlan/:id" enctype="multipart/form-data" method="post">
+                                    <input name="<%= floor.id %>" type="hidden"/>
+                                    <div class="divChooseBigger center-block">
+                                        <% if (floor.floorPlan === '' || floor.floorPlan == undefined) {%>
+                                            <img id="blah" class="imgChooseNew" src="/photosNotAvailable/floorPlan-notAvailableWeb.jpg" alt="your image" /><br><br>
+                                        <% } else { %>
+                                            <img id="blah" class="imgChooseNew" src="/floorPlans/<%= floor.floorPlan %>" /><br><br>
+                                        <% } %>
+                                        <input type="file"
+                                               class="imgChooseNew"
+                                               onchange="validateFileType(this)"
+                                               name="upload"
+                                               id="newPhoto"
+                                               single="single"
+                                               accept=".png, .jpg" required/><br>
+                                            <script type="text/javascript">
 
-                                            <br><br><br><br><br><br><br><br><br>
-                                            <div class="ln_solid"></div>
-                                            <div class="centered-text">
-                                                <div class="moveLittleRight">
-                                                    <input type="submit" value="Save" class="btn btn-success">
-                                                </div>
-                                            </div>
-                                        </form>
+                                            </script>
+                                    </div>
+
+                                    <br><br><br><br><br><br><br><br><br>
+                                    <div class="ln_solid"></div>
+                                    <div class="centered-text">
+                                        <div class="moveLittleRight">
+                                            <input type="submit" value="Save" class="btn btn-success">
                                         </div>
-
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <!-- /page content -->
-
     </div>
+
+
+    <!-- /page content -->
+
+</div>
 </div>
 
 <!-- jQuery -->

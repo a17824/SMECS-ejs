@@ -2,7 +2,7 @@
 <head>
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/public/stylesheets/style.css' />
     <script></script>
 
     <script>
@@ -196,6 +196,7 @@
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 
+<div id="screenSize" class="screenSize"></div>
 
 <% if (alert.roadIndexExit){ %>
     <form action="/alerts/sending/chooseAlert">

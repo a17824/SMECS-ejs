@@ -7,52 +7,6 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAw-JyKkjlWWCn2OgnWsmeNBbQgC1Uodw&callback=initMap"
             type="text/javascript"></script>
 
-    <script>
-
-
-    </script>
-
-
-    <!-- Alert that requires FLOOR -->
-    <% if ( info.alertWith.floor ) {%>
-
-        <script>
-            let yPercentage,xPercentage;
-            let divStartTop, divStartLeft;
-            let redCrossCenterTop, redCrossCenterLeft;
-            let y,x;
-
-            function showP(){
-                yPercentage = $("#y").val();    // percentage of the location of red cross. mongo ex:-> sniperCoordinateY:"36.93931398416886"
-                xPercentage = $("#x").val();    // mongo ex:-> sniperCoordinateX:"76.80555555555556"
-
-                divStartTop = document.getElementById('div1').offsetTop; // where div starts. CSS ex:-> top:150;
-                divStartLeft = document.getElementById('div1').offsetLeft;  // CSS ex:-> left:500;
-
-                redCrossCenterTop = 32; // depends on size of red cross picture. Center red cross picture to touch/click
-                redCrossCenterLeft = 32;
-
-                //console.log('yPercentage,xPercentage = ',yPercentage + ' , ' + xPercentage);
-
-                y = yPercentage*document.getElementById('div1').offsetHeight/100    // transform percentage position to px position (related to div1 size)
-                x = xPercentage*document.getElementById('div1').offsetWidth/100
-
-                //console.log('y,x = ',y + ' , ' + x);
-                //console.log('css = ', document.getElementById('div1').offsetLeft);
-
-                if(x == "" ){    //if user didn't chose to touch/click floor map
-                    document.getElementById("div2").className="div4";
-                }
-                else{ // put sniper cross .png visible
-                    document.getElementById("div2").className="div3";   //put red cross picture visible
-                    document.getElementById("div2").style.top = ( divStartTop + y - redCrossCenterTop )+'px';  // red cross location final location
-                    document.getElementById("div2").style.left= ( divStartLeft + x - redCrossCenterLeft )+'px';
-                }
-            }
-            window.onload = showP;
-        </script>
-    <% } %>
-    <!-- end of Alert that requires FLOOR -->
 
     <script>
 
@@ -222,9 +176,6 @@
         <img class="img1" src="/public/alertSentInfo/floorsPhotos/<%= info.floorPhoto %>">
     </div>
     <% } %>
-    <div id="div2" class="div2" >
-        <img src="/public/floorPlans/red_sniper.png">
-    </div>
 </form>
 <% } %>
 
@@ -417,13 +368,13 @@
 
 <!-- Alert HAZARDOUS MATERIALS SPILL -->
 <% if (info.alertWith.materialSpill) {%>
-<label for="note"><b>Description of type of material, odor, etc.:</b></label><br>
-<textarea id="note" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
-<% } else {%>
+<label for="materialSpill"><b>Description of type of material, odor, etc.:</b></label><br>
+<textarea id="materialSpill" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
+<% } %>
 
 <label for="note"><b>Note:</b></label><br>
 <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
-<% } %>
+
 
 
 

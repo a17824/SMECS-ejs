@@ -193,3 +193,11 @@ caption {
 .onoffswitch-checkboxSent:checked + .onoffswitch-labelSent .onoffswitch-switchSent {
     right: 0px;
 }
+
+.screenSize {
+    position:relative;
+    top:200px;      /*  div1 start position in relation to main window*/
+    left:400px;     /*  div1 start */
+    width: 70%;
+
+}

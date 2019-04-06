@@ -213,6 +213,9 @@ module.exports.showFloorLocation = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+
+
+
             if(req.decoded){ //API user
                 res.json({
                     success: true,
@@ -243,6 +246,7 @@ module.exports.postFloorLocation = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+
             if(alert.floorName !== 'skipped by user'){
                 alert.sniperCoordinateX = req.body.coordinateX;
                 alert.sniperCoordinateY = req.body.coordinateY;
@@ -490,3 +494,4 @@ module.exports.postMultiSelection = function(req, res) {
         }
     });
 };
+

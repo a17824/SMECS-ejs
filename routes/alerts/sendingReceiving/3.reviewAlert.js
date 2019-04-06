@@ -5,6 +5,7 @@ var reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 var functions = require('./../../functions');
 let redirectTo = require('./createAlert');
 
+
 module.exports.reviewAlert = function(req, res) {
     async.parallel([
         function(callback){models.AlertSentTemp.findById(req.params.id).exec(callback);},
@@ -48,6 +49,9 @@ module.exports.reviewAlert = function(req, res) {
                     userAuthPhoto: req.user.photo
                 });
             }
+
+
+
         }
     })
 };

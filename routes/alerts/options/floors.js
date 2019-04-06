@@ -316,7 +316,6 @@ module.exports.addUpdateFloorPlan = function (req, res){
             models.Floors.findById(req.params.id,function(error, floor) {
                 if( error || !floor) console.log("No Floors found or error");
                 else{
-                    console.log("floor = ");
                     res.render('BuildingFloorsRooms/Floor/addFloorPlan', {
                         title: 'ADD FLOOR PLAN',
                         floor: floor,

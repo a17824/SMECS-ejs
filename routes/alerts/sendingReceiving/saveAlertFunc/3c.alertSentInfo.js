@@ -24,23 +24,18 @@ module.exports.create = function(req, res, tempAlert, callback) {
         };
         sentTo.push(sentToArr);
     });
-    var studentPhoto = undefined;
-    if (tempAlert.alertNameID == 4 ||
-        tempAlert.alertNameID == 5 ||
-        tempAlert.alertNameID == 16 ||
-        tempAlert.alertNameID == 17 ||
-        tempAlert.alertNameID == 19) {
-
+    let studentPhoto = undefined;
+    if (tempAlert.alertWith.student) {
         studentPhoto = tempAlert._id + '_' + tempAlert.studentPhoto;
     }
 
-    var sentByApiEjs;
+    let sentByApiEjs;
     if (req.decoded)        // API user
         sentByApiEjs = req.decoded.user.firstName + " " + req.decoded.user.lastName;
     else
         sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
 
-    var alert1 = new models.AlertSentInfo({
+    let alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,
         group: {
             groupID: tempAlert.alertGroupID,

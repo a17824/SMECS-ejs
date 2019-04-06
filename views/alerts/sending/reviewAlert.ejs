@@ -6,6 +6,7 @@
 
 
     <% var latidtude2 %>
+
     <!-- Alert that requires FLOOR -->
     <% if ( info.alertWith.floor ) {%>
 
@@ -166,7 +167,7 @@
             </div>
         <% } %>
         <div id="div2" class="div2" >
-            <img src="/public/floorPlans/red_sniper.png" >
+            <img src="/public/floorPlans/red_sniper66.png" >
         </div>
 
     </form>
@@ -317,13 +318,12 @@
 
 <!-- Alert HAZARDOUS MATERIALS SPILL -->
 <% if (info.alertWith.materialSpill) {%>
-    <label for="note"><b>Description of type of material, odor, etc.:</b></label><br>
-    <textarea id="note" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
-<% } else {%>
+    <label for="materialSpill"><b>Description of type of material, odor, etc.:</b></label><br>
+    <textarea id="materialSpill" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
+<% } %>
 
     <label for="note"><b>Note:</b></label><br>
     <textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
-<% } %>
 
 
 <!-- Alert Medical Emergencies -->

@@ -60,40 +60,40 @@
 
             /********** Last Time seen missing student *******************/
             if(alertID.value == 4){
-            var lastSeen = document.getElementById('missingChildLastTimeSeen');
-            function missingPopulate(selector) {
-                var select = $(selector);
-                var hours, minutes, ampm;
-                for(var i = 405; i <= 1090; i += 15){
-                    hours = Math.floor(i / 60);
-                    minutes = i % 60;
-                    if (minutes < 10){
-                        minutes = '0' + minutes; // adding leading zero
-                    }
-                    ampm = hours % 24 < 12 ? 'AM' : 'PM';
-                    hours = hours % 12;
-                    if (hours === 0){
-                        hours = 12;
-                    }
-                    if (hours === 6 && minutes === 45 && ampm === 'AM') {
-                        select.append($('<option></option>')
+                var lastSeen = document.getElementById('missingChildLastTimeSeen');
+                function missingPopulate(selector) {
+                    var select = $(selector);
+                    var hours, minutes, ampm;
+                    for(var i = 405; i <= 1090; i += 15){
+                        hours = Math.floor(i / 60);
+                        minutes = i % 60;
+                        if (minutes < 10){
+                            minutes = '0' + minutes; // adding leading zero
+                        }
+                        ampm = hours % 24 < 12 ? 'AM' : 'PM';
+                        hours = hours % 12;
+                        if (hours === 0){
+                            hours = 12;
+                        }
+                        if (hours === 6 && minutes === 45 && ampm === 'AM') {
+                            select.append($('<option></option>')
                                 .text(' n/a '));
-                    }
+                        }
 
-                    if (hours + ':' + minutes + ' ' + ampm === lastSeen.value) { //if back button is used, put selected time on select box
-                        select.append($('<option></option>')
+                        if (hours + ':' + minutes + ' ' + ampm === lastSeen.value) { //if back button is used, put selected time on select box
+                            select.append($('<option></option>')
                                 .attr('value', i)
                                 .text(hours + ':' + minutes + ' ' + ampm)
                                 .attr('selected','selected'));
-                    }
-                    else {
-                        select.append($('<option></option>')
+                        }
+                        else {
+                            select.append($('<option></option>')
                                 .attr('value', i)
                                 .text(hours + ':' + minutes + ' ' + ampm));
+                        }
                     }
                 }
-            }
-            missingPopulate('#timeSelect');
+                missingPopulate('#timeSelect');
             }
             /********** end of Last Time seen missing student ************/
             /*
@@ -223,7 +223,7 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                            window.location = data.redirect;
+                        window.location = data.redirect;
                     },
                     error: function(data) {
                         console.log('process error');
@@ -257,7 +257,7 @@
 <h1><%= title %></h1>
 
 <% if (alert.testModeON == true ) {%>
-<h2 style="color: #34A7C1"> TEST MODE ON </h2>
+    <h2 style="color: #34A7C1"> TEST MODE ON </h2>
 <% } %>
 
 <input type="hidden" id="alertNameID"  value="<%= alert.alertNameID %>">
@@ -347,13 +347,13 @@
     <% } %>
 
     <% if (alert.alertNameID == 6) {%>
-            <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
-            <textarea id="materialSpill" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+        <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
+        <textarea id="materialSpill" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+    <% } %>
 
-    <% } else { %>
-            <label for="note"><b>Note:</b>(optional)</label><br>
-            <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
-        <% }%>
+    <label for="note"><b>Note:</b>(optional)</label><br>
+    <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+
 
 
 
