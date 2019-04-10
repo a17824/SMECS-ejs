@@ -325,6 +325,7 @@ module.exports.postNotes = function(req, res) {
                 alert.note = htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }else{  // run SMECS EJS
                 alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+                alert.noteWithoutTags = newNote;
             }
 
             alert.roadIndexExit = false; // for back/exit button

@@ -15,14 +15,10 @@ const sharp = require('sharp');
 
 
 module.exports.saveFloorFile = function(req, res, tempAlert) {
-
     //copy floor Photo from floor database to alertSentInfo database -----------------
     models.Floors.findOne({floorName: tempAlert.floorName}, function (err, result) {
-        if (err) {
-            console.log(err);
-        }
-        if (!result || result.floorPlan == '') {
-            console.log("No Floor found");
+        if (!result || result.floorPlan == '' || err) {
+            console.log("No Floor found. err - ");
         }
         else {
             let src_location = './public/floorPlans/';
@@ -33,56 +29,52 @@ module.exports.saveFloorFile = function(req, res, tempAlert) {
 
             let redCross = './public/floorPlans/red_sniperResized.png';
 
-            redCrossResizedFunc(tempAlert, function (dimensions, redCrossResizedWidthCenter, redCrossResizedHeightCenter) {
-                let redCrossPos = {
-                    x: tempAlert.sniperCoordinateX * dimensions.width / 100 - redCrossResizedWidthCenter,
-                    y: tempAlert.sniperCoordinateY * dimensions.height / 100 - redCrossResizedHeightCenter
-                };
+            if(tempAlert.sniperCoordinateX && tempAlert.sniperCoordinateY){ //if user touch/ choose a specific location on floor
 
-                //merge redCross
-                mergeImages([
-                    { src: src, x: 0, y: 0},
-                    { src: redCross, x: redCrossPos.x, y: redCrossPos.y}
-                ], {
-                    Canvas: Canvas,
-                })
-                    .then(b64 => {
-                        let base64Data = b64.replace(/^data:image\/png;base64,/, ""); //image merged
+                redCrossResizedFunc(tempAlert, function (dimensions, redCrossResizedWidthCenter, redCrossResizedHeightCenter) {
+                    let redCrossPos = {
+                        x: tempAlert.sniperCoordinateX * dimensions.width / 100 - redCrossResizedWidthCenter,
+                        y: tempAlert.sniperCoordinateY * dimensions.height / 100 - redCrossResizedHeightCenter
+                    };
 
-                        //get dimensions
-                        let img = Buffer.from(base64Data, 'base64');
-                        let dimensions = sizeOf(img);
-                        console.log(dimensions);
+                    //merge redCross
+                    mergeImages([
+                        { src: src, x: 0, y: 0},
+                        { src: redCross, x: redCrossPos.x, y: redCrossPos.y}
+                    ], {
+                        Canvas: Canvas,
+                    })
+                        .then(b64 => {
+                            let base64Data = b64.replace(/^data:image\/png;base64,/, ""); //image merged
 
-                        //save file
-                        fs.writeFile(dst_location + dst_File_name, base64Data, 'base64', function(err) { //save file
-                            console.log(err);
+                            //get dimensions
+                            let img = Buffer.from(base64Data, 'base64');
+                            let dimensions = sizeOf(img);
+                            console.log(dimensions);
+
+                            //save file
+                            fs.writeFile(dst_location + dst_File_name, base64Data, 'base64', function(err) { //save file
+                                if (err) {
+                                    console.error('merge floor and redCross failed. err - ',err);
+                                } else {
+                                    console.log("success merging floor and redCross! saved " + result.floorPlan);
+                                }
+                            });
                         });
-                    });
-            });
+                });
+            }
+            else { //if user skipped touch
 
+                //save file
+                fs.copy(src_location + src_File_name, dst_location + dst_File_name, function (err) { // copy floor file to new directory
+                    if (err) {
+                        console.error('copy floor failed. err - ',err);
+                    } else {
+                        console.log("success copy floor! saved " + result.floorPlan);
+                    }
+                });
+            }
 
-
-
-
-            // data:image/png;base64,iVBORw0KGgoAA...
-            //console.log('newSmile = ',newSmile);
-
-            /*
-            //save file
-            var src_location = 'public/floorPlans/';
-            var dst_location = 'public/alertSentInfo/floorsPhotos/';
-            var src_File_name = result.floorPlan;
-            var dst_File_name = tempAlert._id + '_' + result.floorPlan; // alert ID + file_name
-
-            fs.copy(src_location + src_File_name, dst_location + dst_File_name, function (err) { // copy floor file to new directory
-                if (err) {
-                    console.error(err);
-                } else {
-                    //console.log("success! saved " + result.floorPlan);
-                }
-            });
-            */
         }
     });
     //----------------- end of copy floor Photo from floor database to alertSentInfo database

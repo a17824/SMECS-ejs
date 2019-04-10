@@ -8,7 +8,7 @@ var functions = require('../../functions');
 var MobileDetect = require('mobile-detect');
 let reportsApi = require('./../../api/reports.js');
 let reportsEJS = require('./reports.js');
-
+let canReqAssFunc = require('./../sendingReceiving/4.receivedAlert.js');
 
 //* SHOW REPORTS. */
 module.exports.homeReports = function(req, res, next) {
@@ -178,9 +178,7 @@ module.exports.reportsDetails = function(req, res) {
         classNames = 'panel-collapse collapse in';
 
     async.parallel([
-        function(callback){
-            models.AlertSentInfo.findById(req.params.id).exec(callback);
-        },
+        function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
@@ -199,22 +197,30 @@ module.exports.reportsDetails = function(req, res) {
             if(results[0].request911Call)
                 alertWith911 = true;
 
-            reportsEJS.totalNumbers(results[0],function (result,err) {
-                if(err) console.log('totalNumbers err - ',);
-                else {
-                    console.log('classNames = ',classNames);
-                    res.render(page,{
-                        title: 'REPORTS SENT',
-                        userAuthID: req.user.userPrivilegeID,
-                        report: results[0],
-                        aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                        userAuthPhoto: req.user.photo,
-                        total: result,
-                        classNames: classNames,
-                        alertWith911: alertWith911
-                    });
-                }
+            let canRequestAssistance = false;
+            let reqLabels = ["smecs app", "send email", "call"];
+            canReqAssFunc.canRequestAssistanceFunction(req, res, results[0], canRequestAssistance, function (result2) {
+                canRequestAssistance = result2;
+
+                reportsEJS.totalNumbers(results[0], function (result, err) {
+                    if (err) console.log('totalNumbers err - ',err);
+                    else {
+                        console.log('classNames = ', classNames);
+                        res.render(page, {
+                            title: 'REPORTS SENT',
+                            userAuthID: req.user.userPrivilegeID,
+                            report: results[0],
+                            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                            userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                            userAuthPhoto: req.user.photo,
+                            total: result,
+                            classNames: classNames,
+                            alertWith911: alertWith911,
+                            canRequestAssistance: canRequestAssistance,
+                            reqLabels: reqLabels
+                        });
+                    }
+                });
             });
         }
     })

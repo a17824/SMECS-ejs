@@ -108,7 +108,7 @@
             }
             // end of  get gps location of bus
             */
-
+            
 
             $("#<%= alert.id %>").click(function(){
                 var alert_ID=$(this).attr('id');
@@ -350,9 +350,13 @@
         <label for="note"><b>Describe type of material, odor, etc.:</b>(optional)</label><br>
         <textarea id="materialSpill" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
     <% } %>
-
+    <input type="hidden" id="noteWithoutTags" value="<%= alert.noteWithoutTags %>">
     <label for="note"><b>Note:</b>(optional)</label><br>
-    <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.note %></textarea><br><br>
+    <% if (alert.noteWithoutTags) {%>
+        <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"><%= alert.noteWithoutTags %></textarea><br><br>
+    <% }else { %>
+        <textarea id="note" cols="33"  placeholder="<%= alert.placeholderNote %>"></textarea><br><br>
+    <% } %>
 
 
 

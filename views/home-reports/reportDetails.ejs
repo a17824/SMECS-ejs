@@ -13,9 +13,10 @@
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/reportDetails.css" rel="stylesheet">
 
-
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
+    <link href="/public/stylesheets/reportDetails.css" rel="stylesheet">
+
 
     <!-- lightbox (floor zoom) -->
     <link href="/public/lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
@@ -978,6 +979,18 @@
                                 <%  } %>
                             <%  } %>
 
+                            <% if (report.alertWith.materialSpill) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Description of type of material, odor, etc.</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <textarea id="behaviour"
+                                                      class="form-control"
+                                                      placeholder="n/a" readonly><%= report.materialSpill %>
+                                            </textarea>
+                                    </div>
+                                </div>
+                            <%  } %>
+
                             <% if (report.alertWith.notes) {%>
                                 <input type="hidden" id="richNote" value="<%= report.note %>">
                                 <!-- /* showReportDetails - box for NOTES */ file: ...vendors\boots..\dist\css\reportDetails.css -->
@@ -985,23 +998,127 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Note</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <div type="text"
-                                             class="form-control"
-                                             id="richDiv">
-                                        </div>
+                                        <% if (report.note) {%>
+                                            <div type="text"
+                                                 class="form-control"
+                                                 id="richDiv">
+                                            </div>
+                                        <% } else {%>
+                                            <textarea id="behaviour" class="form-control" readonly></textarea>
+                                        <% } %>
                                     </div>
                                 </div>
                             <%  } %>
 
+                            <% if (report.alertWith.multiUtilities) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Situation</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <div type="text" class="form-control" id="multi">
+                                            <% report.requestAssistance.forEach(function(utility) { %>
+
+                                                <input type="checkbox" name="checkbox" value="<%= utility.utilityName %>" checked onclick="return false;">
+                                                <label for="utilityName"><%= utility.utilityName %></label><br>
+
+                                                <% if (canRequestAssistance == true) {%>
+
+                                                    <% if (utility.smecsApp == true) {%>
+                                                        &emsp;&emsp;&emsp;<label for="utilityName"><%= reqLabels[0] %></label>&emsp;
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
+                                                                   id="test"
+                                                                   value="test2">
+                                                            <label class="onoffswitch-label"
+                                                                   for="test3">
+                                                                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                        <br>
+                                                    <% } %>
+                                                    <% if (utility.email !== '') {%>
+                                                        &emsp;&emsp;&emsp;<label for="utilityName"><%= reqLabels[1] %></label>&emsp;
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
+                                                                   id="test"
+                                                                   value="test2">
+                                                            <label class="onoffswitch-label"
+                                                                   for="test3">
+                                                                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                        <br>
+                                                    <% } %>
+                                                    <% if (utility.phone !== '') {%>
+                                                        &emsp;&emsp;&emsp;<label for="utilityName"><%= reqLabels[2] %></label>&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
+                                                                   id="test"
+                                                                   value="test2">
+                                                            <label class="onoffswitch-label"
+                                                                   for="test3">
+                                                                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                        <br>
+                                                    <% } %>
+
+                                                <% } %>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+
+                            <% if (report.alertWith.multiMedical) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Situation</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <div type="text" class="form-control" id="multi">
+                                            <% for (var i=0; i < report.multiSelectionNames.length; i++) {%>
+                                                <input type="checkbox" name="checkbox" value="<%= report.multiSelectionNames[i] %>" checked onclick="return false;">
+                                                <label for="utilityName"><%= report.multiSelectionNames[i] %></label><br>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+
                             <% if (report.alertWith.floor) {%>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Building</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="building"
+                                               value="<%= report.buildingName %>" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <% if (report.alertWith.evacuateTo) {%>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Evacuate to</label>
+                                    <% }else { %>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
+                                    <%  } %>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <% if ( report.floorPhoto !== report._id + '_FloorPhotoNotExist' &&
+                                                report.floorPhoto !== '' &&
+                                                report.floorPhoto !== report._id + '_Multiple floors' &&
+                                                report.floorPhoto !== report._id + '_Multiple Locations' &&
+                                                report.floorPhoto !== report._id + '_skipped by user' &&
+                                                report.floorPhoto !== report._id + '_Outside Building' &&
+                                                report.floorPhoto !== report._id + '_undefined') {%> <!-- user selected a floor -->
 
                                         <a href="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" data-lightbox="image-1" data-title="2nd Floor">
                                             <img src="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" class="form-control floor" alt="Avatar" readonly/>
                                         </a>
 
+                                        <% }else { %> <!-- user skipped floor -->
+                                        <input type="text"
+                                               class="form-control"
+                                               id="floor"
+                                               value="<%= report.floorName %>" readonly>
+                                        <%  } %>
 
                                     </div>
                                 </div>
@@ -1033,9 +1150,6 @@
         </div>
         <!-- /page content -->
 
-        <!-- footer content -->
-        <% include ../layout/footer.ejs %>
-        <!-- /footer content -->
     </div>
 </div>
 
@@ -1089,5 +1203,10 @@
 
 
 </body>
-
+<!-- footer content -->
+<footer class="">
+    <% include ../layout/footer.ejs %>
+    <div class="clearfix"></div>
+</footer>
+<!-- /footer content -->
 </html>

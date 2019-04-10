@@ -1,0 +1,95 @@
+.onoffswitch {
+    display:inline-block;
+    position: relative; width: 45px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 9px; padding: 0; line-height: 9px;
+    font-size: 10px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 7px;
+    background-color: #34A7C1; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 5px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 18px; height: 18px; margin: -2.7px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 32px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}
+
+
+
+
+.onoffswitchSent {
+    position: relative; width: 45px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkboxSent {
+    display: none;
+}
+.onoffswitch-labelSent {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.onoffswitch-innerSent {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-innerSent:before, .onoffswitch-innerSent:after {
+    display: block; float: left; width: 50%; height: 9px; padding: 0; line-height: 9px;
+    font-size: 10px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-innerSent:before {
+    content: "SENT";
+    padding-left: 2px;
+    background-color: #EEEEEE; color: green;
+}
+.onoffswitch-innerSent:after {
+    content: "OFF";
+    padding-right: 5px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switchSent {
+    display: block; width: 13px; margin: -2px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 32px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkboxSent:checked + .onoffswitch-labelSent .onoffswitch-innerSent {
+    margin-left: 0;
+}
+.onoffswitch-checkboxSent:checked + .onoffswitch-labelSent .onoffswitch-switchSent {
+    right: 0px;
+}

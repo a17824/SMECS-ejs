@@ -426,6 +426,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
         contactName: String,
         phone: String,
         email: String,
+        defaultContact: String,
         smecsApp: { type: Boolean, default: false },
         reqSmecsApp: {
             sentReqSmecsApp: Boolean,
@@ -531,6 +532,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
     placeholderNote: String,
     note: String,
+    noteWithoutTags: String,
     materialSpill: String,
     buildingID: String,
     buildingName: String,
@@ -567,6 +569,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         contactName: String,
         phone: String,
         email: String,
+        defaultContact: String,
         smecsApp: { type: Boolean, default: false },
         reqSmecsApp: {
             sentReqSmecsApp: Boolean,

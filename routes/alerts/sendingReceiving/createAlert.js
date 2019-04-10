@@ -185,7 +185,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                     if(road.callFunction[i] === 'earlyDismissal')
                         earlyDismissal(req, res, alertTemp);
                     if (road.callFunction[i] === 'materialSpill')
-                        materialSpill(req, res, alertTemp);
+                        mresultl(req, res, alertTemp);
                     if (road.callFunction[i] === 'evacuateTo')
                         evacuateTo(req, res, alertTemp);
                 }
@@ -430,7 +430,8 @@ function multiUtilities(req, res, alert, callBack) {
                     contactName: util.contactName,
                     phone: util.phone,
                     email: util.email,
-                    smecsApp: util.smecsApp
+                    smecsApp: util.smecsApp,
+                    defaultContact: util.defaultContact
                 };
                 alert.requestAssistance.push(request);
             });

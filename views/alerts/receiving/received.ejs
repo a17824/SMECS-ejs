@@ -62,6 +62,10 @@
             });
             //end of Request procedureCompleted, weAreSafe!, or I need help
 
+            //notes richText
+            let richNote = $("#richNote").val();
+            richDiv.innerHTML = richNote;
+            //end of Notes richText
 
             var alertNameID, alertName;
             $("#reqProcedureWeSafe").click(function() {
@@ -147,6 +151,7 @@
 <input type="hidden" id="busLatitude"  value="<%= info.latitude %>">
 <input type="hidden" id="busLongitude"  value="<%= info.longitude %>">
 <input type="hidden" id="alert_name_ID"  value="<%= info.alert.alertID %>">
+<input type="hidden" id="richNote" value="<%= info.note %>">
 
 <% if (info.testModeON == true ) {%>
 <h2 style="color: #34A7C1"> TEST MODE ON </h2>
@@ -371,9 +376,8 @@
 <label for="materialSpill"><b>Description of type of material, odor, etc.:</b></label><br>
 <textarea id="materialSpill" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
 <% } %>
-
 <label for="note"><b>Note:</b></label><br>
-<textarea id="note" placeholder="n/a" readonly ><%= info.note %></textarea><br><br>
+<div type="text" class="form-control" id="richDiv"></div><br><br>
 
 
 
