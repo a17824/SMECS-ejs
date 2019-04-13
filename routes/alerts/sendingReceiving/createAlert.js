@@ -185,7 +185,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                     if(road.callFunction[i] === 'earlyDismissal')
                         earlyDismissal(req, res, alertTemp);
                     if (road.callFunction[i] === 'materialSpill')
-                        mresultl(req, res, alertTemp);
+                        materialSpill(req, res, alertTemp);
                     if (road.callFunction[i] === 'evacuateTo')
                         evacuateTo(req, res, alertTemp);
                 }

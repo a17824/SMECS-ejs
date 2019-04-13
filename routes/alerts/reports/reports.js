@@ -198,14 +198,18 @@ module.exports.reportsDetails = function(req, res) {
                 alertWith911 = true;
 
             let canRequestAssistance = false;
-            let reqLabels = ["smecs app", "send email", "call"];
+
             canReqAssFunc.canRequestAssistanceFunction(req, res, results[0], canRequestAssistance, function (result2) {
                 canRequestAssistance = result2;
+                let arraySituations =[];
+                reqButtons(arraySituations, results[0]);
+                console.log('arraySituations2 = ',arraySituations);
+                console.log('arrayButtons = ');
+                console.log(arraySituations[0].arrayButtons);
 
                 reportsEJS.totalNumbers(results[0], function (result, err) {
                     if (err) console.log('totalNumbers err - ',err);
                     else {
-                        console.log('classNames = ', classNames);
                         res.render(page, {
                             title: 'REPORTS SENT',
                             userAuthID: req.user.userPrivilegeID,
@@ -217,7 +221,7 @@ module.exports.reportsDetails = function(req, res) {
                             classNames: classNames,
                             alertWith911: alertWith911,
                             canRequestAssistance: canRequestAssistance,
-                            reqLabels: reqLabels
+                            arraySituations: arraySituations
                         });
                     }
                 });
@@ -389,3 +393,138 @@ module.exports.totalNumbers = function(alert, callback) {
 
     callback(total)
 };
+
+function reqButtons(arraySituations, alert) {
+    if(alert.alert.alertID == 14 || alert.alert.alertID == 26) {
+
+        let check = '';
+        let onOffSwitch = 'onoffswitch';
+        let checkbox = 'onoffswitch-checkbox';
+        let label = 'onoffswitch-label';
+        let inner = 'onoffswitch-inner';
+        let switch_ = 'onoffswitch-switch';
+
+        alert.requestAssistance.forEach(function (utility) {
+            let arrayButtons = [];
+
+
+            if (utility.smecsApp) {
+
+                if (utility.defaultContact === 'smecsApp') {
+                    check = 'checked';
+                }
+                if (utility.reqSmecsApp.sentReqSmecsApp) {
+                    check = 'checked';
+                    onOffSwitch = 'onoffswitchSent';
+                    checkbox = 'onoffswitch-checkboxSent';
+                    label = 'onoffswitch-labelSent';
+                    inner = 'onoffswitch-innerSent';
+                    switch_ = 'onoffswitch-switchSent';
+                }
+                let button = {
+                    spacesA: 'spaces1',
+                    spacesB: 'spaces2',
+                    radioLabel: 'smecs app',
+                    radioChecked: check,
+                    radioSent: {
+                        onOffSwitch: onOffSwitch,
+                        checkbox: checkbox,
+                        label: label,
+                        inner: inner,
+                        switch_: switch_
+                    }
+                };
+                arrayButtons.push(button);
+                check = '';
+                onOffSwitch = 'onoffswitch';
+                checkbox = 'onoffswitch-checkbox';
+                label = 'onoffswitch-label';
+                inner = 'onoffswitch-inner';
+                switch_ = 'onoffswitch-switch';
+
+            }
+
+            if (utility.email !== '') {
+
+                if (utility.defaultContact === 'email') {
+                    check = 'checked';
+                }
+                if (utility.reqEmail.sentReqEmail) {
+                    check = 'checked';
+                    onOffSwitch = 'onoffswitchSent';
+                    checkbox = 'onoffswitch-checkboxSent';
+                    label = 'onoffswitch-labelSent';
+                    inner = 'onoffswitch-innerSent';
+                    switch_ = 'onoffswitch-switchSent';
+                }
+                let button = {
+                    spacesA: 'spaces1',
+                    spacesB: 'spaces2',
+                    radioLabel: 'send email',
+                    radioChecked: check,
+                    radioSent: {
+                        onOffSwitch: onOffSwitch,
+                        checkbox: checkbox,
+                        label: label,
+                        inner: inner,
+                        switch_: switch_
+                    }
+                };
+                arrayButtons.push(button);
+                check = '';
+                onOffSwitch = 'onoffswitch';
+                checkbox = 'onoffswitch-checkbox';
+                label = 'onoffswitch-label';
+                inner = 'onoffswitch-inner';
+                switch_ = 'onoffswitch-switch';
+            }
+            if (utility.phone !== '') {
+
+                if (utility.defaultContact === 'call') {
+                    check = 'checked';
+                }
+                if (utility.reqCall.sentReqCall) {
+                    check = 'checked';
+                    onOffSwitch = 'onoffswitchSent';
+                    checkbox = 'onoffswitch-checkboxSent';
+                    label = 'onoffswitch-labelSent';
+                    inner = 'onoffswitch-innerSent';
+                    switch_ = 'onoffswitch-switchSent';
+                }
+                let button = {
+                    spacesA: 'spaces1',
+                    spacesB: 'spaces4',
+                    radioLabel: 'call',
+                    radioChecked: check,
+                    radioSent: {
+                        onOffSwitch: onOffSwitch,
+                        checkbox: checkbox,
+                        label: label,
+                        inner: inner,
+                        switch_: switch_
+                    }
+                };
+                arrayButtons.push(button);
+                check = '';
+                onOffSwitch = 'onoffswitch';
+                checkbox = 'onoffswitch-checkbox';
+                label = 'onoffswitch-label';
+                inner = 'onoffswitch-inner';
+                switch_ = 'onoffswitch-switch';
+            }
+
+            let situation = {
+                utilityID: utility.utilityID,
+                utilityName: utility.utilityName,
+                arrayButtons: arrayButtons
+            };
+
+            arraySituations.push(situation);
+            //console.log('arraySituations1 = ',arraySituations);
+        });
+    }
+}
+
+function resetButtons() {
+
+}

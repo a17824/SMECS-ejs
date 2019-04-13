@@ -48,7 +48,9 @@
 
 
 
+
 .onoffswitchSent {
+    display:inline-block;
     position: relative; width: 45px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
 }
@@ -80,7 +82,7 @@
     text-align: right;
 }
 .onoffswitch-switchSent {
-    display: block; width: 13px; margin: -2px;
+    display: block; width: 18px; height: 18px; margin: -2.7px;
     background: #FFFFFF;
     position: absolute; top: 0; bottom: 0;
     right: 32px;
@@ -92,4 +94,40 @@
 }
 .onoffswitch-checkboxSent:checked + .onoffswitch-labelSent .onoffswitch-switchSent {
     right: 0px;
+}
+
+
+
+
+
+.textSize {
+    font-size: 13px;
+}
+.textColor {
+    color: grey;
+}
+
+.upDown {
+    position: relative;
+    top: -7px;
+}
+.spaces1 {
+    padding-left: 60px;
+}
+.spaces2 {
+    padding-left: 15px;
+}
+.spaces4 {
+    padding-left: 57px;
+}
+.spaces5 {
+    padding-left: 57px;
+}
+
+/* text spacing adjustment */
+.thinnerLine3 {
+    display: block;
+    font-size: 12px;
+    line-height: 0px;
+
 }

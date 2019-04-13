@@ -59,6 +59,7 @@
 
 <body class="nav-md">
 <div class="container body">
+
     <div class="main_container">
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
@@ -548,7 +549,7 @@
                                         </table>
                                     </h4>
                                 </a>
-                                <% console.log('classNames2 = ',classNames);%>
+
                                 <div id="needHelp" class="<%= classNames %>" role="tabpanel" aria-labelledby="headingTwo">
                                     <div class="panel-body">
 
@@ -1015,54 +1016,31 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Situation</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <div type="text" class="form-control" id="multi">
-                                            <% report.requestAssistance.forEach(function(utility) { %>
+                                            <% arraySituations.forEach(function(situation) { %>
 
-                                                <input type="checkbox" name="checkbox" value="<%= utility.utilityName %>" checked onclick="return false;">
-                                                <label for="utilityName"><%= utility.utilityName %></label><br>
+                                                <input type="checkbox" name="checkbox" value="<%= situation.utilityName %>" checked onclick="return false;">
+                                                <label for="utilityName" class="textSize"><%= situation.utilityName %></label><br>
 
                                                 <% if (canRequestAssistance == true) {%>
-
-                                                    <% if (utility.smecsApp == true) {%>
-                                                        &emsp;&emsp;&emsp;<label for="utilityName"><%= reqLabels[0] %></label>&emsp;
-                                                        <div class="onoffswitch">
-                                                            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                                                                   id="test"
-                                                                   value="test2">
-                                                            <label class="onoffswitch-label"
-                                                                   for="test3">
-                                                                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-                                                            </label>
-                                                        </div>
-                                                        <br>
-                                                    <% } %>
-                                                    <% if (utility.email !== '') {%>
-                                                        &emsp;&emsp;&emsp;<label for="utilityName"><%= reqLabels[1] %></label>&emsp;
-                                                        <div class="onoffswitch">
-                                                            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                                                                   id="test"
-                                                                   value="test2">
-                                                            <label class="onoffswitch-label"
-                                                                   for="test3">
-                                                                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-                                                            </label>
-                                                        </div>
-                                                        <br>
-                                                    <% } %>
-                                                    <% if (utility.phone !== '') {%>
-                                                        &emsp;&emsp;&emsp;<label for="utilityName"><%= reqLabels[2] %></label>&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <div class="onoffswitch">
-                                                            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                                                                   id="test"
-                                                                   value="test2">
-                                                            <label class="onoffswitch-label"
-                                                                   for="test3">
-                                                                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-                                                            </label>
-                                                        </div>
-                                                        <br>
+                                                    <% if (situation.arrayButtons.length < 1) {%>
+                                                <label for="utilityName" class="textSize spaces5 upDown textColor">(no contacts available)</label><br>
                                                     <% } %>
 
+                                                    <% situation.arrayButtons.forEach(function(button) { %>
+
+                                                        <div class="thinnerLine3">
+                                                            <span class="<%= button.spacesA %>"></span><label for="utilityName" class="upDown"><%= button.radioLabel %></label><span class="<%= button.spacesB %>"></span>
+                                                            <div class="<%= button.radioSent.onOffSwitch %>">
+                                                                <input type="checkbox" class="<%= button.radioSent.checkbox %>" name="<%= button.radioSent.onOffSwitch %>" id="<%= situation.utilityID %>+<%= button.radioLabel %>" value="test2" <%= button.radioChecked %>>
+                                                                <label class="<%= button.radioSent.label %>" for="<%= situation.utilityID %>+<%= button.radioLabel %>">
+                                                                    <span class="<%= button.radioSent.inner %>"></span>
+                                                                    <span class="<%= button.radioSent.switch_ %>"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    <% }); %>
                                                 <% } %>
+
                                             <% }); %>
                                         </div>
                                     </div>
