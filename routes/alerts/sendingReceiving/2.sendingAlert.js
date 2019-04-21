@@ -38,17 +38,34 @@ module.exports.showFloor = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            results[2].forEach(function (floor, idx, array) {
-                arrayFloors.push(floor.Building.buildingID + '_|');
-                arrayFloors.push(floor.Building.name + '_|');
-                arrayFloors.push(floor.floorID + '_|');
-                arrayFloors.push(floor.floorName + '_|');
-                if (idx === array.length - 1) //if last loop remove '_|'
-                    arrayFloors.push(floor.floorPlan);
-                else
-                    arrayFloors.push(floor.floorPlan + '_|');
+            if (results[0].alertNameID !== 7) {
+                results[2].forEach(function (floor, idx, array) {
+                    arrayFloors.push(floor.Building.buildingID + '_|');
+                    arrayFloors.push(floor.Building.name + '_|');
+                    arrayFloors.push(floor.floorID + '_|');
+                    arrayFloors.push(floor.floorName + '_|');
+                    if (idx === array.length - 1) //if last loop remove '_|'
+                        arrayFloors.push(floor.floorPlan);
+                    else
+                        arrayFloors.push(floor.floorPlan + '_|');
 
-            });
+                });
+            }
+            else {  //evacuate
+                results[3].forEach(function (evacuate, idx, array) {
+                    console.log('evacuate.utilityName =',evacuate.utilityID);
+                    arrayFloors.push('989_|');
+                    arrayFloors.push('989_|');
+                    arrayFloors.push(evacuate.utilityID + '_|');
+                    arrayFloors.push(evacuate.utilityName + '_|');
+                    if (idx === array.length - 1) //if last loop remove '_|'
+                        arrayFloors.push('989');
+                    else
+                        arrayFloors.push('989_|');
+
+                });
+            }
+
 
             var modelToUse = results[2];   // to use Floor collection
             if (results[0].alertNameID == 7){   // to use EvacuateTo collection
@@ -73,7 +90,7 @@ module.exports.showFloor = function(req, res) {
                     buildings: results[1],
                     floor: modelToUse,
                     arrayFloors: arrayFloors,
-                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

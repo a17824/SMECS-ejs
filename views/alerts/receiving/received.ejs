@@ -120,7 +120,8 @@
                         alertName: alertName,
                         exitButton: false,
                         reqAssChecked: searchIDsChecked,
-                        reqAssNotChecked: searchIDsNotChecked
+                        reqAssNotChecked: searchIDsNotChecked,
+                        redirectPage: '/alerts/received/receiveAlert/' + alert_ID
 
                     }, function (data) {
                         if (data === 'done') {

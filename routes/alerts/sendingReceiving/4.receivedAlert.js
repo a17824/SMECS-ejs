@@ -115,6 +115,11 @@ module.exports.receivedAlert = function(req, res) {
 module.exports.postReceivedAlert = function(req, res, next) {
     var alertToUpdate1 = req.body.alertToUpdate;
     var exitButton = req.body.exitButton;
+    let redirectPage = req.body.redirectPage;
+
+    console.log('req.body.reqAssChecked = ',req.body.reqAssChecked);
+    console.log('--------------------------------- ');
+    console.log('req.body.reqAssNotChecked = ',req.body.reqAssChecked);
 
     models.AlertSentInfo.findById({'_id': alertToUpdate1}, function (err, alert) {
         if(err){
@@ -136,13 +141,22 @@ module.exports.postReceivedAlert = function(req, res, next) {
                 }
                 //-------------------
 
+
                 models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
                     if(err)
                         console.log('err - ',err);
                     else{
+
+                        //delete default contact for "reportDetails" page (this is after user has sent at least one request. It memorizes user options on radio buttons to req assistance
+                        if(redirectPage !== '/alerts/received/receiveAlert/' + alert._id){
+                            alert.requestAssistance.forEach(function (utility) {
+                                utility.defaultContact = 'ask';
+                            });
+                        }
+
                         var arraySmecsAppToSent =[];
                         reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent,'notify','dontUpdate',req,res);
-                        res.send({redirect: '/alerts/received/receiveAlert/' + alertToUpdate1});
+                        res.send({redirect: redirectPage});
                     }
                 });
             }else{

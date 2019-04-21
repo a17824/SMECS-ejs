@@ -10,6 +10,7 @@
 
         $(document).ready(function(){
             //build radios on page load
+            let alertName_ID=$("#alertNameID").val();
             let floors=$("#floors").val();
             let floorsArray = floors.split("_|,").map(String);
 
@@ -33,13 +34,22 @@
 
             }
             if(flagOnPageLoad == 0){ //first time on page load
-                let buildingID = $("#building_select").val();
-                for (let i = 0; i < floorsArray.length; i += 5) {
-                    if(floorsArray[i] == buildingID) {
+                if(alertName_ID == 7){
+                    for (let i = 0; i < floorsArray.length; i += 5) {
                         let radioBtn = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i + 1] + '_|_' + floorsArray[i + 2] + '" value="' + floorsArray[i + 4] + '" /><label>' + floorsArray[i + 3] + '</label><br>');
                         radioComplete.push(radioBtn);
                     }
                 }
+                else {
+                    let buildingID = $("#building_select").val();
+                    for (let i = 0; i < floorsArray.length; i += 5) {
+                        if(floorsArray[i] == buildingID) {
+                            let radioBtn = $('<input type="radio" name="floorID" id="' + floorsArray[i] + '_|_' + floorsArray[i + 1] + '_|_' + floorsArray[i + 2] + '" value="' + floorsArray[i + 4] + '" /><label>' + floorsArray[i + 3] + '</label><br>');
+                            radioComplete.push(radioBtn);
+                        }
+                    }
+                }
+
             }
             $("#buildRadio").html(radioComplete);
             //end of build radios o page load
@@ -150,11 +160,11 @@
 
     <label for="floor"><b>Building:</b> (optional)</label>
     <select id='building_select' class="form-control">
-            <% buildings.forEach(function(building) { %>
+        <% buildings.forEach(function(building) { %>
             <% if (building.buildingID == alert.buildingID) {%> <!-- for back button/refresh -->
             <option id="<%= floor %>" value="<%= building.buildingID %>" selected><%= building.buildingName %></option>
             <% } else { %>
-                    <option id="<%= floor %>" value="<%= building.buildingID %>" ><%= building.buildingName %></option>
+                <option id="<%= floor %>" value="<%= building.buildingID %>" ><%= building.buildingName %></option>
             <% }%>
 
         <% }); %>
@@ -175,18 +185,11 @@
     <% }%>
 
     <div id="buildRadio">
-    <% floor.forEach(function(floor) { %>
-        <% if (alert.alertNameID == 7) {%>
-            <% if (floor.utilityID == alert.utilityID) {%> <!-- for back button/refresh -->
-            <input type="radio" class="radio-button" name="floorID" id="<%= floor.utilityID %>"  checked><label for="floorName"><%= floor.utilityName %></label><br>
-            <% } else { %>
-                <input type="radio" class="radio-button" name="floorID" id="<%= floor.utilityID %>"><label for="floorName"><%= floor.utilityName %></label><br>
-            <% }%>
+        <% floor.forEach(function(floor) { %>
 
-        <% } else { %>
-                <!-- for back button/refresh radios are built in javascript -->
-        <% }%>
-    <% }); %>
+            <!-- for back button/refresh radios are built in javascript -->
+
+        <% }); %>
     </div>
 
 

@@ -202,10 +202,8 @@ module.exports.reportsDetails = function(req, res) {
             canReqAssFunc.canRequestAssistanceFunction(req, res, results[0], canRequestAssistance, function (result2) {
                 canRequestAssistance = result2;
                 let arraySituations =[];
-                reqButtons(arraySituations, results[0]);
-                console.log('arraySituations2 = ',arraySituations);
-                console.log('arrayButtons = ');
-                console.log(arraySituations[0].arrayButtons);
+                let disableReqButton = true;
+                reqButtons(arraySituations, results[0], disableReqButton);
 
                 reportsEJS.totalNumbers(results[0], function (result, err) {
                     if (err) console.log('totalNumbers err - ',err);
@@ -221,7 +219,8 @@ module.exports.reportsDetails = function(req, res) {
                             classNames: classNames,
                             alertWith911: alertWith911,
                             canRequestAssistance: canRequestAssistance,
-                            arraySituations: arraySituations
+                            arraySituations: arraySituations,
+                            disableReqButton: disableReqButton
                         });
                     }
                 });
@@ -394,9 +393,10 @@ module.exports.totalNumbers = function(alert, callback) {
     callback(total)
 };
 
-function reqButtons(arraySituations, alert) {
+function reqButtons(arraySituations, alert, disableReqButton) {
     if(alert.alert.alertID == 14 || alert.alert.alertID == 26) {
 
+        //radio OFF/ON
         let check = '';
         let onOffSwitch = 'onoffswitch';
         let checkbox = 'onoffswitch-checkbox';
@@ -404,28 +404,34 @@ function reqButtons(arraySituations, alert) {
         let inner = 'onoffswitch-inner';
         let switch_ = 'onoffswitch-switch';
 
+        //end of radio OFF/ON
+
         alert.requestAssistance.forEach(function (utility) {
             let arrayButtons = [];
 
-
+            //radio SENT
             if (utility.smecsApp) {
 
                 if (utility.defaultContact === 'smecsApp') {
                     check = 'checked';
                 }
                 if (utility.reqSmecsApp.sentReqSmecsApp) {
-                    check = 'checked';
+                    check = 'checked disabled';
                     onOffSwitch = 'onoffswitchSent';
                     checkbox = 'onoffswitch-checkboxSent';
                     label = 'onoffswitch-labelSent';
                     inner = 'onoffswitch-innerSent';
                     switch_ = 'onoffswitch-switchSent';
                 }
+                else disableReqButton = false;
+
                 let button = {
                     spacesA: 'spaces1',
                     spacesB: 'spaces2',
+                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_smecsApp',
                     radioLabel: 'smecs app',
                     radioChecked: check,
+
                     radioSent: {
                         onOffSwitch: onOffSwitch,
                         checkbox: checkbox,
@@ -434,6 +440,7 @@ function reqButtons(arraySituations, alert) {
                         switch_: switch_
                     }
                 };
+                //reset button
                 arrayButtons.push(button);
                 check = '';
                 onOffSwitch = 'onoffswitch';
@@ -450,16 +457,19 @@ function reqButtons(arraySituations, alert) {
                     check = 'checked';
                 }
                 if (utility.reqEmail.sentReqEmail) {
-                    check = 'checked';
+                    check = 'checked disabled';
                     onOffSwitch = 'onoffswitchSent';
                     checkbox = 'onoffswitch-checkboxSent';
                     label = 'onoffswitch-labelSent';
                     inner = 'onoffswitch-innerSent';
                     switch_ = 'onoffswitch-switchSent';
                 }
+                else disableReqButton = false;
+
                 let button = {
                     spacesA: 'spaces1',
                     spacesB: 'spaces2',
+                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_email',
                     radioLabel: 'send email',
                     radioChecked: check,
                     radioSent: {
@@ -470,6 +480,7 @@ function reqButtons(arraySituations, alert) {
                         switch_: switch_
                     }
                 };
+                //reset button
                 arrayButtons.push(button);
                 check = '';
                 onOffSwitch = 'onoffswitch';
@@ -484,16 +495,19 @@ function reqButtons(arraySituations, alert) {
                     check = 'checked';
                 }
                 if (utility.reqCall.sentReqCall) {
-                    check = 'checked';
+                    check = 'checked disabled';
                     onOffSwitch = 'onoffswitchSent';
                     checkbox = 'onoffswitch-checkboxSent';
                     label = 'onoffswitch-labelSent';
                     inner = 'onoffswitch-innerSent';
                     switch_ = 'onoffswitch-switchSent';
                 }
+                else disableReqButton = false;
+
                 let button = {
                     spacesA: 'spaces1',
                     spacesB: 'spaces4',
+                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_call',
                     radioLabel: 'call',
                     radioChecked: check,
                     radioSent: {
@@ -504,6 +518,7 @@ function reqButtons(arraySituations, alert) {
                         switch_: switch_
                     }
                 };
+                //reset button
                 arrayButtons.push(button);
                 check = '';
                 onOffSwitch = 'onoffswitch';
@@ -512,6 +527,7 @@ function reqButtons(arraySituations, alert) {
                 inner = 'onoffswitch-inner';
                 switch_ = 'onoffswitch-switch';
             }
+            //end of radio SENT
 
             let situation = {
                 utilityID: utility.utilityID,
@@ -521,10 +537,10 @@ function reqButtons(arraySituations, alert) {
 
             arraySituations.push(situation);
             //console.log('arraySituations1 = ',arraySituations);
+
+            //check if reqButton shoud be enable or disable
+
         });
     }
 }
 
-function resetButtons() {
-
-}

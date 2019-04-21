@@ -45,13 +45,58 @@
         }
         //end of helpers
 
+
+        function reqAss()
+        {
+            var alert_ID = $("#alertID").val();
+            var alertNameID = $("#alertNameID").val();
+            var searchIDsNotChecked = $('input[name="checkboxRequest"]:not(:checked)').map(function () {
+                return $(this).val();
+            }).get();
+            var searchIDsChecked = $('input[name="checkboxRequest"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+
+
+            //-----forms validation------------------------------------
+            if ((alertNameID == 14 || alertNameID == 26) && searchIDsChecked.length < 1) {
+                alert("To Request Assistance, you need to choose at least one type of contact.");
+                return false;
+            }
+            //-------------------------------forms validation end-------
+
+            $.post('/alerts/received/receivedAlert', {
+                alertToUpdate: alert_ID,
+                exitButton: false,
+                reqAssChecked: searchIDsChecked,
+                reqAssNotChecked: searchIDsNotChecked,
+                redirectPage: '/reports/showReportsDetails/' + alert_ID + '/reportsPage'
+
+            }, function (data) {
+                if (data === 'done') {
+                    alert("login success");
+                }
+                window.location = data.redirect
+            }).error(function (error) {
+                if (error.responseText == 'showAlert')
+                    alert("App stop responding, call SMECS APP team for help .")
+            });
+        }
+
+
         $(document).ready(function(){
 
             let richNote = $("#richNote").val();
             //var note = document.getElementById('richNote').value;
             richDiv.innerHTML = richNote;
 
+            // Alert UTILITY FAILURE
 
+            $("#request").click(function() {
+
+            });
+
+            // END OF Alert UTILITY FAILURE
 
         });
     </script>
@@ -101,6 +146,8 @@
                 <input type="hidden" id="viewedNumber" value="<%= total.viewedNumber %>">
                 <input type="hidden" id="procedureDoneNumber" value="<%= total.procedureDoneNumber %>">
                 <input type="hidden" id="weAreSafeNumber" value="<%= total.weAreSafeNumber %>">
+
+                <input type="hidden" id="alertNameID" value="<%= report.alert.name %>">
 
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
@@ -1016,14 +1063,14 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Situation</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <div type="text" class="form-control" id="multi">
-                                            <% arraySituations.forEach(function(situation) { %>
+                                            <% arraySituations.forEach(function(situation, idx, array) { %>
 
                                                 <input type="checkbox" name="checkbox" value="<%= situation.utilityName %>" checked onclick="return false;">
                                                 <label for="utilityName" class="textSize"><%= situation.utilityName %></label><br>
 
                                                 <% if (canRequestAssistance == true) {%>
                                                     <% if (situation.arrayButtons.length < 1) {%>
-                                                <label for="utilityName" class="textSize spaces5 upDown textColor">(no contacts available)</label><br>
+                                                        <label for="utilityName" class="textSize spaces5 upDown textColor">(no contacts available)</label><br>
                                                     <% } %>
 
                                                     <% situation.arrayButtons.forEach(function(button) { %>
@@ -1031,7 +1078,7 @@
                                                         <div class="thinnerLine3">
                                                             <span class="<%= button.spacesA %>"></span><label for="utilityName" class="upDown"><%= button.radioLabel %></label><span class="<%= button.spacesB %>"></span>
                                                             <div class="<%= button.radioSent.onOffSwitch %>">
-                                                                <input type="checkbox" class="<%= button.radioSent.checkbox %>" name="<%= button.radioSent.onOffSwitch %>" id="<%= situation.utilityID %>+<%= button.radioLabel %>" value="test2" <%= button.radioChecked %>>
+                                                                <input type="checkbox" class="<%= button.radioSent.checkbox %>" name="checkboxRequest" id="<%= situation.utilityID %>+<%= button.radioLabel %>" value="<%= button.value %>" <%= button.radioChecked %>>
                                                                 <label class="<%= button.radioSent.label %>" for="<%= situation.utilityID %>+<%= button.radioLabel %>">
                                                                     <span class="<%= button.radioSent.inner %>"></span>
                                                                     <span class="<%= button.radioSent.switch_ %>"></span>
@@ -1039,6 +1086,17 @@
                                                             </div>
                                                         </div>
                                                     <% }); %>
+
+                                                    <%  if (idx === array.length - 1) { %> <!--  last loop: put button  -->
+                                                    <br>
+                                                    <%  if (disableReqButton) { %>
+                                                        <input type="button" class="btn btn-success btn-xs right" id="request" value="Send Request Assistance" disabled>
+                                                    <% } else { %>
+                                                        <input type="button" class="btn btn-success btn-xs right" id="request" value="Send Request Assistance" onClick="reqAss()">
+                                                    <% } %>
+
+
+                                                    <% } %>
                                                 <% } %>
 
                                             <% }); %>
@@ -1079,6 +1137,18 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
                                     <%  } %>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="building"
+                                               value="<%= report.floorName %>" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+
+
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
                                         <% if ( report.floorPhoto !== report._id + '_FloorPhotoNotExist' &&
                                                 report.floorPhoto !== '' &&
                                                 report.floorPhoto !== report._id + '_Multiple floors' &&
@@ -1087,16 +1157,12 @@
                                                 report.floorPhoto !== report._id + '_Outside Building' &&
                                                 report.floorPhoto !== report._id + '_undefined') {%> <!-- user selected a floor -->
 
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor plan</label>
+
                                         <a href="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" data-lightbox="image-1" data-title="2nd Floor">
                                             <img src="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" class="form-control floor" alt="Avatar" readonly/>
                                         </a>
-
-                                        <% }else { %> <!-- user skipped floor -->
-                                        <input type="text"
-                                               class="form-control"
-                                               id="floor"
-                                               value="<%= report.floorName %>" readonly>
-                                        <%  } %>
+                                        <% } %>
 
                                     </div>
                                 </div>

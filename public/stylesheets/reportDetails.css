@@ -73,7 +73,7 @@
 .onoffswitch-innerSent:before {
     content: "SENT";
     padding-left: 2px;
-    background-color: #EEEEEE; color: green;
+    background-color: #EEEEEE; color: #18c09c;
 }
 .onoffswitch-innerSent:after {
     content: "OFF";
@@ -130,4 +130,11 @@
     font-size: 12px;
     line-height: 0px;
 
+}
+
+/* send request button*/
+.right {
+    position: absolute;
+    bottom: 5%;
+    right: 3%;
 }
