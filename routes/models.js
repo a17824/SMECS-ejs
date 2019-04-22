@@ -479,7 +479,11 @@ var AlertSentInfoSchema = new mongoose.Schema({
         multiUtilities: {type: Boolean, default: false},
         notesStudentWithGun: {type: Boolean, default: false},
         missingStudent: {type: Boolean, default: false},
-        evacuateTo: {type: Boolean, default: false}
+        evacuateTo: {type: Boolean, default: false},
+        htmlTags: {
+            showHideDiv: String,
+            labelFloor: String
+        }
     }
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
@@ -614,7 +618,11 @@ var AlertSentTempSchema = new mongoose.Schema({
         multiUtilities: {type: Boolean, default: false},
         notesStudentWithGun: {type: Boolean, default: false},
         missingStudent: {type: Boolean, default: false},
-        evacuateTo: {type: Boolean, default: false}
+        evacuateTo: {type: Boolean, default: false},
+        htmlTags: {
+            showHideDiv: String,
+            labelFloor: String
+        }
     }
 
 
@@ -775,7 +783,15 @@ var EvacuateTo;
 module.exports.EvacuateTo = mongoose.model("EvacuateTo", EvacuateToSchema);
 
 
-
+// DEFINE Email COLLECTION IN MONGOdb
+var EmailAddressesSchema = new mongoose.Schema({
+    emailID: { type: Number, unique: true },
+    sortID: { type: Number, unique: true },
+    email: { type: String, unique: true },
+    emailPassword: String,
+}, {collection:"EmailAddresses"}); //stops Mongoose of giving plurals to our collections names
+var EmailAddresses;
+module.exports.EmailAddresses = mongoose.model("EmailAddresses", EmailAddressesSchema);
 
 
 

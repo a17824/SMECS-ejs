@@ -38,6 +38,8 @@ module.exports.showFloor = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
+            let modelToUse = results[2];   // to use Floor collection
+
             if (results[0].alertNameID !== 7) {
                 results[2].forEach(function (floor, idx, array) {
                     arrayFloors.push(floor.Building.buildingID + '_|');
@@ -48,29 +50,22 @@ module.exports.showFloor = function(req, res) {
                         arrayFloors.push(floor.floorPlan);
                     else
                         arrayFloors.push(floor.floorPlan + '_|');
-
                 });
             }
-            else {  //evacuate
+            if (results[0].alertNameID == 7){  //evacuate
+                modelToUse = results[3]; // to use EvacuateTo collection
                 results[3].forEach(function (evacuate, idx, array) {
-                    console.log('evacuate.utilityName =',evacuate.utilityID);
                     arrayFloors.push('989_|');
                     arrayFloors.push('989_|');
                     arrayFloors.push(evacuate.utilityID + '_|');
                     arrayFloors.push(evacuate.utilityName + '_|');
                     if (idx === array.length - 1) //if last loop remove '_|'
-                        arrayFloors.push('989');
+                        arrayFloors.push('');
                     else
-                        arrayFloors.push('989_|');
-
+                        arrayFloors.push('_|');
                 });
             }
 
-
-            var modelToUse = results[2];   // to use Floor collection
-            if (results[0].alertNameID == 7){   // to use EvacuateTo collection
-                modelToUse = results[3];
-            }
 
             if(req.decoded){ // run SMECS API
                 res.json({
@@ -142,15 +137,21 @@ module.exports.postFloor = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-
-            alert.buildingID = buildingID;
-            alert.buildingName = buildingName;
+            if (alert.alertWith.evacuateTo){
+                alert.buildingID = 'n/a';
+                alert.buildingName = 'n/a';
+            }
+            else {
+                alert.buildingID = buildingID;
+                alert.buildingName = buildingName;
+            }
             alert.alertWith.floor = true;
 
             //if user skip floor question or if floor photo don't exist on database or all/none/multiple/outside floor selected
             if ( floorID == null ||
                 floorID === 'skipped by user' ||
                 floorPhoto === '' ||
+                floorPhoto === 'n/a' ||
                 floorName === 'Other/Multiple Locations') { // or if is Evacuate alert
 
                 //checkFloorPhotoExists---------------------

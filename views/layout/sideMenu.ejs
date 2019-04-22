@@ -46,6 +46,10 @@
                 <li><a href="/alerts/showAlertPermissionsTableRealDrill"><i class="fa fa-share-square fa-lg"></i> Who can send/receive <span class="fa fa-chevron-right"></span></a></li>
             <% } %>
 
+            <% if (aclSideMenu == null || aclSideMenu.roles2.checkBoxValue == true){%>
+                <li><a href="/emails/showEmails"><i class="fa fa-at fa-lg"></i> Emails to send alerts <span class="fa fa-chevron-right"></span></a></li>
+            <% } %>
+
             <% if (aclSideMenu == null || aclSideMenu.users.privilegeGroupID == 1){%>
                 <li><a><i class="fa fa-key fa-lg"></i> Permissions <span class="fa fa-chevron-right"></span></a>
                     <ul class="nav child_menu">

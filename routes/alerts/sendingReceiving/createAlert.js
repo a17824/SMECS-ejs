@@ -404,6 +404,8 @@ module.exports.updateRoadIndex= function(req, res) {
 function studentStep1(req, res, alertTemp1) {
     alertTemp1.studentPhoto = 'photoNotAvailable.bmp';
     student.saveStudentFile(req, res, alertTemp1);
+    alertTemp1.alertWith.htmlTags.labelFloor = 'Student location';
+
 }
 function busMap(req, res, alertTemp1) {
     alertTemp1.mapBus = req.body.mapBus;
@@ -512,4 +514,6 @@ function materialSpill(req, res, alertTemp1) {
 }
 function evacuateTo(req, res, alertTemp1) {
     alertTemp1.alertWith.evacuateTo = true;
+    alertTemp1.alertWith.htmlTags.showHideDiv = 'hideThis';
+    alertTemp1.alertWith.htmlTags.labelFloor = 'Where to evacuate to';
 }

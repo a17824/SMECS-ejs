@@ -315,6 +315,10 @@ module.exports.showAlertsPost = function(req, res) {
                             if (alertTemp1.alertRoad[i].redirectAPI === 'notes'){
                                 alertTemp1.alertWith.notes = true;
                             }
+                            if (alertTemp1.alertRoad[i].redirectAPI === 'floor'){
+                                alertTemp1.alertWith.htmlTags.showHideDiv = 'showThis';
+                                alertTemp1.alertWith.htmlTags.labelFloor = 'Location';
+                            }
                         }
 
                         alertTemp1.save(function(err, resp) {

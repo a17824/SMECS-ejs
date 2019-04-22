@@ -138,3 +138,11 @@
     bottom: 5%;
     right: 3%;
 }
+
+/* hide/show */
+.hideThis {
+    display: none;
+}
+.showThis {
+    display: block;
+}

@@ -1120,7 +1120,7 @@
                             <% } %>
 
                             <% if (report.alertWith.floor) {%>
-                                <div class="form-group">
+                                <div class="form-group <%= report.alertWith.htmlTags.showHideDiv %>">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Building</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
@@ -1131,11 +1131,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <% if (report.alertWith.evacuateTo) {%>
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Evacuate to</label>
-                                    <% }else { %>
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
-                                    <%  } %>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"><%= report.alertWith.htmlTags.labelFloor %></label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="text"
                                                class="form-control"

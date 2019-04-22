@@ -214,16 +214,13 @@
 <% if (info.alertWith.floor) {%>
 
     <% if (info.floorName) {%>
+        <div class="<%= info.alertWith.htmlTags.showHideDiv %>">
+            <label for="floor"><b>Building:</b></label>
+            <input type="text" id="buildingLevel"  size="25" value="<%= info.buildingName %>" readonly ><br>
+        </div>
 
-        <label for="floor"><b>Building:</b></label>
-        <input type="text" id="buildingLevel"  size="25" value="<%= info.buildingName %>" readonly ><br>
+            <label for="floor"><b><%= info.alertWith.htmlTags.labelFloor %></b></label>
 
-        <!-- Alert EVACUATE -->
-        <% if (info.alertWith.evacuateTo) {%>
-            <label for="floor"><b>Evacuate to:</b></label>
-        <% }else { %>
-            <label for="floor"><b>Floor:</b></label>
-        <% } %>
         <input type="text" id="floorLevel"  size="25" value="<%= info.floorName %>" readonly ><br><br>
     <% } %>
 <% } %>
@@ -322,8 +319,8 @@
     <textarea id="materialSpill" placeholder="n/a" readonly ><%= info.materialSpill %></textarea><br><br>
 <% } %>
 
-    <label for="note"><b>Note:</b></label><br>
-    <textarea id="note" placeholder="n/a" readonly ><%= info.noteWithoutTags %></textarea><br><br>
+<label for="note"><b>Note:</b></label><br>
+<textarea id="note" placeholder="n/a" readonly ><%= info.noteWithoutTags %></textarea><br><br>
 
 
 <!-- Alert Medical Emergencies -->

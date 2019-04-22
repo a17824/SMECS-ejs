@@ -1,0 +1,246 @@
+
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link rel='stylesheet' href='/public/stylesheets/updateStudent.css' />
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+    <script>
+
+
+        $(document).ready(function(){
+            var oldSortID = $("#oldSortID").val();
+            var select_sort = '';
+            var sortArray = $("#inUseSortID").val().split(",").map(Number);
+            for (var a=1;a<=99;a++){
+                if(sortArray.indexOf(a) == -1 || a == oldSortID){
+                    if(a == oldSortID){
+                        select_sort += '<option val=' + a + ' selected="selected">' + a + '</option>';
+                    }else{
+                        select_sort += '<option val=' + a + '>' + a + '</option>';
+                    }
+                }
+            }
+            $('#sort_select').html(select_sort);
+
+            var emailID,email,emailPass,sortID;
+            var select = '';
+            var myArray = $("#inUseRoleID").val().split(",").map(Number);
+            for (i=1;i<=99;i++){
+                if(myArray.indexOf(i) == -1){
+                    select += '<option val=' + i + '>' + i + '</option>';
+                }
+            }
+            $('#some_select').html(select);
+
+            $("#btSubmit").click(function(){
+                emailID=$("#some_select").val();
+                email=$("#email").val();
+                emailPass=$("#emailPass").val();
+                sortID=$("#sort_select").val();
+
+                //-----forms validation------------------------------------
+                if (email == "" ) {
+                    alert("EMAIL field must be filled out");
+                    return false;
+                }
+                if (emailPass == "" ) {
+                    alert("Passord field must be filled out");
+                    return false;
+                }
+                var numbers = /[0-99]|\./;
+                if (!numbers.test(emailID) || !numbers.test(sortID)) {
+                    alert("Email ID or Sort#  must be between 0 and 99 ");
+                    return false;
+                }
+
+                $.post("/emails/addEmail",{
+                    emailID: emailID,
+                    email: email,
+                    emailPass: emailPass,
+                    sortID: sortID
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                }).error(function(error){
+                    if(error.responseText == 'showAlert')
+                        alert("Email already in use. Choose a different email")
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ./../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br>
+
+                <!-- sidebar menu -->
+                <% include ./../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ./../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3><%= title %></h3>
+                </div>
+
+
+                <div class="title_right">
+
+                    <div class="pull-left">
+                        <% if (aclAddRoles2 == null || aclAddRoles2.checkBoxValue == true) {%>
+                            <button type="button"
+                                    id="btSubmit"
+                                    value="Submit"
+                                    class="btn btn-success">Save
+                            </button>
+
+                        <% } else { %>
+                            <button type="button"
+                                    id="btSubmit"
+                                    value="Submit"
+                                    class="btn btn-success" disabled>Save
+                            </button>
+                        <% } %>
+
+                        <a href="/emails/showEmails"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button">Go!</button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Email:</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <input type="text" id="email" class="form-control" placeholder="ex: 123@123.123">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Password:</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <input type="password" id="emailPass" class="form-control" placeholder="must be the same used to login with email entered">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
+                                        <select id='sort_select' class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="inUseRoleID" value="<%= array %>">
+                                <% if (userAuthID == 1) {%>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Email ID</label>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <select id='some_select' class="form-control"></select>
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <select id='some_select' style="display:none;"></select>
+                                <% } %>
+
+
+
+
+
+
+                            </form>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <!-- /page content -->
+
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>

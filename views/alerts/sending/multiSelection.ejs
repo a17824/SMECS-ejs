@@ -37,8 +37,8 @@
 
             $(function() {
                 $('.checkbox').change(function() {
-                    $(this).next('.showthis').toggle(this.checked);
-                    $(this).next('.showThisRefresh').toggle(this.checked);
+                    $(this).next('.hideThis').toggle(this.checked);
+                    $(this).next('.showThis').toggle(this.checked);
                 })
             });
 
@@ -238,9 +238,9 @@
             <% } %>
     <!--ON/OFF switch button for back button/refresh -->
     <% if (alert.alertNameID == 26 ) {%>
-        <% var classType = "showThisRefresh" %>
+        <% var classType = "showThis" %>
         <% if (check == 0) {%>
-            <% classType = "showThis" %>
+            <% classType = "hideThis" %>
         <% } %>
 
     <div class= "<%= classType %>">
@@ -288,7 +288,7 @@
 
     <!-- ON/OFF switch button for "smecs App"--> <!-- frist time entering/loading this page -->
                 <% if (alert.alertNameID == 26 ) {%>
-                    <div class="showThis">
+                    <div class="hideThis">
 
                         <% var flagNoContacts = 0; %> <!-- trigger to disable Request Assistance buttons -->
                         <% var arrayLabels = ["smecs app", "send email", "call\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"]; %>

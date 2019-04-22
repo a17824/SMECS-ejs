@@ -25,7 +25,6 @@ module.exports.reviewAlert = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-
             if(req.decoded){ // run SMECS API
                 res.json({
                     success: true,
@@ -49,9 +48,6 @@ module.exports.reviewAlert = function(req, res) {
                     userAuthPhoto: req.user.photo
                 });
             }
-
-
-
         }
     })
 };

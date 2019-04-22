@@ -8,6 +8,7 @@ var parentsSelfRegistration = require('./parentsSelfRegistration/parentsSelfRegi
 
 var roles2 = require('./roles/roles2');
 var privilege = require('./roles/privilege');
+let emails = require('./emails/emails');
 var permissions = require('./permissions/permissions');
 var permissionsGroup = require('./permissions/permissionsGroup');
 var permissionsTable = require('./permissions/permissionsTable');
@@ -302,6 +303,30 @@ router.post('/privilege/updatePrivilege', auth.simpleAuth, auth.requireLogin, pr
 /* DELETE PRIVILEGE. */
 router.get('/privilege/showPrivilege/:id', auth.simpleAuth, auth.requireLogin, privilege.delete, function(req, res) {
 });
+
+
+
+
+/* SHOW ALL EMAILS. */
+router.get('/emails/showEmails', auth.simpleAuth, auth.requireLogin, emails.show, function(req, res, next) {
+});
+
+/* ADD EMAIL. -------------------------------*/
+router.get('/emails/addEmail', auth.simpleAuth, auth.requireLogin, auth.requireLogin, emails.add, function(req, res) {
+});
+router.post('/emails/addEmail', auth.simpleAuth, auth.requireLogin, auth.requireLogin, emails.addPost, function(req, res) {
+});
+
+/* UPDATE EMAIL. -------------------------------*/
+router.get('/emails/updateEmail/:id', auth.simpleAuth, auth.requireLogin, auth.requireLogin, emails.update, function(req, res) {
+});
+router.post('/emails/updateEmail', auth.simpleAuth, auth.requireLogin, auth.requireLogin, emails.updatePost, function(req, res) {
+});
+
+/* DELETE EMAIL. */
+router.get('/emails/showEmails/:id', auth.simpleAuth, auth.requireLogin, auth.requireLogin, emails.delete, function(req, res) {
+});
+
 
 
 

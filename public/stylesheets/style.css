@@ -89,14 +89,12 @@ caption {
 
 
 
-.showThis {
+.hideThis {
     display: none;
 }
-.showThisRefresh {
+.showThis {
     display: block;
 }
-
-
 
 
 .onoffswitch {

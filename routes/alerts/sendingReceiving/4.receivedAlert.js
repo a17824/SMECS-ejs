@@ -29,12 +29,10 @@ module.exports.receivedAlert = function(req, res) {
 
     ],function(err, results){
         if (!results[0]) {
-            console.log(err);
-            console.log('RECEIVED ALERT NOT FOUND');
+            console.log('RECEIVED ALERT NOT FOUND - ',err);
             res.redirect('/alerts/sending/chooseAlert');
         }
         else {
-
             reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
 
             async.waterfall([
