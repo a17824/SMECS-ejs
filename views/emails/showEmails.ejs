@@ -108,6 +108,7 @@
                                             <th>Email ID</th>
                                         <% } %>
                                         <th>Email</th>
+                                        <th>Alert(s) using email</th>
                                         <th>Update</th>
                                         <th>Delete</th>
 
@@ -120,6 +121,13 @@
                                                 <td><%= email.emailID %></td>
                                             <% } %>
                                             <td><%= email.email %></td>
+                                            <td>
+                                                <% alerts.forEach(function(alert) { %>
+                                                    <% if (email.emailID == alert.sendEmailWith.emailID) {%>
+                                                        <strong>.</strong> <%= alert.alertName %><br>
+                                                    <% } %>
+                                                <% }); %>
+                                            </td>
                                             <td>
                                                 <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true){%>
                                                     <a href="/emails/updateEmail/<%= email.id %>"><button class="btn btn-warning">update</button></a>

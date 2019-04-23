@@ -20,34 +20,6 @@
 
 
     <script>
-        var iconSelect;
-        var selectedText;
-        var savedIcon;
-
-        window.onload = function(){
-            //icons
-            savedIcon = document.getElementById('savedIcon').value;
-            selectedText = document.getElementById('selected-text');
-            savedIcon = savedIcon-1;
-
-            document.getElementById('my-icon-select').addEventListener('changed', function(e){
-                selectedText.value = iconSelect.getSelectedValue();
-            });
-
-            iconSelect = new IconSelect("my-icon-select",
-                {'selectedIconWidth':30,
-                    'selectedIconHeight':30,
-                    'selectedBoxPadding':1,
-                    'iconsWidth':48,
-                    'iconsHeight':48,
-                    'boxIconSpace':1,
-                    'vectoralIconNumber':7,
-                    'horizontalIconNumber':7});
-
-            var icons = [];
-            iconBuild(icons);
-            iconSelect.refresh(icons, savedIcon);
-        };
 
         $(document).ready(function(){
             var oldSortID = $("#oldSortID").val();
@@ -64,12 +36,12 @@
             }
             $('#sort_select').html(select_sort);
 
-            var oldRoleID = $("#oldRoleID").val();
+            var oldEmailID = $("#oldEmailID").val();
             var select = '';
-            var myArray = $("#inUseRoleID").val().split(",").map(Number);
+            var myArray = $("#inUseEmailID").val().split(",").map(Number);
             for (i=1;i<=99;i++){
-                if(myArray.indexOf(i) == -1 || i == oldRoleID){
-                    if(i == oldRoleID){
+                if(myArray.indexOf(i) == -1 || i == oldEmailID){
+                    if(i == oldEmailID){
                         select += '<option val=' + i + ' selected="selected">' + i + '</option>';
                     }else{
                         select += '<option val=' + i + '>' + i + '</option>';
@@ -80,35 +52,34 @@
 
 
 
-            var role1,oldRoleName,oldRoleID,roleID,roleName,sortID,icon;
-            $("#<%= roles2.id %>").click(function(){
-                role1=$(this).attr('id');
-                oldRoleID=$("#oldRoleID").val();
-                roleID=$("#some_select").val();
-                oldRoleName=$("#oldRoleName").val();
-                roleName=$("#roleName").val();
+            var emailToUpdate,oldEmailName,oldEmailID,emailID,email,sortID,icon;
+            $("#<%= email.id %>").click(function(){
+                emailToUpdate=$(this).attr('id');
+                oldEmailID=$("#oldEmailID").val();
+                emailID=$("#some_select").val();
+                oldEmailName=$("#oldEmailName").val();
+                email=$("#email").val();
                 sortID=$("#sort_select").val();
                 icon=$("#selected-text").val();
 
                 //-----forms validation------------------------------------
-                if (roleName == "" ) {
-                    alert("ROLE NAME must be filled out");
+                if (email == "" ) {
+                    alert("EMAIL field must be filled out");
                     return false;
                 }
-                if (roleID == "" ) {
-                    alert("ROLE ID must be filled out");
+                if (emailID == "" ) {
+                    alert("EMAIL ID must be filled out");
                     return false;
                 }
                 //--------------------------------forms validation end-------
 
-                $.post("/roles2/updateRole2",{
-                    roleToUpdate: role1,
-                    oldRoleID: oldRoleID,
-                    roleID: roleID,
-                    oldRoleName: oldRoleName,
-                    roleName: roleName,
-                    sortID: sortID,
-                    icon: icon
+                $.post("/emails/updateEmail",{
+                    emailToUpdate: emailToUpdate,
+                    oldEmailID: oldEmailID,
+                    emailID: emailID,
+                    oldEmailName: oldEmailName,
+                    email: email,
+                    sortID: sortID
 
                 },function(data){
                     if(data==='done')
@@ -165,20 +136,20 @@
                     <div class="pull-left">
                         <% if (aclModifyRoles2 == null || aclModifyRoles2.checkBoxValue == true) {%>
                         <button type="button"
-                                id="<%= roles2.id %>"
+                                id="<%= email.id %>"
                                 value="Submit"
                                 class="btn btn-success">Save
                         </button>
 
                         <% } else { %>
                         <button type="button"
-                                id="<%= roles2.id %>"
+                                id="<%= email.id %>"
                                 value="Submit"
                                 class="btn btn-success" disabled>Save
                         </button>
                         <% } %>
 
-                        <a href="/roles2/showRoles2"><button type="button" class="btn btn-default">Cancel</button></a>
+                        <a href="/emails/showEmails"><button type="button" class="btn btn-default">Cancel</button></a>
 
                     </div>
 
@@ -196,7 +167,7 @@
 
 
 
-            <input type="hidden" id="oldRoleName" value="<%= roles2.roleName %>">
+            <input type="hidden" id="oldEmailName" value="<%= email.email %>">
 
 
             <div class="row">
@@ -212,28 +183,28 @@
                             <form class="form-horizontal form-label-left input_mask">
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Role Name:</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Email:</label>
                                     <div class="col-md-4 col-sm-4 col-xs-12">
                                         <input type="text"
                                                class="form-control"
-                                               id="roleName"
-                                               value="<%= roles2.roleName %>">
+                                               id="email"
+                                               value="<%= email.email %>">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Sort number:</label>
                                     <div class="col-md-4 col-sm-4 col-xs-12">
-                                        <input type="hidden" id="oldSortID" value="<%= roles2.sortID %>">
+                                        <input type="hidden" id="oldSortID" value="<%= email.sortID %>">
                                         <input type="hidden" id="inUseSortID" value="<%= arraySort %>">
                                         <select id='sort_select' class="form-control"></select>
                                     </div>
                                 </div>
 
-                                <input type="hidden" id="inUseRoleID" value="<%= array %>">
+                                <input type="hidden" id="inUseEmailID" value="<%= array %>">
                                 <% if (userAuthID == 1) {%>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Role ID</label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Email ID</label>
                                     <div class="col-md-4 col-sm-4 col-xs-12">
                                         <select id='some_select' class="form-control"></select>
                                     </div>
@@ -241,19 +212,7 @@
                                 <% } else { %>
                                     <select id='some_select' style="display:none;"></select>
                                 <% } %>
-                                <input type="hidden" id="oldRoleID" value="<%= roles2.roleID %>">
-
-
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Icon</label>
-                                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div id="my-icon-select"></div>
-                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
-                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= roles2.icon %>" hidden>
-                                    </div>
-                                </div>
-
+                                <input type="hidden" id="oldEmailID" value="<%= email.emailID %>">
 
 
 

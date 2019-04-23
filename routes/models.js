@@ -266,7 +266,12 @@ var AlertsSchema = new mongoose.Schema({
         callFunction: Array,
         redirectAPI: String,
         redirectEJS: String
-    }]
+    }],
+    sendEmailWith: {
+        emailID: Number,
+        email: String
+    }
+
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"Alerts"}); //stops Mongoose of giving plurals to our collections names

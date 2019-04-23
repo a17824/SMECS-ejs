@@ -183,6 +183,9 @@ module.exports.update = function(req, res) {
         function(callback){
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
+        function(callback) {
+            models.EmailAddresses.find().sort({"sortID": 1}).exec(callback);
+        },
         function(callback){
             models[modelType].find().sort({"utilityID":1}).exec(callback);
         },
@@ -241,13 +244,14 @@ module.exports.update = function(req, res) {
 
                     modelType: modelType,
                     title2: title2,
-                    options: results[3],
-                    aclAddMedical: results[4], //aclPermissions addMedical
-                    aclModifyMedical: results[5], //aclPermissions modifyMedical
-                    aclDeleteMedical: results[6], //aclPermissions deleteMedical
+                    emails: results[3],
+                    options: results[4],
+                    aclAddMedical: results[5], //aclPermissions addMedical
+                    aclModifyMedical: results[6], //aclPermissions modifyMedical
+                    aclDeleteMedical: results[7], //aclPermissions deleteMedical
 
-                    aclModifyAlertGroup: results[7],      //aclPermissions modifyAlertGroup
-                    aclSideMenu: results[8],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclModifyAlertGroup: results[8],      //aclPermissions modifyAlertGroup
+                    aclSideMenu: results[9],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -283,7 +287,8 @@ module.exports.updatePost = function(req, res) {
             alert.alertLight = req.body.alertLight;
             alert.alertLightSound = req.body.alertLightSound;
             alert.icon = req.body.icon;
-
+            alert.sendEmailWith.emailID = req.body.emailID;
+            alert.sendEmailWith.email = req.body.email;
 
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {

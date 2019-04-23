@@ -10,6 +10,9 @@ module.exports.show = function(req, res, next) {
         function(callback){
             models.EmailAddresses.find().sort({"sortID": 1}).exec(callback);
         },
+        function(callback){
+            models.Alerts.find({'alertRequestSendEmail': true}).sort({"sortID": 1}).exec(callback);
+        },
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
         function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
@@ -23,13 +26,13 @@ module.exports.show = function(req, res, next) {
             title:'Emails to send alerts in behalf of School',
             userAuthID: req.user.userPrivilegeID,
             emails: results[0],
-            aclAddRoles2: results[1], //aclPermissions addRoles2
-            aclModifyRoles2: results[2],  //aclPermissions modifyRoles2
-            aclDeleteRoles2: results[3],  //aclPermissions deleteRoles2
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            alerts: results[1],
+            aclAddRoles2: results[2], //aclPermissions addRoles2
+            aclModifyRoles2: results[3],  //aclPermissions modifyRoles2
+            aclDeleteRoles2: results[4],  //aclPermissions deleteRoles2
+            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
-
         });
     })
 };
@@ -103,20 +106,20 @@ module.exports.addPost = function(req, res) {
 
 
 
-/* UPDATE ROLES2. -------------------------------*/
+/* UPDATE EMAIL. -------------------------------*/
 module.exports.update = function(req, res) {
     var arraySort = [];
     var array = [];
     async.parallel([
         function(callback){
-            models.Roles2.findById(req.params.id,function(error, role) {}).exec(callback);
+            models.EmailAddresses.findById(req.params.id,function(error, role) {}).exec(callback);
         },
         function(callback){aclPermissions.modifyRoles2(req, res, callback);},  //aclPermissions modifyRoles2
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
-        let streamSort = models.Roles2.find().sort({"sortID":1}).cursor();
+        let streamSort = models.EmailAddresses.find().sort({"sortID":1}).cursor();
         streamSort.on('data', function (doc) {
             arraySort.push(doc.sortID);
         }).on('error', function (err) {
@@ -124,228 +127,110 @@ module.exports.update = function(req, res) {
         }).on('close', function () {
             // the stream is closed
             //console.log(arraySort);
+            let stream = models.EmailAddresses.find().sort({"emailID":1}).cursor();
+            stream.on('data', function (doc) {
+                array.push(doc.emailID);
+            }).on('error', function (err) {
+                // handle the error
+            }).on('close', function () {
+                // the stream is closed
+                //console.log(array);
+                res.render('emails/updateEmail',{
+                    title:'Update Email',
+                    userAuthID: req.user.userPrivilegeID,
+                    arraySort: arraySort,
+                    array: array,
+                    email: results[0],
+                    aclModifyRoles2: results[1],      //aclPermissions modifyRoles2
+                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            })
         });
 
-        let stream = models.Roles2.find().sort({"roleID":1}).cursor();
-        stream.on('data', function (doc) {
-            array.push(doc.roleID);
-        }).on('error', function (err) {
-            // handle the error
-        }).on('close', function () {
-            // the stream is closed
-            //console.log(array);
-            res.render('roles2/updateRole2',{
-                title:'Update Role',
-                userAuthID: req.user.userPrivilegeID,
-                arraySort: arraySort,
-                array: array,
-                roles2: results[0],
-                aclModifyRoles2: results[1],      //aclPermissions modifyRoles2
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
-        })
+
     })
 };
 module.exports.updatePost = function(req, res) {
-    var roleToUpdate1 = req.body.roleToUpdate;
-    models.Roles2.findById({'_id': roleToUpdate1}, function(err, role){
-        role.roleID = req.body.roleID;
-        role.roleName = req.body.roleName;
-        role.sortID = req.body.sortID;
-        role.icon = req.body.icon;
-        role.save(function (err) {
-            if (err && (err.code === 11000 || err.code === 11001)) {
-                console.log(err);
-                return res.status(409).send('showAlert')
-            }else {
-                var oldRoleIdToUpdate = req.body.oldRoleID;
-                var oldRoleNameToUpdate = req.body.oldRoleName;
-
-                updateUsers();
-                updateWCSRAlerts();
-                updateWhoCanCall911();
-                updateLightRoles();
-
-                return res.send({redirect:'/roles2/showRoles2'})
-            }
-            //UPDATE USERS old roleID/roleName to new roleID/Name
-            function updateUsers(){
-                //Alerts Collection - add new role to all documents
-                models.Users.update({
-                    "userRoleID": oldRoleIdToUpdate
-
-                }, { "$set": {
-                        "userRoleID.$": req.body.roleID,
-                        "userRoleName.$": req.body.roleName
-                    }
-                }, {"multi": true} , function (err, result) {
-                    console.log(result);
-                });
-            }
-            //--------end UPDATE USERS old roleID/roleName to new roleID/Name
-
-            //UPDATE WhoCanSendReceive ALERTS --------
-            function updateWCSRAlerts(){
-                //Alerts Collection - add new role to all documents
-                models.Alerts.update({
-                    "whoCanSendReceive.sendReal.roleID": oldRoleIdToUpdate
-
-                }, { "$set": {
-                        "whoCanSendReceive.sendReal.$.roleID": req.body.roleID,
-                        "whoCanSendReceive.sendReal.$.roleName": req.body.roleName,
-                        "whoCanSendReceive.sendDrill.$.roleID": req.body.roleID,
-                        "whoCanSendReceive.sendDrill.$.roleName": req.body.roleName,
-
-                        "whoCanSendReceive.receiveReal.$.roleID": req.body.roleID,
-                        "whoCanSendReceive.receiveReal.$.roleName": req.body.roleName,
-                        "whoCanSendReceive.receiveDrill.$.roleID": req.body.roleID,
-                        "whoCanSendReceive.receiveDrill.$.roleName": req.body.roleName
-                    }
-                }, {"multi": true} , function (err, result) {
-                    console.log(result);
-                });
-            }
-            //--------end UPDATE ACL ALERT (default: all checkboxes are enable)
-
-            //UPDATE whoCanCall911 ALERTS --------
-            function updateWhoCanCall911(){
-                //Alerts Collection - add new role to all documents
-                models.Alerts.update({
-                    "whoCanCall911": oldRoleNameToUpdate
-
-                }, { "$set": {
-                        "whoCanCall911.$": req.body.roleName
-                    }
-                }, {"multi": true} , function (err, result) {
-                    console.log(result);
-                });
-            }
-            //--------end UPDATE whoCanCall911 ALERT
-
-            //UPDATE whoCanCall911 ALERTS --------
-            function updateLightRoles(){
-                //Alerts Collection - add new role to all documents
-                models.Room.update({
-                    "roomRoleName": oldRoleNameToUpdate
-
-                }, { "$set": {
-                        "roomRoleName.$": req.body.roleName
-                    }
-                }, {"multi": true} , function (err, result) {
-                    console.log(result);
-                });
-            }
-            //--------end UPDATE whoCanCall911 ALERT
-        });
-    });
-};
-/*-------------------------end of update roles2*/
-
-/* DELETE ROLES2. */
-module.exports.delete = function(req, res) {
-    var roleToDelete = req.params.id;
-    models.Roles2.findOne({'_id': roleToDelete}, function(err, roles) {
-        if (err) { console.log('error finding role. err= ',err) }
-        else{
-            models.Users.findOne({ userRoleID: roles.roleID }, function (err2, result) {
-                if (err2 || result) {
-                    console.log("Role NOT deleted");
-                    //return res.status(409).send(' ALERT! ' + roles.roleName + ' Role not deleted because there are Users using this role. Please change Users under this role to other role and then delete this role.')
-                    req.flash('error_messages', ' Attention! ' + roles.roleName + ' Role not deleted because there are Users using this role.. <br> Please change Users under this role to other role and then delete this role.');
-                    res.redirect('/roles2/showRoles2');
+    let emailToUpdate1 = req.body.emailToUpdate;
+    models.EmailAddresses.findById({'_id': emailToUpdate1}, function(err, email){
+        if(err || !email){console.log('err finding email from EmailAddresses to update = ',err);}
+        else {
+            email.emailID = req.body.emailID;
+            email.email = req.body.email;
+            email.sortID = req.body.sortID;
+            email.save(function (err) {
+                if (err && (err.code === 11000 || err.code === 11001)) {
+                    console.log(err);
+                    return res.status(409).send('showAlert')
                 }
                 else {
-                    deleteWCSRAlert(roles);
-                    deleteWhoCanCall911(roles);
-                    deleteRooms(roles);
-                    deleteUserRole(roleToDelete);
-                    res.redirect('/roles2/showRoles2');
+                    var oldEmailIdToUpdate = req.body.oldEmailID;
+                    updateAlerts();
+                    return res.send({redirect: '/emails/showEmails'})
+                }
+
+                //UPDATE Alerts old emailID/emailName to new emailID/Name
+                function updateAlerts() {
+                    //Alerts Collection - add new email to all documents
+                    models.Alerts.update({
+                        "sendEmailWith.emailID": oldEmailIdToUpdate
+                    }, {
+                        "$set": {
+                            "sendEmailWith.emailID": req.body.emailID,
+                            "sendEmailWith.email": req.body.email
+                        }
+                    }, {"multi": true}, function (err, result) {
+                        console.log(result);
+                    });
+                }
+                //--------end UPDATE Alerts old emailID/emailName to new emailID/Name
+            });
+        }
+    });
+};
+/*-------------------------end of update emails*/
+
+/* DELETE Email. */
+module.exports.delete = function(req, res) {
+    var emailToDelete = req.params.id;
+    models.EmailAddresses.findOne({'_id': emailToDelete}, function(err, email) {
+        if (err) { console.log('error finding email. err= ',err) }
+        else{
+            models.Alerts.findOne({ 'alertRequestSendEmail': true, 'sendEmailWith.emailID': email.emailID }, function (err2, result) {
+                if (err2 || result) {
+                    console.log("Email NOT deleted");
+                    //return res.status(409).send(' ALERT! ' + email.email + ' email not deleted because there are Alerts using this email. Please change Alerts that are using this email to other email and then delete this email.')
+                    req.flash('error_messages', ' Attention! ' + email.email + ' email not deleted because there are Alerts using this email. <br> Please change Alerts that are using this email to other email and then delete this email.');
+                    res.redirect('/emails/showEmails');
+                }
+                else {
+                    models.Alerts.find({ 'alertRequestSendEmail': false, 'sendEmailWith.emailID': email.emailID }, function (err2, alerts) {
+                        if (err2 || !alerts) {console.log("Good = no alerts are using email address that will be removed from emails database");}
+                        else {
+                           alerts.forEach(function (alert) {
+                               alert.sendEmailWith.emailID = undefined;
+                               alert.sendEmailWith.email = undefined;
+                               alert.save(function (err) {
+                                   if (err) console.log('error deleting email from alert. err = ',err);
+                               });
+                           });
+
+                        }
+                    });
+                    models.EmailAddresses.remove({'_id': emailToDelete}, function(err) {
+                        if(err){console.log('err deleting email from EmailAddresses = ',err);}
+                        else {
+                            console.log("email deleted");
+                            res.redirect('/emails/showEmails');
+                        }
+                    });
+
                 }
             });
         }
     });
 };
-/* ------------ end of DELETE ROLE2. */
+/* ------------ end of DELETE Email. */
 
-//delete WhoCanSenReceive Alerts-----
-function deleteWCSRAlert(roles) {
-    var deleteRole = {
-        roleID: roles.roleID,
-        roleName: roles.roleName
-    };
-    models.Alerts.updateMany({}, { $pull: {
-            "whoCanSendReceive.sendReal": deleteRole,
-            "whoCanSendReceive.receiveReal": deleteRole,
-            "whoCanSendReceive.sendDrill": deleteRole,
-            "whoCanSendReceive.receiveDrill": deleteRole
-        }}, function(err, alerts) {
-        if(err){
-            console.log('err finding whoCanSendReceive...= ',err);}
-        else {
-            if(!alerts) {console.log('role not found in alerts whoCanSendReceive... ')}
-            else {console.log('alerts with delete role = ',alerts);}
-        }
-    });
-}//----end delete WhoCanSenReceive Alerts
-
-//delete role from "whoCanCall911" Array (Alerts.whoCanCall911)-----
-function deleteWhoCanCall911(roles) {
-    models.Alerts.find({}, function(err, alert){
-        if(err){console.log('err deleteWhoCanCall911 = ',err);}
-        else {
-            for (var i = 0; i < alert.length; i++) {
-                if (alert[i].alertRequest911Call) {
-                    for (var a = 0; a < alert[i].whoCanCall911.length; a++) {
-                        if (alert[i].whoCanCall911[a] == roles.roleName) {
-                            var array = alert[i].whoCanCall911;
-                            array.splice(a, 1);
-                            alert[i].whoCanCall911 = array;
-                            console.log("user role deleted from Alert whoCanCall911 array");
-                            if (alert[i].whoCanCall911.length < 1) { //put radio button off if array is empty
-                                alert[i].alertRequest911Call = 'false';
-                            }
-                            alert[i].save(function (err) {
-                                if(err){console.log('err saving deleteWhoCanCall911 = ',err);}
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    });
-}//----end role from "whoCanCall911" Array (Alerts.whoCanCall911)
-
-//delete role from "Rooms" Array (Alerts.whoCanCall911)-----
-function deleteRooms(roles) {
-    models.Room.find({}, function(err, room){
-        if(err){console.log('err room role = ',err);}
-        else {
-            for (let i = 0; i < room.length; i++) {
-                if (room[i].roomRoleName) {
-                    for (let a = 0; a < room[i].roomRoleName.length; a++) {
-                        if (room[i].roomRoleName[a] == roles.roleName) {
-                            let array = room[i].roomRoleName;
-                            array.splice(a, 1);
-                            room[i].roomRoleName = array;
-                            if (room[i].roomRoleName.length < 1) { //put radio button off if array is empty
-                                room[i].smecsLightAllRoles = 'true';
-                            }
-                            room[i].save(function (err) {
-                                if(err){console.log('err saving roomRoleName = ',err);}
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    });
-}//----end role from "room" Array (roomRoleName)
-
-function deleteUserRole(roleToDelete) {
-    models.Roles2.remove({'_id': roleToDelete}, function(err) {
-        if(err){console.log('err deleteUserRole = ',err);}
-        else {console.log("role deleted");}
-    });
-}
