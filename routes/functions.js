@@ -89,6 +89,21 @@ module.exports.redirectTabProcedure = function(req, res, tab) {
 };
 
 
+module.exports.redirectTabLightsPanicButtons = function(req, res, tab) {
+    if(req.body.tab)
+        tab = req.body.tab;
+
+    models.Users.findOneAndUpdate({_id: req.user.id}, {$set:{redirectTabLightsPanicButtons:tab}}, {new: true}, function(err, user){
+        if(err){
+            console.log("Something wrong when updating user.redirect!");
+        }
+        else {
+            console.log('successfully updated user.redirectTabLightsPanicButtons');
+        }
+    });
+};
+
+
 module.exports.useIcons = function(req, res) {
     var iconType = req.body.iconType;
     var useIcons = req.body.useIcons;

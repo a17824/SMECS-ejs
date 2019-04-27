@@ -365,13 +365,7 @@ router.get('/alerts/createAlert', auth.simpleAuth, auth.requireLogin, alerts.cre
 router.post('/alerts/createAlert', auth.simpleAuth, auth.requireLogin, alerts.createPost, function(req, res) {
 });
 
-/* ADD Alerts. -------------------------------*/
-/*
- router.get('/alerts/addAlerts', auth.simpleAuth, auth.requireLogin, alerts.add, function(req, res) {
- });
- router.post('/alerts/addAlerts', auth.simpleAuth, auth.requireLogin, alerts.addPost, function(req, res) {
- });
- */
+
 /* UPDATE Alerts. -------------------------------*/
 router.get('/alerts/updateAlerts/:id', auth.simpleAuth, auth.requireLogin, alerts.update, function(req, res) {
 });
@@ -392,7 +386,7 @@ router.post('/alerts/specificProcedure', auth.simpleAuth, auth.requireLogin, ale
 });
 
 
-/* SHOW SoftDelete ALERTS. */
+/* SHOW SoftDelete ALERTS. (ADD Alerts)*/
 router.get('/alerts/addAlerts', auth.simpleAuth, auth.requireLogin, alerts.showSoftDeleted, function(req, res, next) {
 });
 

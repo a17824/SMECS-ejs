@@ -324,7 +324,7 @@ module.exports.canRequestAssistanceFunction= function(req, res, alert, canReques
             if (err || !alert26) console.log("No alert26 found");
             else {
 
-                if (alert26.softDeleted == false) {//check if Request Assistance is softDeleted
+                if (alert26.softDeleted == false) {//check if Request Assistance is not softDeleted
 
                     // API EJS ----------
                     let userApiEjs;

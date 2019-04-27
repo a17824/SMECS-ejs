@@ -2,7 +2,6 @@
 var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
-var slug = require('slug');
 var functions = require('./../functions');
 
 
@@ -20,6 +19,9 @@ module.exports.showSoftDeleted = function(req, res, next) {
 
     ],function(err, results){
         functions.redirectPage(req, res, 'addAlerts');
+        functions.redirectTabUsers(req, res, 'showUsers');
+        functions.redirectTabAlertGroups(req, res, 'showAlerts');
+
         res.render('alertsAndGroups/alerts/addAlerts',{
             title:'Add Alerts',
             userAuthID: req.user.userPrivilegeID,

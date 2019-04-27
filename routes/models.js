@@ -39,6 +39,7 @@ var UsersSchema = new mongoose.Schema({
     redirectTabAlertGroups: { type: String, default: 'showGroups'},
     redirectTabBuildings: { type: String, default: 'showBuilding'},
     redirectTabProcedure: { type: String, default: 'showGeneral'},
+    redirectTabLightsPanicButtons: { type: String, default: 'showLights'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
         theme: String
@@ -855,7 +856,9 @@ var LightsSchema = new mongoose.Schema({
             level: String
         }
     },
-    location: String    //room where is installed
+    location: String,    //room where is installed
+    enableLight: {type: Boolean, default: true},  //this allows to disable/enable light in a specific room
+    enableSound: {type: Boolean, default: true},  //this allows to disable/enable sound in a specific room
 
 
 }, {collection:"Lights"}); //stops Mongoose of giving plurals to our collections names

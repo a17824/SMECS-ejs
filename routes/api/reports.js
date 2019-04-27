@@ -99,7 +99,7 @@ module.exports.proceduresGet = function (req, res) {
 };
 
 /* Receive the receipt for message delivered -------------------------------*/
-module.exports.alertReceiptPost = function (req, res, alertID) {
+module.exports.alertReceiptPost = function (req, res) {
     let email;
     if(req.decoded)
         email = req.decoded.user.email;
@@ -108,10 +108,9 @@ module.exports.alertReceiptPost = function (req, res, alertID) {
 
     let wrapped = moment(new Date());
 
-    models.AlertSentInfo.findOne({'_id': alertID},  function (err, alert) {
+    models.AlertSentInfo.findOne({'_id': req.body.alertID},  function (err, alert) {
             if (err || !alert){
                 console.log('alertNot found. err - ',err);
-                console.log('alert - ',alert);
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {

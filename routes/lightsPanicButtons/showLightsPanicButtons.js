@@ -31,7 +31,7 @@ module.exports.show = function(req, res, next) {
             userAuthID: req.user.userPrivilegeID,
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,
-            redirectTab: req.user.redirectTabAlertGroups
+            redirectTab: req.user.redirectTabLightsPanicButtons
 
         });
     })

@@ -330,6 +330,18 @@
                         <div class="x_content">
                             <br />
                             <form class="form-horizontal form-label-left input_mask">
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group icon: </label>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div id="my-icon-select"></div>
+                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
+                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Group name:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
@@ -386,15 +398,6 @@
                                 </div>
 
 
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Group icon: </label>
-                                    <div class="col-md-3 col-sm-3 col-xs-12">
-                                        <div id="my-icon-select"></div>
-                                        <input type="text" id="selected-text" name="selected-text" style="width:65px;" hidden>
-                                        <input type="text" id="savedIcon" name="savedIcon" value="<%= alertGroup.icon %>" hidden>
-                                    </div>
-                                </div>
 
 
                             </form>

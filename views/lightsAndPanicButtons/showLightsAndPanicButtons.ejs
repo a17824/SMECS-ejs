@@ -191,6 +191,8 @@
                                             <th>Power/Level</th>
                                             <th>Connection Type</th>
                                             <th>Location</th>
+                                            <th>Light is</th>
+                                            <th>Sound is</th>
                                             <th>Update</th>
                                             <th>Delete</th>
                                         </tr>
@@ -211,6 +213,8 @@
                                                 <td><%= light.model.power.type %>: <%= light.model.power.level %></td>
                                                 <td><%= light.model.connection.type %></td>
                                                 <td><%= light.location %></td>
+                                                <td><%= light.enableLight %></td>
+                                                <td><%= light.enableSound %></td>
                                                 <td>
                                                     <% if (aclModifyAlertGroup == null || aclModifyAlertGroup.checkBoxValue == true) {%>
                                                         <a href=".../<%= light.id %>"><button class="btn btn-warning">update</button></a>

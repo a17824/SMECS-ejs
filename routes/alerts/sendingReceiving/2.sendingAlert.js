@@ -94,6 +94,7 @@ module.exports.showFloor = function(req, res) {
     });
 };
 module.exports.postFloor = function(req, res) {
+    console.log('req.body.floorID = ',req.body.floorID);
 
     var redirectAPI; //API user
     var redirectEJS; //EJS user

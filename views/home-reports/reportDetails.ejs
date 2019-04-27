@@ -1107,6 +1107,16 @@
 
                             <% if (report.alertWith.multiMedical) {%>
                                 <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of injured parties</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="lastTimeSeen"
+                                               value="<%= report.medicalInjuredParties %>" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Situation</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <div type="text" class="form-control" id="multi">
@@ -1140,28 +1150,25 @@
                                     </div>
                                 </div>
 
+
+                                <% if ( report.floorPhoto !== report._id + '_FloorPhotoNotExist' &&
+                                        report.floorPhoto !== '' &&
+                                        report.floorPhoto !== report._id + '_Multiple floors' &&
+                                        report.floorPhoto !== report._id + '_Multiple Locations' &&
+                                        report.floorPhoto !== report._id + '_skipped by user' &&
+                                        report.floorPhoto !== report._id + '_Outside Building' &&
+                                        report.floorPhoto !== report._id + '_undefined') {%> <!-- user selected a floor -->
                                 <div class="form-group">
 
-
-
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor plan</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <% if ( report.floorPhoto !== report._id + '_FloorPhotoNotExist' &&
-                                                report.floorPhoto !== '' &&
-                                                report.floorPhoto !== report._id + '_Multiple floors' &&
-                                                report.floorPhoto !== report._id + '_Multiple Locations' &&
-                                                report.floorPhoto !== report._id + '_skipped by user' &&
-                                                report.floorPhoto !== report._id + '_Outside Building' &&
-                                                report.floorPhoto !== report._id + '_undefined') {%> <!-- user selected a floor -->
-
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor plan</label>
-
                                         <a href="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" data-lightbox="image-1" data-title="2nd Floor">
                                             <img src="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" class="form-control floor" alt="Avatar" readonly/>
                                         </a>
-                                        <% } %>
-
                                     </div>
                                 </div>
+                                <% } %>
+
                             <%  } %>
 
                         </form>

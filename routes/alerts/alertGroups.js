@@ -21,6 +21,8 @@ module.exports.add = function(req, res) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        functions.redirectTabAlertGroups(req, res, 'showGroups');
+
         var arraySort = [];
         var array = [];
 

@@ -283,8 +283,7 @@ module.exports.createAlert= function(req, res) {
                                         if(err3)
                                             console.log('failed to update alertTemp.alertSent to = true. ERR = ',err3);
                                         else
-                                            reportsApi.alertReceiptPost(req, res, alertTemp._id); //mark alert as been received
-                                        console.log('success to update alertTemp.alertSent to = true');
+                                            console.log('success to update alertTemp.alertSent to = true');
                                     });
                                     redirectTo.redirectTo(req,res,alertTemp,flag);
                                 }
@@ -515,5 +514,5 @@ function materialSpill(req, res, alertTemp1) {
 function evacuateTo(req, res, alertTemp1) {
     alertTemp1.alertWith.evacuateTo = true;
     alertTemp1.alertWith.htmlTags.showHideDiv = 'hideThis';
-    alertTemp1.alertWith.htmlTags.labelFloor = 'Where to evacuate to';
+    alertTemp1.alertWith.htmlTags.labelFloor = 'Where to evacuate to?';
 }

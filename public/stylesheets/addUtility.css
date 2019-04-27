@@ -200,7 +200,9 @@ input[type=checkbox]:checked + label:after {
 #checkboxSendEmail {
     display: none;
 }
-
+#checkboxSendText {
+    display: none;
+}
 
 .hide {
     display: none;

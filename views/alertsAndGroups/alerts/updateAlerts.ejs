@@ -464,173 +464,8 @@
                                 </div>
 
 
-                                <% if (alert.alertID != 26) {%>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkboxSafe" title="When sending this Alert notification, it will also send an email">Send email</label>
-                                        <div class="col-md-1 col-sm-1 col-xs-12">
-                                            <% if (alert.alertRequestSendEmail == true) {%>
-                                                <input type="checkbox"
-                                                       name="checkboxSendEmail"
-                                                       id="checkboxSendEmail"
-                                                       value="<%= alert.alertRequestSendEmail %>" checked
-                                                       onclick="checkOnOff()">
-                                            <% }else{%>
-                                                <input type="checkbox"
-                                                       name="checkboxSendEmail"
-                                                       id="checkboxSendEmail"
-                                                       value="<%= alert.alertRequestSendEmail %>"
-                                                       onclick="checkOnOff()">
-                                            <% } %>
-                                            <label for="checkboxSendEmail"></label>
-                                        </div>
-
-                                        <label class="control-label col-md-1 col-sm-1 col-xs-12" id="emailAddressLabel" style="display: none">With</label>
-                                        <div class="col-md-7 col-sm-7 col-xs-12" id="emailAddressSelect" style="display: none">
-                                            <select id="emailID" class="form-control">
-                                                <% emails.forEach(function(email) { %>
-                                                <%if (email.emailID == alert.sendEmailWith.emailID) { %>
-                                                    <option value="<%= email.emailID %>,<%= email.email %>" selected><%= email.email %></option>
-                                                <% }else {%>
-                                                    <option value="<%= email.emailID %>,<%= email.email %>"><%= email.email %></option>
-                                                <% } %>
-                                                <% }); %>
-                                            </select>
-                                        </div>
-                                    </div>
-                                <% } %>
 
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Alert Light</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-
-                                        <%if (alert.alertLight == false) { %>
-                                            <input
-                                                    type="radio"
-                                                    class="flat"
-                                                    id="alertLight"
-                                                    name="alertLight"
-                                                    value="false" checked>
-                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="alertLight"
-                                                   name="alertLight"
-                                                   value="true">
-                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >On</label>
-                                        <% }else {%>
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="alertLight"
-                                                   name="alertLight"
-                                                   value="false">
-                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="alertLight"
-                                                   name="alertLight"
-                                                   value="true" checked>
-                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >On</label>
-                                        <% }%>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="margin-top: -2px">Alert Light Sound</label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-
-                                        <%if (alert.alertLightSound == false) { %>
-                                            <input
-                                                    type="radio"
-                                                    class="flat"
-                                                    id="alertLightSound"
-                                                    name="alertLightSound"
-                                                    value="false" checked>
-                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="alertLightSound"
-                                                   name="alertLightSound"
-                                                   value="true">
-                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >On</label>
-                                        <% }else {%>
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="alertLightSound"
-                                                   name="alertLightSound"
-                                                   value="false">
-                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
-                                            <input type="radio"
-                                                   class="flat"
-                                                   id="alertLightSound"
-                                                   name="alertLightSound"
-                                                   value="true" checked>
-                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >On</label>
-                                        <% }%>
-                                    </div>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div>
-
-
-
-
-
-
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2><small>Schedule</small></h2>
-
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <br />
-                            <form class="form-horizontal form-label-left input_mask">
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Disable Alert</label>
-                                    <div class="col-md-8 col-sm-8 col-xs-12">
-
-                                        <input
-                                                type="radio"
-                                                class="flat"
-                                                id="disableSchedule"
-                                                name="disableSchedule"
-                                                value="false" checked disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >never</label>&emsp;&emsp;
-                                        <input type="radio"
-                                               class="flat"
-                                               id="disableSchedule"
-                                               name="disableSchedule"
-                                               value="true" disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >custom days/time</label>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Automatic send drills</label>
-                                    <div class="col-md-8 col-sm-8 col-xs-12">
-
-                                        <input
-                                                type="radio"
-                                                class="flat"
-                                                id="autoSchedule"
-                                                name="autoSchedule"
-                                                value="false" checked disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >off</label>&emsp;&emsp;&nbsp;&nbsp;&nbsp;&thinsp;&thinsp;
-                                        <input type="radio"
-                                               class="flat"
-                                               id="autoSchedule"
-                                               name="autoSchedule"
-                                               value="true" disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >On</label>
-                                    </div>
-                                </div>
 
 
 
@@ -639,81 +474,6 @@
                         </div>
                     </div>
 
-
-
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-                <div class="col-md-6 col-xs-12">
-
-
-                    <input type="hidden" id="modelType"  value="<%= modelType %>">
-                    <% if (modelType !== 'other') {%>
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2><small><%= title2 %></small></h2>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-
-                                <div align="center">
-                                    <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
-                                        <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>/<%= alert.alertID %>'">Add option</button>
-                                    <% } else { %>
-                                        <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add option</button>
-                                    <% } %>
-                                </div>
-
-                                <div class="table-responsive">
-                                    <table id="datatable-buttons" class="table table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th>Options</th>
-                                            <% if (userAuthID == 1) {%>
-                                                <th>ID</th>
-                                            <% } %>
-                                            <th>Update</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                        <tbody>
-                                        <% options.forEach(function(option) { %>
-                                            <tr>
-                                                <td><%= option.utilityName %></td>
-                                                <% if (userAuthID == 1) {%>
-                                                    <td><%= option.utilityID %></td>
-                                                <% } %>
-
-                                                <td>
-                                                    <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
-                                                        <a href="/medical/updateMedical/<%= option.id %>/<%= modelType %>/<%= alert.alertID %>"><button class="btn btn-warning">update</button></a>
-                                                    <% } else { %>
-                                                        <a href=""><button class="btn btn-warning" disabled>update</button></a>
-                                                    <% } %>
-                                                </td>
-                                                <td>
-                                                    <% if (aclDeleteMedical == null || aclDeleteMedical.checkBoxValue == true) {%>
-                                                        <a href="/medical/deleteMedical/<%= option.id %>/<%= modelType %>/<%= alert.alertID %>" onclick="return(YNconfirm('<%= title2 %>','<%= option.utilityName %>'));"><button class="btn btn-danger">delete</button></a>
-                                                    <% } else { %>
-                                                        <a href=""><button class="btn btn-danger" disabled>delete</button></a>
-                                                    <% } %>
-                                                </td>
-                                            </tr>
-                                        <% }); %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>
 
                     <div class="x_panel">
                         <div class="x_title">
@@ -848,6 +608,307 @@
 
                         </div>
                     </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col-md-6 col-xs-12">
+
+
+                    <input type="hidden" id="modelType"  value="<%= modelType %>">
+                    <% if (modelType !== 'other') {%>
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2><small><%= title2 %></small></h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <div align="center">
+                                    <% if (aclAddMedical == null || aclAddMedical.checkBoxValue == true) {%>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/medical/addMedical/<%= modelType %>/<%= alert.alertID %>'">Add option</button>
+                                    <% } else { %>
+                                        <button class="btn btn-success" id="exit" onclick="location.href=''" disabled>Add option</button>
+                                    <% } %>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table id="datatable-buttons" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Options</th>
+                                            <% if (userAuthID == 1) {%>
+                                                <th>ID</th>
+                                            <% } %>
+                                            <th>Update</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        <tbody>
+                                        <% options.forEach(function(option) { %>
+                                            <tr>
+                                                <td><%= option.utilityName %></td>
+                                                <% if (userAuthID == 1) {%>
+                                                    <td><%= option.utilityID %></td>
+                                                <% } %>
+
+                                                <td>
+                                                    <% if (aclModifyMedical == null || aclModifyMedical.checkBoxValue == true) {%>
+                                                        <a href="/medical/updateMedical/<%= option.id %>/<%= modelType %>/<%= alert.alertID %>"><button class="btn btn-warning">update</button></a>
+                                                    <% } else { %>
+                                                        <a href=""><button class="btn btn-warning" disabled>update</button></a>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if (aclDeleteMedical == null || aclDeleteMedical.checkBoxValue == true) {%>
+                                                        <a href="/medical/deleteMedical/<%= option.id %>/<%= modelType %>/<%= alert.alertID %>" onclick="return(YNconfirm('<%= title2 %>','<%= option.utilityName %>'));"><button class="btn btn-danger">delete</button></a>
+                                                    <% } else { %>
+                                                        <a href=""><button class="btn btn-danger" disabled>delete</button></a>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+
+
+
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Schedule</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Disable Alert</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+
+                                        <input
+                                                type="radio"
+                                                class="flat"
+                                                id="disableSchedule"
+                                                name="disableSchedule"
+                                                value="false" checked disabled>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >never</label>&emsp;&emsp;
+                                        <input type="radio"
+                                               class="flat"
+                                               id="disableSchedule"
+                                               name="disableSchedule"
+                                               value="true" disabled>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >custom days/time</label>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Automatic send drills</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+
+                                        <input
+                                                type="radio"
+                                                class="flat"
+                                                id="autoSchedule"
+                                                name="autoSchedule"
+                                                value="false" checked disabled>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >off</label>&emsp;&emsp;&nbsp;&nbsp;&nbsp;&thinsp;&thinsp;&thinsp;
+                                        <input type="radio"
+                                               class="flat"
+                                               id="autoSchedule"
+                                               name="autoSchedule"
+                                               value="true" disabled>
+                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                    </div>
+                                </div>
+
+
+
+                            </form>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>SMECS Lights</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Use lights</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+
+                                        <%if (alert.alertLight == false) { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="alertLight"
+                                                    name="alertLight"
+                                                    value="false" checked>
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLight"
+                                                   name="alertLight"
+                                                   value="true">
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }else {%>
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLight"
+                                                   name="alertLight"
+                                                   value="false">
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLight"
+                                                   name="alertLight"
+                                                   value="true" checked>
+                                            <label for="alertLight" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }%>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Use Sounds</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+
+                                        <%if (alert.alertLightSound == false) { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="alertLightSound"
+                                                    name="alertLightSound"
+                                                    value="false" checked>
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLightSound"
+                                                   name="alertLightSound"
+                                                   value="true">
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }else {%>
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLightSound"
+                                                   name="alertLightSound"
+                                                   value="false">
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="alertLightSound"
+                                                   name="alertLightSound"
+                                                   value="true" checked>
+                                            <label for="alertLightSound" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }%>
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Emails & Text messages</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <% if (alert.alertID != 26) {%>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkboxSafe" title="When sending this Alert notification, it will also send an email">Send email</label>
+                                        <div class="col-md-1 col-sm-1 col-xs-12">
+                                            <% if (alert.alertRequestSendEmail == true) {%>
+                                                <input type="checkbox"
+                                                       name="checkboxSendEmail"
+                                                       id="checkboxSendEmail"
+                                                       value="<%= alert.alertRequestSendEmail %>" checked
+                                                       onclick="checkOnOff()">
+                                            <% }else{%>
+                                                <input type="checkbox"
+                                                       name="checkboxSendEmail"
+                                                       id="checkboxSendEmail"
+                                                       value="<%= alert.alertRequestSendEmail %>"
+                                                       onclick="checkOnOff()">
+                                            <% } %>
+                                            <label for="checkboxSendEmail"></label>
+                                        </div>
+
+                                        <label class="control-label col-md-1 col-sm-1 col-xs-12" id="emailAddressLabel" style="display: none">With</label>
+                                        <div class="col-md-7 col-sm-7 col-xs-12" id="emailAddressSelect" style="display: none">
+                                            <select id="emailID" class="form-control">
+                                                <% emails.forEach(function(email) { %>
+                                                <%if (email.emailID == alert.sendEmailWith.emailID) { %>
+                                                    <option value="<%= email.emailID %>,<%= email.email %>" selected><%= email.email %></option>
+                                                <% }else {%>
+                                                    <option value="<%= email.emailID %>,<%= email.email %>"><%= email.email %></option>
+                                                <% } %>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkboxSafe" title="When sending this Alert notification, it will also send a Text message to cellphone">Send text message</label>
+                                        <div class="col-md-1 col-sm-1 col-xs-12">
+
+                                                <input type="checkbox"
+                                                       name="checkboxSendText"
+                                                       id="checkboxSendText"
+                                                       value="<%= alert.alertRequestSendEmail %>"
+                                                       onclick="" disabled>
+
+                                            <label for="checkboxSendText"> ....                     Coming soon...</label>
+                                        </div>
+
+
+                                    </div>
+                                <% } %>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+
                 </div>
 
 

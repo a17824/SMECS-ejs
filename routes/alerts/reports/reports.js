@@ -21,8 +21,13 @@ module.exports.homeReports = function(req, res, next) {
         function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
 
     ],function(err, results){
+        //default tabs to show
         functions.redirectTabUsers(req, res, 'showUsers');
+        functions.redirectTabAlertGroups(req, res, 'showGroups');
         functions.redirectTabBuildings(req, res, 'showBuilding');
+        functions.redirectTabProcedure(req, res, 'showGeneral');
+        functions.redirectTabLightsPanicButtons(req, res, 'showLights');
+        //end of default tabs to show
 
         var page = 'home-reports/home-reports';
 
@@ -203,27 +208,30 @@ module.exports.reportsDetails = function(req, res) {
                 canRequestAssistance = result2;
                 let arraySituations =[];
                 let disableReqButton = true;
-                reqButtons(arraySituations, results[0], disableReqButton);
+                reqButtons(arraySituations, results[0], disableReqButton, function (result3) {
+                    disableReqButton = result3;
 
-                reportsEJS.totalNumbers(results[0], function (result, err) {
-                    if (err) console.log('totalNumbers err - ',err);
-                    else {
-                        res.render(page, {
-                            title: 'REPORTS SENT',
-                            userAuthID: req.user.userPrivilegeID,
-                            report: results[0],
-                            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                            userAuthPhoto: req.user.photo,
-                            total: result,
-                            classNames: classNames,
-                            alertWith911: alertWith911,
-                            canRequestAssistance: canRequestAssistance,
-                            arraySituations: arraySituations,
-                            disableReqButton: disableReqButton
-                        });
-                    }
+                    reportsEJS.totalNumbers(results[0], function (result, err) {
+                        if (err) console.log('totalNumbers err - ',err);
+                        else {
+                            res.render(page, {
+                                title: 'REPORTS SENT',
+                                userAuthID: req.user.userPrivilegeID,
+                                report: results[0],
+                                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                                userAuthPhoto: req.user.photo,
+                                total: result,
+                                classNames: classNames,
+                                alertWith911: alertWith911,
+                                canRequestAssistance: canRequestAssistance,
+                                arraySituations: arraySituations,
+                                disableReqButton: disableReqButton
+                            });
+                        }
+                    });
                 });
+
             });
         }
     })
@@ -393,7 +401,7 @@ module.exports.totalNumbers = function(alert, callback) {
     callback(total)
 };
 
-function reqButtons(arraySituations, alert, disableReqButton) {
+function reqButtons(arraySituations, alert, disableReqButton, callback) {
     if(alert.alert.alertID == 14 || alert.alert.alertID == 26) {
 
         //radio OFF/ON
@@ -542,5 +550,6 @@ function reqButtons(arraySituations, alert, disableReqButton) {
 
         });
     }
+    callback(disableReqButton)
 }
 
