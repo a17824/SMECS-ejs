@@ -94,7 +94,6 @@ module.exports.showFloor = function(req, res) {
     });
 };
 module.exports.postFloor = function(req, res) {
-    console.log('req.body.floorID = ',req.body.floorID);
 
     var redirectAPI; //API user
     var redirectEJS; //EJS user
@@ -105,7 +104,6 @@ module.exports.postFloor = function(req, res) {
     let floorID = '';
     let floorName = req.body.floorName;
     let floorPhoto = req.body.floorPhoto;
-
 
     if ( typeof req.body.buildingID !== 'undefined' && req.body.buildingID )
     {
@@ -411,8 +409,9 @@ module.exports.postStudent = function(req, res) {
     var studentName = req.body.student;
     var studentPhoto = req.body.photo;
 
+    console.log('req.body.photo = ',req.body.photo);
     //checkStudentPhotoExists------------------
-    if (studentPhoto == ''){  //if student photo don't exist on database
+    if (studentPhoto == '' || typeof studentPhoto === 'undefined'){  //if student photo don't exist on database
         studentPhoto = 'photoNotAvailable.bmp';
     }
     //---------- end of checkStudentPhotoExists

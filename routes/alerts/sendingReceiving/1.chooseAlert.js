@@ -268,7 +268,7 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 19){placeholderNote = 'ex: Charlotte cut her wrist';}
                     if (req.body.alertID == 20){placeholderNote = 'ex: Media are here because of Arthur incident.';}
                     if (req.body.alertID == 21){placeholderNote = 'ex: remember to not touch anything and put yellow tape around area.';}
-                    if (req.body.alertID == 22){placeholderNote = 'ex: .';}
+                    if (req.body.alertID == 22){placeholderNote = 'ex: John is having a panic attack';}
                     if (req.body.alertID == 23){placeholderNote = 'ex: Multiple students fighting.';}
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
                     if (req.body.alertID == 29){placeholderNote = 'ex: flood.';}

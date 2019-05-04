@@ -162,9 +162,9 @@
                         </div>
                         <div class="x_content">
 
-                            <% var pageColSize = 'col-md-3 col-sm-3 col-xs-6' %>
+
                             <% if (userAuthID == 1) {%>
-                                <% pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
+                                <% htmlTags.pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
                             <% } %>
 
                             <% if (userAuthID == 1) {%>
@@ -186,7 +186,7 @@
                             <% } %>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -204,7 +204,7 @@
 
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -221,7 +221,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize2 %> <%= htmlTags.showProcedure %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -238,7 +238,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize2 %> <%= htmlTags.showSafe %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -444,7 +444,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel">
+                            <div class="panel <%= htmlTags.showProcedure %>">
                                 <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notProcedure" aria-expanded="false" aria-controls="collapseTwo">
                                     <h4 class="panel-title">
                                         <table class="" width="100%">
@@ -513,7 +513,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel">
+                            <div class="panel <%= htmlTags.showSafe %>">
                                 <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notSafe" aria-expanded="false" aria-controls="collapseTwo">
                                     <h4 class="panel-title">
                                         <table class="" width="100%">
@@ -583,7 +583,7 @@
                             </div>
 
 
-                            <div class="panel">
+                            <div class="panel <%= htmlTags.showHelp %>">
                                 <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#needHelp" aria-expanded="false" aria-controls="collapseTwo">
                                     <h4 class="panel-title">
                                         <table class="" width="100%">
@@ -597,7 +597,7 @@
                                     </h4>
                                 </a>
 
-                                <div id="needHelp" class="<%= classNames %>" role="tabpanel" aria-labelledby="headingTwo">
+                                <div id="needHelp" class="<%= htmlTags.classNames %>" role="tabpanel" aria-labelledby="headingTwo">
                                     <div class="panel-body">
 
                                         <table class="table table-striped">
@@ -720,74 +720,74 @@
 
 
                 <!-- Call 911 -->
-                <%  if (alertWith911) { %>
-                    <div class="x_panel tile overflow_hidden">
-                        <div class="x_title">
-                            <h2 style="font-size: 28px">Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
 
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                            </ul>
+                <div class="x_panel tile overflow_hidden <%= htmlTags.alertWith911 %>">
+                    <div class="x_title">
+                        <h2 style="font-size: 28px">Call 911<a style="font-size: 12px">&emsp;This alert requires the following roles to call 911</a></h2>
 
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </ul>
 
-                            <!-- start accordion -->
-                            <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
-                                <div class="panel">
-                                    <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        <h4 class="panel-title">
-                                            <table class="" width="100%">
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <!-- start accordion -->
+                        <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel">
+                                <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <h4 class="panel-title">
+                                        <table class="" width="100%">
+                                            <tr>
+                                                <td class="">who called 911:</td>
+                                                <td class="accor1Td2"><%= total.called911Number %></td>
+                                                <td class="accor1Td3">users out of</td>
+                                                <td class="accor1Td4"><%= total.viewedNumber %></td>
+                                            </tr>
+                                        </table>
+                                    </h4>
+                                </a>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th width="20">Photo</th>
+                                                <th>Name</th>
+                                                <th>Call time</th>
+                                                <th>Call duration</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <% total.called911By.forEach(function(user) { %>
                                                 <tr>
-                                                    <td class="">who called 911:</td>
-                                                    <td class="accor1Td2"><%= total.called911Number %></td>
-                                                    <td class="accor1Td3">users out of</td>
-                                                    <td class="accor1Td4"><%= total.viewedNumber %></td>
+                                                    <td>
+                                                        <p class="imageSentUsers">
+                                                            <%  if (user.photo !== '') { %>
+                                                                <img src="/public/photosUsers/<%= user.photo %>" class="avatarSentUsers" alt="Avatar" />
+                                                            <%  }else { %>
+                                                                <img src="/public/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
+                                                            <%  } %>
+                                                        </p>
+                                                    </td>
+                                                    <td><%= user.firstName %> <%= user.lastName %></td>
+                                                    <td><%= user.called911.time %></td>
+                                                    <td>10 min </td>
                                                 </tr>
-                                            </table>
-                                        </h4>
-                                    </a>
-                                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                        <div class="panel-body">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th width="20">Photo</th>
-                                                    <th>Name</th>
-                                                    <th>Call time</th>
-                                                    <th>Call duration</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <% total.called911By.forEach(function(user) { %>
-                                                    <tr>
-                                                        <td>
-                                                            <p class="imageSentUsers">
-                                                                <%  if (user.photo !== '') { %>
-                                                                    <img src="/public/photosUsers/<%= user.photo %>" class="avatarSentUsers" alt="Avatar" />
-                                                                <%  }else { %>
-                                                                    <img src="/public/photosNotAvailable/user.png" class="avatarSentUsers" alt="Avatar" />
-                                                                <%  } %>
-                                                            </p>
-                                                        </td>
-                                                        <td><%= user.firstName %> <%= user.lastName %></td>
-                                                        <td><%= user.called911.time %></td>
-                                                        <td>10 min </td>
-                                                    </tr>
-                                                <% }); %>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                            <% }); %>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <!-- end of accordion -->
-
-
                         </div>
+                        <!-- end of accordion -->
+
+
                     </div>
-                <% } %>
+                </div>
+
                 <!-- Call 911 -->
 
 

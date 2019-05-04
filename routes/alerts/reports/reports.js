@@ -198,12 +198,51 @@ module.exports.reportsDetails = function(req, res) {
             if(req.params.id == '5b1eb1d86e727c382cbce0a6')
                 page = 'home-reports/reportDetailsSimAllGreen';
 
-            let alertWith911 = false;
+            //HTML TAGS (classNames, hide show 911, Gauges, Accordions Procedure, Safe, Help
+            let alertWith911 = 'hideThis';
+            let showProcedure = 'hideThis';
+            let showSafe = 'hideThis';
+            let showHelp = 'hideThis';
+            let flagCount = 0;
+            let pageColSize = 'col-md-6 col-sm-6 col-xs-6';
+            let pageColSize2 = 'col-md-6 col-sm-6 col-xs-6';
+
             if(results[0].request911Call)
-                alertWith911 = true;
+                alertWith911 = 'showThis';
+
+            if(results[0].requestProcedureCompleted){
+                showProcedure = 'showThis';
+                flagCount++;
+            }
+            if(results[0].requestWeAreSafe){
+                showSafe = 'showThis';
+                flagCount++;
+            }
+            if(results[0].requestINeedHelp){
+                showHelp = 'showThis';
+            }
+            if(flagCount == 1){
+                pageColSize = 'col-md-4 col-sm-4 col-xs-6';
+                pageColSize2 = 'col-md-4 col-sm-4 col-xs-12'
+            }
+
+            if(flagCount == 2){
+                pageColSize = 'col-md-3 col-sm-3 col-xs-6';
+                pageColSize2 = 'col-md-3 col-sm-3 col-xs-6';
+            }
+            //end of hide show Gauges Accordions Procedure, Safe, Help
+
+            let htmlTags = {
+                classNames: classNames,
+                alertWith911: alertWith911,
+                showProcedure: showProcedure,
+                showSafe: showSafe,
+                showHelp: showHelp,
+                pageColSize: pageColSize,
+                pageColSize2: pageColSize2
+            };
 
             let canRequestAssistance = false;
-
             canReqAssFunc.canRequestAssistanceFunction(req, res, results[0], canRequestAssistance, function (result2) {
                 canRequestAssistance = result2;
                 let arraySituations =[];
@@ -222,11 +261,10 @@ module.exports.reportsDetails = function(req, res) {
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo,
                                 total: result,
-                                classNames: classNames,
-                                alertWith911: alertWith911,
                                 canRequestAssistance: canRequestAssistance,
                                 arraySituations: arraySituations,
-                                disableReqButton: disableReqButton
+                                disableReqButton: disableReqButton,
+                                htmlTags: htmlTags
                             });
                         }
                     });
@@ -369,13 +407,40 @@ module.exports.totalNumbers = function(alert, callback) {
 
     //How many users CompleteAllSteps Alert
     alert.sentTo.forEach(function (user) {
-        if( user.pushToken.length > 0 && user.received.receivedBoolean) {
-            if (user.viewed.viewedBoolean && user.procedureCompleted.boolean && user.weAreSafe.boolean) {
-                total.completedAllStepsBy.push(user);
-            }
+        if( user.pushToken.length > 0) {
+            if(alert.requestProcedureCompleted && alert.requestWeAreSafe) {
+                if (user.received.receivedBoolean && user.viewed.viewedBoolean && user.procedureCompleted.boolean && user.weAreSafe.boolean) {
+                    total.completedAllStepsBy.push(user);
+                }
 
-            else
-                total.notCompletedAllStepsBy.push(user);
+                else
+                    total.notCompletedAllStepsBy.push(user);
+
+            }
+            else {
+                if(alert.requestProcedureCompleted && !alert.requestWeAreSafe) {
+                    if (user.received.receivedBoolean && user.viewed.viewedBoolean && user.procedureCompleted.boolean) {
+                        total.completedAllStepsBy.push(user);
+                    }
+                    else
+                        total.notCompletedAllStepsBy.push(user);
+                }
+                if(!alert.requestProcedureCompleted && alert.requestWeAreSafe) {
+                    if (user.received.receivedBoolean && user.viewed.viewedBoolean && user.weAreSafe.boolean) {
+                        total.completedAllStepsBy.push(user);
+                    }
+                    else
+                        total.notCompletedAllStepsBy.push(user);
+                }
+                if(!alert.requestProcedureCompleted && !alert.requestWeAreSafe) {
+                    if (user.received.receivedBoolean && user.viewed.viewedBoolean) {
+                        total.completedAllStepsBy.push(user);
+                    }
+                    else
+                        total.notCompletedAllStepsBy.push(user);
+                }
+
+            }
         }
     });
     total.completedAllStepsNumber = total.completedAllStepsBy.length;
@@ -553,3 +618,7 @@ function reqButtons(arraySituations, alert, disableReqButton, callback) {
     callback(disableReqButton)
 }
 
+function hideShowDivs(alert,showProcedure,showSafe,showHelp) {
+
+    showProcedure = 'XAXAXAXAX';
+}
