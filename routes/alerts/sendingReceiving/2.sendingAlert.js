@@ -320,9 +320,6 @@ module.exports.showNotes = function(req, res) {
 };
 module.exports.postNotes = function(req, res) {
 
-    var allFloorsButtonHidden;  //API user
-
-
     var alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
@@ -462,30 +459,47 @@ module.exports.showMultiSelection = function(req, res) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            if(req.decoded){ //API user
-                res.json({
-                    success: true,
-                    title: results[0].alertName,
-                    userAuthGroupAlerts: results[4].appSettings.groupAlertsButtons, //for Back or Exit button
-                    alert: results[0],
-                    utilities: results[1],
-                    medical: results[2],
-                    schoolClosed: results[3]
-                });
 
-            }else{  //EJS user
-                res.render('alerts/sending/multiSelection', {
-                    title: results[0].alertName,
-                    userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons, //for Back or Exit button
-                    alert: results[0],
-                    utilities: results[1],
-                    medical: results[2],
-                    schoolClosed: results[3],
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                    userAuthPhoto: req.user.photo
+
+            let arraySituations =[];
+            if(results[0].alertNameID == 26) {
+                reqButtons(arraySituations, results[1], function (result3) {
+                    getRenderJson();
                 });
             }
+            else {
+                getRenderJson();
+            }
+
+            function getRenderJson() {
+                if(req.decoded){ //API user
+                    res.json({
+                        success: true,
+                        title: results[0].alertName,
+                        userAuthGroupAlerts: results[4].appSettings.groupAlertsButtons, //for Back or Exit button
+                        alert: results[0],
+                        utilities: results[1],
+                        medical: results[2],
+                        schoolClosed: results[3],
+                        arraySituations: arraySituations
+                    });
+
+                }else{  //EJS user
+                    res.render('alerts/sending/multiSelection', {
+                        title: results[0].alertName,
+                        userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons, //for Back or Exit button
+                        alert: results[0],
+                        utilities: results[1],
+                        medical: results[2],
+                        schoolClosed: results[3],
+                        aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        arraySituations: arraySituations,
+                        userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                        userAuthPhoto: req.user.photo
+                    });
+                }
+            }
+
         }
     });
 };
@@ -514,3 +528,109 @@ module.exports.postMultiSelection = function(req, res) {
     });
 };
 
+function reqButtons(arraySituations, utilities, callback) {
+
+        //radio OFF/ON
+        let check = '';
+        let onOffSwitch = 'onoffswitch';
+        let checkbox = 'onoffswitch-checkbox';
+        let label = 'onoffswitch-label';
+        let inner = 'onoffswitch-inner';
+        let switch_ = 'onoffswitch-switch';
+
+        //end of radio OFF/ON
+
+        utilities.forEach(function (utility) {
+            let arrayButtons = [];
+
+            //radio ON
+            if (utility.smecsApp) {
+
+                if (utility.defaultContact === 'smecsApp') {
+                    check = 'checked';
+                }
+
+                let button = {
+                    spacesA: 'spaces1',
+                    spacesB: 'spaces2',
+                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_smecsApp',
+                    radioLabel: 'smecs app',
+                    radioChecked: check,
+
+                    radioSent: {
+                        onOffSwitch: onOffSwitch,
+                        checkbox: checkbox,
+                        label: label,
+                        inner: inner,
+                        switch_: switch_
+                    }
+                };
+                //reset button
+                arrayButtons.push(button);
+                check = '';
+
+
+            }
+
+            if (utility.email !== '') {
+
+                if (utility.defaultContact === 'email') {
+                    check = 'checked';
+                }
+
+                let button = {
+                    spacesA: 'spaces1',
+                    spacesB: 'spaces2',
+                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_email',
+                    radioLabel: 'send email',
+                    radioChecked: check,
+                    radioSent: {
+                        onOffSwitch: onOffSwitch,
+                        checkbox: checkbox,
+                        label: label,
+                        inner: inner,
+                        switch_: switch_
+                    }
+                };
+                //reset button
+                arrayButtons.push(button);
+                check = '';
+
+            }
+            if (utility.phone !== '') {
+
+                if (utility.defaultContact === 'phone') {
+                    check = 'checked';
+                }
+
+                let button = {
+                    spacesA: 'spaces1',
+                    spacesB: 'spaces4',
+                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_call',
+                    radioLabel: 'call',
+                    radioChecked: check,
+                    radioSent: {
+                        onOffSwitch: onOffSwitch,
+                        checkbox: checkbox,
+                        label: label,
+                        inner: inner,
+                        switch_: switch_
+                    }
+                };
+                //reset button
+                arrayButtons.push(button);
+                check = '';
+
+            }
+            //end of radio SENT
+
+            let situation = {
+                utilityID: utility.utilityID,
+                utilityName: utility.utilityName,
+                arrayButtons: arrayButtons
+            };
+
+            arraySituations.push(situation);
+        });
+    callback('done building req. buttons')
+}

@@ -2,7 +2,7 @@
 <head>
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="/public/stylesheets/reportDetails.css" rel="stylesheet">
 
     <!-- DataPicker for Alert 29 -->
     <!-- Include Required Prerequisites -->
@@ -32,16 +32,28 @@
         };
         // end of Reload whole page if page is cached
 
+
+        //if send email checkbox changes, hides/shows div
+        function checkOnOff(utilityName, utilityID) {
+            if (document.getElementById(utilityName).checked) {
+                $('#' + utilityID).fadeIn("fast"); //to remove display: none
+            }
+            else {
+                $('#' + utilityID).fadeOut("fast"); //to remove display: none
+            }
+        }
+
         $(document).ready(function(){
             var alertID = document.getElementById('alertNameID');
 
+            /*
             $(function() {
                 $('.checkbox').change(function() {
                     $(this).next('.hideThis').toggle(this.checked);
                     $(this).next('.showThis').toggle(this.checked);
                 })
             });
-
+            */
             /********** School closed *******************/
             if(alertID.value == 29) {
                 $(function() {
@@ -68,6 +80,10 @@
                 var checkedName = [];
                 $.each($("input[name='checkbox']:checked"), function(){
                     checkedName.push($(this).attr('id'));
+                });
+
+                checkedID.forEach(function(button) {
+
                 });
 
                 var searchIDsNotChecked = $('input[name="checkboxRequest"]:not(:checked)').map(function () {
@@ -180,7 +196,7 @@
 
 
 <% if (alert.testModeON == true ) {%>
-<h2 style="color: #34A7C1"> TEST MODE ON </h2>
+    <h2 style="color: #34A7C1"> TEST MODE ON </h2>
 <% } %>
 
 <form>
@@ -188,152 +204,95 @@
     <input type="hidden" id="alertMultifunction"  value="<%= alert.multiSelectionNames %>"> <!-- for back button/refresh -->
 
     <% if (alert.alertNameID == 18) {%>
-    <label for="situation"><b>Number of injured parties:</b> </label>
-    <input type="number" id="parties" name="parties" style="width:40px" min="0" value="<%= alert.medicalInjuredParties %>">&nbsp(optional)<br><br>
+        <label for="situation"><b>Number of injured parties:</b> </label>
+        <input type="number" id="parties" name="parties" style="width:40px" min="0" value="<%= alert.medicalInjuredParties %>">&nbsp(optional)<br><br>
     <% } %>
 
     <% if (alert.alertNameID == 29) {%>
-    <label for="situation"><b>Day(s) school will be closed:</b> </label>
+        <label for="situation"><b>Day(s) school will be closed:</b> </label>
         <input class="" type="text" name="daterange" id="daysClosed" style="width: 185px" value="01/15/2020 - 02/15/2010"><br><br>
 
     <% } %>
 
     <% if (alert.alertNameID == 14 ||
             alert.alertNameID == 18) {%>
-    <label for="situation"><b>Situation:</b> (optional)</label><br>
+        <label for="situation"><b>Situation:</b> (optional)</label><br>
     <% } %>
     <% if (alert.alertNameID == 26 ||
             alert.alertNameID == 29) {%>
-    <label for="situation"><b>Situation:</b></label><br>
+        <label for="situation"><b>Situation:</b></label><br>
     <% } %>
 
 
     <% var typeOfDatabase; %>
-    <% if (alert.alertNameID == 14 ||
-            alert.alertNameID == 26) {%>
-    <% typeOfDatabase = utilities;  %>
+    <% if (alert.alertNameID == 14) {%>
+        <% typeOfDatabase = utilities;  %>
     <% } %>
     <% if (alert.alertNameID == 18) {%>
-    <% typeOfDatabase = medical;  %>
+        <% typeOfDatabase = medical;  %>
     <% } %>
     <% if (alert.alertNameID == 29) {%>
-    <% typeOfDatabase = schoolClosed;  %>
+        <% typeOfDatabase = schoolClosed;  %>
     <% } %>
 
-    <% typeOfDatabase.forEach(function(utility) { %>
-        <!-- back button/refresh write checkbox selected before -->
-        <% if (alert.multiSelectionNames.length >= 1) {%>
-            <% var check = 0;    %>
-            <% for (var i=0; i < alert.multiSelectionNames.length; i++) { %>
-                <% if (utility.utilityName == alert.multiSelectionNames[i]) { %>
-                    <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>" checked> <%= utility.utilityName %>
-
-
-                    <% check = 1; %>
-                <% }  %>
-            <% } %>
-            <% if (check == 0) {%>
-                <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"> <%= utility.utilityName %>
-
-            <% } %>
-    <!--ON/OFF switch button for back button/refresh -->
-    <% if (alert.alertNameID == 26 ) {%>
-        <% var classType = "showThis" %>
-        <% if (check == 0) {%>
-            <% classType = "hideThis" %>
-        <% } %>
-
-    <div class= "<%= classType %>">
-        <% var flagNoContacts = 0; %> <!-- trigger to disable Request Assistance buttons -->
-        <% var arrayLabels = ["smecs app", "send email", "call\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"]; %>
-        <% var arrayIDs = ["_|_smecsApp", "_|_email", "_|_call"]; %>
-        <% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
-        <% var arrayUtilitiesContact = [utility.smecsApp, utility.email, utility.phone]; %>
-
-        <% for (var x=0; x < arrayLabels.length; x++) { %>
-        <% if (arrayUtilitiesContact[x] !== false && arrayUtilitiesContact[x] !== '') {%> <!-- check witch contacts exists-->
-        &emsp;&emsp;&emsp;<label for="utilityName"><%= arrayLabels[x] %></label> &emsp;<!-- contact label for smecs App and email-->
-        <div class="onoffswitch" style="display:inline-block;">
-            <% if (arrayDefaultContact[x] == utility.defaultContact) {%> <!-- check for default contact-->
-            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                   id="<%= utility.utilityID + arrayIDs[x] %>"
-                   value="<%= utility.utilityID + '_|_' + utility.utilityName + arrayIDs[x] %>"  checked>
-            <% }else {%>
-            <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                   id="<%= utility.utilityID + arrayIDs[x] %>"
-                   value="<%= utility.utilityID + '_|_' + utility.utilityName + arrayIDs[x] %>">
-            <% }%>
-            <label class="onoffswitch-label" for="<%= utility.utilityID + arrayIDs[x] %>">
-                <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-            </label>
-        </div>
-        <br>
-        <% flagNoContacts = 1; %>
-        <% }%>
-        <% }%>
-        <% if (flagNoContacts == 0) {%> <!-- if no contacts available-->
-        &emsp;&emsp;&emsp;<label for="disable" style="color: #575757">(no contacts available)</label>
-        <% }%>
-    </div>
-    <% } %>
-    <!--end of  ON/OFF switch button for back button/refresh -->
-
-        <!-- END OF back button/refresh write checkbox selected before -->
-
-        <% } else { %> <!-- frist time entering/loading this page -->
-                <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"> <%= utility.utilityName %>
-
-
-
-
-    <!-- ON/OFF switch button for "smecs App"--> <!-- frist time entering/loading this page -->
-                <% if (alert.alertNameID == 26 ) {%>
-                    <div class="hideThis">
-
-                        <% var flagNoContacts = 0; %> <!-- trigger to disable Request Assistance buttons -->
-                        <% var arrayLabels = ["smecs app", "send email", "call\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"]; %>
-                        <% var arrayIDs = ["_|_smecsApp", "_|_email", "_|_call"]; %>
-                        <% var arrayDefaultContact = ["smecsApp", "email", "call"]; %>
-                        <% var arrayUtilitiesContact = [utility.smecsApp, utility.email, utility.phone]; %>
-
-                        <% for (var x=0; x < arrayLabels.length; x++) { %>
-                        <% if (arrayUtilitiesContact[x] !== false && arrayUtilitiesContact[x] !== '') {%> <!-- check witch contacts exists-->
-                                &emsp;&emsp;&emsp;<label for="utilityName"><%= arrayLabels[x] %></label> &emsp;<!-- contact label for smecs App and email-->
-                                <div class="onoffswitch" style="display:inline-block;">
-                                    <% if (arrayDefaultContact[x] == utility.defaultContact) {%> <!-- check for default contact-->
-                                    <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                                           id="<%= utility.utilityID + arrayIDs[x] %>"
-                                           value="<%= utility.utilityID + '_|_' + utility.utilityName + arrayIDs[x] %>"  checked>
-                                    <% }else {%>
-                                    <input type="checkbox" class="onoffswitch-checkbox" name="checkboxRequest"
-                                           id="<%= utility.utilityID + arrayIDs[x] %>"
-                                           value="<%= utility.utilityID + '_|_' + utility.utilityName + arrayIDs[x] %>">
-                                    <% }%>
-                                    <label class="onoffswitch-label" for="<%= utility.utilityID + arrayIDs[x] %>">
-                                        <span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                                <br>
-                        <% flagNoContacts = 1; %>
-                        <% }%>
-                        <% }%>
-                        <% if (flagNoContacts == 0) {%> <!-- if no contacts available-->
-                        &emsp;&emsp;&emsp;<label for="disable" style="color: #575757">(no contacts available)</label>
-                        <% }%>
-                    </div>
+    <% if (alert.alertNameID !== 26) {%>
+        <% typeOfDatabase.forEach(function(utility) { %>
+            <!-- back button/refresh write checkbox selected before -->
+            <% if (alert.multiSelectionNames.length >= 1) {%>
+                <% var check = 0;    %>
+                <% for (var i=0; i < alert.multiSelectionNames.length; i++) { %>
+                    <% if (utility.utilityName == alert.multiSelectionNames[i]) { %>
+                        <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>" checked> <%= utility.utilityName %>
+                        <% check = 1; %>
+                    <% }  %>
+                <% } %>
+                <% if (check == 0) {%>
+                    <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"> <%= utility.utilityName %>
                 <% } %>
 
+                <!-- END OF back button/refresh write checkbox selected before -->
+
+            <% } else { %> <!-- frist time entering/loading this page -->
+            <input class="" type="checkbox" name="checkbox" id="<%= utility.utilityName %>" value="<%= utility.utilityID %>"> <%= utility.utilityName %>
+            <% } %>
+            <br>
+        <% }); %><br>
+    <% } %>
+
+    <% if (alert.alertNameID == 26) {%>
+
+        <div class="paddingLeft">
+        <% arraySituations.forEach(function(situation) { %>
+
+            <input type="checkbox" name="checkbox" id="<%= situation.utilityName %>" value="<%= situation.utilityID %>" onclick="checkOnOff('<%= situation.utilityName %>','<%= situation.utilityID %>')">
+            <label for="utilityName" class="textSize"><%= situation.utilityName %></label><br>
 
 
+            <% if (situation.arrayButtons.length < 1) {%>
+                <div id="<%= situation.utilityID %>" class="hideThis">
+                    <label for="utilityName" class="textSize spaces5 upDown textColor ">(no contacts available)</label><br>
+                </div>
+            <% } %>
 
+            <div id="<%= situation.utilityID %>" class="hideThis">
+            <% situation.arrayButtons.forEach(function(button) { %>
+                <div class="thinnerLine3">
+                    <span class="<%= button.spacesA %>"></span><label for="utilityName" class="upDown"><%= button.radioLabel %></label><span class="<%= button.spacesB %>"></span>
+                    <div class="<%= button.radioSent.onOffSwitch %>">
+                        <input type="checkbox" class="<%= button.radioSent.checkbox %>" name="checkboxRequest" id="<%= situation.utilityID %>+<%= button.radioLabel %>" value="<%= button.value %>" <%= button.radioChecked %>>
+                        <label class="<%= button.radioSent.label %>" for="<%= situation.utilityID %>+<%= button.radioLabel %>">
+                            <span class="<%= button.radioSent.inner %>"></span>
+                            <span class="<%= button.radioSent.switch_ %>"></span>
+                        </label>
+                    </div>
+                </div>
+            <% }); %>
+            </div>
 
-
+        <% }); %>
+        </div>
     <% } %>
     <br>
-    <% }); %><br>
-
-
-
     <input type="button" id="<%= alert.id %>" value="Next" ><br>
 </form>
 

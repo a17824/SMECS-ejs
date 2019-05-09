@@ -42,24 +42,7 @@ module.exports.alertInfoGet = function (req, res) {
     });
 };
 
-/* Send number of opened alerts. -------------------------------*/
-/*
-module.exports.openAlertsGet = function (req, res) {
-    models.AlertSentInfo.find({'status.statusString': 'open'}, function (err, alerts) {
-        if (err) {
-            res.json({
-                success: 'false',
-                message: 'Something went wrong'
-            });
-        } else {
-            res.json({
-                success: 'true',
-                openAlerts: alerts.length
-            });
-        }
-    });
-};
-*/
+
 /* Send procedure information -------------------------------*/
 module.exports.procedureGet = function (req, res) {
     models.Alerts.findOne({

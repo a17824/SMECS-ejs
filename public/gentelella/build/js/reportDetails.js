@@ -2715,7 +2715,7 @@ function init_morris_charts() {
             data: [
                 {period: '2014 Q1', iphone: 66, ipad: null, android: 47},
                 {period: '2014 Q2', iphone: 78, ipad: 94, android: 41},
-                {period: '2014 Q3', iphone: 12, ipad: 69, android: 01},
+                {period: '2014 Q3', iphone: 12, ipad: 69, android: 1},
                 {period: '2014 Q4', iphone: 10, ipad: 10, android: 10},
                 {period: '2015 Q1', iphone: 10, ipad: 14, android: 93},
                 {period: '2015 Q2', iphone: 70, ipad: 93, android: 81},

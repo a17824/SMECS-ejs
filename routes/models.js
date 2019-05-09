@@ -625,6 +625,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         notesStudentWithGun: {type: Boolean, default: false},
         missingStudent: {type: Boolean, default: false},
         evacuateTo: {type: Boolean, default: false},
+        reqAssistance: {type: Boolean, default: false},
         htmlTags: {
             showHideDiv: String,
             labelFloor: String

@@ -3,6 +3,7 @@
     <title>Alert</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <link rel='stylesheet' href='/public/stylesheets/reviewAlert.css' />
+    <link href="/public/stylesheets/reportDetails.css" rel="stylesheet">
 
 
     <% var latidtude2 %>
@@ -341,10 +342,39 @@
     <label for="situation"><b>Situation:</b></label><br>
 
     <!-- checkBox of utility failure -->
+    <% if (info.alertWith.reqAssistance) {%>
 
-    <% for (var i=0; i < info.multiSelectionNames.length; i++) {%>
-        <input type="checkbox" name="checkbox"  value="<%= info.multiSelectionNames[i] %>" checked onclick="return false;">
-        <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
+        <% arraySituations.forEach(function(situation) { %>
+
+            <input type="checkbox" name="checkbox" value="<%= situation.utilityName %>" checked onclick="return false;">
+            <label for="utilityName" class="textSize"><%= situation.utilityName %></label><br>
+
+
+                <% if (situation.arrayButtons.length < 1) {%>
+                    <label for="utilityName" class="textSize spaces5 upDown textColor">(no contacts available)</label><br>
+                <% } %>
+
+                <% situation.arrayButtons.forEach(function(button) { %>
+
+                    <div class="thinnerLine3">
+                        <span class="<%= button.spacesA %>"></span><label for="utilityName" class="upDown"><%= button.radioLabel %></label><span class="<%= button.spacesB %>"></span>
+                        <div class="<%= button.radioSent.onOffSwitch %>">
+                            <input type="checkbox" class="<%= button.radioSent.checkbox %>" name="checkboxRequest" id="<%= situation.utilityID %>+<%= button.radioLabel %>" value="<%= button.value %>" <%= button.radioChecked %>>
+                            <label class="<%= button.radioSent.label %>" for="<%= situation.utilityID %>+<%= button.radioLabel %>">
+                                <span class="<%= button.radioSent.inner %>"></span>
+                                <span class="<%= button.radioSent.switch_ %>"></span>
+                            </label>
+                        </div>
+                    </div>
+                <% }); %>
+
+        <% }); %>
+
+    <% }  else { %>
+        <% for (var i=0; i < info.multiSelectionNames.length; i++) {%>
+            <input type="checkbox" name="checkbox"  value="<%= info.multiSelectionNames[i] %>" checked onclick="return false;">
+            <label for="utilityName"><%= info.multiSelectionNames[i] %></label><br>
+        <% } %>
     <% } %>
 <% } %>
 

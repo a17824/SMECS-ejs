@@ -128,8 +128,9 @@ module.exports.postReceivedAlert = function(req, res, next) {
 
             // ALERT 14 REQUEST ASSISTANCE
             if ((alert.alert.alertID == 14 || alert.alert.alertID == 26) && exitButton == 'false') {
-                var reqAssOn = req.body.reqAssChecked;
-                var reqAssOff = req.body.reqAssNotChecked;
+
+                let reqAssOn = req.body.reqAssChecked;
+                let reqAssOff = req.body.reqAssNotChecked;
 
                 // API EJS ----------
                 if (req.decoded) {       // API user

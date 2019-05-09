@@ -187,6 +187,8 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                         materialSpill(req, res, alertTemp);
                     if (road.callFunction[i] === 'evacuateTo')
                         evacuateTo(req, res, alertTemp);
+                    if (road.callFunction[i] === 'reqAssistance')
+                        reqAssistance(req, res, alertTemp);
                 }
                 redirectAPI = road.redirectAPI;
                 redirectEJS = road.redirectEJS + alertTemp._id;
@@ -418,9 +420,10 @@ function multiMedical(req, res, alertTemp1) {
     alertTemp1.alertWith.multiMedical = true;
 }
 function multiUtilities(req, res, alert, callBack) {
+
     models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
         if(err){
-            console.log('err = ', err);
+            console.log('err finding Utilities = ', err);
         }else {
             alert.requestAssistance = [];
             utils.forEach(function (util) {
@@ -436,20 +439,46 @@ function multiUtilities(req, res, alert, callBack) {
                 alert.requestAssistance.push(request);
             });
 
-            if (alert.alertNameID == 26) {
-                alert.reqAssOn = req.body.reqAssChecked;
-                alert.reqAssOff = req.body.reqAssNotChecked;
+            if (alert.alertWith.reqAssistance) {
 
-                var reqAssOn, reqAssOff;
+
+/*
+                alert.requestAssistance.forEach(function (utility) {    //delete default contact. It memorizes user options on radio buttons to req assistance
+                    utility.defaultContact = 'ask';
+                });
+*/
+                let utilitiesON =  req.body.checkboxesIDs;
+                let reqAssChecked =  req.body.reqAssChecked;
+
+                let array = [];
+                let arrOn = [];
+                let arrOff = [];
+                reqAssChecked.forEach(function (utility) {
+                    array = [];
+                    let arr = [];
+                    array = utility.split(',').map(String);
+                    let arrayString = array[0];
+                    arr = arrayString.split('_|_').map(String);
+                    utilitiesON.forEach(function (utilityChecked) {
+                        if(utilityChecked === arr[0])
+                            arrOn.push(arrayString);
+                        else
+                            arrOff.push(arrayString);
+                    });
+
+                });
+
+
+
+                let reqAssOn, reqAssOff;
 
                 if (req.decoded) {       // API user
                     reqAssOn = req.body.reqAssChecked.split(',').map(String);
                     reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
                 } else {                 // EJS user
-                    reqAssOn = req.body.reqAssChecked;
-                    reqAssOff = req.body.reqAssNotChecked;
+                    reqAssOn = arrOn;
+                    reqAssOff = arrOff;
                 }
-
 
                 alert.reqAssOn = reqAssOn;
                 alert.reqAssOff = reqAssOff;
@@ -514,4 +543,7 @@ function evacuateTo(req, res, alertTemp1) {
     alertTemp1.alertWith.evacuateTo = true;
     alertTemp1.alertWith.htmlTags.showHideDiv = 'hideThis';
     alertTemp1.alertWith.htmlTags.labelFloor = 'Where to evacuate to?';
+}
+function reqAssistance(req, res, alertTemp1) {
+    alertTemp1.alertWith.reqAssistance = true;
 }
