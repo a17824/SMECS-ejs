@@ -103,7 +103,9 @@ module.exports.create = function(req, res, tempAlert, callback) {
         alertRoad: tempAlert.alertRoad,
         alertWith: tempAlert.alertWith
     });
+
     //REQ ASST ALERT
+    /*
     if(tempAlert.alertNameID == 26){
         alert1.status.statusString = 'closed';
         alert1.status.statusClosedDate = wrapped.format('YYYY-MM-DD');
@@ -114,6 +116,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
         alert1.softDeletedTime = wrapped.format('h:mm:ss');
         alert1.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
     }
+    */
     //end of REQ ASST ALERT
 
     alert1.save();
@@ -125,7 +128,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
 module.exports.update = function(req, res, tempAlert, callback) {
 
     models.AlertSentInfo.findById(tempAlert._id, function (err, alert) {
-        if (!alert) {
+        if (!alert || err) {
             console.log('SOMETHING WENT WRONG UPDATING AlertSentInfo OR DEMO MODE WAS SELECTED TO SEND ALERT');
             //return res.send({redirect:'/alerts/sending/chooseGroup'})
             res.redirect('/alerts/sending/chooseGroup');

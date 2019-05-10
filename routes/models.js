@@ -486,11 +486,13 @@ var AlertSentInfoSchema = new mongoose.Schema({
         notesStudentWithGun: {type: Boolean, default: false},
         missingStudent: {type: Boolean, default: false},
         evacuateTo: {type: Boolean, default: false},
+        reqAssistance: {type: Boolean, default: false},
         htmlTags: {
             showHideDiv: String,
             labelFloor: String
         }
-    }
+    },
+    autoAlert: {type: Boolean, default: false}  //for automatic alerts created on requested assistance alert
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names
@@ -630,7 +632,8 @@ var AlertSentTempSchema = new mongoose.Schema({
             showHideDiv: String,
             labelFloor: String
         }
-    }
+    },
+    utils: Array    //for alert 26 req assistance on createAlert.js (temporary variable only needed in AlertSentTemp)
 
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"

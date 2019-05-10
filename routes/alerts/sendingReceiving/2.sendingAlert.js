@@ -4,7 +4,7 @@ var async = require("async");
 var functions = require('./../../functions');
 var moment = require('moment');
 let redirectTo = require('./createAlert');
-
+let reqButtons = require('./saveAlertFunc/2_3_4.reqAssButtons');
 
 
 //          FLOOR           \\
@@ -463,7 +463,7 @@ module.exports.showMultiSelection = function(req, res) {
 
             let arraySituations =[];
             if(results[0].alertNameID == 26) {
-                reqButtons(arraySituations, results[1], function (result3) {
+                reqButtons.sendingAlert(arraySituations, results[1], function (result3) {
                     getRenderJson();
                 });
             }
@@ -527,110 +527,3 @@ module.exports.postMultiSelection = function(req, res) {
         }
     });
 };
-
-function reqButtons(arraySituations, utilities, callback) {
-
-        //radio OFF/ON
-        let check = '';
-        let onOffSwitch = 'onoffswitch';
-        let checkbox = 'onoffswitch-checkbox';
-        let label = 'onoffswitch-label';
-        let inner = 'onoffswitch-inner';
-        let switch_ = 'onoffswitch-switch';
-
-        //end of radio OFF/ON
-
-        utilities.forEach(function (utility) {
-            let arrayButtons = [];
-
-            //radio ON
-            if (utility.smecsApp) {
-
-                if (utility.defaultContact === 'smecsApp') {
-                    check = 'checked';
-                }
-
-                let button = {
-                    spacesA: 'spaces1',
-                    spacesB: 'spaces2',
-                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_smecsApp',
-                    radioLabel: 'smecs app',
-                    radioChecked: check,
-
-                    radioSent: {
-                        onOffSwitch: onOffSwitch,
-                        checkbox: checkbox,
-                        label: label,
-                        inner: inner,
-                        switch_: switch_
-                    }
-                };
-                //reset button
-                arrayButtons.push(button);
-                check = '';
-
-
-            }
-
-            if (utility.email !== '') {
-
-                if (utility.defaultContact === 'email') {
-                    check = 'checked';
-                }
-
-                let button = {
-                    spacesA: 'spaces1',
-                    spacesB: 'spaces2',
-                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_email',
-                    radioLabel: 'send email',
-                    radioChecked: check,
-                    radioSent: {
-                        onOffSwitch: onOffSwitch,
-                        checkbox: checkbox,
-                        label: label,
-                        inner: inner,
-                        switch_: switch_
-                    }
-                };
-                //reset button
-                arrayButtons.push(button);
-                check = '';
-
-            }
-            if (utility.phone !== '') {
-
-                if (utility.defaultContact === 'phone') {
-                    check = 'checked';
-                }
-
-                let button = {
-                    spacesA: 'spaces1',
-                    spacesB: 'spaces4',
-                    value: utility.utilityID + '_|_' + utility.utilityName + '_|_call',
-                    radioLabel: 'call',
-                    radioChecked: check,
-                    radioSent: {
-                        onOffSwitch: onOffSwitch,
-                        checkbox: checkbox,
-                        label: label,
-                        inner: inner,
-                        switch_: switch_
-                    }
-                };
-                //reset button
-                arrayButtons.push(button);
-                check = '';
-
-            }
-            //end of radio SENT
-
-            let situation = {
-                utilityID: utility.utilityID,
-                utilityName: utility.utilityName,
-                arrayButtons: arrayButtons
-            };
-
-            arraySituations.push(situation);
-        });
-    callback('done building req. buttons')
-}

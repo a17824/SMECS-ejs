@@ -1086,16 +1086,16 @@
                                                         </div>
                                                     <% }); %>
 
-                                                    <%  if (idx === array.length - 1) { %> <!--  last loop: put button  -->
+                                                    <%  if (idx === array.length - 1 && !report.autoAlert) { %> <!--  last loop: put button  -->
                                                     <br>
                                                     <%  if (disableReqButton) { %>
                                                         <input type="button" class="btn btn-success btn-xs right" id="request" value="Send Request Assistance" disabled>
                                                     <% } else { %>
                                                         <input type="button" class="btn btn-success btn-xs right" id="request" value="Send Request Assistance" onClick="reqAss()">
                                                     <% } %>
-
-
+                                                        <br>
                                                     <% } %>
+
                                                 <% } %>
 
                                             <% }); %>

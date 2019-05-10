@@ -3,6 +3,7 @@ var models = require('./../../models');
 var async = require("async");
 var functions = require('./../../functions');
 let redirectTo = require('./createAlert');
+let reqButtons = require('./saveAlertFunc/2_3_4.reqAssButtons');
 
 
 module.exports.reviewAlert = function(req, res) {
@@ -27,7 +28,7 @@ module.exports.reviewAlert = function(req, res) {
 
             let arraySituations =[];
             if(results[0].alertNameID == 26) {
-                reqButtons(arraySituations, results[0], function (result3) {
+                reqButtons.reviewAlert(arraySituations, results[0], function (result3) {
                     getRenderJson();
                 });
             }
@@ -81,136 +82,3 @@ module.exports.postReviewAlert = function(req, res, next) {
 };
 
 
-function reqButtons(arraySituations, alert, callback) {
-
-    let array = [];
-    let reqOnArray = [];
-    alert.reqAssOn.forEach(function (val) {
-        array = [];
-        array = val.split('_|_').map(String);
-
-        let reqOn = {
-            utilityID: array[0],
-            utilityName: array[1],
-            type: array[2]
-
-        };
-        reqOnArray.push(reqOn);
-
-    });
-
-
-            //radio OFF/ON
-            let check = '';
-            let onOffSwitch = 'onoffswitch';
-            let checkbox = 'onoffswitch-checkbox';
-            let label = 'onoffswitch-label';
-            let inner = 'onoffswitch-inner';
-            let switch_ = 'onoffswitch-switch';
-
-            //end of radio OFF/ON
-
-            alert.requestAssistance.forEach(function (utility) {
-                let arrayButtons = [];
-
-                //radio ON
-                if (utility.smecsApp) {
-                    for(let x = 0; x < reqOnArray.length; x++) {
-                        if (utility.utilityID == reqOnArray[x].utilityID && reqOnArray[x].type === 'smecsApp') {
-                            check = 'checked';
-                        }
-                    }
-
-                    let button = {
-                        spacesA: 'spaces1',
-                        spacesB: 'spaces2',
-                        value: utility.utilityID + '_|_' + utility.utilityName + '_|_smecsApp',
-                        radioLabel: 'smecs app',
-                        radioChecked: check,
-
-                        radioSent: {
-                            onOffSwitch: onOffSwitch,
-                            checkbox: checkbox,
-                            label: label,
-                            inner: inner,
-                            switch_: switch_
-                        }
-                    };
-                    //reset button
-                    arrayButtons.push(button);
-                    check = '';
-
-
-                }
-
-                if (utility.email !== '') {
-                    for(let x = 0; x < reqOnArray.length; x++) {
-                        if (utility.utilityID == reqOnArray[x].utilityID && reqOnArray[x].type === 'email') {
-                            check = 'checked';
-                        }
-                    }
-
-                    let button = {
-                        spacesA: 'spaces1',
-                        spacesB: 'spaces2',
-                        value: utility.utilityID + '_|_' + utility.utilityName + '_|_email',
-                        radioLabel: 'send email',
-                        radioChecked: check,
-                        radioSent: {
-                            onOffSwitch: onOffSwitch,
-                            checkbox: checkbox,
-                            label: label,
-                            inner: inner,
-                            switch_: switch_
-                        }
-                    };
-                    //reset button
-                    arrayButtons.push(button);
-                    check = '';
-
-                }
-                if (utility.phone !== '') {
-                    for(let x = 0; x < reqOnArray.length; x++) {
-                        if (utility.utilityID == reqOnArray[x].utilityID && reqOnArray[x].type === 'call') {
-                            check = 'checked';
-                        }
-                    }
-
-                    let button = {
-                        spacesA: 'spaces1',
-                        spacesB: 'spaces4',
-                        value: utility.utilityID + '_|_' + utility.utilityName + '_|_call',
-                        radioLabel: 'call',
-                        radioChecked: check,
-                        radioSent: {
-                            onOffSwitch: onOffSwitch,
-                            checkbox: checkbox,
-                            label: label,
-                            inner: inner,
-                            switch_: switch_
-                        }
-                    };
-                    //reset button
-                    arrayButtons.push(button);
-                    check = '';
-
-                }
-                //end of radio SENT
-
-                let situation = {
-                    utilityID: utility.utilityID,
-                    utilityName: utility.utilityName,
-                    arrayButtons: arrayButtons
-                };
-
-                arraySituations.push(situation);
-            });
-
-
-
-
-
-
-
-    callback('done building req. buttons')
-}

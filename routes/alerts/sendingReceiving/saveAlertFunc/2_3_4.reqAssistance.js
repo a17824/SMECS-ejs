@@ -11,8 +11,11 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
         var array = [];
         utils.forEach(function (utility,idx, arr) {
             models.Users.find({email: utility.smecsUsers, pushToken: { "$exists": true }}, function (err, users) {
-                if(err || !users)
-                    console.log('No users to send Req Asst alert. err - ',err);
+                if(err || !users) {
+                    console.log('No users to send Req Asst SMECS APP alert. err - ',err);
+                    callback(array);
+                }
+
                 else {
                     users.forEach(function (user) {
                         var userWithPushToken = {
@@ -31,29 +34,29 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
         });
     }
     usersScopeToSendAlert (function (result, err) {
-                if(err){
-                    console.log('err = ', err);
-                }else {
-                    //console.log('result');
-                    //console.log(result);
-                    //console.log('***********');
-                    //console.log('arraySmecsAppToSent');
-                    //console.log(arraySmecsAppToSent);
-                    arraySmecsAppToSent = arraySmecsAppToSent.concat(result);
-                    //console.log('------------');
-                    //console.log(arraySmecsAppToSent);
-                    alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
-                    var boolTrue = true;
-                    var boolFalse = false;
-                    reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue, actionNotification, updateTime, req,res);
-                    reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse, actionNotification, updateTime, req,res);
-                    alert.save(function (err) {
-                        if(err)
-                            console.log('err - ', err)
+        if(err){
+            console.log('err = ', err);
+        }else {
+            //console.log('result');
+            //console.log(result);
+            //console.log('***********');
+            //console.log('arraySmecsAppToSent');
+            //console.log(arraySmecsAppToSent);
+            arraySmecsAppToSent = arraySmecsAppToSent.concat(result);
+            //console.log('------------');
+            //console.log(arraySmecsAppToSent);
+            alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
+            var boolTrue = true;
+            var boolFalse = false;
+            reqAsst.saveRequestAssistance(alert, reqAssOn, boolTrue, actionNotification, updateTime, req,res);
+            //reqAsst.saveRequestAssistance(alert, reqAssOff, boolFalse, actionNotification, updateTime, req,res);
+            alert.save(function (err) {
+                if(err)
+                    console.log('err - ', err)
 
-                    })
-                }
-            });
+            })
+        }
+    });
 };
 
 
@@ -125,6 +128,11 @@ module.exports.saveRequestAssistance = function(alert, reqAss, boolTrueFalse, ac
 
 //REQUEST ASSISTANCE auto
 module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req,res) {
+
+    let requestedAssistanceSMECSUtility = [];   //to create new requested alert SMECS req with only the chosen utility
+    requestedAssistanceSMECSUtility.push(utility);
+
+
     models.Alerts.findOne({'alertID': 26}, function (err, alertRequestAsst) {
         if(err || !alertRequestAsst)
             console.log('alert not found. Err 2 - ',err);
@@ -146,6 +154,17 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                 whoCanCall911: alertRequestAsst.whoCanCall911,
                 alertIcon: alertRequestAsst.icon,
                 alertRoad: alertRequestAsst.alertRoad,
+                alertWith: {
+                    reqAssistance: true,
+                    multiUtilities: true,
+                    multiSelection: true,
+                    floor: true,
+                    notes: true,
+                    htmlTags: {
+                        labelFloor: "Lcation",
+                        showHideDiv: "showThis"
+                    }
+                },
                 realDrillDemo: alert.realDrillDemo,
                 alertSent: true
 
@@ -160,7 +179,6 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                         })
                 } else {
                     console.log('AUTO alert temp successfully created');
-                    console.log('alertTemp1 _id = ',alertTemp1._id);
 
                     whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) { //get internal users that can receive request assistance alert
                         if(err){
@@ -241,16 +259,32 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                                     buildingName: alert.buildingName,
                                     floorID: alert.floorID,
                                     floorName: alert.floorName,
-                                    floorPhoto: alert._id + '_' + alert.floorPhoto,
+                                    floorPhoto: alert.floorPhoto,
                                     sniperCoordinateX: alert.sniperCoordinateX,
                                     sniperCoordinateY: alert.sniperCoordinateY,
                                     multiSelectionNames: alert.multiSelectionNames,
                                     multiSelectionIDs: alert.multiSelectionIDs,
-                                    requestAssistance: alert.requestAssistance,
+                                    requestAssistance: requestedAssistanceSMECSUtility,
                                     sentSmecsAppUsersScope: alert.sentSmecsAppUsersScope,
                                     latitude: alert.latitude,
                                     longitude: alert.longitude,
-                                    alertRoad: alertTemp1.alertRoad
+                                    alertRoad: alertTemp1.alertRoad,
+                                    alertWith: alertTemp1.alertWith,
+                                    autoAlert: true,
+
+                                    //Auto close alert to not show in reportDetails
+                                    status: {
+                                        statusString: 'closed',
+                                        statusClosedDate: wrapped.format('YYYY-MM-DD'),
+                                        statusClosedTime: wrapped.format('h:mm:ss a')
+                                    },
+                                    archived: false,
+                                    softDeletedBy: req.session.user.firstName + " " + req.session.user.lastName,
+                                    softDeletedDate: wrapped.format('YYYY-MM-DD'),
+                                    softDeletedTime: wrapped.format('h:mm:ss'),
+                                    expirationDate: new Date(Date.now() + ( 30 * 24 * 3600 * 1000)), //( 'days' * 24 * 3600 * 1000) milliseconds
+                                    //end of Auto close alert to not show in reportDetails
+
                                 });
                                 alert1.save(function(err, resp) {
                                     if (err) {

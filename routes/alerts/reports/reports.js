@@ -9,6 +9,7 @@ var MobileDetect = require('mobile-detect');
 let reportsApi = require('./../../api/reports.js');
 let reportsEJS = require('./reports.js');
 let canReqAssFunc = require('./../sendingReceiving/4.receivedAlert.js');
+let reqButtons = require('./../sendingReceiving/saveAlertFunc/2_3_4.reqAssButtons');
 
 
 //* SHOW REPORTS. */
@@ -250,7 +251,7 @@ module.exports.reportsDetails = function(req, res) {
             if(results[0].alert.alertID == 14 || results[0].alert.alertID == 26) {
                 canReqAssFunc.canRequestAssistanceFunction(req, res, results[0], canRequestAssistance, function (result2) {
                     canRequestAssistance = result2;
-                    reqButtons(arraySituations, results[0], disableReqButton, function (result3) {
+                    reqButtons.reportDetails(arraySituations, results[0], disableReqButton, function (result3) {
                         disableReqButton = result3;
                         getRenderJson();
                     });
@@ -476,152 +477,3 @@ module.exports.totalNumbers = function(alert, callback) {
     callback(total)
 };
 
-function reqButtons(arraySituations, alert, disableReqButton, callback) {
-
-    //radio OFF/ON
-    let check = '';
-    let onOffSwitch = 'onoffswitch';
-    let checkbox = 'onoffswitch-checkbox';
-    let label = 'onoffswitch-label';
-    let inner = 'onoffswitch-inner';
-    let switch_ = 'onoffswitch-switch';
-
-    //end of radio OFF/ON
-
-    alert.requestAssistance.forEach(function (utility) {
-        let arrayButtons = [];
-
-        //radio SENT
-        if (utility.smecsApp) {
-
-            if (utility.defaultContact === 'smecsApp') {
-                check = 'checked';
-            }
-            if (utility.reqSmecsApp.sentReqSmecsApp) {
-                check = 'checked disabled';
-                onOffSwitch = 'onoffswitchSent';
-                checkbox = 'onoffswitch-checkboxSent';
-                label = 'onoffswitch-labelSent';
-                inner = 'onoffswitch-innerSent';
-                switch_ = 'onoffswitch-switchSent';
-            }
-            else disableReqButton = false;
-
-            let button = {
-                spacesA: 'spaces1',
-                spacesB: 'spaces2',
-                value: utility.utilityID + '_|_' + utility.utilityName + '_|_smecsApp',
-                radioLabel: 'smecs app',
-                radioChecked: check,
-
-                radioSent: {
-                    onOffSwitch: onOffSwitch,
-                    checkbox: checkbox,
-                    label: label,
-                    inner: inner,
-                    switch_: switch_
-                }
-            };
-            //reset button
-            arrayButtons.push(button);
-            check = '';
-            onOffSwitch = 'onoffswitch';
-            checkbox = 'onoffswitch-checkbox';
-            label = 'onoffswitch-label';
-            inner = 'onoffswitch-inner';
-            switch_ = 'onoffswitch-switch';
-
-        }
-
-        if (utility.email !== '') {
-
-            if (utility.defaultContact === 'email') {
-                check = 'checked';
-            }
-            if (utility.reqEmail.sentReqEmail) {
-                check = 'checked disabled';
-                onOffSwitch = 'onoffswitchSent';
-                checkbox = 'onoffswitch-checkboxSent';
-                label = 'onoffswitch-labelSent';
-                inner = 'onoffswitch-innerSent';
-                switch_ = 'onoffswitch-switchSent';
-            }
-            else disableReqButton = false;
-
-            let button = {
-                spacesA: 'spaces1',
-                spacesB: 'spaces2',
-                value: utility.utilityID + '_|_' + utility.utilityName + '_|_email',
-                radioLabel: 'send email',
-                radioChecked: check,
-                radioSent: {
-                    onOffSwitch: onOffSwitch,
-                    checkbox: checkbox,
-                    label: label,
-                    inner: inner,
-                    switch_: switch_
-                }
-            };
-            //reset button
-            arrayButtons.push(button);
-            check = '';
-            onOffSwitch = 'onoffswitch';
-            checkbox = 'onoffswitch-checkbox';
-            label = 'onoffswitch-label';
-            inner = 'onoffswitch-inner';
-            switch_ = 'onoffswitch-switch';
-        }
-        if (utility.phone !== '') {
-
-            if (utility.defaultContact === 'call') {
-                check = 'checked';
-            }
-            if (utility.reqCall.sentReqCall) {
-                check = 'checked disabled';
-                onOffSwitch = 'onoffswitchSent';
-                checkbox = 'onoffswitch-checkboxSent';
-                label = 'onoffswitch-labelSent';
-                inner = 'onoffswitch-innerSent';
-                switch_ = 'onoffswitch-switchSent';
-            }
-            else disableReqButton = false;
-
-            let button = {
-                spacesA: 'spaces1',
-                spacesB: 'spaces4',
-                value: utility.utilityID + '_|_' + utility.utilityName + '_|_call',
-                radioLabel: 'call',
-                radioChecked: check,
-                radioSent: {
-                    onOffSwitch: onOffSwitch,
-                    checkbox: checkbox,
-                    label: label,
-                    inner: inner,
-                    switch_: switch_
-                }
-            };
-            //reset button
-            arrayButtons.push(button);
-            check = '';
-            onOffSwitch = 'onoffswitch';
-            checkbox = 'onoffswitch-checkbox';
-            label = 'onoffswitch-label';
-            inner = 'onoffswitch-inner';
-            switch_ = 'onoffswitch-switch';
-        }
-        //end of radio SENT
-
-        let situation = {
-            utilityID: utility.utilityID,
-            utilityName: utility.utilityName,
-            arrayButtons: arrayButtons
-        };
-
-        arraySituations.push(situation);
-        //console.log('arraySituations1 = ',arraySituations);
-
-        //check if reqButton shoud be enable or disable
-
-    });
-    callback(disableReqButton)
-};

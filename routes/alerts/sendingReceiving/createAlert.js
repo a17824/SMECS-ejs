@@ -10,7 +10,9 @@ var floor = require('./saveAlertFunc/3a.savefloorFile.js');
 let student = require('./saveAlertFunc/3b.student.js');
 let reqAsst = require('./saveAlertFunc/2_3_4.reqAssistance.js');
 let redirectTo = require('./createAlert');
-let reportsApi = require('./../../api/reports.js');
+
+
+
 
 /* Verify PIN. -------------------------------*/
 module.exports.verifyPinGet = function(req, res) {
@@ -189,6 +191,7 @@ module.exports.redirectTo= function(req, res, alertTemp,flag,arg1,arg2) {
                         evacuateTo(req, res, alertTemp);
                     if (road.callFunction[i] === 'reqAssistance')
                         reqAssistance(req, res, alertTemp);
+
                 }
                 redirectAPI = road.redirectAPI;
                 redirectEJS = road.redirectEJS + alertTemp._id;
@@ -274,32 +277,40 @@ module.exports.createAlert= function(req, res) {
                     if(err || !result) console.log('something worng creating Alert. err - ', err);
                     else {
                         /*****  CALL HERE NOTIFICATION API  *****/
-                        if(alertTemp.alertNameID !== 26){
-                            pushNotification.alert(result, 'newAlert', email, function (result2,err2) {
-                                if(err2 || !result2) console.log('sending pushNotification. err - ', err2);
-                                else {
-                                    console.log('resultCreate = ',result2);
-                                    alertTemp.alertSent = true;
-                                    alertTemp.save(function (err3) {
-                                        if(err3)
-                                            console.log('failed to update alertTemp.alertSent to = true. ERR = ',err3);
-                                        else
-                                            console.log('success to update alertTemp.alertSent to = true');
-                                    });
-                                    redirectTo.redirectTo(req,res,alertTemp,flag);
-                                }
-                            });
-                        }
+                        //if(alertTemp.alertNameID !== 26){
+                        pushNotification.alert(result, 'newAlert', email, function (result2,err2) {
+                            if(err2 || !result2) console.log('sending pushNotification. err - ', err2);
+                            else {
+                                alertTemp.alertSent = true;
+                                alertTemp.save(function (err3) {
+                                    if(err3)
+                                        console.log('failed to update alertTemp.alertSent to = true. ERR = ',err3);
+                                    else
+                                        console.log('success to update alertTemp.alertSent to = true');
+                                });
+                                redirectTo.redirectTo(req,res,alertTemp,flag);
+                            }
+                        });
+                        //}
+                        /*
                         else {
                             alertTemp.alertSent = true;
                             alertTemp.save(function (err) {
                                 if(err)
-                                    console.log('failed to update alertTemp.alertSent to = true. ERR = ',err);
+                                    console.log('26 failed to update alertTemp.alertSent to = true. ERR = ',err);
                                 else
-                                    console.log('success to update alertTemp.alertSent to = true');
+                                    console.log('26 success to update alertTemp.alertSent to = true');
                             });
                             redirectTo.redirectTo(req,res,alertTemp,flag);
                         }
+                        */
+                        if(alertTemp.alertWith.reqAssistance){
+
+                            //console.log('alertTemp.utils = ',alertTemp.utils);
+                            var arraySmecsAppToSent = [];
+                            reqAsst.buildSmecsAppUsersArrToSendReqAss(result, alertTemp.utils, alertTemp.reqAssOn, alertTemp.reqAssOff, arraySmecsAppToSent, 'notify', 'dontUpdate',req,res);
+                        }
+
                     }
                 });
             }
@@ -419,12 +430,14 @@ function multiMedical(req, res, alertTemp1) {
     alertTemp1.medicalInjuredParties = req.body.medicalInjuredParties;
     alertTemp1.alertWith.multiMedical = true;
 }
+
 function multiUtilities(req, res, alert, callBack) {
 
     models.Utilities.find({'utilityID': alert.multiSelectionIDs}, function (err, utils) {
         if(err){
             console.log('err finding Utilities = ', err);
         }else {
+
             alert.requestAssistance = [];
             utils.forEach(function (util) {
                 var request = {
@@ -442,50 +455,52 @@ function multiUtilities(req, res, alert, callBack) {
             if (alert.alertWith.reqAssistance) {
 
 
-/*
-                alert.requestAssistance.forEach(function (utility) {    //delete default contact. It memorizes user options on radio buttons to req assistance
-                    utility.defaultContact = 'ask';
-                });
-*/
+                /*
+                                alert.requestAssistance.forEach(function (utility) {    //delete default contact. It memorizes user options on radio buttons to req assistance
+                                    utility.defaultContact = 'ask';
+                                });
+                */
+
                 let utilitiesON =  req.body.checkboxesIDs;
                 let reqAssChecked =  req.body.reqAssChecked;
 
-                let array = [];
-                let arrOn = [];
-                let arrOff = [];
-                reqAssChecked.forEach(function (utility) {
-                    array = [];
-                    let arr = [];
-                    array = utility.split(',').map(String);
-                    let arrayString = array[0];
-                    arr = arrayString.split('_|_').map(String);
-                    utilitiesON.forEach(function (utilityChecked) {
-                        if(utilityChecked === arr[0])
-                            arrOn.push(arrayString);
-                        else
-                            arrOff.push(arrayString);
+                if(typeof reqAssChecked !== "undefined") {  //for back button in ejs
+
+                    let array = [];
+                    let arrOn = [];
+                    let arrOff = [];
+                    reqAssChecked.forEach(function (utility) {
+                        array = [];
+                        let arr = [];
+                        array = utility.split(',').map(String);
+                        let arrayString = array[0];
+                        arr = arrayString.split('_|_').map(String);
+                        utilitiesON.forEach(function (utilityChecked) {
+                            if (utilityChecked === arr[0])
+                                arrOn.push(arrayString);
+                            else
+                                arrOff.push(arrayString);
+                        });
+
                     });
 
-                });
 
+                    let reqAssOn, reqAssOff;
 
+                    if (req.decoded) {       // API user
+                        reqAssOn = req.body.reqAssChecked.split(',').map(String);
+                        reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
+                    } else {                 // EJS user
+                        reqAssOn = arrOn;
+                        reqAssOff = arrOff;
+                    }
 
-                let reqAssOn, reqAssOff;
+                    alert.reqAssOn = reqAssOn;
+                    alert.reqAssOff = reqAssOff;
+                    alert.utils = utils;
 
-                if (req.decoded) {       // API user
-                    reqAssOn = req.body.reqAssChecked.split(',').map(String);
-                    reqAssOff = req.body.reqAssNotChecked.split(',').map(String);
-                } else {                 // EJS user
-                    reqAssOn = arrOn;
-                    reqAssOff = arrOff;
                 }
 
-                alert.reqAssOn = reqAssOn;
-                alert.reqAssOff = reqAssOff;
-
-
-                var arraySmecsAppToSent = [];
-                reqAsst.buildSmecsAppUsersArrToSendReqAss(alert, utils, reqAssOn, reqAssOff, arraySmecsAppToSent, 'dontNotify', 'update',req,res);
             }
 
             alert.alertWith.multiUtilities = true;
@@ -547,3 +562,4 @@ function evacuateTo(req, res, alertTemp1) {
 function reqAssistance(req, res, alertTemp1) {
     alertTemp1.alertWith.reqAssistance = true;
 }
+

@@ -135,7 +135,7 @@
 /* send request button*/
 .right {
     position: absolute;
-    bottom: 5%;
+    bottom: 10%;
     right: 3%;
 }
 
@@ -148,5 +148,5 @@
 }
 
 .paddingLeft{
-padding-left: 20px;    
+padding-left: 20px;
 }
