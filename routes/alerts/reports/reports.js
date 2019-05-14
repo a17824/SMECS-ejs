@@ -16,7 +16,7 @@ let reqButtons = require('./../sendingReceiving/saveAlertFunc/2_3_4.reqAssButton
 module.exports.homeReports = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.AlertSentInfo.find().sort({"_id":-1}).exec(callback);
+            models.AlertSentInfo.find({autoAlert: false}).sort({"_id":-1}).exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
@@ -55,7 +55,7 @@ module.exports.homeReports = function(req, res, next) {
 module.exports.reportsArchived = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.AlertSentInfo.find().sort({"_id":-1}).sort({"sentTime":-1}).exec(callback);
+            models.AlertSentInfo.find({autoAlert: false}).sort({"_id":-1}).sort({"sentTime":-1}).exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
@@ -78,7 +78,7 @@ module.exports.reportsArchived = function(req, res, next) {
 module.exports.reportsTrash = function(req, res, next) {
     async.parallel([
         function(callback){
-            models.AlertSentInfo.find().sort({"_id":-1}).sort({"sentTime":-1}).exec(callback);
+            models.AlertSentInfo.find({autoAlert: false}).sort({"_id":-1}).sort({"sentTime":-1}).exec(callback);
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
@@ -103,7 +103,7 @@ module.exports.updateStatus = function(req, res) {
     var statusToChange = req.body.searchIDsChecked;
     var wrapped = moment(new Date());
 
-    models.AlertSentInfo.find({'_id': statusToChange}, function (err, alerts) {
+    models.AlertSentInfo.find({$or: [{'_id': statusToChange}, {'parent': statusToChange}]},function (err, alerts) {
         if (err) {
             console.log('err - changing Alert STATUS');
         } else {
@@ -117,8 +117,12 @@ module.exports.updateStatus = function(req, res) {
                     alert.status.statusClosedDate = undefined;
                     alert.status.statusClosedTime = undefined;
                 }
-                alert.save();
-                console.log('success - Alert status changed to ' + alert.status.statusString);
+                alert.save(function(err) {
+                    if (err)
+                        console.log('err = ', err);
+                    else
+                        console.log('success - Alert status changed to ' + alert.status.statusString);
+                });
 
             });
             /*****  CALL HERE NOTIFICATION API  *****/
@@ -136,7 +140,7 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
     var action = req.body.action;
     var page = req.body.page;
 
-    models.AlertSentInfo.find({'_id': statusToChange}, function (err, alerts) {
+    models.AlertSentInfo.find({$or: [{'_id': statusToChange}, {'parent': statusToChange}]}, function (err, alerts) {
         if (err) {
             console.log('err - changing Alert to Archive or Inbox');
         } else {

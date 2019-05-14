@@ -711,6 +711,18 @@ module.exports.updatePost = function(req, res) {
                     user.contactName = req.body.firstName + ' ' + req.body.lastName
 
             }else{
+                if(oldIfUserHasUtilityUserRole == 1){   //is user was external and it's not external anymore, delete user from utilities
+
+                    models.Utilities.update({}, { $pull: { 'smecsUsers': user.email }}, {safe: true, multi: true}, function (err, result) {
+                        if (err) {
+                            console.log('err - finding students from arrayToDelete');
+                        } else {
+                            console.log('success - parent(s) removed from Student document');
+                            console.log('result update utilities users = ',result);
+                        }
+                    });
+
+                }
                 user.companyName = undefined;
                 user.contactName = undefined;
             }

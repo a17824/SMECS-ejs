@@ -222,6 +222,7 @@ module.exports.delete = function(req, res) {
 
 
 /* SHOW/UPDATE/DELETE UTILITy USERS. */
+
 module.exports.showUtilityUsers = function(req, res, next) {
     async.parallel([
         function(callback){
@@ -270,4 +271,5 @@ module.exports.updateUtilityUsersPost = function(req, res) {
 
     });
 };
+
 /*-------------------------end of SHOW/UPDATE/DELETE UtilityUsers*/

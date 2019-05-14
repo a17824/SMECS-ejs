@@ -5,7 +5,13 @@ let timeDifFunc = require('./reports.js');
 
 /* Send all alerts. -------------------------------*/
 module.exports.reportsGet = function (req, res) {
-    models.AlertSentInfo.find({'status.statusString': "open"}, function (err, alert) {
+
+    models.AlertSentInfo.find({
+        $and: [
+            {'status.statusString': "open"},
+            {$or: [{ sentTo: {$elemMatch: {email: req.decoded.user.email}} } , { sentSmecsAppUsersScope: {$elemMatch: {userEmail: req.decoded.user.email}} }] }
+        ]
+    },function (err, alert) {
         if (err || !alert){
             console.log('no open alerts found. err - ',err);
             res.json({
@@ -106,9 +112,9 @@ module.exports.alertReceiptPost = function (req, res) {
                         pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
 
                         if(req.decoded)
-                            //res.json({success: true});
+                        //res.json({success: true});
 
-                        break
+                            break
                     }
                 }
             }

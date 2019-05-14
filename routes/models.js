@@ -492,7 +492,8 @@ var AlertSentInfoSchema = new mongoose.Schema({
             labelFloor: String
         }
     },
-    autoAlert: {type: Boolean, default: false}  //for automatic alerts created on requested assistance alert
+    autoAlert: {type: Boolean, default: false},  //for automatic alerts created on requested assistance alert
+    parent: String  //to delete/close/archive autoAlerts related to main alert (this applies only to utility failures and requeste assistance alerts
 
 }, {usePushEach: true,  //stops Mongoose error of "Unknown modifier: $pushAll"
     collection:"AlertSentInfo"}); //stops Mongoose of giving plurals to our collections names

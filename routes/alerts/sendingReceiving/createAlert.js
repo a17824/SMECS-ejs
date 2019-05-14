@@ -506,8 +506,7 @@ function multiUtilities(req, res, alert, callBack) {
             alert.alertWith.multiUtilities = true;
 
             if (alert.alertNameID !== 26) {
-                console.log('requestAssistance = ',alert.requestAssistance);
-                alert.save();
+                //alert.save();
             }
             callBack('222222')
         }
