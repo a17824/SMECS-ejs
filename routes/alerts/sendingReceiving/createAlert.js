@@ -538,15 +538,11 @@ function busEarlyLate(req, res, alertTemp1) {
     alertTemp1.busMorningAfternoon = req.body.busMorningAfternoon;
     alertTemp1.busDelayedAhead = req.body.busDelayedAhead;
     alertTemp1.busTimeChanged = req.body.busTime;
-    alertTemp1.busTimeChangedEmail = req.body.busSendEmailBusEarlyLate;
     alertTemp1.alertWith.busEarlyLate = true;
 }
 function earlyDismissal(req, res, alertTemp1) {
-    //console.log(typeof req.body.earlyDismissalTime);
-    console.log('busSendEmail = ',req.body.busSendEmailEarlyDismissal);
     alertTemp1.earlyDismissalDate = req.body.earlyDismissalDate;
     alertTemp1.earlyDismissalTime = req.body.earlyDismissalTime;
-    alertTemp1.busTimeChangedEmail = req.body.busSendEmailEarlyDismissal;
     alertTemp1.alertWith.earlyDismissal = true;
 }
 function materialSpill(req, res, alertTemp1) {

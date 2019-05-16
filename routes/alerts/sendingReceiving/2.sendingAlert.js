@@ -320,17 +320,17 @@ module.exports.showNotes = function(req, res) {
 };
 module.exports.postNotes = function(req, res) {
 
-    var alertToUpdate1 = req.body.alertToUpdate;
+    let alertToUpdate1 = req.body.alertToUpdate;
     models.AlertSentTemp.findById({'_id': alertToUpdate1}, function (err, alert) {
         if (!alert) {
             functions.alertTimeExpired(req,res);
         }
         else {
-            var wrapped = moment(new Date());
-            var htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
-            var htmlTime = '</span></strong><span style="font-size:11px">';
-            var htmlNote = '</span></div><span style="color:#333333">&nbsp;';
-            var newNote = req.body.note;
+            let wrapped = moment(new Date());
+            let htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
+            let htmlTime = '</span></strong><span style="font-size:11px">';
+            let htmlNote = '</span></div><span style="color:#333333">&nbsp;';
+            let newNote = req.body.note;
 
             if (typeof newNote == 'undefined' || newNote == '')
                 newNote = '(skipped note)';

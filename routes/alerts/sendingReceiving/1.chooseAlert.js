@@ -289,6 +289,8 @@ module.exports.showAlertsPost = function(req, res) {
                             alertNameID: req.body.alertID,
                             alertName: req.body.alertName,
                             realDrillDemo: req.body.alertMode,
+                            requestSendEmail: alert[0].alertRequestSendEmail,
+                            requestSendSMS: alert[0].alertRequestSendSMS,
                             requestProcedureCompleted: alert[0].alertRequestProcedureCompleted,
                             requestWeAreSafe: alert[0].alertRequestWeAreSafe,
                             requestINeedHelp: alert[0].alertRequestForINeedHelp,
@@ -353,6 +355,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.groupLight = alert[0].group.light;
                                     alertTemp.alertNameID = req.body.alertID;
                                     alertTemp.alertName = req.body.alertName;
+                                    alertTemp.requestSendEmail = alert[0].requestSendEmail;
                                     alertTemp.requestProcedureCompleted = alert[0].alertRequestProcedureCompleted;
                                     alertTemp.requestWeAreSafe = alert[0].alertRequestWeAreSafe;
                                     alertTemp.requestINeedHelp = alert[0].alertRequestForINeedHelp;

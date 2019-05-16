@@ -150,3 +150,12 @@
 .paddingLeft{
 padding-left: 20px;
 }
+
+.centerPics{
+    position: absolute;
+    right: 0%;
+    top: 3%;
+}
+.size{
+    width: 15%;
+}

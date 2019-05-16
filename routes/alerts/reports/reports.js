@@ -238,6 +238,35 @@ module.exports.reportsDetails = function(req, res) {
             }
             //end of hide show Gauges Accordions Procedure, Safe, Help
 
+            //Alert with Lights, Sound, Emails, TextMessage
+            let lights = '174.png';
+            let lightTitle = 'This alert does not use Lights in classrooms';
+            let sound = '178.png';
+            let soundTitle = 'This alert does not play Sound in classrooms';
+            let emails = '181.png';
+            let emailsTitle = 'This alert does not send Emails';
+            let textMessages = '186.png';
+            let TextMessagesTitle = 'This alert does not send text messages';
+
+            if(results[0].alert.light){
+                lights = '53.png';
+                lightTitle = 'This alert uses Lights in classrooms';
+            }
+            if(results[0].alert.lightSound){
+                sound = '179.png';
+                soundTitle = 'This alert plays Sound in classrooms';
+            }
+            if(results[0].requestSendEmail){
+                emails = '180.png';
+                emailsTitle = 'This alert sends Emails';
+            }
+            if(results[0].requestSendSMS){
+                textMessages = '185.png';
+                TextMessagesTitle = 'This alert sends text messages';
+            }
+
+            //end of Alert with Lights, Sound, Emails, TextMessage
+
             let htmlTags = {
                 classNames: classNames,
                 alertWith911: alertWith911,
@@ -245,7 +274,17 @@ module.exports.reportsDetails = function(req, res) {
                 showSafe: showSafe,
                 showHelp: showHelp,
                 pageColSize: pageColSize,
-                pageColSize2: pageColSize2
+                pageColSize2: pageColSize2,
+                icons: {
+                    lights: lights,
+                    lightTitle: lightTitle,
+                    sound: sound,
+                    soundTitle: soundTitle,
+                    emails: emails,
+                    emailsTitle: emailsTitle,
+                    textMessages: textMessages,
+                    TextMessagesTitle: TextMessagesTitle
+                }
             };
 
             let canRequestAssistance = false;

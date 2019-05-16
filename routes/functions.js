@@ -261,13 +261,19 @@ module.exports.alertTimeExpired = function(req, res) {
     if(req.decoded){ // run SMECS API
         res.json({
             success: false,
-            message: 'Alert expired. After choosing alert, you have 10min to fill info and send alert',
+            message: 'Alert expired. After choosing alert, you have 1 day to fill info and send alert',
             redirect: 'home'
         });
 
     }else{  // run SMECS EJS
-        req.flash('error_messages', 'Alert expired. After choosing alert, you have 10min to fill info and send alert');
+        req.flash('error_messages', 'Alert expired. After choosing alert, you have 1 day to fill info and send alert');
         //res.send({redirect: '/alerts/sending/chooseGroup'});
         res.redirect('/alerts/sending/chooseAlert');
     }
+};
+
+module.exports.userTimeExpired = function(req, res) {
+    console.log('TTL EXPIRED');
+    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 30min to fill info and save new User');
+    res.redirect('/users/showUsers/');
 };

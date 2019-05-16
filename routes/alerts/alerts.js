@@ -286,6 +286,7 @@ module.exports.updatePost = function(req, res) {
             alert.alertRequestWeAreSafe = req.body.alertRequestWeAreSafe;
             alert.alertRequestForINeedHelp = req.body.alertRequestForINeedHelp;
             alert.alertRequestSendEmail = req.body.alertRequestSendEmail;
+            alert.alertRequestSendSMS = req.body.alertRequestSendSMS;
             alert.alertLight = req.body.alertLight;
             alert.alertLightSound = req.body.alertLightSound;
             alert.icon = req.body.icon;

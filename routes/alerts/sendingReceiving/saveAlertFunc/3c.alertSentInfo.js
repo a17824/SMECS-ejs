@@ -54,7 +54,8 @@ module.exports.create = function(req, res, tempAlert, callback) {
             name: tempAlert.alertName,
             icon: tempAlert.alertIcon,
             light: tempAlert.light,
-            lightSound: tempAlert.lightSound
+            lightSound: tempAlert.lightSound,
+
         },
         sentBy: sentByApiEjs,
         sentDate: wrapped.format('YYYY-MM-DD'),
@@ -62,6 +63,8 @@ module.exports.create = function(req, res, tempAlert, callback) {
         sentRoleIDScope: tempAlert.sentRoleIDScope,
         sentRoleNameScope: tempAlert.sentRoleNameScope,
         sentTo: sentTo,
+        requestSendEmail: tempAlert.requestSendEmail,
+        requestSendSMS: tempAlert.requestSendSMS,
         requestProcedureCompleted: tempAlert.requestProcedureCompleted,
         requestWeAreSafe: tempAlert.requestWeAreSafe,
         requestINeedHelp: tempAlert.requestINeedHelp,
@@ -103,22 +106,6 @@ module.exports.create = function(req, res, tempAlert, callback) {
         alertRoad: tempAlert.alertRoad,
         alertWith: tempAlert.alertWith
     });
-
-    //REQ ASST ALERT
-    /*
-    if(tempAlert.alertNameID == 26){
-        alert1.status.statusString = 'closed';
-        alert1.status.statusClosedDate = wrapped.format('YYYY-MM-DD');
-        alert1.status.statusClosedTime = wrapped.format('h:mm:ss a');
-        alert1.archived = false;
-        alert1.softDeletedBy = req.session.user.firstName + " " + req.session.user.lastName;
-        alert1.softDeletedDate = wrapped.format('YYYY-MM-DD');
-        alert1.softDeletedTime = wrapped.format('h:mm:ss');
-        alert1.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
-    }
-    */
-    //end of REQ ASST ALERT
-
     alert1.save();
     callback(alert1)
 };

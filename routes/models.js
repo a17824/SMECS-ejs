@@ -53,7 +53,7 @@ module.exports.Users = mongoose.model("Users", UsersSchema);
 
 // DEFINE UsersAddTemp COLLECTION IN MONGOdb
 var UsersAddTempSchema = new mongoose.Schema({
-    ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
+    ttl: { type: Date, index: { expireAfterSeconds: 1800 }, default: Date.now }, //TTL delete document after 600 seconds (10min), 1800sec(30min)
     userRoleID: [Number],
     userRoleName: [String],
     userPrivilegeID: Number,
@@ -234,6 +234,7 @@ var AlertsSchema = new mongoose.Schema({
     alertRequestWeAreSafe: { type: Boolean, default: true },
     alertRequestForINeedHelp: { type: Boolean, default: true },
     alertRequestSendEmail: { type: Boolean, default: false },
+    alertRequestSendSMS: { type: Boolean, default: false },
     alertAutoDrill: { type: Boolean, default: false },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
@@ -388,6 +389,8 @@ var AlertSentInfoSchema = new mongoose.Schema({
         statusClosedTime: String
     },
     realDrillDemo: String,
+    requestSendEmail: { type: Boolean, default: false },
+    requestSendSMS: { type: Boolean, default: false },
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
     requestINeedHelp: { type: Boolean, default: false },
@@ -418,7 +421,6 @@ var AlertSentInfoSchema = new mongoose.Schema({
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...
-    busTimeChangedEmail: Boolean,            //on or off (to send email to parents)
     earlyDismissalDate: String,
     earlyDismissalTime: String,
     multiSelectionNames: [String],
@@ -522,6 +524,8 @@ var AlertSentTempSchema = new mongoose.Schema({
     sentTime: String,
     notePlaceholder: String,
     realDrillDemo: String,
+    requestSendEmail: { type: Boolean, default: false },
+    requestSendSMS: { type: Boolean, default: false },
     requestProcedureCompleted: { type: Boolean, default: false },
     requestWeAreSafe: { type: Boolean, default: false },
     requestINeedHelp: { type: Boolean, default: false },
@@ -542,7 +546,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         userEmail: String,
         userPushToken: String
     }],
-    ttl: { type: Date, index: { expireAfterSeconds: 600 }, default: Date.now }, //TTL delete document after 600 seconds (10min)
+    ttl: { type: Date, index: { expireAfterSeconds: 86400 }, default: Date.now }, //TTL delete document after 600seconds(10min), 86400sec(1 day)
     placeholderNote: String,
     note: String,
     noteWithoutTags: String,
@@ -569,7 +573,6 @@ var AlertSentTempSchema = new mongoose.Schema({
     busMorningAfternoon: String,            //bus time: morning or afternoon
     busDelayedAhead: String,                //bus is delayed or ahead
     busTimeChanged: String,                 //0:45, 1:30...
-    busTimeChangedEmail: Boolean,            //on or off (to send email to parents)
     earlyDismissalDate: String,
     earlyDismissalTime: String,
     multiSelectionNames: [String],          // Utilities in Failure or Medical Emergencies
@@ -642,9 +645,7 @@ var AlertSentTempSchema = new mongoose.Schema({
 var AlertSentTemp;
 module.exports.AlertSentTemp = mongoose.model("AlertSentTemp", AlertSentTempSchema);
 // Fix for Mongoose not creating the TTL indexes (see https://github.com/LearnBoost/mongoose/issues/2459#issuecomment-62802096 )
-mongoose.model('AlertSentTemp').ensureIndexes(function(err) {
-    console.log('ensure index', err)
-});
+mongoose.model('AlertSentTemp').ensureIndexes(function(err) {});
 
 
 

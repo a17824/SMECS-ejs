@@ -121,11 +121,7 @@ module.exports.addStep1 = function(req, res) {
 
     ],function(err, results){
         if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.redirect('/users/showUsers/');
-            //res.send({redirect: '/users/showUsers/'});
+            functions.userTimeExpired(req,res);
         }
         else {
             res.render('users/addUserStep1', {
@@ -145,10 +141,7 @@ module.exports.addStep1Post = function(req, res) {
     var userToAddUpdate_ID = req.body.userToAddUpdate_ID;
     models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
         if (!user || err) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.send({redirect: '/users/showUsers/'});
+            functions.userTimeExpired(req,res);
         }
         else {
             user.userRoleID = req.body.userRoleID;
@@ -173,11 +166,7 @@ module.exports.addStep2 = function(req, res) {
 
     ],function(err, results){
         if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.redirect('/users/showUsers/');
-            //res.send({redirect: '/users/showUsers/'});
+            functions.userTimeExpired(req,res);
         }
         else {
             var ifUserHasParentRole = 0;
@@ -221,10 +210,7 @@ module.exports.addStep2Post = function(req, res) {
 
             models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
                 if (!user) {
-                    console.log(err);
-                    console.log('TTL EXPIRED');
-                    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-                    res.send({redirect: '/users/showUsers/'});
+                    functions.userTimeExpired(req,res);
                 }
                 else {
                     console.log('pin = ',req.body.pin);
@@ -301,10 +287,7 @@ module.exports.addStep3 = function(req, res) {
 
     ],function(err, results){
         if (!results[0]) {
-            console.log(err);
-            console.log('TTL EXPIRED');
-            req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-            res.redirect('/users/showUsers/');
+            functions.userTimeExpired(req,res);
         }
         else {
             var ifUserHasPrincipalRole = 0;
@@ -350,10 +333,7 @@ module.exports.addStep3Post = function(req, res) {
             models.UsersAddTemp.findById({'_id': userToAddUpdate_ID}, function (err, user) {
 
                 if (!user) {
-                    console.log(err);
-                    console.log('TTL EXPIRED');
-                    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
-                    res.send({redirect: '/users/showUsers/'});
+                    functions.userTimeExpired(req,res);
                 }
                 else {
                     user.userPrivilegeID = req.body.userPrivilegeID;
@@ -459,9 +439,7 @@ module.exports.update = function(req, res) {
                 var ifUserHasAnyOtherRole = 0;
 
                 if (!user) {
-
-                    console.log('TTL EXPIRED');
-                    req.flash('error_messages', 'Time expired. After clicking "Add User" button, you have 10min to fill info and save new User');
+                    req.flash('error_messages', 'There was a problem updating user info. Please try again and if problem persists, contact SMECS team.');
                     res.redirect('/users/showUsers/');
                 }else{
                     for (var i = 0; i < user.userRoleID.length; i++) {

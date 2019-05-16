@@ -233,6 +233,7 @@
                 var alertRequestWeAreSafe = document.getElementById("checkboxSafe").checked;
                 var alertRequestForINeedHelp = document.getElementById("checkboxNeedHelp").checked;
                 var alertRequestSendEmail = document.getElementById("checkboxSendEmail").checked;
+                var alertRequestSendText = document.getElementById("checkboxSendText").checked;
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -292,6 +293,7 @@
                     alertRequestWeAreSafe: alertRequestWeAreSafe,
                     alertRequestForINeedHelp: alertRequestForINeedHelp,
                     alertRequestSendEmail: alertRequestSendEmail,
+                    alertRequestSendSMS: alertRequestSendText,
                     alertLight: alertLight,
                     alertLightSound: alertLightSound,
                     icon: icon,
@@ -889,14 +891,18 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkboxSafe" title="When sending this Alert notification, it will also send a Text message to cellphone">Send text message</label>
                                         <div class="col-md-1 col-sm-1 col-xs-12">
-
+                                            <% if (alert.alertRequestSendSMS == true) {%>
                                                 <input type="checkbox"
                                                        name="checkboxSendText"
                                                        id="checkboxSendText"
-                                                       value="<%= alert.alertRequestSendEmail %>"
-                                                       onclick="" disabled>
-
-                                            <label for="checkboxSendText"> ....                     Coming soon...</label>
+                                                       value="<%= alert.alertRequestSendSMS %>" checked>
+                                            <% }else{%>
+                                                <input type="checkbox"
+                                                       name="checkboxSendText"
+                                                       id="checkboxSendText"
+                                                       value="<%= alert.alertRequestSendSMS %>">
+                                            <% } %>
+                                            <label for="checkboxSendSMS"></label>
                                         </div>
 
 

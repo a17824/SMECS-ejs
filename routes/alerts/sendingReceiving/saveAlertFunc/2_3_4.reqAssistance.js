@@ -10,19 +10,15 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
     function usersScopeToSendAlert(callback) {
         let array = [];
         let flagLength = 0;
-        console.log('utils.length = ',utils.length);
+
         for(let i = 0; i < utils.length; i++) {
-            console.log('first i = ', i);
-            //console.log('1 flagLength = ', flagLength);
+            //console.log('first i = ', i);
             models.Users.find({email: utils[i].smecsUsers, pushToken: {"$exists": true}}, function (err, users) {
-                console.log('second i = ', i);
                 if (err || !users) {
                     console.log('No users to send Req Asst SMECS APP alert. err - ', err);
                     callback(array);
                 }
-
                 else {
-                    //console.log('users = ', users);
                     users.forEach(function (user) {
                         let userWithPushToken = {
                             utilityID: utils[i].utilityID,
@@ -33,65 +29,25 @@ module.exports.buildSmecsAppUsersArrToSendReqAss = function(alert, utils, reqAss
                         array.push(userWithPushToken);
                     });
                     flagLength++;
-                    //console.log('2 flagLength = ', flagLength);
-                    console.log('outside i = ', i);
-                    if (i == utils.length - 1) { //If last forEach loop, then does the callback
-                        //if (idx === arr.length - 1) { //If last forEach loop, then does the callback
+                    //console.log('outside i = ', i);
+                    if (i === utils.length - 1) { // TO DELETE
                         console.log('LAST LOOP LAST LOOP');
-                        //console.log('inside i = ', i);
                     }
                     if (flagLength == utils.length) { //If last forEach loop, then does the callback
-                        //if (idx === arr.length - 1) { //If last forEach loop, then does the callback
                         console.log('LAST LOOP flagLength');
-                        //console.log('inside i = ', i);
-                        //console.log('array = ', array);
                         callback(array);
                     }
                 }
             })
         }
-        /*
-        utils.forEach(function (utility,idx, arr) {
-            models.Users.find({email: utility.smecsUsers, pushToken: {"$exists": true}}, function (err, users) {
-                if (err || !users) {
-                    console.log('No users to send Req Asst SMECS APP alert. err - ', err);
-                    callback(array);
-                }
-
-                else {
-                    console.log('users = ', users);
-                    users.forEach(function (user) {
-                        let userWithPushToken = {
-                            utilityID: utility.utilityID,
-                            utilityName: utility.utilityName,
-                            userEmail: user.email,
-                            userPushToken: user.pushToken
-                        };
-                        array.push(userWithPushToken);
-                    });
-
-                    if (idx === arr.length - 1) { //If last forEach loop, then does the callback
-                        console.log('LAST LOOP LAST LOOP');
-                        console.log('array = ', array);
-                        callback(array);
-                    }
-                }
-            });
-        });
-        */
     }
-    console.log('CALL');
+
     usersScopeToSendAlert (function (result, err) {
         if(err){
             console.log('err = ', err);
         }else {
-            //console.log('utils = ',utils);
-            //console.log('result = ',result);
-            //console.log('before arraySmecsAppToSent = ',arraySmecsAppToSent);
-
             arraySmecsAppToSent = arraySmecsAppToSent.concat(result);
 
-            //console.log('after arraySmecsAppToSent = ',arraySmecsAppToSent);
             alert.sentSmecsAppUsersScope = arraySmecsAppToSent;
             let boolTrue = true;
             //var boolFalse = false;
@@ -199,6 +155,7 @@ module.exports.sendPushNotificationReqAssSmecsApp = function(alert, utility, req
                 groupColorTx: alertRequestAsst.group.textValue,
                 alertNameID: alertRequestAsst.alertID,
                 alertName: alertRequestAsst.alertName,
+                requestSendEmail: alertRequestAsst.requestSendEmail,
                 requestProcedureCompleted: alertRequestAsst.alertRequestProcedureCompleted,
                 requestWeAreSafe: alertRequestAsst.alertRequestWeAreSafe,
                 requestINeedHelp: alertRequestAsst.alertRequestForINeedHelp,
