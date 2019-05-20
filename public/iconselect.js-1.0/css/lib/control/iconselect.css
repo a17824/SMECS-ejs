@@ -81,12 +81,14 @@ and open the template in the editor.
      -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
      border-radius: 3px;
-     
-     
+
+
      overflow:auto;
+     height: auto;
      /*
      -webkit-overflow-scrolling: touch;
      */
+
 
  }
 
@@ -127,3 +129,16 @@ and open the template in the editor.
      overflow:hidden;
      float: left;
  }
+
+ /* NOT WORKING */
+.icon-select .icon.selected, body {
+
+}
+#some_id_from_html_tag_disable_scrolling_{
+    overflow:hidden;
+    height: 100%;
+}
+#some_id_from_html_tag_enable_scrolling_{
+    overflow:auto;
+    height: auto;
+}

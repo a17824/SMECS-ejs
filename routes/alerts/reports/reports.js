@@ -31,9 +31,9 @@ module.exports.homeReports = function(req, res, next) {
         functions.redirectTabLightsPanicButtons(req, res, 'showLights');
         //end of default tabs to show
 
-        var page = 'home-reports/home-reports';
+        let page = 'home-reports/home-reports';
 
-        var md = new MobileDetect(req.headers['user-agent']);
+        let md = new MobileDetect(req.headers['user-agent']);
 
         if(md.is('iPad') == true)
             page = 'home-reports/home-mobReports';
@@ -198,11 +198,13 @@ module.exports.reportsDetails = function(req, res) {
             if (!req.decoded)       // EJS user
                 reportsApi.receivedViewedAlert(req, results[0]); //mark alert as been received and viewed
 
-            var page = 'home-reports/reportDetails';
+            let page = 'home-reports/reportDetails';
             if(req.params.id == '5b1e96f26e727c382cbce097')
                 page = 'home-reports/reportDetailsSim';
             if(req.params.id == '5b1eb1d86e727c382cbce0a6')
                 page = 'home-reports/reportDetailsSimAllGreen';
+
+
 
             //HTML TAGS (classNames, hide show 911, Gauges, Accordions Procedure, Safe, Help
             let alertWith911 = 'hideThis';
@@ -210,8 +212,8 @@ module.exports.reportsDetails = function(req, res) {
             let showSafe = 'hideThis';
             let showHelp = 'hideThis';
             let flagCount = 0;
-            let pageColSize = 'col-md-6 col-sm-6 col-xs-6';
-            let pageColSize2 = 'col-md-6 col-sm-6 col-xs-6';
+            let pageColSize = 'col-md-6 col-sm-6 col-xs-6';     // 2 Gauges
+            let pageColSize2 = 'col-md-6 col-sm-6 col-xs-6';    // last Gauge
 
             if(results[0].request911Call)
                 alertWith911 = 'showThis';
@@ -227,42 +229,42 @@ module.exports.reportsDetails = function(req, res) {
             if(results[0].requestINeedHelp){
                 showHelp = 'showThis';
             }
-            if(flagCount == 1){
+            if(flagCount == 1){ // 3 Gauges
                 pageColSize = 'col-md-4 col-sm-4 col-xs-6';
-                pageColSize2 = 'col-md-4 col-sm-4 col-xs-12'
+                pageColSize2 = 'col-md-4 col-sm-4 col-xs-12';
             }
 
-            if(flagCount == 2){
+            if(flagCount == 2){ // 4 Gauges
                 pageColSize = 'col-md-3 col-sm-3 col-xs-6';
                 pageColSize2 = 'col-md-3 col-sm-3 col-xs-6';
             }
             //end of hide show Gauges Accordions Procedure, Safe, Help
 
             //Alert with Lights, Sound, Emails, TextMessage
-            let lights = '174.png';
+            let lights = '187.png';
             let lightTitle = 'This alert does not use Lights in classrooms';
             let sound = '178.png';
             let soundTitle = 'This alert does not play Sound in classrooms';
-            let emails = '181.png';
-            let emailsTitle = 'This alert does not send Emails';
-            let textMessages = '186.png';
-            let TextMessagesTitle = 'This alert does not send text messages';
+            let emails = '188.png';
+            let emailsTitle = 'This alert does not send Emails notifications';
+            let textMessages = '189.png';
+            let TextMessagesTitle = 'This alert does not send text messages notifications';
 
             if(results[0].alert.light){
                 lights = '53.png';
-                lightTitle = 'This alert uses Lights in classrooms';
+                lightTitle = 'This alert uses Lights in classrooms to make people aware that an alert was sent';
             }
             if(results[0].alert.lightSound){
                 sound = '179.png';
-                soundTitle = 'This alert plays Sound in classrooms';
+                soundTitle = 'This alert plays Sound in classrooms to make people aware that an alert was sent';
             }
             if(results[0].requestSendEmail){
                 emails = '180.png';
-                emailsTitle = 'This alert sends Emails';
+                emailsTitle = 'This alert sends Emails notifications';
             }
             if(results[0].requestSendSMS){
                 textMessages = '185.png';
-                TextMessagesTitle = 'This alert sends text messages';
+                TextMessagesTitle = 'This alert sends text messages notifications';
             }
 
             //end of Alert with Lights, Sound, Emails, TextMessage

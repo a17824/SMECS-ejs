@@ -338,13 +338,6 @@
     <label for="busRadio"><b>Day of early dismissal:</b> <%= info.earlyDismissalDate %></label><br><br>
 
     <label for="busTime"><b>Dismissal time:</b> <%= info.earlyDismissalTime %></label><br><br>
-
-    <label for="email"><b>Send email notification:</b></label>
-    <% if (info.busTimeChangedEmail == true ) {%>
-        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" checked onclick="return false;"><br><br>
-    <% } else {%>
-        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" onclick="return false;"><br><br>
-    <% } %>
 <% } %>
 
 
@@ -357,13 +350,6 @@
 
     <label for="busTime"><b>Time <%= info.busDelayedAhead %>:</b></label>
     <input type="text" id="lastPlaceSeen" size="8" placeholder="n/a" value="<%= info.busTimeChanged %>" readonly><br><br>
-
-    <label for="email"><b>Send email notification:</b></label>
-    <% if (info.busTimeChangedEmail == true ) {%>
-        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" checked onclick="return false;"><br><br>
-    <% } else {%>
-        <input class="checkbox" type="checkbox" name="checkbox" id=<%= info.busTimeChangedEmail %> value="<%= info.busTimeChangedEmail %>" onclick="return false;"><br><br>
-    <% } %>
 <% } %>
 
 

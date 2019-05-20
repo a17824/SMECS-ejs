@@ -82,6 +82,11 @@
             });
         }
 
+        //iPad ToolTip
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip({trigger:"hover", delay:{"show":400,"hide":0}})
+        })
+        //end of iPad ToolTip
 
         $(document).ready(function(){
 
@@ -225,7 +230,7 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>Procedure finished</h4>
-                                            <canvas id="chart_gauge_04" class="gaugeCan">2</canvas>
+                                            <canvas id="chart_gauge_04" class="gaugeCan" style="width: 160px; height: 100px;"></canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text4" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
@@ -242,7 +247,7 @@
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
                                             <h4>We are safe</h4>
-                                            <canvas width="150" height="80" id="chart_gauge_05" class="" style="width: 160px; height: 100px;"></canvas>
+                                            <canvas id="chart_gauge_05" class="gaugeCan" style="width: 160px; height: 100px;"></canvas>
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text5" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
@@ -879,11 +884,12 @@
 
 
                         <div class="centerPics">
-                            <img title="<%= htmlTags.icons.lightTitle %>"src="/public/icons/<%= htmlTags.icons.lights %>" class="size" alt="Avatar">
-                            <img title="<%= htmlTags.icons.soundTitle %>" src="/public/icons/<%= htmlTags.icons.sound %>" class="size" alt="Avatar">
-                            <img title="<%= htmlTags.icons.emailsTitle %>" src="/public/icons/<%= htmlTags.icons.emails %>" class="size" alt="Avatar">
-                            <img title="<%= htmlTags.icons.TextMessagesTitle %>" src="/public/icons/<%= htmlTags.icons.textMessages %>" class="size" alt="Avatar">
+                            <img title="<%= htmlTags.icons.lightTitle %>"src="/public/icons/<%= htmlTags.icons.lights %>" class="size" data-toggle="tooltip" data-placement="bottom">
+                            <img title="<%= htmlTags.icons.soundTitle %>" src="/public/icons/<%= htmlTags.icons.sound %>" class="size" data-toggle="tooltip" data-placement="bottom">
+                            <img title="<%= htmlTags.icons.emailsTitle %>" src="/public/icons/<%= htmlTags.icons.emails %>" class="size" data-toggle="tooltip" data-placement="bottom">
+                            <img title="<%= htmlTags.icons.TextMessagesTitle %>" src="/public/icons/<%= htmlTags.icons.textMessages %>" class="size" data-toggle="tooltip" data-placement="bottom">
                         </div>
+
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -1041,6 +1047,69 @@
                                 </div>
                             <%  } %>
 
+                            <% if (report.alertWith.busEarlyLate) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Time of day</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="busMorningAfternoon"
+                                               value="<%= report.busMorningAfternoon %>" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Bus is</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="busDelayedAhead"
+                                               value="<%= report.busDelayedAhead %>" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Time</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="busTimeChanged"
+                                               value="<%= report.busTimeChanged %>" readonly>
+                                    </div>
+                                </div>
+                            <%  } %>
+
+                            <% if (report.alertWith.earlyDismissal) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Day of early dismissal</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="earlyDismissalDate"
+                                               value="<%= report.earlyDismissalDate %>" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Dismissal time</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="earlyDismissalTime"
+                                               value="<%= report.earlyDismissalTime %>" readonly>
+                                    </div>
+                                </div>
+                            <%  } %>
+
+                            <% if (report.alertWith.multiSchoolClosed) {%>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Day(s) school will be closed</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="daysClosed"
+                                               value="<%= report.daysClosed %>" readonly>
+                                    </div>
+                                </div>
+                            <%  } %>
+
                             <% if (report.alertWith.notes) {%>
                                 <input type="hidden" id="richNote" value="<%= report.note %>">
                                 <!-- /* showReportDetails - box for NOTES */ file: ...vendors\boots..\dist\css\reportDetails.css -->
@@ -1092,9 +1161,9 @@
                                                     <%  if (idx === array.length - 1 && !report.autoAlert) { %> <!--  last loop: put button  -->
                                                     <br>
                                                     <%  if (disableReqButton) { %>
-                                                        <input type="button" class="btn btn-success btn-xs right" id="request" value="Send Request Assistance" disabled>
+                                                        <input type="button" class="btn btn-success btn-xs right2" id="request" value="Send Request Assistance" disabled>
                                                     <% } else { %>
-                                                        <input type="button" class="btn btn-success btn-xs right" id="request" value="Send Request Assistance" onClick="reqAss()">
+                                                        <input type="button" class="btn btn-success btn-xs right2" id="request" value="Send Request Assistance" onClick="reqAss()">
                                                     <% } %>
                                                         <br>
                                                     <% } %>

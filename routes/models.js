@@ -546,7 +546,7 @@ var AlertSentTempSchema = new mongoose.Schema({
         userEmail: String,
         userPushToken: String
     }],
-    ttl: { type: Date, index: { expireAfterSeconds: 86400 }, default: Date.now }, //TTL delete document after 600seconds(10min), 86400sec(1 day)
+    ttl: { type: Date, index: { expireAfterSeconds: 1800 }, default: Date.now }, //TTL delete document after 600seconds(10min), 86400sec(1 day)
     placeholderNote: String,
     note: String,
     noteWithoutTags: String,
