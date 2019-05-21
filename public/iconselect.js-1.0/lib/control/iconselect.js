@@ -150,7 +150,7 @@ function IconSelect($$elementID, $$parameters) {
         if($isShown) {
             _View.boxElement.style.display = "block";
             _View.boxScrollElement.style.display = "block";
-            _boxScroll = (_boxScroll) ? _boxScroll : new iScroll($$elementID + "-box-scroll");
+            //_boxScroll = (_boxScroll) ? _boxScroll : new iScroll($$elementID + "-box-scroll");
         }else{
             _View.boxElement.style.display = "none";
             _View.boxScrollElement.style.display = "none";
@@ -242,13 +242,13 @@ function IconSelect($$elementID, $$parameters) {
         
         _View.boxScrollElement.style.left = parseInt(selectedBoxElement.style.width) + 1;
         
-        _View.boxScrollElement.style.width = (($parameters.iconsWidth + 2) * $parameters.vectoralIconNumber) + 
+        _View.boxScrollElement.style.width = (($parameters.iconsWidth - 3.5) * $parameters.vectoralIconNumber) +
                 (($parameters.vectoralIconNumber + 1) * $parameters.boxIconSpace);
-        _View.boxScrollElement.style.height = (($parameters.iconsHeight + 2) * $parameters.horizontalIconNumber) + 
+        _View.boxScrollElement.style.height = (($parameters.iconsHeight + 2) * $parameters.horizontalIconNumber) +
                 (($parameters.horizontalIconNumber + 1) * $parameters.boxIconSpace);
          
         _View.boxElement.style.left = _View.boxScrollElement.style.left;
-        _View.boxElement.style.width = _View.boxScrollElement.style.width;
+        //_View.boxElement.style.width = _View.boxScrollElement.style.width;
         
         _View.iconSelectElement.appendChild(selectedBoxElement);
         selectedBoxElement.appendChild(selectedIconElement);

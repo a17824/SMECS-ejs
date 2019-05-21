@@ -1,12 +1,17 @@
 /*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+enable original scroll: iscroll.js -> line 89: that.wrapper.style.overflow = 'auto';
+disable original scroll: iscroll.js -> line 89: that.wrapper.style.overflow = 'hidden'; (original)
+
+disable custom scroll: iconselect.js ->  line 153: \\_boxScroll = (_boxScroll) ? _boxScroll : new iScroll($$elementID + "-box-scroll");
+enable custom scroll: iconselect.js ->  line 153: _boxScroll = (_boxScroll) ? _boxScroll : new iScroll($$elementID + "-box-scroll"); (original)
+
+right scrollbar vertical padding: iconselect.js ->  line 245: _View.boxScrollElement.style.width = (($parameters.iconsWidth - 3.5) * $parameters.vectoralIconNumber) +
+                                                        _View.boxScrollElement.style.width = (($parameters.iconsWidth + 2) * $parameters.vectoralIconNumber) + (original)
+
+disable bottom scroll: iconselect.js ->  line 251: //_View.boxElement.style.width = _View.boxScrollElement.style.width;
+                                                    _View.boxElement.style.width = _View.boxScrollElement.style.width; (original)
 */
-/* 
-    Created on : Nov 28, 2013, 7:09:35 AM
-    Author     : bugraozden
-*/
+
 
 .icon-select{
     width:0px;
@@ -129,16 +134,3 @@ and open the template in the editor.
      overflow:hidden;
      float: left;
  }
-
- /* NOT WORKING */
-.icon-select .icon.selected, body {
-
-}
-#some_id_from_html_tag_disable_scrolling_{
-    overflow:hidden;
-    height: 100%;
-}
-#some_id_from_html_tag_enable_scrolling_{
-    overflow:auto;
-    height: auto;
-}
