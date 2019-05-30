@@ -318,6 +318,7 @@
                                             </th>
                                             <th title="Tells if this Alert has Scheduled drills">Auto Drills</th>
                                             <th title="When sending this Alert notification, it will also send an email">Send Email</th>
+                                            <th title="When sending this Alert notification, it will also send a text message">Send SMS</th>
                                             <th title="Uses Alert Light in Classrooms">Light</th>
                                             <th title="Light in Classrooms will emmit a sound">Light Sound</th>
                                             <th title="Everyone that receives this Alert will need to
@@ -374,6 +375,12 @@ this will allow them to ask for help">Request<br>We Are Safe</th>
                                                             <% } %>
 
                                                             <% if (alert.alertRequestSendEmail == true) { %>
+                                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                                            <% } else { %>
+                                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                                            <% } %>
+
+                                                            <% if (alert.alertRequestSendSMS == true) { %>
                                                                 <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
                                                             <% } else { %>
                                                                 <td><img  src="/miscPictures/redCross20.png"></td>

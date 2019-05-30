@@ -247,7 +247,7 @@ module.exports.reportsDetails = function(req, res) {
             let soundTitle = 'This alert does not play Sound in classrooms';
             let emails = '188.png';
             let emailsTitle = 'This alert does not send Emails notifications';
-            let textMessages = '189.png';
+            let textMessages = '190.png';
             let TextMessagesTitle = 'This alert does not send text messages notifications';
 
             if(results[0].alert.light){
@@ -263,7 +263,7 @@ module.exports.reportsDetails = function(req, res) {
                 emailsTitle = 'This alert sends Emails notifications';
             }
             if(results[0].requestSendSMS){
-                textMessages = '185.png';
+                textMessages = '191.png';
                 TextMessagesTitle = 'This alert sends text messages notifications';
             }
 

@@ -153,6 +153,17 @@ module.exports.showAlerts = function(req, res) {
         }
 
     ],function(err, results){
+        let rightIcons = {
+            alertLightImgURLOff: '/public/icons/187.png',
+            alertLightImgURLOn: '/public/icons/53.png',
+            alertLightSoundImgURLOff: '/public/icons/178.png',
+            alertLightSoundImgURLOn: '/public/icons/179.png',
+            alertEmailImgURLOff: '/public/icons/188.png',
+            alertEmailImgURLOn: '/public/icons/180.png',
+            alertSMSImgURLOff: '/public/icons/191.png',
+            alertSMSImgURLOn: '/public/icons/190.png',
+        };
+
         if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
             models.AlertSentTemp.findById(req.params.id, function (err, alert) {
                 if(err)
@@ -172,7 +183,8 @@ module.exports.showAlerts = function(req, res) {
                                 aclReal: arrayGroups[0],
                                 aclTest: arrayGroups[1],
                                 aclDemo: arrayGroups[2],
-                                icons: results[3]
+                                icons: results[3],
+                                rightIcons: rightIcons
                             });
                         }else{  //EJS user
                             res.render('alerts/sending/chooseAlert',{   //Groups Buttons ON
@@ -203,7 +215,7 @@ module.exports.showAlerts = function(req, res) {
                     testModeOnArrayTest: results[1],
                     testModeOnArrayDemo: results[2],
                     icons: results[3],
-
+                    rightIcons: rightIcons
                 });
 
             }else{  // run SMECS EJS
