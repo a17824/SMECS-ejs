@@ -406,7 +406,10 @@ module.exports.postStudent = function(req, res) {
     var studentName = req.body.student;
     var studentPhoto = req.body.photo;
 
-    console.log('req.body.photo = ',req.body.photo);
+
+    if (studentName == '' || typeof studentName === 'undefined'){  //if student photo don't exist on database
+        studentName = '(skipped by user)';
+    }
     //checkStudentPhotoExists------------------
     if (studentPhoto == '' || typeof studentPhoto === 'undefined'){  //if student photo don't exist on database
         studentPhoto = 'photoNotAvailable.bmp';

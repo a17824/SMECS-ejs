@@ -100,10 +100,12 @@ module.exports.alertReceiptPost = function (req, res) {
     models.AlertSentInfo.findOne({'_id': req.body.alertID},  function (err, alert) {
             if (err || !alert){
                 console.log('alertNot found. err - ',err);
-                return res.json({success: false, message: 'Failed to locate user.'});
+                return res.json({success: false, message: 'Failed to locate alert.'});
             } else {
-                for (var i = 0; i < alert.sentTo.length; i++) {
-                    if(alert.sentTo[i].email == email ){
+                let userNotFound = false;
+                for (let i = 0; i < alert.sentTo.length; i++) {
+                    if(alert.sentTo[i].email === email ){    //locate user to update
+                        userNotFound = true;
                         alert.sentTo[i].received.receivedBoolean = true;
                         alert.sentTo[i].received.receivedDate = wrapped.format('YYYY-MM-DD');
                         alert.sentTo[i].received.receivedTime = wrapped.format('h:mm:ss a');
@@ -112,11 +114,14 @@ module.exports.alertReceiptPost = function (req, res) {
                         pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
 
                         if(req.decoded)
-                        //res.json({success: true});
+                            res.json({success: true});
 
-                            break
+                        break
                     }
                 }
+                if(!userNotFound)
+                    if(req.decoded)
+                        res.json({success: false, message: 'Failed to locate user.'});
             }
         }
     );

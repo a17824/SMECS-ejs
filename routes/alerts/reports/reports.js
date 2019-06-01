@@ -246,9 +246,9 @@ module.exports.reportsDetails = function(req, res) {
             let sound = '178.png';
             let soundTitle = 'This alert does not play Sound in classrooms';
             let emails = '188.png';
-            let emailsTitle = 'This alert does not send Emails notifications';
+            let emailsTitle = 'This alert does not send Emails';
             let textMessages = '190.png';
-            let TextMessagesTitle = 'This alert does not send text messages notifications';
+            let TextMessagesTitle = 'This alert does not send text messages';
 
             if(results[0].alert.light){
                 lights = '53.png';
@@ -260,11 +260,11 @@ module.exports.reportsDetails = function(req, res) {
             }
             if(results[0].requestSendEmail){
                 emails = '180.png';
-                emailsTitle = 'This alert sends Emails notifications';
+                emailsTitle = 'This alert sends Emails';
             }
             if(results[0].requestSendSMS){
                 textMessages = '191.png';
-                TextMessagesTitle = 'This alert sends text messages notifications';
+                TextMessagesTitle = 'This alert sends text messages';
             }
 
             //end of Alert with Lights, Sound, Emails, TextMessage

@@ -155,13 +155,21 @@ module.exports.showAlerts = function(req, res) {
     ],function(err, results){
         let rightIcons = {
             alertLightImgURLOff: '/public/icons/187.png',
+            alertLightTooltipOff: 'This alert does not use Lights in classrooms',
             alertLightImgURLOn: '/public/icons/53.png',
+            alertLightTooltipOn: 'This alert uses Lights in classrooms',
             alertLightSoundImgURLOff: '/public/icons/178.png',
+            alertLightSoundTooltipOff: 'This alert does not play Sound in classrooms',
             alertLightSoundImgURLOn: '/public/icons/179.png',
+            alertLightSoundTooltipOn: 'This alert plays Sound in classrooms',
             alertEmailImgURLOff: '/public/icons/188.png',
+            alertEmailTooltipOff: 'This alert does not send Emails',
             alertEmailImgURLOn: '/public/icons/180.png',
+            alertEmailTooltipOn: 'This alert sends Emails',
             alertSMSImgURLOff: '/public/icons/191.png',
+            alertSMSTooltipOff: 'This alert does not send text messages',
             alertSMSImgURLOn: '/public/icons/190.png',
+            alertSMSTooltipOn: 'This alert sends text messages',
         };
 
         if(req.params.id){ //----------------------- Groups Buttons ON ----------------------------------
