@@ -153,6 +153,7 @@ module.exports.showAlerts = function(req, res) {
         }
 
     ],function(err, results){
+        // (if changes are made to icons, reports\reports.js need to be change as well)
         let rightIcons = {
             alertLightImgURLOff: '/public/icons/187.png',
             alertLightTooltipOff: 'This alert does not use Lights in classrooms',
@@ -166,7 +167,7 @@ module.exports.showAlerts = function(req, res) {
             alertEmailTooltipOff: 'This alert does not send Emails',
             alertEmailImgURLOn: '/public/icons/180.png',
             alertEmailTooltipOn: 'This alert sends Emails',
-            alertSMSImgURLOff: '/public/icons/191.png',
+            alertSMSImgURLOff: '/public/icons/192.png',
             alertSMSTooltipOff: 'This alert does not send text messages',
             alertSMSImgURLOn: '/public/icons/190.png',
             alertSMSTooltipOn: 'This alert sends text messages',
@@ -293,9 +294,7 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
                     if (req.body.alertID == 29){placeholderNote = 'ex: flood.';}
 
-
-
-                    if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
+                    if(req.body.alertToUpdate == 0 || req.body.alertID == 1){    //Groups Buttons OFF
 
                         let alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
@@ -389,6 +388,17 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.longitude = req.body.longitude;
                                     alertTemp.alertRoad = alert[0].alertRoad;
                                     alertTemp.roadIndex = 1;
+
+                                    // Alert With... (this is needed for review and received pages)
+                                    for (let i=0; i < alertTemp.alertRoad.length; i++) {
+                                        if (alertTemp.alertRoad[i].redirectAPI === 'notes'){
+                                            alertTemp.alertWith.notes = true;
+                                        }
+                                        if (alertTemp.alertRoad[i].redirectAPI === 'floor'){
+                                            alertTemp.alertWith.htmlTags.showHideDiv = 'showThis';
+                                            alertTemp.alertWith.htmlTags.labelFloor = 'Location';
+                                        }
+                                    }
 
                                     alertTemp.save();
 

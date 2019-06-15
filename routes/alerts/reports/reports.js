@@ -240,14 +240,14 @@ module.exports.reportsDetails = function(req, res) {
             }
             //end of hide show Gauges Accordions Procedure, Safe, Help
 
-            //Alert with Lights, Sound, Emails, TextMessage
+            //Alert with Lights, Sound, Emails, TextMessage (if changes are made to icons, 1.chooseAlert.js need to be change as well)
             let lights = '187.png';
             let lightTitle = 'This alert does not use Lights in classrooms';
             let sound = '178.png';
             let soundTitle = 'This alert does not play Sound in classrooms';
             let emails = '188.png';
             let emailsTitle = 'This alert does not send Emails';
-            let textMessages = '190.png';
+            let textMessages = '192.png';
             let TextMessagesTitle = 'This alert does not send text messages';
 
             if(results[0].alert.light){
@@ -263,7 +263,7 @@ module.exports.reportsDetails = function(req, res) {
                 emailsTitle = 'This alert sends Emails';
             }
             if(results[0].requestSendSMS){
-                textMessages = '191.png';
+                textMessages = '190.png';
                 TextMessagesTitle = 'This alert sends text messages';
             }
 

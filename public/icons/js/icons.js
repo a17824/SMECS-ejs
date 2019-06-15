@@ -1,6 +1,6 @@
 
 function iconBuild(icons){
-    for (var i=1; i <= 191; i++) {
+    for (var i=1; i <= 192; i++) {
         icons.push({'iconFilePath': '/public/icons/' + i + '.png', 'iconValue': i});
     }
 }

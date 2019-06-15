@@ -13,9 +13,10 @@
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/reportDetails.css" rel="stylesheet">
 
-
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/reportDetails.css" rel="stylesheet">
+    <link href="/public/stylesheets/reportDetails.css" rel="stylesheet">
+
 
     <!-- lightbox (floor zoom) -->
     <link href="/public/lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
@@ -23,6 +24,13 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
     <script>
+
+        //iPad ToolTip
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip({trigger:"hover", delay:{"show":400,"hide":0}})
+        })
+        //end of iPad ToolTip
+
         $(document).ready(function(){
             var richNote = $("#richNote").val();
             //var note = document.getElementById('richNote').value;
@@ -79,7 +87,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2 style="font-size: 28px">Gauges<a style="font-size: 12px">&emsp;Total alerts sent: 50</a></h2>
+                            <h2 style="font-size: 28px">Gauges<a style="font-size: 12px">&emsp;50 users in this scope. Total alerts sent: 48 (users with SMECS installed)</a></h2>
 
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -925,9 +933,13 @@
                     <div class="x_title">
                         <h2 style="font-size: 28px">Alert details</h2>
 
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </ul>
+
+                        <div style="position: absolute; right: 3%; top: 1%">
+                            <img title="<%= htmlTags.icons.lightTitle %>"src="/public/icons/<%= htmlTags.icons.lights %>" class="size" data-toggle="tooltip" data-placement="bottom">
+                            <img title="<%= htmlTags.icons.soundTitle %>" src="/public/icons/<%= htmlTags.icons.sound %>" class="size" data-toggle="tooltip" data-placement="bottom">
+                            <img title="<%= htmlTags.icons.emailsTitle %>" src="/public/icons/<%= htmlTags.icons.emails %>" class="size" data-toggle="tooltip" data-placement="bottom">
+                            <img title="<%= htmlTags.icons.TextMessagesTitle %>" src="/public/icons/192.png" class="size" data-toggle="tooltip" data-placement="bottom">
+                        </div>
 
                         <div class="clearfix"></div>
                     </div>
@@ -1149,3 +1161,4 @@
 </footer>
 <!-- /footer content -->
 </html>
+
