@@ -42,6 +42,7 @@ var UsersSchema = new mongoose.Schema({
     redirectTabLightsPanicButtons: { type: String, default: 'showLights'},
     appSettings:{
         groupAlertsButtons: { type: Boolean, default: false},
+        enableFingerprint: { type: Boolean, default: false},
         theme: String
 
     }

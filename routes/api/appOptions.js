@@ -7,7 +7,8 @@ module.exports.appSettingsGet = function (req, res) {
         }else{
             res.json({
                 success: 'true',
-                groupSettings: user.appSettings.groupAlertsButtons
+                groupSettings: user.appSettings.groupAlertsButtons,
+                enableFingerprint: user.appSettings.enableFingerprint
             });
         }
 
@@ -20,6 +21,7 @@ module.exports.appSettingsPost = function (req, res) {
             console.log('err - appSettingsPost = ',err);
         }else{
             user.appSettings.groupAlertsButtons = req.body.groupAlertsButtons;
+            user.appSettings.enableFingerprint = req.body.enableFingerprint;
             user.save();
             res.json({
                 success: 'true'

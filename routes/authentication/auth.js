@@ -27,7 +27,10 @@ module.exports.simpleAuth = function(req, res, next) {
 
 function authentication(req, res, typeUserAuth, next){
     models[typeUserAuth].findOne({ email: req.session.user.email }, function(err, user) {
-        if (user) {
+        if(err || !user){
+        console.log("error finding in model: " + typeUserAuth);
+        }
+        else {
             req.user = user;
             delete req.user.pin;
             req.session.user = req.user;
@@ -88,25 +91,19 @@ module.exports.auth = function (req, res, next) {
     }
 };
 /*
-// route middleware to verify pin
-module.exports.pin = function (req, res, next) {
-    var email = req.decoded.user.email;
-    models.Users.findOne({'email': email}, function (err, user) {
-        if (err) {
-            return res.json({
-                success: false,
-                message: 'Failed to locate user.'
-            });
-        } else {
-            if (!bcrypt.compareSync(req.body.pin, user.pin)) {
-                res.json({
-                    success: false,
-                    message: 'Authentication failed. Wrong password.'
-                });
-            } else {
-                console.log('Pin OK');
-                next();
-            }
+// route middleware to update pushToken
+module.exports.updatePushToken = function (req, res, next) {
+   let newPushToken = req.body.pushToken;
+    console.log('req.body.pushToken = ',newPushToken);
+    console.log('req.decoded.email = ',req.decoded.email);
+    models.Users.findOne({ email: req.decoded.email }, function(err, user) {
+        if (err || !user) {
+            console.log("error finding user to update pushToken");
+        }
+        else {
+            user.pushToken.push(newPushToken);
+            user.save();
         }
     });
-};*/
+};
+*/

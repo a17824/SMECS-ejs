@@ -6,10 +6,11 @@
     <script>
 
         $(document).ready(function(){
-            var appSettingsToUpdate,groupAlertsButtons;
+            var appSettingsToUpdate,groupAlertsButtons,enableFingerprint;
             $("#<%= user.id %>").click(function(){
                 appSettingsToUpdate=$(this).attr('id');
                 groupAlertsButtons = document.getElementById("groupAlertsButtons").checked;
+                enableFingerprint = document.getElementById("enableFingerprint").checked;
 
 
                 //-----forms validation------------------------------------
@@ -18,7 +19,8 @@
 
                 $.post("/updateAppSettings",{
                     appSettingsToUpdate: appSettingsToUpdate,
-                    groupAlertsButtons: groupAlertsButtons
+                    groupAlertsButtons: groupAlertsButtons,
+                    enableFingerprint: enableFingerprint
 
                 },function(data){
                     if(data==='done')
@@ -44,9 +46,16 @@
 
     <label for="busRide"><b>Show "Groups Buttons":</b></label>
     <% if (user.appSettings.groupAlertsButtons == true) {%>
-    <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>" checked><br><br>
+    <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>" checked><br>
     <% }else{%>
-    <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>"><br><br>
+    <input class="checkbox" type="checkbox" name="checkbox" id="groupAlertsButtons" value="<%= user.appSettings.groupAlertsButtons %>"><br>
+    <% } %>
+
+    <label for="busRide"><b>Enable fingerprint authentication:</b></label>
+    <% if (user.appSettings.enableFingerprint == true) {%>
+        <input class="checkbox" type="checkbox" name="checkbox" id="enableFingerprint" value="<%= user.appSettings.enableFingerprint %>" checked><br><br>
+    <% }else{%>
+        <input class="checkbox" type="checkbox" name="checkbox" id="enableFingerprint" value="<%= user.appSettings.enableFingerprint %>"><br><br>
     <% } %>
 
 

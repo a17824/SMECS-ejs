@@ -74,11 +74,9 @@ module.exports.getLoginParentSelfRegistration = function(req, res, next) {
  * Once a user is logged in, they will be sent to the dashboard page.
  */
 module.exports.postLogin = function(req, res, next) {
-    if (req.body.pushToken) { // run SMECS API
-        models.Users.findOne({
-            email: req.body.email.toLowerCase()
-        }, function (err, user) {
-
+    console.log('req.body.pushToken = ',req.body.pushToken);
+    if (req.body.isIonic) { // run SMECS API
+        models.Users.findOne({email: req.body.email.toLowerCase()}, function (err, user) {
             if (err) throw err;
 
             if (!user) {
@@ -128,14 +126,7 @@ module.exports.postLogin = function(req, res, next) {
                         success: true,
                         message: 'Welcome aboard!',
                         token: token,
-                        userRoleID: user.userRoleID,
-                        userRoleName: user.userRoleName,
-                        userPrivilegeID: user.userPrivilegeID,
-                        userPrivilegeName: user.userPrivilegeName,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        userPhoto: user.photo,
-                        email: user.email
+                        user: user
                     });
                 }
             }

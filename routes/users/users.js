@@ -778,12 +778,14 @@ module.exports.updateAppSettingsPost = function(req, res) {
 
     var appSettingsToUpdate = req.body.appSettingsToUpdate;
     var groupAlertsButtons = req.body.groupAlertsButtons;
+    let enableFingerprint = req.body.enableFingerprint;
 
     models.Users.findById({'_id': appSettingsToUpdate}, function(err, user){
         if (err) {
             console.log('POST - something wrong updating App Settings');
         }else{
             user.appSettings.groupAlertsButtons = groupAlertsButtons;
+            user.appSettings.enableFingerprint = enableFingerprint;
             user.save();
 
             /*****  CALL HERE NOTIFICATION API  *****/
