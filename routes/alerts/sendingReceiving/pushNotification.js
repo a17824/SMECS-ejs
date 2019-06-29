@@ -117,16 +117,13 @@ module.exports.updateBadge= function(alerts) {
 
             // we need to create a notification to send
             let message = new OneSignal.Notification({
-                contents: {
-                    en: 'updateOpenAlertsBadge'
-                },
+                content_available: true,
                 include_player_ids: allUsersWithPushToken
             });
             message.postBody["data"] = {
                 action: 'closeAlert'
             };
 
-            //let userName = user.firstName + ' ' + user.lastName;
             sendPush(message,function (result,err) {
                 if(err || !result) console.log('updateBadge err = ',err);
                 else {
@@ -150,9 +147,7 @@ module.exports.icons = function(icons,action) {
                 });
             });
             let message = new OneSignal.Notification({
-                contents: {
-                    en: 'update on/off group buttons'
-                },
+                content_available: true,
                 include_player_ids: allUsersWithPushToken
             });
             message.postBody["data"] = {
@@ -191,21 +186,22 @@ module.exports.notifyUser = function(user, action) {
 
     // we need to create a notification to send
     let message = new OneSignal.Notification({
-        contents: {
-            en: 'update on/off group buttons'
-        },
+        content_available: true,
         include_player_ids: user.pushToken
     });
     message.postBody["data"] = {
         action: action,
         groupAlertsButtons: user.appSettings.groupAlertsButtons,
+        enableFingerprint: user.appSettings.enableFingerprint,
         theme: user.appSettings.theme,
         userRoleName: user.userRoleName,
         firstName: user.firstName,
         lastName: user.lastName,
         userPhoto: user.photo,
         token: token
+
     };
+
     sendPush(message,function (result,err) {
         if(err || !result) console.log('notifyUser err = ',err);
         else {
@@ -274,7 +270,7 @@ function sendPush(message, callback) {
         //when a pushToken has incorrect format
         if (err || data.errors) {
             //console.log("Couldn't send message to " + userName);
-            //console.log(data);
+            console.log(data);
             //console.log('include_player_ids222 = ',message.postBody.include_player_ids);
             let usersArray = message.postBody.include_player_ids;
             usersArray.forEach(function (user) {
@@ -290,14 +286,11 @@ function sendPush(message, callback) {
                         console.log('user with bad token - ', data);
                     }
                     else{
-                        //console.log('sent to 1 user successfully - ', data);
+                        console.log('sent to 1 user successfully - ', data);
                     }
                 });
             });
-
-
             //console.log('include_player_ids = ',message.postBody.contents.include_player_ids.length);
-
         }
             //end of When a pushToken has incorrect format
 

@@ -789,7 +789,7 @@ module.exports.updateAppSettingsPost = function(req, res) {
             user.save();
 
             /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.notifyUser(user, 'updateAppSettings');
+            pushNotification.notifyUser(user, 'updateUserInfo');
         }
 
     });

@@ -74,7 +74,7 @@ module.exports.getLoginParentSelfRegistration = function(req, res, next) {
  * Once a user is logged in, they will be sent to the dashboard page.
  */
 module.exports.postLogin = function(req, res, next) {
-    console.log('req.body.pushToken = ',req.body.pushToken);
+
     if (req.body.isIonic) { // run SMECS API
         models.Users.findOne({email: req.body.email.toLowerCase()}, function (err, user) {
             if (err) throw err;
