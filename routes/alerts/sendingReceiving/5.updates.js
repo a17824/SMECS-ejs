@@ -1,6 +1,7 @@
 //Dependencies
 var models = require('./../../models');
 var moment = require('moment');
+let pushNotification = require('./pushNotification.js');
 
 
 module.exports.postUpdateNotes = function(req, res) {
@@ -42,6 +43,8 @@ module.exports.postUpdateNotes = function(req, res) {
             }else{  // run SMECS EJS
                 res.send({redirect: redirectEJS});
             }
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.refreshNotes(alert, 'refreshNotes'); //refresh notes on cellphones
         }
     });
 };

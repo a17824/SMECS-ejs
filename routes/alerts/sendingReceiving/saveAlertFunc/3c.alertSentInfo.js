@@ -209,9 +209,6 @@ module.exports.update = function(req, res, tempAlert, callback) {
             alert.alertWith = tempAlert.alertWith
         }
         alert.save();
-        /*****  CALL HERE NOTIFICATION API  *****/
-        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo'); //refresh notes on cellphones
-
         callback(alert)
     });
 };

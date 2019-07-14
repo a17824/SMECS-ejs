@@ -213,7 +213,6 @@ module.exports.notifyUser = function(user, action) {
 
 module.exports.refreshAlertInfo = function(alert, action) {
     // ONESIGNAL
-
     let allUsersWithPushToken = [];
     alert.sentTo.forEach(function (user) {
         user.pushToken.forEach(function (token) {
@@ -223,8 +222,40 @@ module.exports.refreshAlertInfo = function(alert, action) {
 
     // we need to create a notification to send
     let message = new OneSignal.Notification({
+        content_available: true,
+        include_player_ids: allUsersWithPushToken
+    });
+    message.postBody["data"] = {
+        action: action,
+        alert: alert._id
+    };
+    sendPush(message,function (result,err) {
+        if(err || !result) console.log('refreshAlertInfo err = ',err);
+        else {
+            console.log('result refreshAlertInfo = ',result)
+        }
+
+    });
+};
+
+
+module.exports.refreshNotes = function(alert, action) {
+    // ONESIGNAL
+    let allUsersWithPushToken = [];
+    let testModeON = 'This is a Real Alert -';
+    if (alert.realDrillDemo == 'drill')
+        testModeON = 'Drill Alert -';
+
+    alert.sentTo.forEach(function (user) {
+        user.pushToken.forEach(function (token) {
+            allUsersWithPushToken.push(token);
+        });
+    });
+
+    // we need to create a notification to send
+    let message = new OneSignal.Notification({
         contents: {
-            en: 'refreshAlertInfo'
+            en: testModeON + ' ' + alert.alert.name + '. Notes have been updated'
         },
         include_player_ids: allUsersWithPushToken
     });
@@ -240,6 +271,7 @@ module.exports.refreshAlertInfo = function(alert, action) {
 
     });
 };
+
 
 /* FireBase - sending cellPhone notification
 function sendPush(message, userName, userAuthKey) {
