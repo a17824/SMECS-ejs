@@ -65,9 +65,11 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
             });
             // we need to create a notification to send
             let message = new OneSignal.Notification({
-                contents: {
+                /*contents: {
                     en: testModeON + ' ' + alert.alert.name
-                },
+                },*/
+                content_available: true, //silent notification
+
                 include_player_ids: allUsersWithPushToken
             });
             message.postBody["data"] = {
