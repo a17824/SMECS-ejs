@@ -65,12 +65,15 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
             });
             // we need to create a notification to send
             let message = new OneSignal.Notification({
-                /*contents: {
+                contents: {
                     en: testModeON + ' ' + alert.alert.name
-                },*/
-                content_available: true, //silent notification
+                },
+                //content_available: true, //silent notification
 
-                include_player_ids: allUsersWithPushToken
+                include_player_ids: allUsersWithPushToken,
+                android_sound: "car_alarm", //android 7 and older
+                android_channel_id: alert.group.soundChannel
+
             });
             message.postBody["data"] = {
                 alertID: alert._id,
@@ -189,7 +192,8 @@ module.exports.notifyUser = function(user, action) {
     // we need to create a notification to send
     let message = new OneSignal.Notification({
         content_available: true,
-        include_player_ids: user.pushToken
+        include_player_ids: user.pushToken,
+
     });
     message.postBody["data"] = {
         action: action,
@@ -259,7 +263,10 @@ module.exports.refreshNotes = function(alert, action) {
         contents: {
             en: testModeON + ' ' + alert.alert.name + '. Notes have been updated'
         },
-        include_player_ids: allUsersWithPushToken
+        include_player_ids: allUsersWithPushToken,
+        android_sound: alert.group.mp3, //android 7 and older
+        ios_sound: alert.group.mp3 + '.wav', //ios .wav
+        android_channel_id: alert.group.soundChannel
     });
     message.postBody["data"] = {
         action: action,

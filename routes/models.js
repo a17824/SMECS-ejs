@@ -178,7 +178,8 @@ var AlertsGroupSchema = new mongoose.Schema({
         soundID: { type: Number },
         soundType: String,
         name: String,
-        mp3: String
+        mp3: String,
+        channel: String
     },
     light: {
         mode: String,   //always on, blinking, strips, etc.
@@ -197,6 +198,7 @@ var AlertsSchema = new mongoose.Schema({
         sortID: Number,
         name: String,
         mp3: String,
+        soundChannel: String,
         useIcon: Boolean,
         icon: String,
         color: {
@@ -308,6 +310,7 @@ var AlertSentInfoSchema = new mongoose.Schema({
         groupID: Number,
         name: String,     //red, green, blue, yellow
         sound: String,
+        soundChannel: String,
         icon: String,
         color: {
             name: String,
@@ -508,6 +511,7 @@ var AlertSentTempSchema = new mongoose.Schema({
     alertGroupID: Number,
     alertGroupName: String,
     groupSound: String,
+    groupSoundChannel: String,
     groupIcon: String,
     groupColorName: String,
     groupColorBk: String,

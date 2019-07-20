@@ -77,6 +77,7 @@ module.exports.addPost = function(req, res) {
         var soundType = soundArray[1];
         var soundName = soundArray[2];
         var soundMp3 = soundArray[3];
+        var soundChannel = soundArray[4];
 
         var alertGroup1 = new models.AlertsGroup({
             groupID: req.body.alertGroupID,
@@ -92,7 +93,8 @@ module.exports.addPost = function(req, res) {
                 soundID: soundID,
                 soundType: soundType,
                 name: soundName,
-                mp3: soundMp3
+                mp3: soundMp3,
+                channel: soundChannel
             },
             light: {
                 mode: req.body.lightModeType,
@@ -181,6 +183,7 @@ module.exports.updatePost = function(req, res) {
         var soundType = soundArray[1];
         var soundName = soundArray[2];
         var soundMp3 = soundArray[3];
+        var soundChannel = soundArray[4];
 
 
         models.AlertsGroup.findById({'_id': alertGroupToUpdate1}, function(err, alertGroup){
@@ -196,6 +199,7 @@ module.exports.updatePost = function(req, res) {
             alertGroup.sound.soundType = soundType;
             alertGroup.sound.name = soundName;
             alertGroup.sound.mp3 = soundMp3;
+            alertGroup.sound.channel = soundChannel;
             alertGroup.light.mode = req.body.lightModeType;
             alertGroup.light.colorRandom = req.body.lightColor;
 
@@ -220,6 +224,7 @@ module.exports.updatePost = function(req, res) {
                                 alert.group.light.mode = req.body.lightModeType;
                                 alert.group.light.colorRandom = req.body.lightColor;
                                 alert.group.mp3 = soundMp3;
+                                alert.group.soundChannel = soundChannel;
 
                                 alert.save(function (err) {
                                     if (err && (err.code === 11000 || err.code === 11001)) {

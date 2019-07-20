@@ -294,12 +294,14 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 27){placeholderNote = 'ex: early dismissal.';}
                     if (req.body.alertID == 29){placeholderNote = 'ex: flood.';}
 
+
                     if(req.body.alertToUpdate == 0 || req.body.alertID == 1){    //Groups Buttons OFF
 
                         let alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
                             alertGroupName: req.body.alertGroupName,
                             groupSound: alert[0].group.mp3,
+                            groupSoundChannel: alert[0].group.soundChannel,
                             groupIcon: alert[0].group.icon,
                             groupColorName: alert[0].group.color.name,
                             groupColorBk: alert[0].group.color.bgValue,
@@ -371,6 +373,7 @@ module.exports.showAlertsPost = function(req, res) {
                                     alertTemp.groupColorBk = alert[0].group.color.bgValue;
                                     alertTemp.groupColorTx = alert[0].group.color.textValue;
                                     alertTemp.groupSound = alert[0].group.mp3;
+                                    alertTemp.groupSoundChannel = alert[0].group.soundChannel,
                                     alertTemp.groupLight = alert[0].group.light;
                                     alertTemp.alertNameID = req.body.alertID;
                                     alertTemp.alertName = req.body.alertName;

@@ -85,10 +85,10 @@
                 var soundArray = soundID.split(",").map(String);
 
                 var radioComplete = [];
-                for (var i = 1; i < soundArray.length; i += 3) {
+                for (var i = 1; i < soundArray.length; i += 4) {
 
                     var radioBtn = $('<div class="wrapper"><div class="navi"></div><input type="radio" style="margin-bottom: 5px" ' +
-                        'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] +'" ' +
+                        'value="' + soundTypeId + ',' + soundArray[i-1] + ',' + soundArray[i] + ',' + soundArray[i+1] + ',' + soundArray[i+2] +'" ' +
                         'name="radio" ' +
                         'class="icheckbox_flat-green"/> ' + soundArray[i] + '' +
                         '<span class="mediPlayer" style="position: absolute; right: 0px; top: -2px;"><audio class="listen" preload="none" data-size="250" src="/public/sounds/' + soundArray[i+1] +'.mp3"></audio></span></div><div class="divider-dashed"></div>');
@@ -456,13 +456,13 @@
                                 <div class="divider-dashed"></div>
                                 <div id="buildRadio">
                                     <% var soundType = 2 %>
-                                    <% for (var i = 1; i < sounds[soundType].length; i += 3) { %>
+                                    <% for (var i = 1; i < sounds[soundType].length; i += 4) { %>
 
                                     <div class="wrapper">
                                         <div class="navi"></div>
                                         <input type="radio"
                                                style="margin-bottom: 5px"
-                                               value="1,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>, <%= sounds[soundType][i+1] %>"
+                                               value="1,<%= sounds[soundType][i-1] %>,<%= sounds[soundType][i] %>, <%= sounds[soundType][i+1] %>, <%= sounds[soundType][i+2] %>"
                                                class="icheckbox_flat-green"
                                                name="radio"> <%= sounds[soundType][i] %>
                                         <div class="navi"></div>
