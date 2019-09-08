@@ -27,10 +27,9 @@ module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
 
 
     ],function(err, results){
-
         var arrayRoleID = []; //scope ID
         var arrayRoleName = []; //scope Name
-        if(alertTemp.realDrillDemo == 'drill'){
+        if(alertTemp.realDrillDemo === 'drill'){
             results[0].whoCanSendReceive.receiveDrill.forEach(function (role) {
                 if(role.checkbox == true){
                     arrayRoleID.push(role.roleID); //ROLES that will receive alert
@@ -38,7 +37,7 @@ module.exports.getUsersToReceiveAlert = function(req, res, alertTemp,callback) {
                 }
             });
         }
-        if(alertTemp.realDrillDemo == 'real'){
+        if(alertTemp.realDrillDemo === 'real'){
             results[0].whoCanSendReceive.receiveReal.forEach(function (role) {
                 if(role.checkbox == true){
                     arrayRoleID.push(role.roleID); //ROLES that will receive alert

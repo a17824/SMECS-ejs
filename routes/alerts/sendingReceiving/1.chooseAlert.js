@@ -295,7 +295,7 @@ module.exports.showAlertsPost = function(req, res) {
                     if (req.body.alertID == 29){placeholderNote = 'ex: flood.';}
 
 
-                    if(req.body.alertToUpdate == 0 || req.body.alertID == 1){    //Groups Buttons OFF
+                    if(req.body.alertToUpdate == 0){    //Groups Buttons OFF
 
                         let alertTemp1 = new models.AlertSentTemp({
                             alertGroupID: req.body.alertGroupID,
@@ -330,9 +330,7 @@ module.exports.showAlertsPost = function(req, res) {
                             longitude: req.body.longitude,
                             alertRoad: alert[0].alertRoad,
                             roadIndex: 1
-
                         });
-
                         // Alert With... (this is needed for review and received pages)
                         for (let i=0; i < alertTemp1.alertRoad.length; i++) {
                             if (alertTemp1.alertRoad[i].redirectAPI === 'notes'){
@@ -402,9 +400,7 @@ module.exports.showAlertsPost = function(req, res) {
                                             alertTemp.alertWith.htmlTags.labelFloor = 'Location';
                                         }
                                     }
-
                                     alertTemp.save();
-
                                     callback(null, alertTemp);
                                 }
                             }
@@ -416,6 +412,7 @@ module.exports.showAlertsPost = function(req, res) {
         }
     ], function (err, alertTemp1) {
         //REAL and DRILL modes
+
         if(alertTemp1.realDrillDemo !== 'demo'){
             whoReceiveAlert.getUsersToReceiveAlert(req, res, alertTemp1, function (result,err) {
                 if(err){

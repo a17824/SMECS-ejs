@@ -36,8 +36,7 @@ module.exports.create = function(req, res, tempAlert, callback) {
         sentByApiEjs = req.session.user.firstName + " " + req.session.user.lastName;
 
 
-    console.log('tempAlert.groupSoundChannel = ', tempAlert.groupSoundChannel);
-    console.log('tempAlert.groupSoundChannel = ', tempAlert.groupSoundChannel);
+
     let alert1 = new models.AlertSentInfo({
         _id: tempAlert._id,
         group: {

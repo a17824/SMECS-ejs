@@ -107,6 +107,7 @@ module.exports.updateStatus = function(req, res) {
         if (err) {
             console.log('err - changing Alert STATUS');
         } else {
+            let reOpenAlert = false;
             alerts.forEach(function(alert){
                 if (alert.status.statusString == 'open') {
                     alert.status.statusString = 'closed';
@@ -116,6 +117,7 @@ module.exports.updateStatus = function(req, res) {
                     alert.status.statusString = 'open';
                     alert.status.statusClosedDate = undefined;
                     alert.status.statusClosedTime = undefined;
+                    reOpenAlert = true;
                 }
                 alert.save(function(err) {
                     if (err)
@@ -126,7 +128,7 @@ module.exports.updateStatus = function(req, res) {
 
             });
             /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.updateBadge(alerts);
+            pushNotification.updateBadge(alerts,reOpenAlert);
             return res.send({redirect: '/reports/homeReports'});
         }
     })

@@ -77,12 +77,11 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
             });
             message.postBody["data"] = {
                 alertID: alert._id,
-                sound: alert.groupSound,
                 action: action
             };
-
             //let userName = user.firstName + ' ' + user.lastName;
-            sendPush(message, function (result,err) {
+            let title = testModeON + ' ' + alert.alert.name;
+            sendPush(message, title, function (result,err) {
                 if(err || !result) console.log('timeDif err = ',err);
                 else {
                     console.log('resultAlert = ',result);
@@ -95,7 +94,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
 
 // FOR OneSignal - Update open alerts badge number
-module.exports.updateBadge= function(alerts) {
+module.exports.updateBadge= function(alerts,reOpenAlert) {
     let allUsersWithPushToken = [];
 
     let arrayUsersToSend = [];
@@ -120,22 +119,55 @@ module.exports.updateBadge= function(alerts) {
                 }
             });
 
-            // we need to create a notification to send
-            let message = new OneSignal.Notification({
-                content_available: true,
-                include_player_ids: allUsersWithPushToken
-            });
-            message.postBody["data"] = {
-                action: 'closeAlert'
-            };
+            if(reOpenAlert){
+                // we need to create a notification to send
+                let message = new OneSignal.Notification({
+                    contents: {
+                        en: 'An alert(s) was reopened'
+                    },
+                    //content_available: true,
+                    include_player_ids: allUsersWithPushToken,
+                    android_sound: "car_alarm", //android 7 and older
+                    android_channel_id: '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df' //reopen sound
+                });
+                message.postBody["data"] = {
+                    action: 'closeAlert'
+                };
 
-            sendPush(message,function (result,err) {
-                if(err || !result) console.log('updateBadge err = ',err);
-                else {
-                    console.log('result updateBadge = ',result)
-                }
+                let title = '';
+                sendPush(message, title, function (result,err) {
 
-            });
+                    if(err || !result) console.log('updateBadge err = ',err);
+                    else {
+                        console.log('result updateBadge = ',result)
+                    }
+                });
+            }
+            else {
+                // we need to create a notification to send
+                let message = new OneSignal.Notification({
+                    contents: {
+                        en: 'An alert(s) was closed'
+                    },
+                    //content_available: true,
+                    include_player_ids: allUsersWithPushToken
+                });
+                message.postBody["data"] = {
+                    action: 'closeAlert'
+                };
+
+                let title = '';
+                sendPush(message, title, function (result,err) {
+
+                    if(err || !result) console.log('updateBadge err = ',err);
+                    else {
+                        console.log('result updateBadge = ',result)
+                    }
+                });
+            }
+
+
+
         }
     });
 };
@@ -159,7 +191,8 @@ module.exports.icons = function(icons,action) {
                 action: action,
                 icons: icons
             };
-            sendPush(message,function (result,err) {
+            let title = '';
+            sendPush(message, title, function (result,err) {
                 if(err || !result) console.log('icons err = ',err);
                 else {
                     console.log('result icons = ',result)
@@ -208,7 +241,8 @@ module.exports.notifyUser = function(user, action) {
 
     };
 
-    sendPush(message,function (result,err) {
+    let title = '';
+    sendPush(message, title, function (result,err) {
         if(err || !result) console.log('notifyUser err = ',err);
         else {
             console.log('result notifyUser = ',result)
@@ -235,7 +269,8 @@ module.exports.refreshAlertInfo = function(alert, action) {
         action: action,
         alert: alert._id
     };
-    sendPush(message,function (result,err) {
+    let title = '';
+    sendPush(message, title, function (result,err) {
         if(err || !result) console.log('refreshAlertInfo err = ',err);
         else {
             console.log('result refreshAlertInfo = ',result)
@@ -272,7 +307,8 @@ module.exports.refreshNotes = function(alert, action) {
         action: action,
         alert: alert._id
     };
-    sendPush(message,function (result,err) {
+    let title = testModeON + ' ' + alert.alert.name;
+    sendPush(message, title, function (result,err) {
         if(err || !result) console.log('refreshAlertInfo err = ',err);
         else {
             console.log('result refreshAlertInfo = ',result)
@@ -300,47 +336,80 @@ function sendPush(message, userName, userAuthKey) {
 //end of FireBase - sending cellPhone notification
 
 //OneSignal - sending cellPhone notification
-function sendPush(message, callback) {
+function sendPush(message, title, callback) {
+
+
     // first we need to create a client
     let myClient = new OneSignal.Client({
         //userAuthKey: userAuthKey,
         app: { appAuthKey: 'OGY3NTY1NjAtMzI0OS00NDJhLWFlNDYtNWNlZDQ3NDhhOGZk' , appId: '2ce09fe3-5c91-4e53-9624-4d5b647322ea'}
     });
 
+
     myClient.sendNotification(message, function (err, httpResponse,data) {
         //when a pushToken has incorrect format
         if (err || data.errors) {
-            //console.log("Couldn't send message to " + userName);
-            console.log(data);
-            //console.log('include_player_ids222 = ',message.postBody.include_player_ids);
-            let usersArray = message.postBody.include_player_ids;
-            usersArray.forEach(function (user) {
-                let message2 = new OneSignal.Notification({
-                    contents: {
-                        en: 'refreshAlertInfo'
-                    },
-                    include_player_ids: [user]
-                });
-                message2.postBody["data"] = message.data;
-                myClient.sendNotification(message2, function (err, httpResponse,data) {
-                    if (err || data.errors) {
-                        console.log('user with bad token - ', data);
-                    }
-                    else{
-                        console.log('sent to 1 user successfully - ', data);
-                    }
-                });
-            });
-            //console.log('include_player_ids = ',message.postBody.contents.include_player_ids.length);
+            if(typeof data.errors.length !== 'undefined'){
+                let usersArray = message.postBody.include_player_ids;
+
+                // send message without notification (no sound, no icon on cellphone...)
+                if (typeof message.postBody.android_channel_id === 'undefined' || message.postBody.android_channel_id === null) {
+                    usersArray.forEach(function (user) {
+                        let message2 = new OneSignal.Notification({
+                            //contents: {en: title},
+                            content_available: true, //silent notification
+                            include_player_ids: [user]
+                        });
+                        message2.postBody["data"] = message.data;
+                        myClient.sendNotification(message2, function (err, httpResponse,data) {
+                            if (err || data.errors) {
+                                console.log('user with bad token - ', data);
+                            }
+                            else{
+                                console.log('sent to 1 user successfully - ', data);
+                            }
+                        });
+                    });
+                }
+                else {  // send message with notification (sound)
+
+                    usersArray.forEach(function (user) {
+                        let message2 = new OneSignal.Notification({
+                            contents: {
+                                en: title
+                            },
+                            //content_available: true, //silent notification
+                            include_player_ids: [user],
+                            android_sound: "car_alarm", //android 7 and older
+                            android_channel_id: message.postBody.android_channel_id
+                        });
+                        message2.postBody["data"] = message.data;
+                        myClient.sendNotification(message2, function (err, httpResponse,data) {
+                            if (err || data.errors) {
+                                console.log('user with bad token - ', data);
+                            }
+                            else{
+                                console.log('sent to 1 user successfully - ', data);
+                            }
+                        });
+                    });
+                }
+                //console.log('include_player_ids = ',message.postBody.contents.include_player_ids.length);
+            }
+            else {
+                console.log('PUSH NOTIFICATION SENT Correctly but there are tokens in mongo that dont exist in OneSignal');
+            }
         }
-            //end of When a pushToken has incorrect format
+
+        //end of When a pushToken has incorrect format
 
         // when pusharrays are OK
         else {
             console.log('PUSH NOTIFICATION SENT Correctly');
             //console.log('pushResult = ',data, httpResponse.statusCode);
-            callback('doneSendPush');
         }
+
+        callback('doneSendPush');
     });
 }
 //end of OneSignal - sending cellPhone notification
