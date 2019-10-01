@@ -1,0 +1,36 @@
+.logo2 {
+    position: absolute;
+    top: 15%;
+    left: 10%;
+}
+.logoSize {
+    height: 50%;
+}
+
+.sizer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+.downloadLogos {
+    max-height:70%;
+    max-width:70%;
+}
+
+.realColor {
+    color: red;
+}
+.drillColor {
+    color: dimgrey;
+}
+.demoColor {
+    color: #dcb605;
+}
+
+.sizeIconFontAwesome {
+    font-size: 40px !important;
+}
+.sizeIconIonIcon {
+    font-size: 50px !important;
+}
