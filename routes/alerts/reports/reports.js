@@ -103,6 +103,9 @@ module.exports.updateStatus = function(req, res) {
     var statusToChange = req.body.searchIDsChecked;
     var wrapped = moment(new Date());
 
+    let alertsClosed = [];
+    let alertsReopend = [];
+
     models.AlertSentInfo.find({$or: [{'_id': statusToChange}, {'parent': statusToChange}]},function (err, alerts) {
         if (err) {
             console.log('err - changing Alert STATUS');
@@ -113,11 +116,26 @@ module.exports.updateStatus = function(req, res) {
                     alert.status.statusString = 'closed';
                     alert.status.statusClosedDate = wrapped.format('YYYY-MM-DD');
                     alert.status.statusClosedTime = wrapped.format('h:mm:ss a');
+
+                    //this info will be require for the popup window in app if user is updating alert that was closed
+                    let alertIdName = {
+                        id: alert._id,
+                        name: alert.alert.name
+                    };
+                    alertsClosed.push(alertIdName);
+
                 } else {
                     alert.status.statusString = 'open';
                     alert.status.statusClosedDate = undefined;
                     alert.status.statusClosedTime = undefined;
                     reOpenAlert = true;
+
+                    //this info will be require for the popup window in app to say which alerts were reopen
+                    let alertIdName = {
+                        id: alert._id,
+                        name: alert.alert.name
+                    };
+                    alertsReopend.push(alertIdName);
                 }
                 alert.save(function(err) {
                     if (err)
@@ -128,7 +146,7 @@ module.exports.updateStatus = function(req, res) {
 
             });
             /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.updateBadge(alerts,reOpenAlert);
+            pushNotification.updateBadge(alerts,reOpenAlert,alertsClosed,alertsReopend);
             return res.send({redirect: '/reports/homeReports'});
         }
     })

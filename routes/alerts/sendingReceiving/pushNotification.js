@@ -55,7 +55,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
             console.log('err - finding Users to send Alert');
         } else {
             users.forEach(function (user) {
-                console.log('user.email = ',user.email); //show to who this alert should be sent
+                //console.log('user.email = ',user.email); //show to who this alert should be sent
                 if (user.pushToken && (user.email !== userAuthEmail)) {
                     user.pushToken.forEach(function (token) {
                         console.log('user.email with token = ',user.email);//show to who this alert will be sent
@@ -94,7 +94,30 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
 
 // FOR OneSignal - Update open alerts badge number
-module.exports.updateBadge= function(alerts,reOpenAlert) {
+module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
+    //popup message for alerts closed and reopened
+    let enClosed = 'no alerts were closed';
+    if(alertsClosed.length === 1)
+        enClosed = 'Alert ' + alertsClosed[0].name + ' was closed';
+    if(alertsClosed.length > 1) {
+        let allAlertsClosed = [];
+        alertsClosed.forEach(function(alertClosed) {
+            allAlertsClosed.push(alertClosed.name);
+        });
+        enClosed = 'The following alerts were closed:\n' + '-' + allAlertsClosed.join("\n-");
+    }
+    let enReopened = 'no alerts were reopened';
+    if(alertsReopened.length === 1)
+        enReopened = 'Alert ' + alertsReopened[0].name + ' was reopened';
+    if(alertsReopened.length > 1) {
+        let allAlertsReopened = [];
+        alertsReopened.forEach(function(alertReopened) {
+            allAlertsReopened.push(alertReopened.name);
+        });
+        enReopened = 'The following alerts were reopened:\n' + '-' + allAlertsReopened.join("\n-");
+    }
+    //end of popup message for alerts closed and reopened
+
     let allUsersWithPushToken = [];
 
     let arrayUsersToSend = [];
@@ -103,7 +126,6 @@ module.exports.updateBadge= function(alerts,reOpenAlert) {
             arrayUsersToSend.indexOf(users.email) === -1 ? arrayUsersToSend.push(users.email) : console.log("This item already exists"); //add to array if not exists
         });
     });
-    console.log(arrayUsersToSend);
 
     models.Users.find({'email': { $in : arrayUsersToSend}}, function (err, users) {
         if (err) {
@@ -123,7 +145,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert) {
                 // we need to create a notification to send
                 let message = new OneSignal.Notification({
                     contents: {
-                        en: 'An alert(s) was reopened'
+                        en: enReopened
                     },
                     //content_available: true,
                     include_player_ids: allUsersWithPushToken,
@@ -147,13 +169,14 @@ module.exports.updateBadge= function(alerts,reOpenAlert) {
                 // we need to create a notification to send
                 let message = new OneSignal.Notification({
                     contents: {
-                        en: 'An alert(s) was closed'
+                        en: enClosed
                     },
                     //content_available: true,
                     include_player_ids: allUsersWithPushToken
                 });
                 message.postBody["data"] = {
-                    action: 'closeAlert'
+                    action: 'closeAlert',
+                    alertsClosed: alertsClosed
                 };
 
                 let title = '';
@@ -347,8 +370,8 @@ function sendPush(message, title, callback) {
 
 
     myClient.sendNotification(message, function (err, httpResponse,data) {
-        //when a pushToken has incorrect format
-        if (err || data.errors) {
+
+        if (err || data.errors) {   //when a pushToken has incorrect format
             if(typeof data.errors.length !== 'undefined'){
                 let usersArray = message.postBody.include_player_ids;
 
@@ -400,7 +423,6 @@ function sendPush(message, title, callback) {
                 console.log('PUSH NOTIFICATION SENT Correctly but there are tokens in mongo that dont exist in OneSignal');
             }
         }
-
         //end of When a pushToken has incorrect format
 
         // when pusharrays are OK
