@@ -98,6 +98,40 @@ module.exports.reportsTrash = function(req, res, next) {
 };
 
 /* Update STATUS Report. */
+module.exports.updateStatusReopen = function(req, res) {
+
+    let alertsClosed = [];
+    let alertsReopend = [];
+    let reOpenAlert = true;
+
+    models.AlertSentInfo.find({'_id': req.body.alertId}, function(err, alerts){//check if Request Assistance is softDeleted
+        if(err || !alerts) console.log("No AlertInfo found");
+        else{
+            alerts[0].status.statusString = 'open';
+            alerts[0].status.statusClosedDate = undefined;
+            alerts[0].status.statusClosedTime = undefined;
+
+            alerts[0].save(function(err) {
+                if (err)
+                    console.log('err = ', err);
+                else
+                    console.log('success - Alert status changed to ' + alerts[0].status.statusString);
+            });
+
+            //this info will be require for the popup window in app to say which alerts were reopen
+            let alertIdName = {
+                id: alerts[0]._id,
+                name: alerts[0].alert.name
+            };
+            alertsReopend.push(alertIdName);
+
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.updateBadge(alerts,reOpenAlert,alertsClosed,alertsReopend);
+            return res.send({redirect: '/reports/homeReports'});
+        }
+    });
+};
+
 module.exports.updateStatus = function(req, res) {
 
     var statusToChange = req.body.searchIDsChecked;

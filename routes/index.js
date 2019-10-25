@@ -551,6 +551,8 @@ router.post('/iWillHelp', auth.simpleAuth, auth.requireLogin, receiveAlert.helpe
 /* UPDATE Report STATUS  ---------------------------------------------------*/
 router.post('/reportStatus', auth.simpleAuth, auth.requireLogin, reports.updateStatus, function(req, res) {
 });
+router.post('/reportStatusReopen', auth.simpleAuth, auth.requireLogin, reports.updateStatusReopen, function(req, res) {
+});
 /*  Move Alerts to Archive.  ---------------------------------------------------*/
 router.post('/moveToArchiveInboxTrash', auth.simpleAuth, auth.requireLogin, reports.moveToArchiveInboxTrash, function(req, res) {
 });

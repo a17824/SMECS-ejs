@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -10,106 +10,120 @@
 
 
 
-      <!-- Datatables -->
-      <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
-      <!-- Bootstrap -->
-      <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrapHomeReports.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrapHomeReports.css" rel="stylesheet">
 
-      <!-- iCheck -->
-      <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
 
-      <!-- Custom Theme Style -->
-      <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
-      <link href="/public/gentelella/build/css/customHomeReports.css" rel="stylesheet">
-      <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/customHomeReports.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
-      <script>
+    <script>
 
-          function selectAll() {
-              $('input:checkbox').prop('checked','checked');
-              $(this).val();
-          }
-          function deselectAll() {
-              $('input:checkbox').removeAttr('checked');
-              $(this).val();
-          }
+        function selectAll() {
+            $('input:checkbox').prop('checked','checked');
+            $(this).val();
+        }
+        function deselectAll() {
+            $('input:checkbox').removeAttr('checked');
+            $(this).val();
+        }
 
-          function changeStatus(action, page) {
-              var arrayIDsAndStatus = $('input[name="actionCheckbox"]:checked').map(function () {
-                  return $(this).val();
-              }).get();
-              var arrayToString = arrayIDsAndStatus.toString()
-              var arraySplit = arrayToString.split(",").map(String);
+        function changeStatusReopen(alertId, route) {
 
-              var searchIDsChecked = [];
-              for (var i = 0; i < arraySplit.length; i += 2) {
-                  searchIDsChecked.push(arraySplit[i]);
-              }
+            $.post(route, {
+                alertId: alertId
 
-              //-----forms validation------------------------------------
-              if (arrayIDsAndStatus.length < 1 ){
-                  alert("No alerts checked to preform action chosen. Please check a checkbox first and then choose the action desired.");
-                  return false;
-              }
-              if(action !== 'status'){
-                  for (var i = 0; i < arraySplit.length; i++) {
-                      if (arraySplit[i+1] == 'open'){
-                          alert("Some alert(s) selected are still in progress. Please change the state of that alert(s) to close before selectiong an action .");
-                          return false;
-                      }
-                  }
-              }
+            },function(data){
+                if(data==='done')
+                {
+                    alert("login success");
+                }
+                window.location = data.redirect
+            });
+        }
 
-              //--------------------------------forms validation end-------
+        function changeStatus(action, page) {
+            var arrayIDsAndStatus = $('input[name="actionCheckbox"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+            var arrayToString = arrayIDsAndStatus.toString()
+            var arraySplit = arrayToString.split(",").map(String);
 
-              var route
-              if (action == 'status')
-                  route = "/reportStatus";
-              if (action == 'archive')
-                  route = "/moveToArchiveInboxTrash";
-              if (action == 'trash')
-                  route = "/moveToArchiveInboxTrash";
+            var searchIDsChecked = [];
+            for (var i = 0; i < arraySplit.length; i += 2) {
+                searchIDsChecked.push(arraySplit[i]);
+            }
 
-              $.post(route, {
-                  searchIDsChecked: searchIDsChecked,
-                  action: action,
-                  page: page
+            //-----forms validation------------------------------------
+            if (arrayIDsAndStatus.length < 1 ){
+                alert("No alerts checked to preform action chosen. Please check a checkbox first and then choose the action desired.");
+                return false;
+            }
+            if(action !== 'status'){
+                for (var i = 0; i < arraySplit.length; i++) {
+                    if (arraySplit[i+1] == 'open'){
+                        alert("Some alert(s) selected are still in progress. Please change the state of that alert(s) to close before selectiong an action .");
+                        return false;
+                    }
+                }
+            }
 
-              },function(data){
-                  if(data==='done')
-                  {
-                      alert("login success");
-                  }
-                  window.location = data.redirect
-              });
+            //--------------------------------forms validation end-------
 
-          }
-      </script>
-  </head>
+            var route
+            if (action == 'status')
+                route = "/reportStatus";
+            if (action == 'archive')
+                route = "/moveToArchiveInboxTrash";
+            if (action == 'trash')
+                route = "/moveToArchiveInboxTrash";
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
+            $.post(route, {
+                searchIDsChecked: searchIDsChecked,
+                action: action,
+                page: page
+
+            },function(data){
+                if(data==='done')
+                {
+                    alert("login success");
+                }
+                window.location = data.redirect
+            });
+
+        }
+    </script>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
         <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
+            <div class="left_col scroll-view">
 
-            <!-- menu profile quick info -->
-            <% include ../layout/menuProfile.ejs %>
-            <!-- /menu profile quick info -->
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
 
-            <br>
+                <br>
 
-            <!-- sidebar menu -->
-            <% include ../layout/sideMenu.ejs %>
-            <!-- /sidebar menu -->
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
 
-          </div>
+            </div>
         </div>
 
         <!-- top navigation -->
@@ -126,173 +140,184 @@
 
 
             <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-12 col-sm-12 col-xs-12">
 
 
-              <div class="x_panel">
-                <div class="x_content">
+                    <div class="x_panel">
+                        <div class="x_content">
 
-                    <ul>
-                        <div align="right">
-                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'">Archived</button>
-                            <% } else { %>
-                            <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'" disabled>Archived</button>
-                            <% } %>
-                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                            <button class="btn btn-danger" id="exit" onclick="location.href='/reports/showTrashReports'">Trash</button>
-                            <% } else { %>
-                            <button class="btn btn-danger" id="exit" onclick="location.href='/reports/showTrashReports'" disabled>Trash</button>
-                            <% } %>
-                        </div>
-                    </ul>
-
-                    <div class="table-responsive">
-                    <table id="datatable-buttons" class="table ">
-                        <thead>
-                        <tr>
-                            <th width="10"></th>
-                            <th width="50">
-                                <div class="input-group-btn">
+                            <ul>
+                                <div align="right">
                                     <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle btn-ms" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
+                                        <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'">Archived</button>
                                     <% } else { %>
-                                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle btn-ms" style="border-radius: 5%" type="button" aria-expanded="false" disabled>Action <span class="caret"></span></button>
+                                        <button class="btn btn-primary" id="exit" onclick="location.href='/reports/showArchived'" disabled>Archived</button>
                                     <% } %>
-                                    <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
-                                        <li><a onclick="changeStatus('status','/reports/homeReports')">Change alert status</a></li>
-                                        <li><a onclick="changeStatus('archive','/reports/homeReports')">Archive alerts selected</a></li>
-                                        <li><a onclick="changeStatus('trash','/reports/homeReports')">Trash alerts selected</a></li>
-                                        <li class="divider"></li>
-                                        <li><a onclick="selectAll()">Select All</a></li>
-                                        <li><a onclick="deselectAll()">Deselect All</a></li>
-                                    </ul>
+                                    <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                        <button class="btn btn-danger" id="exit" onclick="location.href='/reports/showTrashReports'">Trash</button>
+                                    <% } else { %>
+                                        <button class="btn btn-danger" id="exit" onclick="location.href='/reports/showTrashReports'" disabled>Trash</button>
+                                    <% } %>
                                 </div>
-                            </th>
-                            <th width="60">Date<br>created</th>
-                            <th width="60">Time<br>created</th>
-                            <th>Alert</th>
-                            <th width="50">Type</th>
-                            <th>Sent by</th>
-                            <th width="60">Date closed</th>
-                            <th width="60">Time closed</th>
-                            <th width="60">Status</th>
-                            <th width="50">Details</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <% reportSent.forEach(function(reportS) { %>
-                        <% if (!reportS.archived && !reportS.softDeletedBy) { %>
-                        <% if ( reportS.status.statusString == 'open'){ %>
-                            <% var color = "#26ba9a"; %> <!-- green: #26ba9a grey: #8c93a3 yellow: #eeae4a -->
-                            <% var colorBg = "#FFF"; %>
-                            <% var colorButton = "btn btn-success"; %> <!-- green: success dark: dark yellow: warning -->
-                        <% } else { %>
-                            <% var color = "#4d6275"; %>        <!-- white #FFF -->
-                            <% var colorBg = "#FFF"; %>  <!-- dark blue #4d6275 -->
-                            <% var colorButton = "btn btn-dark"; %>
-                        <% } %>
-                        <tr style="color: <%= color %>; background: <%= colorBg %>;">
+                            </ul>
 
-                            <td></td>
+                            <div class="table-responsive">
+                                <table id="datatable-buttons" class="table ">
+                                    <thead>
+                                    <tr>
+                                        <th width="10"></th>
+                                        <th width="10">
+                                            <div class="input-group-btn">
+                                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle btn-ms" style="border-radius: 5%" type="button" aria-expanded="false">Action <span class="caret"></span></button>
+                                                <% } else { %>
+                                                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle btn-ms" style="border-radius: 5%" type="button" aria-expanded="false" disabled>Action <span class="caret"></span></button>
+                                                <% } %>
+                                                <ul class="dropdown-menu" role="menu"> <!-- to open dropdown menu box to the left, add this class -> pull-right -->
+                                                    <li><a onclick="changeStatus('status','/reports/homeReports')">Close alerts selected</a></li>
+                                                    <li><a onclick="changeStatus('archive','/reports/homeReports')">Archive alerts selected</a></li>
+                                                    <li><a onclick="changeStatus('trash','/reports/homeReports')">Trash alerts selected</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a onclick="selectAll()">Select All</a></li>
+                                                    <li><a onclick="deselectAll()">Deselect All</a></li>
+                                                </ul>
+                                            </div>
+                                        </th>
+                                        <th width="60">Date<br>created</th>
+                                        <th width="60">Time<br>created</th>
+                                        <th>Alert</th>
+                                        <th width="50">Type</th>
+                                        <th>Sent by</th>
+                                        <th width="60">Date closed</th>
+                                        <th width="60">Time closed</th>
+                                        <th width="60">Status</th>
+                                        <th width="50">Details</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% reportSent.forEach(function(reportS) { %>
+                                        <% if (!reportS.archived && !reportS.softDeletedBy) { %>
+                                            <% if ( reportS.status.statusString == 'open'){ %>
+                                                <% var color = "#26ba9a"; %> <!-- green: #26ba9a grey: #8c93a3 yellow: #eeae4a -->
+                                                <% var colorBg = "#FFF"; %>
+                                                <% var colorButton = "btn btn-info"; %> <!-- green: success dark: dark yellow: warning -->
 
-                            <td>
-                                <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                                <input type="checkbox"
-                                       name="actionCheckbox"
-                                       value="<%= reportS.id %>,<%= reportS.status.statusString %>"
-                                       class="icheckbox_flat-green"
-                                       style="position: relative; right: -25px">
+                                            <% } else { %>
+                                                <% var color = "#4d6275"; %>        <!-- white #FFF -->
+                                                <% var colorBg = "#FFF"; %>  <!-- dark blue #4d6275 -->
+                                                <% var colorButton = "btn btn-dark"; %>
+                                                <% var colorReopen = "btn btn-success btn-xs"; %>
+                                            <% } %>
+                                            <tr style="color: <%= color %>; background: <%= colorBg %>;">
 
-                                <% } else { %>
-                                <input type="checkbox"
-                                       name="actionCheckbox"
-                                       value="<%= reportS.id %>,<%= reportS.status.statusString %>"
-                                       class="icheckbox_flat-green"
-                                       style="position: relative; right: -25px"
-                                       disabled>
-                                <% } %>
-                            </td>
-                            <td><%= reportS.sentDate %></td>
-                            <td><%= reportS.sentTime %></td>
-                            <td><%= reportS.alert.name %></td>
-                            <td>
-                                <% if (reportS.testModeON){ %>
-                                <a style="color: <%= color %>;">drill</a>
-                                <% } else { %>
-                                <a style="color: <%= color %>;">real</a>
-                                <% } %>
-                            </td>
+                                                <td></td>
 
-                            <td><%= reportS.sentBy %></td>
-                            <% if ( reportS.status.statusString == 'open'){ %>
-                            <td>in progress...</td>
-                            <td>in progress...</td>
-                            <% } else { %>
-                            <td><%= reportS.status.statusClosedDate %></td>
-                            <td><%= reportS.status.statusClosedTime %></td>
-                            <% } %>
-                            <td>
-                                <% if ( reportS.status.statusString == 'closed'){ %>
-                                <a style="color: <%= color %>;"><%= reportS.status.statusString %></a>
-                                <% } else { %>
-                                <a style="color: <%= color %>;">open</a>
-                                <% } %>
-                            </td>
-                            <td><a href="/reports/showReportsDetails/<%= reportS.id %>/reportsPage"><button class="<%= colorButton %>">show</button></a></td>
-                        </tr>
-                        <% } %>
-                        <% }); %>
-                        </tbody>
-                    </table>
+                                                <td>
+                                                    <% if ( reportS.status.statusString == 'open'){ %>
+                                                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                                                <input type="checkbox"
+                                                                       name="actionCheckbox"
+                                                                       value="<%= reportS.id %>,<%= reportS.status.statusString %>"
+                                                                       class="icheckbox_flat-green"
+                                                                       style="position: relative; right: -28px; top: 5px">
+
+                                                            <% } else { %>
+                                                                <input type="checkbox"
+                                                                       name="actionCheckbox"
+                                                                       value="<%= reportS.id %>,<%= reportS.status.statusString %>"
+                                                                       class="icheckbox_flat-green"
+                                                                       style="position: relative; right: -28px; top: 5px"
+                                                                       disabled>
+                                                            <% } %>
+                                                    <% } else { %>
+                                                            <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                                                <a onclick="changeStatusReopen('<%= reportS.id %>','/reportStatusReopen')" style="position: relative; right: -10px; top: 5px">
+                                                                    <button class="<%= colorReopen %>" id="<%= reportS.id %>">Reopen</button>
+                                                                </a>
+                                                            <% } %>
+                                                    <% } %>
+
+                                                </td>
+                                                <td><%= reportS.sentDate %></td>
+                                                <td><%= reportS.sentTime %></td>
+                                                <td><%= reportS.alert.name %></td>
+                                                <td>
+                                                    <% if (reportS.testModeON){ %>
+                                                        <a style="color: <%= color %>;">drill</a>
+                                                    <% } else { %>
+                                                        <a style="color: <%= color %>;">real</a>
+                                                    <% } %>
+                                                </td>
+
+                                                <td><%= reportS.sentBy %></td>
+                                                <% if ( reportS.status.statusString == 'open'){ %>
+                                                    <td>in progress...</td>
+                                                    <td>in progress...</td>
+                                                <% } else { %>
+                                                    <td><%= reportS.status.statusClosedDate %></td>
+                                                    <td><%= reportS.status.statusClosedTime %></td>
+                                                <% } %>
+                                                <td>
+                                                    <% if ( reportS.status.statusString == 'closed'){ %>
+                                                        <a style="color: <%= color %>;"><%= reportS.status.statusString %></a>
+                                                    <% } else { %>
+                                                        <a style="color: <%= color %>;">open</a>
+                                                    <% } %>
+                                                </td>
+                                                <td><a href="/reports/showReportsDetails/<%= reportS.id %>/reportsPage"><button class="<%= colorButton %>">show</button></a></td>
+                                            </tr>
+                                        <% } %>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
                     </div>
-
-
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-
-      </div>
 
     </div>
 
+</div>
 
-    <!-- jQuery -->
-    <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
-    <!-- Bootstrap -->
-    <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
-    
-    <!-- iCheck -->
-    <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
-    <!-- Datatables -->
-    <script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
 
-    <script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-    <script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
-    <script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
-    <script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
-    <!-- Custom Theme Scripts -->
-    <script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
 
-  </body>
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
 
-  <!-- footer content -->
-  <footer class="adjustPos">
-  <% include ../layout/footer.ejs %>
-  </footer>
-  <!-- /footer content -->
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+
+</body>
+
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 
 </html>

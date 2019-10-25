@@ -63,6 +63,11 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                     });
                 }
             });
+
+            let soundNewUpdate = '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df'; //sound for alert update/notes/closed
+            if(action === 'newAlert')
+                soundNewUpdate = alert.group.soundChannel;
+
             // we need to create a notification to send
             let message = new OneSignal.Notification({
                 contents: {
@@ -72,7 +77,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
                 include_player_ids: allUsersWithPushToken,
                 android_sound: "car_alarm", //android 7 and older
-                android_channel_id: alert.group.soundChannel
+                android_channel_id: '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df'
 
             });
             message.postBody["data"] = {
@@ -109,13 +114,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
     let enReopened = 'no alerts were reopened';
     if(alertsReopened.length === 1)
         enReopened = 'Alert ' + alertsReopened[0].name + ' was reopened';
-    if(alertsReopened.length > 1) {
-        let allAlertsReopened = [];
-        alertsReopened.forEach(function(alertReopened) {
-            allAlertsReopened.push(alertReopened.name);
-        });
-        enReopened = 'The following alerts were reopened:\n' + '-' + allAlertsReopened.join("\n-");
-    }
+
     //end of popup message for alerts closed and reopened
 
     let allUsersWithPushToken = [];
@@ -140,7 +139,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                     });
                 }
             });
-
+            console.log('sound', alerts[0].group.soundChannel);
             if(reOpenAlert){
                 // we need to create a notification to send
                 let message = new OneSignal.Notification({
@@ -150,7 +149,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                     //content_available: true,
                     include_player_ids: allUsersWithPushToken,
                     android_sound: "car_alarm", //android 7 and older
-                    android_channel_id: '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df' //reopen sound
+                    android_channel_id: alerts[0].group.soundChannel //reopen sound
                 });
                 message.postBody["data"] = {
                     action: 'closeAlert'
