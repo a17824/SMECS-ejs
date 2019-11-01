@@ -768,7 +768,7 @@ router.post('/verifyPin', auth.simpleAuth, auth.requireLogin, createAlert.verify
 /* Create Alert. -------------------------------*/
 router.get('/createAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.createAlert, function(req, res) {});
 /* Update Alert. -------------------------------*/
-router.get('/updateAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.updateAlert, function(req, res) {});
+//router.get('/updateAlert/:id', auth.simpleAuth, auth.requireLogin, createAlert.updateAlert, function(req, res) {});
 
 /* Sending Alert BACK BUTTON pressed. -------------------------------*/
 router.post('/sendAlertBackButton', auth.simpleAuth, auth.requireLogin, createAlert.updateRoadIndex, function(req, res) {});

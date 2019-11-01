@@ -40,6 +40,7 @@ module.exports.alert= function(alert, action) {
 
 // FOR OneSignal - Create message for cellPhone notification
 module.exports.alert= function(alert, action, userAuthEmail, callback) {
+    console.log('ALERT');
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
     if (alert.realDrillDemo == 'drill')
@@ -64,9 +65,6 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                 }
             });
 
-            let soundNewUpdate = '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df'; //sound for alert update/notes/closed
-            if(action === 'newAlert')
-                soundNewUpdate = alert.group.soundChannel;
 
             // we need to create a notification to send
             let message = new OneSignal.Notification({
@@ -77,7 +75,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
                 include_player_ids: allUsersWithPushToken,
                 android_sound: "car_alarm", //android 7 and older
-                android_channel_id: '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df'
+                android_channel_id: alert.group.soundChannel
 
             });
             message.postBody["data"] = {
@@ -100,6 +98,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
 // FOR OneSignal - Update open alerts badge number
 module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
+    console.log('updateBadge');
     //popup message for alerts closed and reopened
     let enClosed = 'no alerts were closed';
     if(alertsClosed.length === 1)
@@ -196,6 +195,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
 
 
 module.exports.icons = function(icons,action) {
+    console.log('icons');
     models.Users.find({pushToken: {$exists: true, $not: {$size: 0}}}, function (err,users) {
         if( err || !users) console.log("No users with pushToken to update");
         else{
@@ -227,7 +227,7 @@ module.exports.icons = function(icons,action) {
 //end of Create message for cellPhone notification
 
 module.exports.notifyUser = function(user, action) {
-
+    console.log('notifyUser');
     let token = jwt.sign({user: user}, config.secret, {
         //expiresIn: 1440 // expires in 24 hours
     });
@@ -274,6 +274,7 @@ module.exports.notifyUser = function(user, action) {
 };
 
 module.exports.refreshAlertInfo = function(alert, action) {
+    console.log('refreshAlertInfo');
     // ONESIGNAL
     let allUsersWithPushToken = [];
     alert.sentTo.forEach(function (user) {
@@ -303,6 +304,7 @@ module.exports.refreshAlertInfo = function(alert, action) {
 
 
 module.exports.refreshNotes = function(alert, action) {
+    console.log('refreshNotes');
     // ONESIGNAL
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
@@ -321,9 +323,9 @@ module.exports.refreshNotes = function(alert, action) {
             en: testModeON + ' ' + alert.alert.name + '. Notes have been updated'
         },
         include_player_ids: allUsersWithPushToken,
-        android_sound: alert.group.mp3, //android 7 and older
-        ios_sound: alert.group.mp3 + '.wav', //ios .wav
-        android_channel_id: alert.group.soundChannel
+        //android_sound: alert.group.mp3, //android 7 and older
+        //ios_sound: alert.group.mp3 + '.wav', //ios .wav
+        android_channel_id: '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df'  //sound for alert update/notes/closed
     });
     message.postBody["data"] = {
         action: action,
@@ -359,7 +361,7 @@ function sendPush(message, userName, userAuthKey) {
 
 //OneSignal - sending cellPhone notification
 function sendPush(message, title, callback) {
-
+    console.log('sendPush');
 
     // first we need to create a client
     let myClient = new OneSignal.Client({

@@ -40,18 +40,29 @@
             $(this).val();
         }
 
-        function changeStatusReopen(alertId, route) {
+        //Reopen alert Confirmation
+        function YNconfirm(type, optionName) {
+            if (confirm('ATTENTION: \'' + optionName + '\' option will be deleted. Are you sure?'))
+                return true;
+            else
+                return false;
+        };
 
-            $.post(route, {
-                alertId: alertId
+        function changeStatusReopen(alertId, route, alertName) {
+            if (confirm('ATTENTION: \'' + alertName + '\' alert will be reopen and send notifications to all users that can receive this alert.')){
+                $.post(route, {
+                    alertId: alertId
 
-            },function(data){
-                if(data==='done')
-                {
-                    alert("login success");
-                }
-                window.location = data.redirect
-            });
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                });
+            }
+             else
+                return false;
         }
 
         function changeStatus(action, page) {
@@ -231,7 +242,7 @@
                                                             <% } %>
                                                     <% } else { %>
                                                             <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                                                                <a onclick="changeStatusReopen('<%= reportS.id %>','/reportStatusReopen')" style="position: relative; right: -10px; top: 5px">
+                                                                <a onclick="changeStatusReopen('<%= reportS.id %>','/reportStatusReopen','<%= reportS.alert.name %>')" style="position: relative; right: -10px; top: 5px">
                                                                     <button class="<%= colorReopen %>" id="<%= reportS.id %>">Reopen</button>
                                                                 </a>
                                                             <% } %>

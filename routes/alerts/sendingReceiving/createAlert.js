@@ -323,6 +323,7 @@ module.exports.createAlert= function(req, res) {
 };
 /* end of Create AlertSentInfo and Send PushNotification. -------------------------------*/
 
+/*
 module.exports.updateAlert= function(req, res) {
     let alertToUpdate = req.params.id;
 
@@ -337,7 +338,7 @@ module.exports.updateAlert= function(req, res) {
             if (alertTemp.realDrillDemo !== 'demo'){
                 alertSentInfo.update(req, res, alertTemp, function (result) {  //update AlertSentInfo
 
-                    /*****  CALL HERE NOTIFICATION API  *****/
+                    //  CALL HERE NOTIFICATION API  *****
                     pushNotification.alert(result, 'updateAlert', 'email', function (result2,err2) {
                         if(err2 || !result2) console.log('sending updateAlert. err - ', err2);
                         else {
@@ -350,13 +351,13 @@ module.exports.updateAlert= function(req, res) {
 
             //DEMO alert
             else {
-                /*****  CALL HERE NOTIFICATION API  *****/
+                //  CALL HERE NOTIFICATION API  *****
                 redirectTo.redirectTo(req, res, alertTemp, flag);
             }
         }
     });
 };
-
+*/
 module.exports.updateRoadIndex= function(req, res) {
     let alertToUpdate = req.body.alertToUpdate;
     let floorLocation = req.body.floorLocation;
