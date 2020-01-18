@@ -323,7 +323,7 @@ module.exports.createAlert= function(req, res) {
 };
 /* end of Create AlertSentInfo and Send PushNotification. -------------------------------*/
 
-/*
+
 module.exports.updateAlert= function(req, res) {
     let alertToUpdate = req.params.id;
 
@@ -357,7 +357,7 @@ module.exports.updateAlert= function(req, res) {
         }
     });
 };
-*/
+
 module.exports.updateRoadIndex= function(req, res) {
     let alertToUpdate = req.body.alertToUpdate;
     let floorLocation = req.body.floorLocation;

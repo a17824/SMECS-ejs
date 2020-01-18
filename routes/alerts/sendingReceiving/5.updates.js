@@ -3,7 +3,7 @@ var models = require('./../../models');
 var moment = require('moment');
 let pushNotification = require('./pushNotification.js');
 
-
+//update notes only from cellphone
 module.exports.postUpdateNotes = function(req, res) {
     var wrapped = moment(new Date());
     //var redirectEJS; //EJS user

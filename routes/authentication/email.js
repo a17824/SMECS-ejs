@@ -25,7 +25,7 @@ module.exports.forgotPost = function (req, res) {
                 service: 'gmail',
                 auth: {
                     user: 'pdcpadr@gmail.com',
-                    pass: '123pdcpadr'
+                    pass: 'Welcome@123!'
                 }
             };
             var transporter = nodemailer.createTransport(smtpTransport(options));
@@ -56,6 +56,8 @@ module.exports.show = function(req, res, next) {
 };
 //post - FORGOT EJS
 module.exports.post = function(req, res, next) {
+    console.log('req.body.email = ', req.body.email);
+
     async.waterfall([
         function(done) {
             crypto.randomBytes(20, function(err, buf) {
@@ -86,7 +88,7 @@ module.exports.post = function(req, res, next) {
                 service: 'gmail',
                 auth: {
                     user: 'pdcpadr@gmail.com',
-                    pass: 'X'
+                    pass: 'Welcome@123!'
                 }
             };
             var transporter = nodemailer.createTransport(smtpTransport(options));
@@ -114,7 +116,8 @@ module.exports.post = function(req, res, next) {
         }
     ], function(err) {
         if (err) return next(err);
-        //res.redirect('/forgot');
+
+        //res.redirect('/loginResetPassword');
     });
 };
 
@@ -127,7 +130,7 @@ module.exports.sendAlertRequestAssistance = function(req, utilityName, next) {
                     service: 'gmail',
                     auth: {
                         user: 'pdcpadr@gmail.com',
-                        pass: '123pdcpadr'
+                        pass: 'Welcome@123!'
                     }
                 };
                 var transporter = nodemailer.createTransport(smtpTransport(options));

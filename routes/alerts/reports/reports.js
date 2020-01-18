@@ -111,6 +111,41 @@ module.exports.updateStatusReopen = function(req, res) {
             alerts[0].status.statusClosedDate = undefined;
             alerts[0].status.statusClosedTime = undefined;
 
+            //reset users view/received/procedure completed
+            alerts[0].sentTo.forEach(function (user) {
+
+                user.received.receivedBoolean = false;
+                user.received.receivedDate = undefined;
+                user.received.receivedTime = undefined;
+                user.received.timeDif = undefined;
+
+                user.viewed.viewedBoolean = false;
+                user.viewed.viewedDate = undefined;
+                user.viewed.viewedTime = undefined;
+                user.viewed.timeDif = undefined;
+
+                user.procedureCompleted.boolean = false;
+                user.procedureCompleted.date = undefined;
+                user.procedureCompleted.time = undefined;
+                user.procedureCompleted.timeDif = undefined;
+
+                user.weAreSafe.boolean = false;
+                user.weAreSafe.date = undefined;
+                user.weAreSafe.time = undefined;
+                user.weAreSafe.timeDif = undefined;
+
+                user.called911.boolean = false;
+                user.called911.date = undefined;
+                user.called911.time = undefined;
+                user.called911.timeDif = undefined;
+
+                user.iNeedHelp.boolean = false;
+                user.iNeedHelp.date = undefined;
+                user.iNeedHelp.time = undefined;
+                user.iNeedHelp.timeDif = undefined;
+                user.iNeedHelp.helpers = undefined;
+            });
+
             alerts[0].save(function(err) {
                 if (err)
                     console.log('err = ', err);

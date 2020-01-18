@@ -128,6 +128,8 @@ module.exports.alertReceiptPost = function (req, res) {
 };
 
 module.exports.receivedViewedAlert = function (req, alert) { //EJS
+    console.log('!!!!!!!!!!receivedViewedAlert!!!!!!!!!!!!!!!');
+
     let email;
     if(req.decoded)
         email = req.decoded.user.email;
@@ -175,7 +177,7 @@ module.exports.receivedViewedAlert = function (req, alert) { //EJS
 
 /* Receive the called 911 for message delivered -------------------------------*/
 module.exports.alertCalled911 = function (req, res) {
-    var email = req.decoded.email;
+    var email = req.decoded.user.email;
     var alertID = req.body.alertID;
     var wrapped = moment(new Date());
 
@@ -185,13 +187,13 @@ module.exports.alertCalled911 = function (req, res) {
                 return res.json({success: false, message: 'Failed to locate user.'});
             } else {
                 for (var i = 0; i < alert.sentTo.length; i++) {
-                    if(alert.sentTo[i].email == email && alert.sentTo[i].called911.called911Boolean == false ){
-                        alert.sentTo[i].called911.called911Boolean = true;
-                        alert.sentTo[i].called911.called911Date = wrapped.format('YYYY-MM-DD');
-                        alert.sentTo[i].called911.called911Time = wrapped.format('h:mm:ss a');
+                    if(alert.sentTo[i].email == email && alert.sentTo[i].called911.boolean == false ){
+                        alert.sentTo[i].called911.boolean = true;
+                        alert.sentTo[i].called911.date = wrapped.format('YYYY-MM-DD');
+                        alert.sentTo[i].called911.time = wrapped.format('h:mm:ss a');
 
                         //time user took to call911 after viewing alert
-                        timeDifFunc.timeDif(alert.sentTo[i].viewed.viewedDate, alert.sentTo[i].viewed.viewedTime, alert.sentTo[i].called911.called911Date, alert.sentTo[i].called911.called911Time,function (result,err) {
+                        timeDifFunc.timeDif(alert.sentTo[i].viewed.viewedDate, alert.sentTo[i].viewed.viewedTime, alert.sentTo[i].called911.date, alert.sentTo[i].called911.time,function (result,err) {
                             if(err || !result) console.log('timeDif err = ',err);
                             else {
                                 alert.sentTo[i].called911.timeDif = result;
@@ -205,6 +207,14 @@ module.exports.alertCalled911 = function (req, res) {
                             success: true
                         });
                         break
+                    }
+                    else {
+                        if (i === alert.sentTo.length - 1) { //last loop
+                            res.json({
+                                success: false
+                            });
+                            break
+                        }
                     }
                 }
             }

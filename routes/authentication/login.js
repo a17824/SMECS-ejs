@@ -68,6 +68,13 @@ module.exports.getLoginParentSelfRegistration = function(req, res, next) {
         csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
 };
+module.exports.getLoginResetPassword = function(req, res) {
+    res.render('login', {
+        title: 'SMECS Login',
+        error: "Success! Your Pin has been changed.",
+        csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+};
 /**
  * Log a user into their account.
  *

@@ -40,7 +40,9 @@ module.exports.alert= function(alert, action) {
 
 // FOR OneSignal - Create message for cellPhone notification
 module.exports.alert= function(alert, action, userAuthEmail, callback) {
-    console.log('ALERT');
+    console.log('alert');
+    console.log('action = ', action);
+
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
     if (alert.realDrillDemo == 'drill')
@@ -99,6 +101,8 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 // FOR OneSignal - Update open alerts badge number
 module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
     console.log('updateBadge');
+    console.log('action (no var action)= ');
+
     //popup message for alerts closed and reopened
     let enClosed = 'no alerts were closed';
     if(alertsClosed.length === 1)
@@ -138,9 +142,10 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                     });
                 }
             });
-            console.log('sound', alerts[0].group.soundChannel);
+            //console.log('sound', alerts[0].group.soundChannel);
             if(reOpenAlert){
                 // we need to create a notification to send
+                //console.log('ALERT REOPEN CLOSED = ');
                 let message = new OneSignal.Notification({
                     contents: {
                         en: enReopened
@@ -151,7 +156,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                     android_channel_id: alerts[0].group.soundChannel //reopen sound
                 });
                 message.postBody["data"] = {
-                    action: 'closeAlert'
+                    action: 'reOpenAlert'
                 };
 
                 let title = '';
@@ -164,13 +169,16 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                 });
             }
             else {
+                //console.log('ALERT CLOSED = ');
                 // we need to create a notification to send
                 let message = new OneSignal.Notification({
                     contents: {
                         en: enClosed
                     },
                     //content_available: true,
-                    include_player_ids: allUsersWithPushToken
+                    include_player_ids: allUsersWithPushToken,
+                    android_sound: "car_alarm", //android 7 and older
+                    android_channel_id: 'ee9140fa-9eff-403d-b14b-cd5547291382'  //sound for alert update/notes/closed
                 });
                 message.postBody["data"] = {
                     action: 'closeAlert',
@@ -196,6 +204,8 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
 
 module.exports.icons = function(icons,action) {
     console.log('icons');
+    console.log('action = ', action);
+
     models.Users.find({pushToken: {$exists: true, $not: {$size: 0}}}, function (err,users) {
         if( err || !users) console.log("No users with pushToken to update");
         else{
@@ -228,6 +238,8 @@ module.exports.icons = function(icons,action) {
 
 module.exports.notifyUser = function(user, action) {
     console.log('notifyUser');
+    console.log('action = ', action);
+
     let token = jwt.sign({user: user}, config.secret, {
         //expiresIn: 1440 // expires in 24 hours
     });
@@ -275,6 +287,8 @@ module.exports.notifyUser = function(user, action) {
 
 module.exports.refreshAlertInfo = function(alert, action) {
     console.log('refreshAlertInfo');
+    console.log('action = ', action);
+
     // ONESIGNAL
     let allUsersWithPushToken = [];
     alert.sentTo.forEach(function (user) {
@@ -305,6 +319,8 @@ module.exports.refreshAlertInfo = function(alert, action) {
 
 module.exports.refreshNotes = function(alert, action) {
     console.log('refreshNotes');
+    console.log('action = ', action);
+
     // ONESIGNAL
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
@@ -325,7 +341,7 @@ module.exports.refreshNotes = function(alert, action) {
         include_player_ids: allUsersWithPushToken,
         //android_sound: alert.group.mp3, //android 7 and older
         //ios_sound: alert.group.mp3 + '.wav', //ios .wav
-        android_channel_id: '2b500d9f-7d71-41c0-92c9-fc02d9fcb7df'  //sound for alert update/notes/closed
+        android_channel_id: 'ee9140fa-9eff-403d-b14b-cd5547291382'  //sound for alert update/notes/closed
     });
     message.postBody["data"] = {
         action: action,
@@ -333,9 +349,9 @@ module.exports.refreshNotes = function(alert, action) {
     };
     let title = testModeON + ' ' + alert.alert.name;
     sendPush(message, title, function (result,err) {
-        if(err || !result) console.log('refreshAlertInfo err = ',err);
+        if(err || !result) console.log('refreshNotes err = ',err);
         else {
-            console.log('result refreshAlertInfo = ',result)
+            console.log('result refreshNotes = ',result)
         }
 
     });

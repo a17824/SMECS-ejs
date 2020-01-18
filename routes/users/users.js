@@ -606,6 +606,7 @@ module.exports.updatePost = function(req, res) {
                 user.userRoleName = req.body.userRoleName;
                 user.userPrivilegeID = req.body.userPrivilegeID;
                 user.userPrivilegeName = req.body.userPrivilegeName;
+
                 if (req.body.pin != "oldPin"){
                     user.pin = hash; //req.body.pin;
                 }

@@ -25,7 +25,7 @@ module.exports.show = function(req, res, next) {
             */
         }
         res.render('reset', {
-            title: "Reset Password",
+            title: "Reset Pin",
             user: user
         });
     });
@@ -33,34 +33,32 @@ module.exports.show = function(req, res, next) {
 module.exports.post = function(req, res) {
     async.waterfall([
         function(done) {
-            console.log(req.params.token);
             var userToUpdate = req.body.userToUpdate;
             models.Users.findOne({ resetPasswordToken: userToUpdate, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
                 if (!user) {
                     //req.flash('error', 'Password reset token is invalid or has expired.');
                     //return res.redirect('back');
+                    console.log('2');
                     return res.render('forgot', {
                         title: 'SMECS Forgot Password',
                         error: "Password reset token is invalid or has expired. Try again",
                         errorMessages: ""
                     });
                 }
-                var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
-                user.pin = hash; //req.body.pin;
-                user.resetPasswordToken = undefined;
-                user.resetPasswordExpires = undefined;
+                else {
+                    var hash = bcrypt.hashSync(req.body.pin, bcrypt.genSaltSync(10));
+                    user.pin = hash; //req.body.pin;
+                    user.resetPasswordToken = undefined;
+                    user.resetPasswordExpires = undefined;
 
+                    user.save(function(err, user) {
+                        req.session.user = user;
+                        req.flash('success_messages', 'Success! Your password has been changed.');
+                        res.send({redirect:'/loginResetPassword'});
+                        done(err, user);
+                    });
+                }
 
-
-                user.save(function(err, user) {
-                    console.log('3');
-                    req.session.user = user;
-                    req.flash('success_messages', 'Success! Your password has been changed.');
-                    res.send({redirect:'/dashboard'});
-                    done(err, user);
-
-
-                 });
             });
         },
         function(user, done) {
@@ -88,15 +86,8 @@ module.exports.post = function(req, res) {
         }
     ], function(err) {
         console.log("Redirecionamento Aqui ");
-        //res.redirect('/dashboard');
-        //res.send({redirect: '/dashboard'});
-        //res.writeHead(302, {location: '/dashboard'});
-        //res.end();
-        //res.writeHead(301, { 'Location': '/dashboard'});
-        //res.end();
-        //res.status(302).render('/dashboard');
-        //res.redirect(301, '/dashboard')
-        //link;
+        //res.redirect('/loginResetPassword');
+        //res.redirect('/login');
     });
 };
 /*-------------------------------------------end of reset password*/

@@ -17,17 +17,8 @@
       <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="/public/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="/public/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- bootstrap-progressbar -->
-    <link href="/public/gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
-    <!-- PNotify -->
-    <link href="/public/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
-    <link href="/public/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
-    <link href="/public/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/fontawesome-free-5.0.12/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
+
 
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
@@ -70,8 +61,14 @@
                 <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
                 Registration completed, please use your new email and pin to login
             </div>
-
             <% } %>
+            <% if (error == 'Success! Your Pin has been changed.') { %>
+                <div class="alert alert-success" role="alert">
+                    <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                    Success! Your Pin has been changed.
+                </div>
+            <% } %>
+
             <% if (error == 'Incorrect email or pin') { %>
             <div class="alert alert-danger" role="alert">
                 <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
@@ -94,7 +91,7 @@
                 </div>
                 <div>
                     <button class="btn btn-default submit" type="submit" value="Login">Login</button>
-                    <a class="to-register" href="#register">Lost your password?</a>
+                    <a class="to-register" href="/forgot">Lost your password?</a>
                 </div>
                 <div class="clearfix"></div>
                 <div class="separator">
@@ -109,52 +106,13 @@
             </form>
         </section>
     </div>
-
-    <div id="register" class="animate form registration_form">
-        <section class="login_content">
-            <h1>Reset Pin</h1>
-            <form action="/forgot" method="post">
-
-                <input type="email" name="email" class="form-control" placeholder="Email" required="" />
-
-                <button class="btn btn-default submit" type="submit">Reset Password</button>
-
-                <div class="clearfix"></div>
-
-                <div class="separator">
-                    <p class="change_link">Already a member ?
-                        <a href="#signin" class="to_register"> Log in </a>
-                    </p>
-
-                    <div class="clearfix"></div>
-                    <br />
-
-                    <div>
-                        <h1>
-                            <i class="fa fa-graduation-cap"></i> SMECS</h1>
-                        <p>©2019 All Rights Reserved.</p>
-                    </div>
-                </div>
-            </form>
-        </section>
-    </div>
 </div>
 <!-- jQuery -->
 <script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- FastClick -->
-<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
-<!-- NProgress -->
-<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
-<!-- bootstrap-progressbar -->
-<script src="/public/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-<!-- iCheck -->
-<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
-<!-- PNotify -->
-<script src="/public/gentelella/vendors/pnotify/dist/pnotify.js"></script>
-<script src="/public/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
-<script src="/public/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+
 </body>
 
 </html>
+

@@ -1,27 +1,97 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>forgot password</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Meta, Refresh page every 5 minutes. -->
+    <!--  <meta http-equiv="refresh" content="300"> -->
+
+
+    <title>Forgot/Lost Password</title>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/public/gentelella/vendors/fontawesome-free-5.0.12/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
+
+
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
+
+    <!-- refresh csrf token every 10min if browser is active or refresh right away if browser is hidden and is brought active  -->
+    <script type="text/javascript">
+        function Redirect()
+        {
+            window.location="/login";
+        }
+        setTimeout('Redirect()', 600000);
+
+        //if browser is hidden and is brought to active, refresh page
+        document.addEventListener( 'visibilitychange' , function() {
+            if (document.hidden) {
+                //console.log('bye');
+            } else {
+                //console.log('well back');
+                setTimeout('Redirect()', 1);
+            }
+        }, false );
+    </script>
+    <!-- /refresh csrf token every 10min if browser is active or refresh right away if browser is hidden and is brought active  -->
+
 </head>
-<body>
-<h1><%= title %></h1>
 
-<% if ( error_messages ) { %>
-<p style="color: red"><%= error_messages %></p>
-<% } %>
-<% if (error || errorMessages) { %>
-<p class="error" style="color: red"><%= error %></p>
-<p class="messages" style="color: dodgerblue"><%= errorMessages %></p>
-<% } %>
+<body class="login">
+<div class="login_wrapper">
+    <div class="animate form login_form">
+        <section class="login_content">
+            <% if ( error_messages ) { %>
+                <p style="color: red"><%= error_messages %></p>
+            <% } %>
+            <% if (error || errorMessages) { %>
+                <p class="error" style="color: red"><%= error %></p>
+                <p class="messages" style="color: dodgerblue"><%= errorMessages %></p>
+            <% } %>
+            <form action="/forgot" method="post">
+
+                <h1>Reset Pin</h1>
+                <div>
+                    <input type="email" name="email" class="form-control" placeholder="Email" required="" />
+                    <button class="btn btn-default submit" type="submit">Reset Password</button>
+                </div>
+
+                <div>
+                   <!-- <button class="btn btn-default submit" type="submit" value="Login">Login</button> -->
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="separator">
+                    <div class="clearfix"></div>
+                    <br>
+                    <div>
+                        <h1>
+                            <i class="fa fa-graduation-cap"></i> SMECS</h1>
+                        <p>©2019 All Rights Reserved.</p>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
 
 
-<form action="/forgot"  method="post">
+</div>
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 
-    <label for="email"><b>Email:</b></label><br>
-    <input type="email" name="email" size="40" placeholder="ex: Manuel.Neves@gmail.com" required="true"><br><br>
-
-    <input type="submit" id="btSubmit" value="Reset Password">
-
-</form>
 </body>
 </html>
+
+
+
+

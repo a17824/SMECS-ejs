@@ -1,4 +1,17 @@
 <html>
+
+
+
+<!-- Bootstrap -->
+<link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link href="/public/gentelella/vendors/fontawesome-free-5.0.12/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
+
+
+<!-- Custom Theme Style -->
+<link href="/public/gentelella/build/css/custom.min.css" rel="stylesheet">
+
+
 <head>
     <title>reset password</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
@@ -35,29 +48,53 @@
                     {
                         alert("login success");
                     }
+                    console.log('data = ',data);
                     window.location = data.redirect
                 });
             });
         });
     </script>
 </head>
-<body>
-<h1><%= title %></h1>
 
-<form>
-    <input type="hidden" id="token" size="40" value="<%= user.resetPasswordToken %>">
+<body class="login">
+<div class="login_wrapper">
+    <div class="animate form login_form">
+        <section class="login_content">
 
-    <label for="pin"><b>Pin:</b></label><br>
-    <input type="password" id="pin" size="40" placeholder="ex: 1234"><br><br>
-    <label for="confirmPin"><b>Confirm Pin:</b></label><br>
-    <input type="password" id="confirmPin" size="40" placeholder="ex: 1234"><br><br>
+            <form>
+                <h1><%= title %></h1>
 
-    <input type="button" id="btSubmit" value="Update Password">
+                <input type="hidden" id="token" size="40" value="<%= user.resetPasswordToken %>">
 
-</form>
+                <div>
+                <input type="password" name="pin" class="form-control" id="pin" size="40" placeholder="New Pin">
+                </div>
+                <div>
+                <input type="password" name="confirmPin" class="form-control" id="confirmPin" size="40" placeholder="Confirm Pin">
+                </div>
+                <button class="btn btn-default submit" type="submit" id="btSubmit" value="Update Password">Update Pin</button>
+
+                <div class="separator">
+                    <div class="clearfix"></div>
+                    <br>
+                    <div>
+                        <h1>
+                            <i class="fa fa-graduation-cap"></i> SMECS</h1>
+                        <p>©2019 All Rights Reserved.</p>
+                    </div>
+                </div>
+            </form>
+
+        </section>
+    </div>
 
 
+</div>
 
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>

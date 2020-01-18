@@ -133,7 +133,9 @@ a.disable {
     margin-top: 10px;
 }
 
-
+.labelSpace:before {
+    content: '\00A0';
+}
 
 
 

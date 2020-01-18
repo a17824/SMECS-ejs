@@ -202,9 +202,8 @@ module.exports.procSafeHelp = function(req, res, next) {
                                     }
 
                                     /*****  CALL HERE NOTIFICATION API  *****/
-                                    pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
-
-
+                                    if (result)
+                                        pushNotification.refreshAlertInfo(alert, 'refreshAlertInfo');
 
                                     if (req.decoded)
                                         res.json({success: true});
@@ -288,6 +287,7 @@ module.exports.helpers = function(req, res) {
 
 function updateProcedureCompletedWeAreSafe(alert, user, requestType, callback) {
     let wrapped = moment(new Date());
+    let flag911 = true;
 
     if(!user[requestType].boolean){
         user[requestType].boolean = true;
@@ -304,15 +304,21 @@ function updateProcedureCompletedWeAreSafe(alert, user, requestType, callback) {
         });
 
     }else {
-        user[requestType].boolean = false;
-        user[requestType].date = undefined;
-        user[requestType].time = undefined;
-        user[requestType].timeDif = undefined;
-        if(requestType === 'iNeedHelp')
-            user[requestType].helpers = undefined;
+        if(requestType !== 'called911'){
+            user[requestType].boolean = false;
+            user[requestType].date = undefined;
+            user[requestType].time = undefined;
+            user[requestType].timeDif = undefined;
+            if(requestType === 'iNeedHelp')
+                user[requestType].helpers = undefined;
+        }
+        else {
+            flag911 = false;
+        }
+
     }
     console.log('success - ' + requestType + ' for ' + user.firstName + ' ' + user.lastName + ' status changed to ' + user[requestType].boolean);
-    callback('done');
+    callback(flag911);
 }
 
 

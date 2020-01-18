@@ -172,28 +172,7 @@
     </form>
 <% } %>
 
-<% if (info.request911Call == true ) {%>
-    <% for (var i=0; i < info.whoCanCall911.length; i++) { %>
-        <% if (info.whoCanCall911[i] == userAuthRoleName ) {%>
-            <label style="color: red">This Alert request a 911 call</label>
-            <button class="callButton">Call 911</button><br>
-        <% } %>
-    <% } %>
-<% } %>
 
-
-
-
-
-<% if (info.request911Call == true ) {%>
-    <% for (var i=0; i < info.whoCanCall911.length; i++) { %>
-        <% if (info.whoCanCall911[i] == userAuthRoleName ) {%>
-            <label for="read"><b>People that called 911: </b></label>
-            <input type="text" id="read" size="1" value="5" readonly ><br>
-        <% } %>
-    <% } %>
-<% } %>
-<br>
 
 <!-- Alert that requires STUDENT -->
 <% if (info.alertWith.student) {%>
