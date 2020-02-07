@@ -44,6 +44,7 @@
               $('.' + $(this).data('child')).prop('checked', this.checked);
           });
 
+
           var searchIDsNotChecked = {};
           $("#btSave").click(function(event) {
               event.preventDefault();
@@ -53,16 +54,32 @@
               var searchIDsChecked = $('input[name="aclPermissionsCheckBox"]:checked').map(function () {
                   return $(this).val();
               }).get();
-              console.log("NOT selected::::" + searchIDsNotChecked);
+              //console.log("NOT selected::::" + searchIDsNotChecked);
               //console.log("selected::::" + searchIDsChecked);
               $.ajax({
                   url:'/permissions/showPermissionsTable',
                   type:'post',
                   data:{searchIDsNotChecked:searchIDsNotChecked, searchIDsChecked:searchIDsChecked},
                   success:function(response){
-                      console.log(response);
+                      console.log('SIM = ',response);
                   }
               });
+          });
+          $("#btRestore").click(function(event) {
+              if (confirm('ATTENTION: Are you sure you want to reset to default permissions?')){
+                  $.ajax({
+                      url:'/permissions/showPermissionsTable',
+                      type:'post',
+                      data:{searchIDsNotChecked: 'restore', searchIDsChecked: 'restore'},
+                      success:function(response){
+                          console.log(response);
+                      }
+                  });
+                  location.reload();
+                  return true;
+              }
+              else
+                  return false;
           });
       });
   </script>
@@ -108,11 +125,11 @@
                 <div align="center">
 
                     <% if (aclModifyPermissionsTable == null || aclModifyPermissionsTable.checkBoxValue == true) {%>
-                  <button class="btn btn-success" name="btSave" id="btSave" disabled="true" onclick="this.disabled=true">Save</button>
-                  <button class="btn btn-default" name="btCancel" id="btCancel" disabled="true" onclick="this.disabled=true">Cancel</button>
+                        <button class="btn btn-success" name="btSave" id="btSave" disabled="true" onclick="this.disabled=true">Save</button>
+                        <button class="btn btn-danger" name="btRestore" id="btRestore" onclick="this.disabled=false">Reset</button>
                     <% } else { %>
-                  <button class="btn btn-success" name="btSave" id="btSave" disabled>Save</button>
-                  <button class="btn btn-default" name="btCancel" id="btCancel" disabled>Cancel</button>
+                        <button class="btn btn-success" name="btSave" id="btSave" disabled>Save</button>
+                        <button class="btn btn-danger" name="btRestore" id="btRestore" disabled>Reset</button>
                     <% } %>
 
 
