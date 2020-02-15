@@ -96,7 +96,7 @@ module.exports.post = function(req, res, next) {
             // setup e-mail data with unicode symbols
             var mailOptions = {
                 to: user.email,
-                from: 'passwordreset@demo.com', //Gmail and many other email services don't allow you to send messages with various FROM field
+                from: 'pdcpadr@gmail.com', //Gmail and many other email services don't allow you to send messages with various FROM field
                 subject: 'SMECS Password Reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
@@ -105,19 +105,32 @@ module.exports.post = function(req, res, next) {
             };
             // send mail with defined transport object
             transporter.sendMail(mailOptions, function(err) {
+                if(err){
+                    console.log('err sending email = ', err);
+                    done(err, 'noEmailSent');
+                }
+                else {
+                    done(err, 'done');
+                }
                 //req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+                /*
                 res.render('forgot', {
                     title: 'SMECS Forgot Password',
                     error: "",
                     errorMessages: "An e-mail has been sent to " + user.email + " with further instructions."
                 });
-                done(err, 'done');
+                */
+
             });
         }
-    ], function(err) {
-        if (err) return next(err);
+    ], function(err, done) {
+        //if (err) return next(err);
+        console.log('done = ',done);
+        let emailMessage = 'Success! An e-mail has been sent with further instructions.';
+        if (done === 'noEmailSent')
+            emailMessage = 'There was a problem sending email with further instructions! If problem persists contact SMECS support';
 
-        //res.redirect('/loginResetPassword');
+        res.redirect('/loginFurtherInstructions/' + emailMessage);
     });
 };
 

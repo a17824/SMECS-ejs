@@ -14,15 +14,24 @@ let redirectTo = require('./createAlert');
 module.exports.showGroups = function(req, res) {
     if(req.decoded) { // run SMECS API
         models.Users.findOne({'email': req.decoded.user.email}, function (err, user) {
-            if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF ----------
+            if (!user || err) {
                 res.json({
-                    success: true,
-                    redirect: 'chooseAlert'
+                    success: false,
+                    redirect: 'home'
                 });
-            } else {    //Groups Buttons ON
-
-                showGroups2();
             }
+            else {
+                if (user.appSettings.groupAlertsButtons == false) {//Groups Buttons OFF ----------
+                    res.json({
+                        success: true,
+                        redirect: 'chooseAlert'
+                    });
+                } else {    //Groups Buttons ON
+
+                    showGroups2();
+                }
+            }
+
         });
     }
     else{   // run SMECS EJS -----------------

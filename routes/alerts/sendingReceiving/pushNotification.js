@@ -5,6 +5,7 @@ let models = require('./../../models');
 let jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 let config = require('../../api/config');
 
+let appId= '2ce09fe3-5c91-4e53-9624-4d5b647322ea';
 /*****  CALL HERE NOTIFICATION API  ****
  *  var 'action' can be:                *
  *     .newAlert                        *
@@ -41,7 +42,7 @@ module.exports.alert= function(alert, action) {
 // FOR OneSignal - Create message for cellPhone notification
 module.exports.alert= function(alert, action, userAuthEmail, callback) {
     console.log('alert');
-    console.log('action = ', action);
+    console.log('action of alert = ', action);
 
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
@@ -67,9 +68,9 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                 }
             });
 
-
             // we need to create a notification to send
-            let message = new OneSignal.Notification({
+            let message = {
+                app_id: appId,
                 contents: {
                     en: testModeON + ' ' + alert.alert.name
                 },
@@ -77,13 +78,14 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
                 include_player_ids: allUsersWithPushToken,
                 android_sound: "car_alarm", //android 7 and older
-                android_channel_id: alert.group.soundChannel
+                android_channel_id: alert.group.soundChannel,
+                data: {
+                    alertID: alert._id,
+                    action: action
+                }
 
-            });
-            message.postBody["data"] = {
-                alertID: alert._id,
-                action: action
             };
+
             //let userName = user.firstName + ' ' + user.lastName;
             let title = testModeON + ' ' + alert.alert.name;
             sendPush(message, title, function (result,err) {
@@ -101,7 +103,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 // FOR OneSignal - Update open alerts badge number
 module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
     console.log('updateBadge');
-    console.log('action (no var action)= ');
+    console.log('action (no var action) of updateBadge = ');
 
     //popup message for alerts closed and reopened
     let enClosed = 'no alerts were closed';
@@ -142,21 +144,24 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                     });
                 }
             });
-            //console.log('sound', alerts[0].group.soundChannel);
+
             if(reOpenAlert){
                 // we need to create a notification to send
                 //console.log('ALERT REOPEN CLOSED = ');
-                let message = new OneSignal.Notification({
+                console.log('alertsReopened[0]', alertsReopened[0].id);
+                let message = {
+                    app_id: appId,
                     contents: {
                         en: enReopened
                     },
                     //content_available: true,
                     include_player_ids: allUsersWithPushToken,
                     android_sound: "car_alarm", //android 7 and older
-                    android_channel_id: alerts[0].group.soundChannel //reopen sound
-                });
-                message.postBody["data"] = {
-                    action: 'reOpenAlert'
+                    android_channel_id: alerts[0].group.soundChannel, //reopen sound
+                    data: {
+                        action: 'reOpenAlert',
+                        alertID: alertsReopened[0].id
+                    }
                 };
 
                 let title = '';
@@ -171,18 +176,19 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
             else {
                 //console.log('ALERT CLOSED = ');
                 // we need to create a notification to send
-                let message = new OneSignal.Notification({
+                let message = {
+                    app_id: appId,
                     contents: {
                         en: enClosed
                     },
                     //content_available: true,
                     include_player_ids: allUsersWithPushToken,
                     android_sound: "car_alarm", //android 7 and older
-                    android_channel_id: 'ee9140fa-9eff-403d-b14b-cd5547291382'  //sound for alert update/notes/closed
-                });
-                message.postBody["data"] = {
-                    action: 'closeAlert',
-                    alertsClosed: alertsClosed
+                    android_channel_id: 'ee9140fa-9eff-403d-b14b-cd5547291382',  //sound for alert update/notes/closed
+                    data: {
+                        action: 'closeAlert',
+                        alertsClosed: alertsClosed
+                    }
                 };
 
                 let title = '';
@@ -204,7 +210,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
 
 module.exports.icons = function(icons,action) {
     console.log('icons');
-    console.log('action = ', action);
+    console.log('action of icons = ', action);
 
     models.Users.find({pushToken: {$exists: true, $not: {$size: 0}}}, function (err,users) {
         if( err || !users) console.log("No users with pushToken to update");
@@ -215,14 +221,16 @@ module.exports.icons = function(icons,action) {
                     allUsersWithPushToken.push(token);
                 });
             });
-            let message = new OneSignal.Notification({
+            let message = {
+                app_id: appId,
                 content_available: true,
-                include_player_ids: allUsersWithPushToken
-            });
-            message.postBody["data"] = {
-                action: action,
-                icons: icons
+                include_player_ids: allUsersWithPushToken,
+                data: {
+                    action: action,
+                    icons: icons
+                }
             };
+
             let title = '';
             sendPush(message, title, function (result,err) {
                 if(err || !result) console.log('icons err = ',err);
@@ -238,7 +246,7 @@ module.exports.icons = function(icons,action) {
 
 module.exports.notifyUser = function(user, action) {
     console.log('notifyUser');
-    console.log('action = ', action);
+    console.log('action of notifyUser= ', action);
 
     let token = jwt.sign({user: user}, config.secret, {
         //expiresIn: 1440 // expires in 24 hours
@@ -257,22 +265,22 @@ module.exports.notifyUser = function(user, action) {
     // ONESIGNAL
 
     // we need to create a notification to send
-    let message = new OneSignal.Notification({
+    let message = {
+        app_id: appId,
         content_available: true,
         include_player_ids: user.pushToken,
-
-    });
-    message.postBody["data"] = {
-        action: action,
-        groupAlertsButtons: user.appSettings.groupAlertsButtons,
-        enableFingerprint: user.appSettings.enableFingerprint,
-        theme: user.appSettings.theme,
-        userRoleName: user.userRoleName,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userPhoto: user.photo,
-        token: token
-
+        data: {
+            action: action,
+            groupAlertsButtons: user.appSettings.groupAlertsButtons,
+            enableFingerprint: user.appSettings.enableFingerprint,
+            theme: user.appSettings.theme,
+            userRoleName: user.userRoleName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userPhoto: user.photo,
+            userEmail: user.email,
+            token: token
+        }
     };
 
     let title = '';
@@ -287,7 +295,7 @@ module.exports.notifyUser = function(user, action) {
 
 module.exports.refreshAlertInfo = function(alert, action) {
     console.log('refreshAlertInfo');
-    console.log('action = ', action);
+    console.log('action of refreshAlertInfo = ', action);
 
     // ONESIGNAL
     let allUsersWithPushToken = [];
@@ -298,13 +306,14 @@ module.exports.refreshAlertInfo = function(alert, action) {
     });
 
     // we need to create a notification to send
-    let message = new OneSignal.Notification({
+    let message = {
+        app_id: appId,
         content_available: true,
-        include_player_ids: allUsersWithPushToken
-    });
-    message.postBody["data"] = {
-        action: action,
-        alert: alert._id
+        include_player_ids: allUsersWithPushToken,
+        data: {
+            alertID: alert._id,
+            action: action
+        }
     };
     let title = '';
     sendPush(message, title, function (result,err) {
@@ -319,7 +328,7 @@ module.exports.refreshAlertInfo = function(alert, action) {
 
 module.exports.refreshNotes = function(alert, action) {
     console.log('refreshNotes');
-    console.log('action = ', action);
+    console.log('action of refreshNotes = ', action);
 
     // ONESIGNAL
     let allUsersWithPushToken = [];
@@ -334,19 +343,21 @@ module.exports.refreshNotes = function(alert, action) {
     });
 
     // we need to create a notification to send
-    let message = new OneSignal.Notification({
+    let message = {
+        app_id: appId,
         contents: {
             en: testModeON + ' ' + alert.alert.name + '. Notes have been updated'
         },
         include_player_ids: allUsersWithPushToken,
         //android_sound: alert.group.mp3, //android 7 and older
         //ios_sound: alert.group.mp3 + '.wav', //ios .wav
-        android_channel_id: 'ee9140fa-9eff-403d-b14b-cd5547291382'  //sound for alert update/notes/closed
-    });
-    message.postBody["data"] = {
-        action: action,
-        alert: alert._id
+        android_channel_id: 'ee9140fa-9eff-403d-b14b-cd5547291382',  //sound for alert update/notes/closed
+        data: {
+            action: action,
+            alert: alert._id
+        }
     };
+
     let title = testModeON + ' ' + alert.alert.name;
     sendPush(message, title, function (result,err) {
         if(err || !result) console.log('refreshNotes err = ',err);
@@ -380,75 +391,113 @@ function sendPush(message, title, callback) {
     console.log('sendPush');
 
     // first we need to create a client
-    let myClient = new OneSignal.Client({
+    let myClient = new OneSignal.Client(
         //userAuthKey: userAuthKey,
-        app: { appAuthKey: 'OGY3NTY1NjAtMzI0OS00NDJhLWFlNDYtNWNlZDQ3NDhhOGZk' , appId: '2ce09fe3-5c91-4e53-9624-4d5b647322ea'}
-    });
+        'OGY3NTY1NjAtMzI0OS00NDJhLWFlNDYtNWNlZDQ3NDhhOGZk' , '2ce09fe3-5c91-4e53-9624-4d5b647322ea'
+    );
 
-
-    myClient.sendNotification(message, function (err, httpResponse,data) {
-
-        if (err || data.errors) {   //when a pushToken has incorrect format
-            if(typeof data.errors.length !== 'undefined'){
-                let usersArray = message.postBody.include_player_ids;
-
-                // send message without notification (no sound, no icon on cellphone...)
-                if (typeof message.postBody.android_channel_id === 'undefined' || message.postBody.android_channel_id === null) {
-                    usersArray.forEach(function (user) {
-                        let message2 = new OneSignal.Notification({
-                            //contents: {en: title},
-                            content_available: true, //silent notification
-                            include_player_ids: [user]
-                        });
-                        message2.postBody["data"] = message.data;
-                        myClient.sendNotification(message2, function (err, httpResponse,data) {
-                            if (err || data.errors) {
-                                console.log('user with bad token - ', data);
-                            }
-                            else{
-                                console.log('sent to 1 user successfully - ', data);
-                            }
-                        });
-                    });
-                }
-                else {  // send message with notification (sound)
-
-                    usersArray.forEach(function (user) {
-                        let message2 = new OneSignal.Notification({
-                            contents: {
-                                en: title
-                            },
-                            //content_available: true, //silent notification
-                            include_player_ids: [user],
-                            android_sound: "car_alarm", //android 7 and older
-                            android_channel_id: message.postBody.android_channel_id
-                        });
-                        message2.postBody["data"] = message.data;
-                        myClient.sendNotification(message2, function (err, httpResponse,data) {
-                            if (err || data.errors) {
-                                console.log('user with bad token - ', data);
-                            }
-                            else{
-                                console.log('sent to 1 user successfully - ', data);
-                            }
-                        });
-                    });
-                }
-                //console.log('include_player_ids = ',message.postBody.contents.include_player_ids.length);
+    // or you can use promise style:
+    myClient.createNotification(message)
+        .then(response => {
+            if (response.errors) {
+                resendMessage(response, message, myClient, title);
             }
             else {
-                console.log('PUSH NOTIFICATION SENT Correctly but there are tokens in mongo that dont exist in OneSignal');
+                console.log('PUSH NOTIFICATION SENT Correctly');
+                //console.log('pushResult = ',data, httpResponse.statusCode);
             }
-        }
-        //end of When a pushToken has incorrect format
+        })
+        .catch(e => { //when a pushToken has incorrect format
+            resendMessage(e, message, myClient, title);
+        });
+    callback('doneSendPush');
 
-        // when pusharrays are OK
-        else {
-            console.log('PUSH NOTIFICATION SENT Correctly');
-            //console.log('pushResult = ',data, httpResponse.statusCode);
-        }
 
-        callback('doneSendPush');
-    });
+
+
 }
 //end of OneSignal - sending cellPhone notification
+
+
+
+function resendMessage(errResponse, message, myClient, title) {
+
+    if(typeof errResponse.body.errors.length !== 'undefined'){
+        let usersArray = message.include_player_ids;
+
+        // send message without notification (no sound, no icon on cellphone...)
+        if (typeof message.android_channel_id === 'undefined' || message.android_channel_id === null) {
+            usersArray.forEach(function (user) {
+                let message2 = {
+                    app_id: appId,
+                    //contents: {en: title},
+                    content_available: true, //silent notification
+                    include_player_ids: [user],
+                    data: message.data
+                };
+
+                myClient.createNotification(message2)
+                    .then(response => {
+                        console.log('A- user with bad token - ', response.body.errors);
+                    })
+                    .catch(e => {
+                        console.log('A- ent to 1 user successfully - ', e);
+                    });
+
+            });
+        }
+        else {  // send message with notification (sound)
+            console.log('B- android_channel_id - ', message.android_channel_id);
+            usersArray.forEach(function (user) {
+                let message2 = {
+                    app_id: appId,
+                    contents: {
+                        en: title
+                    },
+                    //content_available: true, //silent notification
+                    include_player_ids: [user],
+                    android_sound: "car_alarm", //android 7 and older
+                    android_channel_id: message.android_channel_id,
+                    data: message.data
+                };
+
+                myClient.createNotification(message2)
+                    .then(response => {
+                        if(response.body.errors)
+                            console.log('B- user with bad token - ', response.body.errors);
+                    })
+                    .catch(e => {
+                        console.log('B- sent to 1 user successfully - ', e);
+                    });
+
+            });
+        }
+        //console.log('include_player_ids = ',message.postBody.contents.include_player_ids.length);
+    }
+    else {
+        console.log('PUSH NOTIFICATION SENT Correctly but there are tokens in mongo that dont exist in OneSignal');
+    }
+
+    //end of When a pushToken has incorrect format
+}
+
+
+
+//add pushtoken to OneSignal - to resolve issue of "unsubscribe user"
+/*
+OneSignal.push(["init", {
+    appId: "2ce09fe3-5c91-4e53-9624-4d5b647322ea",
+    autoRegister: false,
+    notifyButton: {
+        enable: true
+    }
+}]);
+OneSignal.push(function() {
+    OneSignal.registerForPushNotifications();
+});
+OneSignal.push(function() {
+    OneSignal.registerForPushNotifications({
+        modalPrompt: true
+    });
+});
+*/

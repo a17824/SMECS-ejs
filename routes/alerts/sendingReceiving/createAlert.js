@@ -339,12 +339,17 @@ module.exports.updateAlert= function(req, res) {
                 alertSentInfo.update(req, res, alertTemp, function (result) {  //update AlertSentInfo
 
                     //  CALL HERE NOTIFICATION API  *****
+                    /*
                     pushNotification.alert(result, 'updateAlert', 'email', function (result2,err2) {
                         if(err2 || !result2) console.log('sending updateAlert. err - ', err2);
                         else {
                             redirectTo.redirectTo(req, res, alertTemp, flag);
                         }
                     });
+                    */
+                    //  CALL HERE NOTIFICATION API  *****
+                    pushNotification.refreshNotes(result, 'updateAlert');
+                    redirectTo.redirectTo(req, res, alertTemp, flag);
 
                 });
             }

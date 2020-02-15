@@ -4,6 +4,7 @@ var models = require('./../models');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../api/config');
 
+let OneSignal = require('onesignal-node'); //for OneSignal
 
 
 
@@ -68,6 +69,14 @@ module.exports.getLoginParentSelfRegistration = function(req, res, next) {
         csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
 };
+module.exports.getLoginFurtherInstructions = function(req, res) {
+    console.log('req.params.emailMessage = ', req.params.emailMessage);
+    res.render('login', {
+        title: 'SMECS Login',
+        error: req.params.emailMessage,
+        csrfToken: req.csrfToken()}); // add this at login.ejs: <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+};
 module.exports.getLoginResetPassword = function(req, res) {
     res.render('login', {
         title: 'SMECS Login',
@@ -123,7 +132,6 @@ module.exports.postLogin = function(req, res, next) {
                                             }
                                         });
                                     }
-
                                 });
                             }
                         });
@@ -177,7 +185,7 @@ module.exports.postLogin = function(req, res, next) {
  */
 module.exports.getLogout = function(req, res) {
     //if (req.session) {
-        req.session.reset();
+    req.session.reset();
     //}
     res.redirect('/');
 };
