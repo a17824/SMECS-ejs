@@ -5,7 +5,7 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../api/config');
 
 let OneSignal = require('onesignal-node'); //for OneSignal
-
+let pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
 
 
 
@@ -122,17 +122,25 @@ module.exports.postLogin = function(req, res, next) {
                                 models.Users.find({}, function (err, users2) {
                                     if (err || !users2) console.log("No users to delete push token");
                                     else {
-                                        users2.forEach(function (user2) {
-                                            if (user.email != user2.email) {
-                                                if (user2.pushToken.includes(newPushToken)) {
-                                                    let index = user2.pushToken.indexOf(newPushToken);
-                                                    user2.pushToken.splice(index, 1);
-                                                    user2.save();
+                                        users2.forEach(function (user3) {
+                                            if (user.email != user3.email) {
+                                                if (user3.pushToken.includes(newPushToken)) {
+                                                    let index = user3.pushToken.indexOf(newPushToken);
+                                                    user3.pushToken.splice(index, 1);
+                                                    user3.save();
+                                                    console.log("push token deleted successfully from " + user3.firstName + ' ' + user3.lastName);
+                                                }
+                                                if (user3.pushToken.includes(null)) {
+                                                    let index2 = user3.pushToken.indexOf(null);
+                                                    user3.pushToken.splice(index2, 1);
+                                                    user3.save();
+                                                    console.log("push token NULL deleted successfully from " + user3.firstName + ' ' + user3.lastName);
                                                 }
                                             }
                                         });
                                     }
                                 });
+                                console.log("New token added");
                             }
                         });
                     }
@@ -189,5 +197,28 @@ module.exports.getLogout = function(req, res) {
     //}
     res.redirect('/');
 };
+
+module.exports.heartBeat = function (){
+    let arrayTokensToSend = [];
+    models.Users.find({}, function (err, users) {
+        if (err) {
+            console.log('err - finding Users');
+        } else {
+            users.forEach(function (user) {
+                user.pushToken.forEach(function (token) {
+                    arrayTokensToSend.push(token);
+                });
+
+            });
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.icons(arrayTokensToSend,'heartBeat');
+        }
+    });
+};
+
+module.exports.heartBeatResponse = function (){ //response with pushTokens to remove
+
+};
+
 
 //module.exports = router;

@@ -23,6 +23,7 @@ var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 var auth = require('./authentication/auth');
 var email = require('./authentication/email');
 var reset = require('./authentication/reset');
+var login = require('./authentication/login');
 
 var building = require('./alerts/options/building');
 var floors = require('./alerts/options/floors');
@@ -46,11 +47,28 @@ let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicBut
 
 
 
-//Run this function once a month
+//Run this function once a month to clean old Photos
+/*
+*    *    *    *    *    *
+┬    ┬    ┬    ┬    ┬    ┬
+│    │    │    │    │    │
+│    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+│    │    │    │    └───── month (1 - 12)
+│    │    │    └────────── day of month (1 - 31)
+│    │    └─────────────── hour (0 - 23)
+│    └──────────────────── minute (0 - 59)
+└───────────────────────── second (0 - 59, OPTIONAL)
+*/
 //schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
 schedule.scheduleJob({hour: 2, minute: 59, dayOfWeek: 1, dayOfMonth: [1,2,3,4,5,6,7]}, function(){
     console.log('This runs every first Monday of the month at 02:59AM');
     photos.cleanOldPhotos();
+});
+//Run this function once a month to remove pushTokens of users with app installed but are not logged in
+//schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
+schedule.scheduleJob("0 19 * * *", function() { //This runs every day ay 7pm
+    console.log('This runs every day ay 07:00PM');
+    login.heartBeat();
 });
 
 

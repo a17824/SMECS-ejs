@@ -386,6 +386,30 @@ function sendPush(message, userName, userAuthKey) {
 */
 //end of FireBase - sending cellPhone notification
 
+//To remove pushTokens of users with app that is logged out
+module.exports.heartBeat = function(arrayTokensToSend, action) {
+
+    // we need to create a notification to send
+    let message = {
+        app_id: appId,
+        content_available: true,
+        include_player_ids: arrayTokensToSend,
+        data: {
+            action: action
+        }
+    };
+
+    let title = '';
+    sendPush(message, title, function (result,err) {
+        if(err || !result) console.log('heartBeat err = ',err);
+        else {
+            console.log('result heartBeat = ',result)
+        }
+
+    });
+};
+
+
 //OneSignal - sending cellPhone notification
 function sendPush(message, title, callback) {
     console.log('sendPush');

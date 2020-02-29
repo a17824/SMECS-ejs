@@ -90,6 +90,52 @@ module.exports.auth = function (req, res, next) {
         });
     }
 };
+
+// route middleware to remove pushToken from user when user logs out from cellphone app
+module.exports.logout = function (req, res, next) {
+
+    let pushTokenRoRemove = req.body.pushToken;
+
+    models.Users.findOne({'email': req.decoded.user.email}, function (err, user) {
+        if (!user || err) {
+            res.json({
+                success: false
+            });
+            console.log("error -  finding user with pushToken to remove at logout");
+        }
+        else {
+            if (user.pushToken.includes(pushTokenRoRemove)) {
+                let index = user.pushToken.indexOf(pushTokenRoRemove);
+                user.pushToken.splice(index, 1);
+                user.save(function (err) {
+                    if (err) {
+                        res.json({
+                            success: false
+                        });
+                        console.log("error removing pushToken at logged out");
+                    } else {
+                        res.json({
+                            success: true
+                        });
+                        console.log("successfully logout and removing pushToken");
+                    }
+                });
+            }
+            else {
+                res.json({
+                    success: true
+                });
+                console.log("error -  finding pushToken to remove in the user at logout");
+            }
+        }
+
+    });
+
+};
+
+
+
+
 /*
 // route middleware to update pushToken
 module.exports.updatePushToken = function (req, res, next) {

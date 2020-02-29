@@ -12,9 +12,12 @@ var receiveAlert = require('./alerts/sendingReceiving/4.receivedAlert.js');
 var updates = require('./alerts/sendingReceiving/5.updates.js');
 var reports = require('./api/reports.js');
 var appOptions = require('./api/appOptions');
+var login = require('./authentication/login');
 
 /* AUTHENTICATE ---------------------- */
 routerApi.post('/login', login.postLogin, function(req, res) {});
+routerApi.post('/logout', auth.auth, auth.logout, function(req, res) {});
+routerApi.post('/heartBeatResponse', auth.auth, login.heartBeatResponse, function(req, res) {});
 
 /* FORGOT PASSWORD ------------------- */
 routerApi.post('/forgot', email.forgotPost, function(req, res) {});
