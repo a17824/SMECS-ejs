@@ -199,6 +199,7 @@ module.exports.getLogout = function(req, res) {
 };
 
 module.exports.heartBeat = function (){
+    console.log('heartBeat');
     let arrayTokensToSend = [];
     models.Users.find({}, function (err, users) {
         if (err) {

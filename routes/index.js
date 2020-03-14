@@ -18,6 +18,7 @@ var alertRoad = require('./alerts/alertsRoad');
 var statistics = require('./statistics/statistics');
 var reports = require('./alerts/reports/reports');
 var photos = require('./photos/addUpdatePhoto');
+var backup = require('./backupRestore/backupRestore');
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 
 var auth = require('./authentication/auth');
@@ -64,11 +65,11 @@ schedule.scheduleJob({hour: 2, minute: 59, dayOfWeek: 1, dayOfMonth: [1,2,3,4,5,
     console.log('This runs every first Monday of the month at 02:59AM');
     photos.cleanOldPhotos();
 });
-//Run this function once a month to remove pushTokens of users with app installed but are not logged in
-//schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
-schedule.scheduleJob("0 19 * * *", function() { //This runs every day ay 7pm
+//This runs every day ay 7pm
+schedule.scheduleJob("0 19 * * *", function() {
     console.log('This runs every day ay 07:00PM');
-    login.heartBeat();
+    login.heartBeat();  //remove pushTokens of users with app installed but are not logged in
+    //backup.backup();  //auto backup
 });
 
 
