@@ -94,7 +94,7 @@ module.exports.auth = function (req, res, next) {
 // route middleware to remove pushToken from user when user logs out from cellphone app
 module.exports.logout = function (req, res, next) {
 
-    let pushTokenRoRemove = req.body.pushToken;
+    let pushTokenToRemove = req.body.pushToken;
 
     models.Users.findOne({'email': req.decoded.user.email}, function (err, user) {
         if (!user || err) {
@@ -104,8 +104,8 @@ module.exports.logout = function (req, res, next) {
             console.log("error -  finding user with pushToken to remove at logout");
         }
         else {
-            if (user.pushToken.includes(pushTokenRoRemove)) {
-                let index = user.pushToken.indexOf(pushTokenRoRemove);
+            if (user.pushToken.includes(pushTokenToRemove)) {
+                let index = user.pushToken.indexOf(pushTokenToRemove);
                 user.pushToken.splice(index, 1);
                 user.save(function (err) {
                     if (err) {
@@ -133,6 +133,22 @@ module.exports.logout = function (req, res, next) {
 
 };
 
+module.exports.checkPushToken = function(req, res, next) {
+    models.Users.findOne({ email: req.decoded.user.email, 'pushToken': req.body.pushToken }, function(err, user) {
+        if(err || !user){
+            res.json({
+                success: false
+            });
+            console.log("error finding user");
+        }
+        else {
+            res.json({
+                success: true
+            });
+            console.log("OK - found user");
+        }
+    });
+};
 
 
 

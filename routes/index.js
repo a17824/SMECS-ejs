@@ -69,7 +69,16 @@ schedule.scheduleJob({hour: 2, minute: 59, dayOfWeek: 1, dayOfMonth: [1,2,3,4,5,
 schedule.scheduleJob("0 19 * * *", function() {
     console.log('This runs every day ay 07:00PM');
     login.heartBeat();  //remove pushTokens of users with app installed but are not logged in
-    //backup.backup();  //auto backup
+
+    var spawn = require('child_process').spawn,
+        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
+    backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
+        if(err || !result) console.log('autoBackup err = ', err);
+        else {
+            console.log('result autoBackup = ',result)
+        }
+
+    });
 });
 
 
@@ -544,8 +553,14 @@ router.post('/permissions/showPermissionsTable', auth.simpleAuth, auth.requireLo
 
 
 
-
-
+/* TOP NAVIGATION BUTTONS. */
+/* backup. */
+router.get('/inProgressBackup', auth.simpleAuth, auth.requireLogin, backup.inProgressBackup, function(req, res, next) {
+});
+router.post('/manualBackupPost', auth.simpleAuth, auth.requireLogin, backup.manualBackupPost, function(req, res, next) {
+});
+router.get('/backupResp/:message', auth.simpleAuth, auth.requireLogin, backup.backupResp, function(req, res, next) {
+});
 
 /* SHOW REPORTS. */
 router.get('/reports/homeReports', auth.simpleAuth, auth.requireLogin, reports.homeReports, function(req, res, next) {

@@ -91,6 +91,7 @@ routerApi.post('/alertReceipt', auth.auth, reports.alertReceiptPost, function(re
 routerApi.post('/alertCalled911', auth.auth, reports.alertCalled911, function(req, res) {});
 routerApi.post('/alerts/received/procSafeHelp', auth.auth, receiveAlert.procSafeHelp, function(req, res) {});
 routerApi.post('/receivedAlert', auth.auth, receiveAlert.postReceivedAlert, function(req, res) {});
+routerApi.post('/checkPushToken', auth.auth, auth.checkPushToken, function(req, res) {});
 
 /* Get app options -----------------------------------*/
 routerApi.get('/appSettings', auth.auth, appOptions.appSettingsGet, function(req, res) {});

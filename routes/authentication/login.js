@@ -109,7 +109,16 @@ module.exports.postLogin = function(req, res, next) {
                         //expiresIn: 1440 // expires in 24 hours
                     });
                     let newPushToken = req.body.pushToken;
-                    if (!user.pushToken.includes(newPushToken)) {
+
+                    if (user.pushToken.includes(null)) { //deletes null pushTokens from user
+                        let filtered = user.pushToken.filter(function (el) {
+                            return el != null;
+                        });
+                        //console.log(filtered);
+                        user.pushToken = filtered;
+                    }
+
+                    if (!user.pushToken.includes(newPushToken)) { //adds new pushToken
                         user.pushToken.push(newPushToken);
                         user.save(function (err) {
                             if (err) {
@@ -130,9 +139,11 @@ module.exports.postLogin = function(req, res, next) {
                                                     user3.save();
                                                     console.log("push token deleted successfully from " + user3.firstName + ' ' + user3.lastName);
                                                 }
-                                                if (user3.pushToken.includes(null)) {
-                                                    let index2 = user3.pushToken.indexOf(null);
-                                                    user3.pushToken.splice(index2, 1);
+                                                if (user3.pushToken.includes(null)) {   //deletes null pushTokens from other users
+                                                    let filtered = user3.pushToken.filter(function (el) {
+                                                        return el != null;
+                                                    });
+                                                    user3.pushToken = filtered;
                                                     user3.save();
                                                     console.log("push token NULL deleted successfully from " + user3.firstName + ' ' + user3.lastName);
                                                 }

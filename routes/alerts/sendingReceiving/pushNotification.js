@@ -368,24 +368,6 @@ module.exports.refreshNotes = function(alert, action) {
     });
 };
 
-
-/* FireBase - sending cellPhone notification
-function sendPush(message, userName, userAuthKey) {
-
-    var serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
-    var fcm = new FCM(serverKey);
-
-    fcm.send(message, function (err, response) {
-        if (err) {
-            console.log("Couldn't send message to " + userName);
-        } else {
-            console.log("Successfully sent to " + userName);
-        }
-    });
-}
-*/
-//end of FireBase - sending cellPhone notification
-
 //To remove pushTokens of users with app that is logged out
 module.exports.heartBeat = function(arrayTokensToSend, action) {
 
@@ -435,12 +417,29 @@ function sendPush(message, title, callback) {
             resendMessage(e, message, myClient, title);
         });
     callback('doneSendPush');
-
-
-
-
 }
 //end of OneSignal - sending cellPhone notification
+
+
+
+// FireBase - sending cellPhone notification
+function sendPush2(message, userName, userAuthKey) {
+
+    var serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
+    var fcm = new FCM(serverKey);
+
+    fcm.send(message, function (err, response) {
+        if (err) {
+            console.log("Couldn't send message to " + userName);
+        } else {
+            console.log("Successfully sent to " + userName);
+        }
+    });
+}
+
+//end of FireBase - sending cellPhone notification
+
+
 
 
 
