@@ -45,9 +45,6 @@ var showAlertsAndGroups = require('./alerts/showAlertsAndGroups');
 let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicButtons');
 
 
-
-
-
 //Run this function once a month to clean old Photos
 /*
 *    *    *    *    *    *

@@ -110,7 +110,7 @@ module.exports.postLogin = function(req, res, next) {
                     });
                     let newPushToken = req.body.pushToken;
 
-                    if (user.pushToken.includes(null)) { //deletes null pushTokens from user
+                    if (user.pushToken.includes(null)) { //deletes all null pushTokens from user
                         let filtered = user.pushToken.filter(function (el) {
                             return el != null;
                         });
@@ -118,50 +118,61 @@ module.exports.postLogin = function(req, res, next) {
                         user.pushToken = filtered;
                     }
 
-                    if (!user.pushToken.includes(newPushToken)) { //adds new pushToken
-                        user.pushToken.push(newPushToken);
-                        user.save(function (err) {
-                            if (err) {
-                                res.json({
-                                    success: false,
-                                    message: 'contact your system administrator. pushToken not saved'
-                                });
-                            } else {
-                                //delete new push token from other users (if a user log
-                                models.Users.find({}, function (err, users2) {
-                                    if (err || !users2) console.log("No users to delete push token");
-                                    else {
-                                        users2.forEach(function (user3) {
-                                            if (user.email != user3.email) {
-                                                if (user3.pushToken.includes(newPushToken)) {
-                                                    let index = user3.pushToken.indexOf(newPushToken);
-                                                    user3.pushToken.splice(index, 1);
-                                                    user3.save();
-                                                    console.log("push token deleted successfully from " + user3.firstName + ' ' + user3.lastName);
+                    if(newPushToken !== null && newPushToken !== undefined){
+                        if (!user.pushToken.includes(newPushToken)) { //adds new pushToken
+                            user.pushToken.push(newPushToken);
+                            user.save(function (err) {
+                                if (err) {
+                                    res.json({
+                                        success: false,
+                                        message: 'contact your system administrator. pushToken not saved'
+                                    });
+                                } else {
+                                    //delete new push token from other users (if a user log
+                                    models.Users.find({}, function (err, users2) {
+                                        if (err || !users2) console.log("No users to delete push token");
+                                        else {
+                                            users2.forEach(function (user3) {
+                                                if (user.email != user3.email) {
+                                                    if (user3.pushToken.includes(newPushToken)) {
+                                                        let index = user3.pushToken.indexOf(newPushToken);
+                                                        user3.pushToken.splice(index, 1);
+                                                        user3.save();
+                                                        console.log("push token deleted successfully from " + user3.firstName + ' ' + user3.lastName);
+                                                    }
+                                                    if (user3.pushToken.includes(null)) {   //deletes null pushTokens from other users
+                                                        let filtered = user3.pushToken.filter(function (el) {
+                                                            return el != null;
+                                                        });
+                                                        user3.pushToken = filtered;
+                                                        user3.save();
+                                                        console.log("push token NULL deleted successfully from " + user3.firstName + ' ' + user3.lastName);
+                                                    }
                                                 }
-                                                if (user3.pushToken.includes(null)) {   //deletes null pushTokens from other users
-                                                    let filtered = user3.pushToken.filter(function (el) {
-                                                        return el != null;
-                                                    });
-                                                    user3.pushToken = filtered;
-                                                    user3.save();
-                                                    console.log("push token NULL deleted successfully from " + user3.firstName + ' ' + user3.lastName);
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                                console.log("New token added");
-                            }
+                                            });
+                                        }
+                                    });
+                                    console.log("New token added");
+                                }
+                            });
+                        }
+                        // return the information including token as JSON
+                        res.json({
+                            success: true,
+                            message: 'Welcome aboard!',
+                            token: token,
+                            user: user
                         });
                     }
-                    // return the information including token as JSON
-                    res.json({
-                        success: true,
-                        message: 'Welcome aboard!',
-                        token: token,
-                        user: user
-                    });
+                    else {
+                        res.json({
+                            success: false,
+                            message: 'token is null',
+                            token: token,
+                            user: user
+                        });
+                    }
+
                 }
             }
         });

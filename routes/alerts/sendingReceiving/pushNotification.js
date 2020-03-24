@@ -1,5 +1,5 @@
 //Dependencies
-//var FCM = require('fcm-node'); //for Firebase
+let FCM = require('fcm-node'); //for Firebase
 let OneSignal = require('onesignal-node'); //for OneSignal
 let models = require('./../../models');
 let jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -15,30 +15,98 @@ let appId= '2ce09fe3-5c91-4e53-9624-4d5b647322ea';
  ***************************************/
 
 
-/* FOR FIREBASE - Create message for cellPhone notification
-module.exports.alert= function(alert, action) {
-    alert.sentTo.forEach(function (user) {
-        if (user.pushToken) {
-            var message = {
-                to: user.pushToken, // required fill with device token
-                notification: {
-                    title: alert.alertGroupName,
-                    body: alert.alertName,
-                    sound : alert.groupSound,
-                    vibrate: true
-                },
-                data: { //you can send only notification or only data(or include both)
-                    alertID: alert._id,
-                    sound : alert.groupSound,
-                    action: action
+// FOR FIREBASE - Create message for cellPhone notification
+module.exports.alert= function(alert, action, userAuthEmail, callback) {
+    console.log('alert');
+    console.log('action of alert = ', action);
+
+    let allUsersWithPushToken = [];
+    let testModeON = 'This is a Real Alert -';
+    if (alert.realDrillDemo == 'drill')
+        testModeON = 'Drill Alert -';
+
+    let arrayUsersToSend = [];
+    alert.sentTo.forEach(function (users) {
+        arrayUsersToSend.push(users.email);
+    });
+
+    models.Users.find({'email': { $in : arrayUsersToSend}}, function (err, users) {
+        if (err) {
+            console.log('err - finding Users to send Alert');
+        } else {
+            users.forEach(function (user) {
+                //console.log('user.email = ',user.email); //show to who this alert should be sent
+                if (user.pushToken && (user.email !== userAuthEmail)) {
+                    user.pushToken.forEach(function (token) {
+                        console.log('user.email with token = ',user.email);//show to who this alert will be sent
+                        allUsersWithPushToken.push(token);
+                    });
                 }
-            };
+            });
+
+
+
+            let arr =  allUsersWithPushToken;
+            let size = 500;
+            splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+                if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
+                else {
+                    newArray.forEach(function(usersWithPushTokenArrayChunk, idx, array) {
+                        let title = testModeON + ' ' + alert.alert.name;
+                        let message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+                            //registration_ids: usersWithPushTokenArrayChunk,
+                            to: usersWithPushTokenArrayChunk[0],
+                            /*notification: {
+                                click_action: ".MainActivity",
+                                title: title,
+                                body: 'Body of your push notification'
+                            },*/
+                            data: {  //you can send only notification or only data(or include both)
+                                alertID: alert._id
+                            },
+                            priority: "high"
+                        };
+
+                        sendPush2(message, function (result,err) {
+                            if(err || !result) console.log('timeDif err = ',err);
+                            else {
+                                console.log('resultAlert = ',result);
+                                if (idx === array.length - 1) { //if last loop do callback
+                                    callback('doneAlert')
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+
+
+            /*
+                        // OneSignal - we need to create a notification to send
+                        let message = {
+                            app_id: appId,
+                            contents: {
+                                en: testModeON + ' ' + alert.alert.name
+                            },
+                            //content_available: true, //silent notification
+
+                            include_player_ids: allUsersWithPushToken,
+                            android_sound: "car_alarm", //android 7 and older
+                            android_channel_id: alert.group.soundChannel,
+                            data: {
+                                alertID: alert._id,
+                                action: action
+                            }
+
+                        };
+                        //-------------------------------------------------
+            */
         }
     });
 };
-*/
 //end of FOR FIREBASE - Create message for cellPhone notification
 
+/*
 // FOR OneSignal - Create message for cellPhone notification
 module.exports.alert= function(alert, action, userAuthEmail, callback) {
     console.log('alert');
@@ -98,7 +166,7 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
         }
     });
 };
-
+*/
 
 // FOR OneSignal - Update open alerts badge number
 module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
@@ -423,18 +491,27 @@ function sendPush(message, title, callback) {
 
 
 // FireBase - sending cellPhone notification
-function sendPush2(message, userName, userAuthKey) {
-
-    var serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
-    var fcm = new FCM(serverKey);
-
-    fcm.send(message, function (err, response) {
-        if (err) {
-            console.log("Couldn't send message to " + userName);
-        } else {
-            console.log("Successfully sent to " + userName);
+function sendPush2(message, callback) {
+    let serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
+    let fcm = new FCM(serverKey);
+    //console.log('message - ', message);
+    fcm.send(message, function (err, result) {
+        if(err || !result) {
+            console.log('err = ', err);
+            let myArrayResult = result.split(/([0-9]+)/);
+            let success_number =  parseInt(myArrayResult[3]);
+            console.log('success_number - ', success_number);
+            //resendMessage function
+        }
+        else {
+            console.log('PUSH NOTIFICATION SENT Correctly');
+            console.log('result - ', result);
+            let myArrayResult = result.split(/([0-9]+)/);
+            let success_number =  parseInt(myArrayResult[3]);
+            console.log('success_number - ', success_number);
         }
     });
+    callback('doneSendPush');
 }
 
 //end of FireBase - sending cellPhone notification
@@ -504,6 +581,12 @@ function resendMessage(errResponse, message, myClient, title) {
     //end of When a pushToken has incorrect format
 }
 
+
+function splittingArray(size, arr, callback){ //size - child_array.length
+    let out = [],i = 0, n= Math.ceil((arr.length)/size);
+    while(i < n) { out.push(arr.splice(0, (i==n-1) && size < arr.length ? arr.length: size));  i++;}
+    callback(out);
+}
 
 
 //add pushtoken to OneSignal - to resolve issue of "unsubscribe user"
