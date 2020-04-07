@@ -27,7 +27,8 @@ plugins/
 plugins/android.json
 plugins/ios.json
 www/
-backup/
+backup_Auto/
+backup_Manual/
 $RECYCLE.BIN/
 
 .DS_Store
