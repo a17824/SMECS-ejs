@@ -67,7 +67,7 @@ schedule.scheduleJob("0 19 * * *", function() {
     console.log('This runs every day ay 07:00PM');
     login.heartBeat();  //remove pushTokens of users with app installed but are not logged in
 
-    var spawn = require('child_process').spawn,
+    let spawn = require('child_process').spawn,
         ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
     backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
         if(err || !result) console.log('autoBackup err = ', err);
@@ -78,7 +78,19 @@ schedule.scheduleJob("0 19 * * *", function() {
     });
 });
 
+//This runs every sunday ay 8pm
+schedule.scheduleJob("0 20 * * 0", function() {
 
+    let spawn = require('child_process').spawn,
+        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
+    backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
+        if(err || !result) console.log('autoBackup err = ', err);
+        else {
+            console.log('result autoBackup = ',result)
+        }
+
+    });
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

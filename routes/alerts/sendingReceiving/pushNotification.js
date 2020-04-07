@@ -4,6 +4,7 @@ let OneSignal = require('onesignal-node'); //for OneSignal
 let models = require('./../../models');
 let jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 let config = require('../../api/config');
+let admin = require('firebase-admin');
 
 let appId= '2ce09fe3-5c91-4e53-9624-4d5b647322ea';
 /*****  CALL HERE NOTIFICATION API  ****
@@ -511,6 +512,11 @@ function sendPush2(message, callback) {
             console.log('success_number - ', success_number);
         }
     });
+    /*admin.messaging().send(message).then(response => {
+        // handle response
+        console.log('response - ', response);
+    });*/
+
     callback('doneSendPush');
 }
 
