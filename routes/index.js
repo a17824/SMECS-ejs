@@ -82,7 +82,7 @@ schedule.scheduleJob("0 19 * * *", function() {
 schedule.scheduleJob("0 20 * * 0", function() {
 
     let spawn = require('child_process').spawn,
-        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
+        ls    = spawn('cmd.exe', ["/c", `backup_Auto\\SMECS_auto_backup.bat`],{env: process.env});
     backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
         if(err || !result) console.log('autoBackup err = ', err);
         else {

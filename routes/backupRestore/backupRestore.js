@@ -34,7 +34,7 @@ module.exports.inProgressBackup = function(req, res) {
 module.exports.manualBackupPost = function(req, res) {
 
     var spawn = require('child_process').spawn,
-        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_manual_backup.bat`],{env: process.env});
+        ls    = spawn('cmd.exe', ["/c", `backup_Manual\\SMECS_manual_backup.bat`],{env: process.env});
     backup.backup(ls, 'manualBackup', function (result,err) {   //manual backup
         if(err) console.log('autoBackup err = ',err);
         else {
