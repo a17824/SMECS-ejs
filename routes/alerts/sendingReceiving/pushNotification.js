@@ -63,7 +63,8 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                                 body: 'Body of your push notification'
                             },*/
                             data: {  //you can send only notification or only data(or include both)
-                                alertID: alert._id
+                                alertID: alert._id,
+                                "force-start": "1"
                             },
                             priority: "high"
                         };
@@ -495,21 +496,32 @@ function sendPush(message, title, callback) {
 function sendPush2(message, callback) {
     let serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
     let fcm = new FCM(serverKey);
-    //console.log('message - ', message);
+    console.log('message - ', message);
     fcm.send(message, function (err, result) {
         if(err || !result) {
             console.log('err = ', err);
-            let myArrayResult = result.split(/([0-9]+)/);
-            let success_number =  parseInt(myArrayResult[3]);
-            console.log('success_number - ', success_number);
+            //this IF and ELSE can be deleted. this was just for testing receipts
+            if(result !== null && result !== undefined ){
+                let myArrayResult = result.split(/([0-9]+)/);
+                let success_number =  parseInt(myArrayResult[3]);
+                console.log('success_number - ', success_number);
+            }
+            else
+                console.log('result1 - ', result);
+            //END OF this IF and ELSE can be deleted. this was just for testing receipts
+
             //resendMessage function
         }
         else {
             console.log('PUSH NOTIFICATION SENT Correctly');
-            console.log('result - ', result);
-            let myArrayResult = result.split(/([0-9]+)/);
-            let success_number =  parseInt(myArrayResult[3]);
-            console.log('success_number - ', success_number);
+            console.log('result2 - ', result);
+            //this IF and ELSE can be deleted. this was just for testing receipts
+            if(result !== null && result !== undefined ){
+                let myArrayResult = result.split(/([0-9]+)/);
+                let success_number =  parseInt(myArrayResult[3]);
+                console.log('success_number - ', success_number);
+            }
+            //END OF this IF and ELSE can be deleted. this was just for testing receipts
         }
     });
     /*admin.messaging().send(message).then(response => {
