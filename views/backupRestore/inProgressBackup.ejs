@@ -30,12 +30,20 @@
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/preloaderCircle.css" rel="stylesheet">
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <script>
         $(document).ready(function() {
-            $.post("/manualBackupPost",{
+            var type = $("#typeBakRes").val();
+            var redirectionPath = '/restore/restoreBackup';
+            if(type === 'backup'){
+                redirectionPath = '/manualBackupPost';
+            }
 
+
+            $.post(redirectionPath,{
+                directoryName: type
             },function(data){
                 if(data==='done')
                 {
@@ -90,9 +98,29 @@
                         <div class="x_content">
                             <ul>
                                 <div align="center">
-                                    <% if (message) { %>
 
-                                            <span class="fa fa-spinner" aria-hidden="true"></span>
+                                    <input type="hidden" id="typeBakRes" value="<%= type %>">
+                                    <% if (message) { %>
+                                        <!--loader-->
+                                        <div id="preloader">
+                                            <div class="sk-circle">
+                                                <div class="sk-circle1 sk-child"></div>
+                                                <div class="sk-circle2 sk-child"></div>
+                                                <div class="sk-circle3 sk-child"></div>
+                                                <div class="sk-circle4 sk-child"></div>
+                                                <div class="sk-circle5 sk-child"></div>
+                                                <div class="sk-circle6 sk-child"></div>
+                                                <div class="sk-circle7 sk-child"></div>
+                                                <div class="sk-circle8 sk-child"></div>
+                                                <div class="sk-circle9 sk-child"></div>
+                                                <div class="sk-circle10 sk-child"></div>
+                                                <div class="sk-circle11 sk-child"></div>
+                                                <div class="sk-circle12 sk-child"></div>
+                                            </div>
+                                        </div>
+
+                                        <!--end of loader-->
+
                                             <%= message %>
 
                                     <% } %>

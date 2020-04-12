@@ -82,7 +82,7 @@ schedule.scheduleJob("0 19 * * *", function() {
 schedule.scheduleJob("0 20 * * 0", function() {
 
     let spawn = require('child_process').spawn,
-        ls    = spawn('cmd.exe', ["/c", `backup_Auto\\SMECS_auto_backup.bat`],{env: process.env});
+        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
     backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
         if(err || !result) console.log('autoBackup err = ', err);
         else {
@@ -564,11 +564,17 @@ router.post('/permissions/showPermissionsTable', auth.simpleAuth, auth.requireLo
 
 /* TOP NAVIGATION BUTTONS. */
 /* backup. */
-router.get('/inProgressBackup', auth.simpleAuth, auth.requireLogin, backup.inProgressBackup, function(req, res, next) {
+router.get('/inProgressBackup/:type', auth.simpleAuth, auth.requireLogin, backup.inProgressBackup, function(req, res, next) {
 });
 router.post('/manualBackupPost', auth.simpleAuth, auth.requireLogin, backup.manualBackupPost, function(req, res, next) {
 });
 router.get('/backupResp/:message', auth.simpleAuth, auth.requireLogin, backup.backupResp, function(req, res, next) {
+});
+
+/* restore*/
+router.get('/restore/showBackups', auth.simpleAuth, auth.requireLogin, backup.showBackups, function(req, res, next) {
+});
+router.post('/restore/restoreBackup', auth.simpleAuth, auth.requireLogin, backup.restoreBackupPost, function(req, res, next) {
 });
 
 /* SHOW REPORTS. */

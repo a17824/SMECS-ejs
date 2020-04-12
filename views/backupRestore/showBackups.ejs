@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+
+    <script>
+        //DELETE Confirmation
+        function YNconfirm(type) {
+            if (confirm('ATTENTION: This will restore SMECS to this date: ' + type + '. Are you sure you want to proceed?'))
+                return true;
+            else
+                return false;
+        };
+
+        $(document).ready(function() {
+
+        });
+    </script>
+
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
+
+                <br />
+
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <% include ../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div >
+                    <h3 class="title_left"><%= title %></h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <ul>
+
+                            </ul>
+
+                            <ul>
+                                <div align="center" style="size: 100px">
+                                    <% if ( error_messages.length >= 1) { %>
+                                        <div align="center" style="size: 100px" class="alert alert-warning" role="alert">
+                                            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                                            <strong><%- error_messages %></strong>
+                                        </div>
+                                    <% } %>
+
+                                </div>
+                            </ul>
+
+                            <div class="table-responsive">
+                                <table id="datatable-buttons" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Backup date</th>
+                                        <th>Backup Time</th>
+                                        <th>Backup type</th>
+                                        <th>Restore</th>
+                                    </tr>
+                                    <tbody>
+                                    <% backups.forEach(function(backup) { %>
+                                        <tr>
+                                            <td><%= backup.backupDate %></td>
+                                            <td><%= backup.backupTime %></td>
+                                            <td><%= backup.backupType %></td>
+                                            <td>
+                                                <% if (aclDeleteRoles2 == null || aclDeleteRoles2.checkBoxValue == true){%>
+                                                    <a href="/inProgressBackup/<%= backup.backupFullName %>" onclick="return(YNconfirm('<%= backup.backupDate %>'));"><button class="btn btn-warning">restore</button></a>
+                                                <% } else { %>
+                                                    <a href="/restore/restoreBackup/<%= backup.backupFullName %>" onclick="return(YNconfirm('<%= backup.backupDate %>                                                                                                                      '));"><button class="btn btn-warning" disabled>restore</button></a>
+                                                <% } %>
+                                            </td>
+
+                                        </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
+<!-- Datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Google Analytics -->
+
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
+</html>
