@@ -39,8 +39,8 @@
 
       <script>
           //DELETE Confirmation
-          function YNconfirm() {
-              if (confirm('Are you sure you want to DELETE this student?'))
+          function YNconfirm(type) {
+              if (confirm('ATTENTION: Student will be permanently deleted. Are you sure you want to trash the student: ' + type + '?'))
                   return true;
               else
                   return false;
@@ -168,9 +168,9 @@
                                 </td>
                                 <td align="center">
                                     <% if (aclDeleteStudent == null || aclDeleteStudent.checkBoxValue == true) {%>
-                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm());"><button class="btn btn-danger">delete</button></a>
+                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm('<%= student.firstName %> <%= student.lastName %>'));"><button class="btn btn-danger">delete</button></a>
                                     <% } else { %>
-                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm());"><button class="btn btn-danger" disabled>delete</button></a>
+                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm('<%= student.firstName %> <%= student.lastName %>'));"><button class="btn btn-danger" disabled>delete</button></a>
                                     <% } %>
                                 </td>
                             </tr>

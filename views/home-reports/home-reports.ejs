@@ -217,7 +217,7 @@
                                                 <% var color = "#4d6275"; %>        <!-- white #FFF -->
                                                 <% var colorBg = "#FFF"; %>  <!-- dark blue #4d6275 -->
                                                 <% var colorButton = "btn btn-dark"; %>
-                                                <% var colorReopen = "btn btn-success btn-xs"; %>
+                                                <% var colorReopen = "btn btn-warning btn-xs"; %>
                                             <% } %>
                                             <tr style="color: <%= color %>; background: <%= colorBg %>;">
 
@@ -242,9 +242,19 @@
                                                             <% } %>
                                                     <% } else { %>
                                                             <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
-                                                                <a onclick="changeStatusReopen('<%= reportS.id %>','/reportStatusReopen','<%= reportS.alert.name %>')" style="position: relative; right: -10px; top: 5px">
-                                                                    <button class="<%= colorReopen %>" id="<%= reportS.id %>">Reopen</button>
-                                                                </a>
+                                                                <input type="checkbox"
+                                                                       name="actionCheckbox"
+                                                                       value="<%= reportS.id %>,<%= reportS.status.statusString %>"
+                                                                       class="icheckbox_flat-green"
+                                                                       style="position: relative; right: -28px; top: 5px">
+
+                                                            <% } else { %>
+                                                                <input type="checkbox"
+                                                                       name="actionCheckbox"
+                                                                       value="<%= reportS.id %>,<%= reportS.status.statusString %>"
+                                                                       class="icheckbox_flat-green"
+                                                                       style="position: relative; right: -28px; top: 5px"
+                                                                       disabled>
                                                             <% } %>
                                                     <% } %>
 
@@ -270,7 +280,12 @@
                                                 <% } %>
                                                 <td>
                                                     <% if ( reportS.status.statusString == 'closed'){ %>
-                                                        <a style="color: <%= color %>;"><%= reportS.status.statusString %></a>
+                                                        <a style="color: <%= color %>;"><%= reportS.status.statusString %></a><br>
+                                                        <% if (aclClearReports == null || aclClearReports.checkBoxValue == true) {%>
+                                                            <a onclick="changeStatusReopen('<%= reportS.id %>','/reportStatusReopen','<%= reportS.alert.name %>')" style="position: relative; right: 0px; top: 0px">
+                                                                <button class="<%= colorReopen %>" id="<%= reportS.id %>">Reopen</button>
+                                                            </a>
+                                                        <% } %>
                                                     <% } else { %>
                                                         <a style="color: <%= color %>;">open</a>
                                                     <% } %>

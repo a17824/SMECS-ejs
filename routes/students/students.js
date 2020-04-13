@@ -671,9 +671,11 @@ function removeStudentsAndCopyNewStudents (callback, temp_path, file_name, new_l
 //Function for  MULTI STUDENTS -> add parents to Student Collection or delete parents from Users collection --
 function addDeleteStudentsParents(res,busTransportation) {
     models.Users.find({'parentOf.0': { "$exists": true }, 'softDeleted': null}, function (err, users) {
+        console.log('users 2= ',users);
         if (err) {
             console.log('err - finding parents');
-        }else{
+        }
+        else{
             async.eachSeries(users, function (user, callback) { //loop through array
                 var parent = {
                     _id: user._id,
@@ -682,7 +684,7 @@ function addDeleteStudentsParents(res,busTransportation) {
                     parentPhoto: user.photo
                 };
                 async.eachSeries(user.parentOf, function (child, callback1) { //loop through array
-                    if (!child) {
+                    if (!child ) {
                         console.log('child undefined');
                     }else{
                         models.Students.findOneAndUpdate({'studentID': child.studentID},
@@ -737,7 +739,6 @@ function addDeleteStudentsParents(res,busTransportation) {
 
                                         }
                                     }else{ //update user new student photo name
-                                        console.log('user = ',user);
                                         user.parentOf.forEach(function(student){
                                             if (err) {console.log('error removing photo from parent');}
                                             else {

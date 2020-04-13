@@ -992,7 +992,7 @@
                                     <input type="text"
                                            class="form-control"
                                            id="alertName"
-                                           value="Pedro Reis" readonly>
+                                           value="<%= report.sentBy %>" readonly>
                                 </div>
                             </div>
 
@@ -1025,7 +1025,7 @@
                                 <div class="col-md-9 col-sm-9 col-xs-12">
                                     <ul class="form-control" readonly="">
                                         <p class="imageSentStudents" style="position: relative; top: 0px">
-                                            Adam O'Donovan &ensp;<img style="position: relative; top: -4px" src="/photosStudents/5b155cf47f23e42ee0527318_111486.BMP" class="avatarSentStudents" alt="Avatar">
+                                            Adam O'Donovan &ensp;<img style="position: relative; top: -4px" src="/public/alertSentInfo/studentsPhotos/<%= report.studentPhoto %>" class="avatarSentStudents" alt="Avatar">
                                         </p>
                                     </ul>
                                 </div>
@@ -1066,8 +1066,8 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Floor</label>
                                 <div class="col-md-9 col-sm-9 col-xs-12">
 
-                                    <a href="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" data-lightbox="image-1" data-title="2nd Floor">
-                                        <img src="/public/alertSentInfo/floorsPhotos/5b1b2f93d1ad742854090560_2floor_750x512.png" class="form-control floor" alt="Avatar" readonly/>
+                                    <a href="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" data-lightbox="image-1" data-title="2nd Floor">
+                                        <img src="/public/alertSentInfo/floorsPhotos/<%= report.floorPhoto %>" class="form-control floor" alt="Avatar" readonly/>
                                     </a>
 
 

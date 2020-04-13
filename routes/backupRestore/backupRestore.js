@@ -1,9 +1,9 @@
 //Dependencies
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
-
 var backup = require('./backupRestore');
 var functions = require('../functions');
+var clean = require('../backupRestore/cleanOldFiles');
 
 //MANUAL BACKUP Wait Page
 module.exports.inProgressBackup = function(req, res) {
@@ -102,7 +102,7 @@ module.exports.backupRestore = function(ls, backupType, callback) {
     ls.on('exit', function (code) {
         code2 = code;
         console.log('child process exited with code ' + code);
-        if(backupType === 'manualBackup' || backupType === 'restore')
+        if(backupType === 'autoBackup' || backupType === 'manualBackup' || backupType === 'restore')
             callback(code2);
         else
             callback('failed');
@@ -173,19 +173,23 @@ module.exports.restoreBackupPost = function(req, res) {
 
     var spawn = require('child_process').spawn,
         ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_1restoreDatabase.bat`,backupToRestore],{env: process.env});
-    backup.backupRestore(ls, 'restore', function (result,err) {   //manual backup
+    backup.backupRestore(ls, 'restore', function (result,err) {   //restore DATABASE
         if(err) console.log('restore database err = ',err);
         else {
             let message;
             if(result === 0){
                 console.log('Restore database successful!');
-                backup.restoreFolders(function (result2,err2) {
+                backup.restoreFolders(function (result2,err2) { //restore FOLDERS
                     if(err) console.log('restore folders err = ',err2);
                     else {
                         let message2;
                         if(result2 === 0){
                             console.log('Restore folders successful!');
                             message2 = "Restore finished successfully";
+                            clean.cleanOldUserPhotos(); //delete old Users photos
+                            clean.cleanOldStudentPhotos(); //delete old Users photos
+                            clean.cleanOldAlertSentInfoFloors(); //delete old AlertSentInfoFloors photos
+                            clean.cleanOldAlertSentInfoStudents(); //delete old AlertSentInfoStudents photos
 
                         }
                         else {

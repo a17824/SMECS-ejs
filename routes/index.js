@@ -19,6 +19,7 @@ var statistics = require('./statistics/statistics');
 var reports = require('./alerts/reports/reports');
 var photos = require('./photos/addUpdatePhoto');
 var backup = require('./backupRestore/backupRestore');
+var clean = require('./backupRestore/cleanOldFiles');
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 
 var auth = require('./authentication/auth');
@@ -45,6 +46,10 @@ var showAlertsAndGroups = require('./alerts/showAlertsAndGroups');
 let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicButtons');
 
 
+//clean.cleanOldUserPhotos(); //delete old Users photos
+//clean.cleanOldStudentPhotos(); //delete old Users photos
+//clean.cleanOldAlertSentInfoFloors(); //delete old AlertSentInfoFloors photos
+//clean.cleanOldAlertSentInfoStudents(); //delete old AlertSentInfoStudents photos
 //Run this function once a month to clean old Photos
 /*
 *    *    *    *    *    *
@@ -57,36 +62,21 @@ let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicBut
 │    └──────────────────── minute (0 - 59)
 └───────────────────────── second (0 - 59, OPTIONAL)
 */
-//schedule.scheduleJob("*/4 * * * *", function(req, res) { //This runs every 4 minutes
-schedule.scheduleJob({hour: 2, minute: 59, dayOfWeek: 1, dayOfMonth: [1,2,3,4,5,6,7]}, function(){
-    console.log('This runs every first Monday of the month at 02:59AM');
-    photos.cleanOldPhotos();
-});
 //This runs every day ay 7pm
 schedule.scheduleJob("0 19 * * *", function() {
     console.log('This runs every day ay 07:00PM');
     login.heartBeat();  //remove pushTokens of users with app installed but are not logged in
 
-    let spawn = require('child_process').spawn,
-        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
-    backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
-        if(err || !result) console.log('autoBackup err = ', err);
-        else {
-            console.log('result autoBackup = ',result)
-        }
-
-    });
 });
 
-//This runs every sunday ay 8pm
-schedule.scheduleJob("0 20 * * 0", function() {
-
+//This runs every day at 8pm
+schedule.scheduleJob("0 20 * * *", function() {
     let spawn = require('child_process').spawn,
         ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_auto_backup.bat`],{env: process.env});
-    backup.backup(ls, 'autoBackup', function (result,err) {   //auto backup
-        if(err || !result) console.log('autoBackup err = ', err);
+    backup.backupRestore(ls, 'autoBackup', function (result,err) {   //auto backup
+        if(err || result !== 0) console.log('autoBackup err + result = ', err + ' ' + result);
         else {
-            console.log('result autoBackup = ',result)
+            console.log('autoBackup successful = ',result)
         }
 
     });

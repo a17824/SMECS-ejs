@@ -57,15 +57,15 @@ module.exports.addUpdatePhoto = function (req, res){
 
 
 module.exports.addUpdatePhotoPost = function (req, res){
-    var locationType = 'public/temp/photosUsers/'; //if photo is from a user document
-    var userType = 'Users';
-    if(req.user.redirect == 'showStudents'){    //if photo is from a student document
+    let locationType = 'public/temp/photosUsers/'; //if photo is from a user document
+    let userType = 'Users';
+    if(req.user.redirect === 'showStudents'){    //if photo is from a student document
         locationType = 'public/temp/photosStudents/';
         userType = 'Students';
     }
 
-    var fields =[];
-    var form = new formidable.IncomingForm();
+    let fields =[];
+    let form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
         //res.writeHead(200, {'content-type': 'text/plain'});
@@ -89,10 +89,6 @@ module.exports.addUpdatePhotoPost = function (req, res){
 
             if (this.openedFiles[0].name){ // if a file is selected do this
                 models[userType].findById({'_id': field}, function(err, user){
-                    var oldPhoto = user.photo;
-                    var newUser = "";
-
-
 
                     //delete all Photos and other files in Student Photo folder before copy new photos
                     try { var filesToDelete = fs.readdirSync(locationType); }
@@ -110,12 +106,14 @@ module.exports.addUpdatePhotoPost = function (req, res){
 
 
                     //save new file
-                    fs.copy(temp_path, new_location + user.id + ext, function (err) { // save file
+                    let user2 = user.id + ext;
+                    if(userType == 'Students')
+                        user2 = user.id  + '_' + user.studentID + ext;
+                    fs.copy(temp_path, new_location + user2, function (err) { // save file
                         if (err) {
                             console.error(err);
                         } else {
-
-                            user.photoTemp = user.id + ext; //save uploaded file name to user.photo
+                            user.photoTemp = user2; //save uploaded file name to user.photo
                             user.save(function (err) {
                                 if(err)
                                     console.log('err - ',err);
@@ -123,6 +121,8 @@ module.exports.addUpdatePhotoPost = function (req, res){
                                     console.log("success! saved " + file_name);
                                 }
                             });
+
+
                         }
                         fs.unlink(temp_path, function (err) { //delete file from temp folder (unlink) -------
                             if (err) {
@@ -130,7 +130,7 @@ module.exports.addUpdatePhotoPost = function (req, res){
                             }
                         });//------------------------------#end - unlink
 
-                        res.redirect('/photos/cropPhoto/' + user._id);
+                        res.redirect('/photos/cropPhoto/' + user.id);
                     });
 
 
@@ -156,6 +156,7 @@ module.exports.addUpdatePhotoPost = function (req, res){
 
 // DELETE PHOTO------------------
 module.exports.deletePhoto = function(req, res) {
+    console.log('deletePhoto');
     var new_location = 'public/photosUsers/'; //if photo is from a user document
     var userType = 'Users';
     if(req.user.redirect == 'showStudents'){    //if photo is from a student document
@@ -201,6 +202,8 @@ module.exports.deletePhoto = function(req, res) {
 
 
 module.exports.cropPhoto = function (req, res){
+    console.log('cropPhoto');
+    let userToCrop = req.params.id;
     async.parallel([
         //function(callback){models.Users.findById(req.params.id).exec(callback);},
         function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
@@ -209,19 +212,18 @@ module.exports.cropPhoto = function (req, res){
 
     ],function(err, results){
 
-        if (req.session.user.userRoleID) {         // if it is a user from "User" database
+        if (req.session.user.userRoleID)              // if it is a user from "User" database
             var title = 'Add Photo';
-        } else {                                        // if it is a user from "ParentSelfRegistration" database
+        else                                         // if it is a user from "ParentSelfRegistration" database
             var title = 'Parent registration Step2';
-        }
 
         let userType,aclType,folder;
         if(req.session.user.redirect == 'showStudents'){ //if photo to update is from a Student
             userType = 'Students';
             aclType = results[2];
             folder = 'photosStudents';
-
-        }else {                                          //if photo to update is from a User
+        }
+        else {                                          //if photo to update is from a User
             userType = 'Users';
             aclType = results[0];
             folder = 'photosUsers';
@@ -232,26 +234,31 @@ module.exports.cropPhoto = function (req, res){
         if(md.is('iPad') == true)
             iPad = true;
 
+        models[userType].findById(userToCrop, function (err, user) {
+            if(err || !user)
+                console.log('err - ',err);
+            else
+            {
+                res.render('photos/cropPhoto',{
+                    title: title,
+                    userToChangePhoto: user,
+                    userType: userType,
+                    iPad: iPad,
+                    folder: folder,
+                    aclModifyUsers: aclType, //aclPermissions modifyUsers
+                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                    userAuthPhoto: req.user.photo
+                });
+            }
 
-        models[userType].findById(req.params.id, function (err, user) {
-            console.log('user = ',user);
-            res.render('photos/cropPhoto',{
-                title: title,
-                userToChangePhoto: user,
-                userType: userType,
-                iPad: iPad,
-                folder: folder,
-                aclModifyUsers: aclType, //aclPermissions modifyUsers
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-                userAuthName: req.user.firstName + ' ' + req.user.lastName,
-                userAuthPhoto: req.user.photo
-            });
         });
 
     })
 };
 
 module.exports.cropPhotoPost = function (req, res){
+    console.log('helo 2- ');
     let locationType = 'public/photosUsers/'; //if photo is from a user document
     let userType = 'Users';
 
@@ -268,7 +275,7 @@ module.exports.cropPhotoPost = function (req, res){
     var buf = new Buffer(data, 'base64');
 
     models[userType].findById({'_id': userID}, function(err, user){
-
+        console.log('user - ',user);
         fs.writeFile(locationType + user.photoTemp, buf, function (err) {
             if (err) {
                 console.error(err);
@@ -288,19 +295,19 @@ module.exports.cropPhotoPost = function (req, res){
                     }
                 });
                 if(req.user.userRoleID){
-                if(req.user.redirect == 'showUsers') {
-                    res.send({redirect: '/users/showUsers'});
-                    pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
-                }
+                    if(req.user.redirect == 'showUsers') {
+                        res.send({redirect: '/users/showUsers'});
+                        pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
+                    }
 
-                if(req.user.redirect == 'updateUser') {
-                    res.send({redirect: '/users/updateUser/' + user.id});
-                    pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
-                }
-                if(req.user.redirect == 'registerParent')
-                    res.send({redirect: '/login'});
-                if(req.user.redirect == 'showStudents')
-                    res.send({redirect: '/students/showStudents'});
+                    if(req.user.redirect == 'updateUser') {
+                        res.send({redirect: '/users/updateUser/' + user.id});
+                        pushNotification.notifyUser(user, 'updateUserInfo'); //update user info on App
+                    }
+                    if(req.user.redirect == 'registerParent')
+                        res.send({redirect: '/login'});
+                    if(req.user.redirect == 'showStudents')
+                        res.send({redirect: '/students/showStudents'});
                 } else {
                     res.send({redirect: '/loginParents'});
                     //res.render('login', {error: "Registration completed"});
@@ -314,39 +321,6 @@ module.exports.cropPhotoPost = function (req, res){
 
 };
 
-
-
-module.exports.cleanOldPhotos = function (){
-    async.parallel([
-        function(callback){
-            var arrayUsers = [];
-            models.Users.find({},function(err,users){
-                if(err) throw err;
-                users.forEach(function(user){
-                    if(user.photo !== '')
-                        arrayUsers.push(user.photo)   ;
-                });
-                callback(null, arrayUsers);
-            });
-        },
-        function(callback){
-            fs.readdir('./public/photosUsers/',function(err,files){
-                if(err) throw err;
-                callback(null, files);
-            });
-        }
-    ],function(err, results){
-        var arrayUsersWithPhoto = results[0];
-        var files = results[1];
-
-        var diff = files.filter(function(x) { return arrayUsersWithPhoto.indexOf(x) < 0 });
-
-        diff.forEach(function(fileToDelete){
-            fs.unlinkSync('./public/photosUsers/' + fileToDelete);  //delete file
-            console.log('successfully deleted ' + fileToDelete);
-        });
-    });
-};
 
 
 function updateParentPhotoInStudentsDocument(user){
