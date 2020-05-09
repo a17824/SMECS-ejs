@@ -171,41 +171,41 @@
                                 <% htmlTags.pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
                             <% } %>
 
-                            <% if (userAuthID == 1) {%>
-                                <div class="col-md-2half col-sm-6 col-xs-6" align="center">
-                                    <div class="x_content">
-                                        <div class="dashboard-widget-content">
-                                            <div class="reports-widget">
-                                                <h4>Sent to</h4>
-                                                <canvas id="chart_gauge_01" class="gaugeCan"></canvas>
-                                                <div class="goal-wrapper">
-                                                    <span id="gauge-text" class="gauge-value gauge-chart pull-left"></span>
-                                                    <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                    <span id="goal-text" class="goal-value pull-right"><%= total.sentToAllNumber %></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% } %>
 
-
-                            <div class="<%= htmlTags.pageColSize %>" align="center">
+                            <div class="col-md-2half col-sm-6 col-xs-6" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
-                                            <h4>Received by</h4>
-                                            <canvas id="chart_gauge_02" class="gaugeCan"></canvas>
+                                            <h4>Sent to</h4>
+                                            <canvas id="chart_gauge_01" class="gaugeCan"></canvas>
                                             <div class="goal-wrapper">
-                                                <span id="gauge-text2" class="gauge-value gauge-chart pull-left"></span>
+                                                <span id="gauge-text" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text2" class="goal-value pull-right"><%= total.sentToWithPushTokenNumber %></span>
+                                                <span id="goal-text" class="goal-value pull-right"><%= total.sentToAllNumber %></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+
+                            <% if (userAuthID == 1) {%>
+                                <div class="<%= htmlTags.pageColSize %>" align="center">
+                                    <div class="x_content">
+                                        <div class="dashboard-widget-content">
+                                            <div class="reports-widget">
+                                                <h4>Received by</h4>
+                                                <canvas id="chart_gauge_02" class="gaugeCan"></canvas>
+                                                <div class="goal-wrapper">
+                                                    <span id="gauge-text2" class="gauge-value gauge-chart pull-left"></span>
+                                                    <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
+                                                    <span id="goal-text2" class="goal-value pull-right"><%= total.sentToWithPushTokenNumber %></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
 
 
                             <div class="<%= htmlTags.pageColSize %>" align="center">
@@ -310,75 +310,77 @@
 
                         <!-- start accordion -->
                         <div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
-                            <div class="panel">
-                                <a class="panel-heading" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#notReceive" aria-expanded="true" aria-controls="collapseOne">
-                                    <h4 class="panel-title">
-                                        <table class="" width="100%">
-                                            <tr>
-                                                <td class="no">didn't receive alert:</td>
-                                                <td class="accor1Td2"><%= total.notReceivedNumber %></td>
-                                                <td class="accor1Td3">users out of</td>
-                                                <td class="accor1Td4"><%= total.sentToWithPushTokenNumber %></td>
-                                            </tr>
-                                        </table>
-                                    </h4>
-                                </a>
-                                <div id="notReceive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                    <div class="panel-body">
+                            <% if (userAuthID == 1) {%>
+                                <div class="panel">
+                                    <a class="panel-heading" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#notReceive" aria-expanded="true" aria-controls="collapseOne">
+                                        <h4 class="panel-title">
+                                            <table class="" width="100%">
+                                                <tr>
+                                                    <td class="no">didn't receive alert:</td>
+                                                    <td class="accor1Td2"><%= total.notReceivedNumber %></td>
+                                                    <td class="accor1Td3">users out of</td>
+                                                    <td class="accor1Td4"><%= total.sentToWithPushTokenNumber %></td>
+                                                </tr>
+                                            </table>
+                                        </h4>
+                                    </a>
+                                    <div id="notReceive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="panel-body">
 
-                                        <ul class="list-unstyled msg_list">
+                                            <ul class="list-unstyled msg_list">
 
-                                            <% total.notReceivedBy.forEach(function(user, idx, array) { %>
-                                                <% var imgPos = 'avatarSentUsers' %>
-                                                <% var namePos = '' %>
-                                                <%  if (idx === array.length - 1) { %> <!--  last loop  -->
-                                                <!-- last user, picture and name need to be manual position -->
-                                                <% imgPos = 'avatarSentUsers imgPositionLastLoop' %>
-                                                <% namePos = 'namePos' %>
-                                                <%  } %>
-
-                                                <li class="imageSentUsers">
-                                                    <%  if (user.photo !== '') { %>
-                                                        <img src="/public/photosUsers/<%= user.photo %>" class="<%= imgPos %>" alt="Avatar" />
-                                                    <%  }else { %>
-                                                        <img src="/public/photosNotAvailable/user.png" class="<%= imgPos %>" alt="Avatar" />
+                                                <% total.notReceivedBy.forEach(function(user, idx, array) { %>
+                                                    <% var imgPos = 'avatarSentUsers' %>
+                                                    <% var namePos = '' %>
+                                                    <%  if (idx === array.length - 1) { %> <!--  last loop  -->
+                                                    <!-- last user, picture and name need to be manual position -->
+                                                    <% imgPos = 'avatarSentUsers imgPositionLastLoop' %>
+                                                    <% namePos = 'namePos' %>
                                                     <%  } %>
-                                                    <span><span class="<%= namePos %>">&ensp;</span><span><%= user.firstName + ' ' + user.lastName %></span><span class="time compNot"><i><b>not completed</b></i></span></span>
 
-                                                    <span class="message adjPos"><br>
+                                                    <li class="imageSentUsers">
+                                                        <%  if (user.photo !== '') { %>
+                                                            <img src="/public/photosUsers/<%= user.photo %>" class="<%= imgPos %>" alt="Avatar" />
+                                                        <%  }else { %>
+                                                            <img src="/public/photosNotAvailable/user.png" class="<%= imgPos %>" alt="Avatar" />
+                                                        <%  } %>
+                                                        <span><span class="<%= namePos %>">&ensp;</span><span><%= user.firstName + ' ' + user.lastName %></span><span class="time compNot"><i><b>not completed</b></i></span></span>
+
+                                                        <span class="message adjPos"><br>
                                                             received:
-                                                        <%  if (user.received.receivedBoolean) { %>
-                                                            <span class="yes"><%= user.received.receivedTime %></span> &ensp;
-                                                        <%  }else { %>
-                                                            <span class="no">no</span> &ensp;
-                                                        <%  } %>
-                                                        viewed:
-                                                        <%  if (user.viewed.viewedBoolean) { %>
-                                                            <span class="yes"><%= user.viewed.timeDif %></span> &ensp;
-                                                        <%  }else { %>
-                                                            <span class="no">no</span> &ensp;
-                                                        <%  } %>
-                                                        procedure done:
-                                                        <%  if (user.procedureCompleted.boolean) { %>
-                                                            <span class="yes"><%= user.procedureCompleted.timeDif %></span> &ensp;
-                                                        <%  }else { %>
-                                                            <span class="no">no</span> &ensp;
-                                                        <%  } %>
-                                                        we are safe:
-                                                        <%  if (user.weAreSafe.boolean) { %>
-                                                            <span class="yes"><%= user.weAreSafe.timeDif %></span> &ensp;
-                                                        <%  }else { %>
-                                                            <span class="no">no</span> &ensp;
-                                                        <%  } %>
-                                                    </span>
-                                                </li>
-                                            <% }); %>
+                                                            <%  if (user.received.receivedBoolean) { %>
+                                                                <span class="yes"><%= user.received.receivedTime %></span> &ensp;
+                                                            <%  }else { %>
+                                                                <span class="no">no</span> &ensp;
+                                                            <%  } %>
+                                                            viewed:
+                                                            <%  if (user.viewed.viewedBoolean) { %>
+                                                                <span class="yes"><%= user.viewed.timeDif %></span> &ensp;
+                                                            <%  }else { %>
+                                                                <span class="no">no</span> &ensp;
+                                                            <%  } %>
+                                                            procedure done:
+                                                            <%  if (user.procedureCompleted.boolean) { %>
+                                                                <span class="yes"><%= user.procedureCompleted.timeDif %></span> &ensp;
+                                                            <%  }else { %>
+                                                                <span class="no">no</span> &ensp;
+                                                            <%  } %>
+                                                            we are safe:
+                                                            <%  if (user.weAreSafe.boolean) { %>
+                                                                <span class="yes"><%= user.weAreSafe.timeDif %></span> &ensp;
+                                                            <%  }else { %>
+                                                                <span class="no">no</span> &ensp;
+                                                            <%  } %>
+                                                        </span>
+                                                    </li>
+                                                <% }); %>
 
-                                        </ul>
+                                            </ul>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            <% } %>
                             <div class="panel">
                                 <a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#notView" aria-expanded="false" aria-controls="collapseTwo">
                                     <h4 class="panel-title">
@@ -1165,7 +1167,7 @@
                                                     <% } else { %>
                                                         <input type="button" class="btn btn-success btn-xs right2" id="request" value="Send Request Assistance" onClick="reqAss()">
                                                     <% } %>
-                                                        <br>
+                                                    <br>
                                                     <% } %>
 
                                                 <% } %>
