@@ -110,7 +110,7 @@ module.exports.registerParentStep1 = function(req, res, next) {
                 }
                 else {
                     res.render('parentsSelfRegistration/registerParentStep1', {
-                        title: 'Parent registration Step1',
+                        title: 'Parent registration',
                         users: user,
                         userTempID: userID,
                         iPad: iPad,
@@ -180,6 +180,7 @@ module.exports.registerParentStep1Post = function(req, res) {
                                 lastName: req.body.lastName,
                                 email: emailLowerCase,
                                 pin: hash,
+                                photo: '',
                                 parentOf: parentOfFinal,
                                 parent: true
 

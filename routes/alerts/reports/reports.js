@@ -20,7 +20,7 @@ module.exports.homeReports = function(req, res, next) {
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         //default tabs to show
@@ -38,16 +38,21 @@ module.exports.homeReports = function(req, res, next) {
         if(md.is('iPad') == true)
             page = 'home-reports/home-mobReports';
 
+        if(!results[3][1])   //if user has no permissions, redirect to his profile
+            res.redirect('/users/showUsers');
 
-        res.render(page,{
-            title: 'REPORTS SENT',
-            reportSent: results[0],
-            aclClearReports: results[1],           //aclPermissions clearReports
-            aclDeleteReports: results[2],        //aclPermissions deleteReports
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
-            userAuthName: req.user.firstName + ' ' + req.user.lastName,
-            userAuthPhoto: req.user.photo
-        });
+        else{
+            res.render(page,{
+                title: 'Reports',
+                reportSent: results[0],
+                aclClearReports: results[1],           //aclPermissions clearReports
+                aclDeleteReports: results[2],        //aclPermissions deleteReports
+                aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                userAuthName: req.user.firstName + ' ' + req.user.lastName,
+                userAuthPhoto: req.user.photo
+            });
+        }
+
     })
 };
 
@@ -301,7 +306,7 @@ module.exports.reportsDetails = function(req, res) {
             let showSafe = 'hideThis';
             let showHelp = 'hideThis';
             let flagCount = 0;
-            let pageColSize = 'col-md-6 col-sm-6 col-xs-6';     // 2 Gauges
+            let pageColSize = 'col-md-12 col-sm-12 col-xs-12';     // 1 Gauges
             let pageColSize2 = 'col-md-6 col-sm-6 col-xs-6';    // last Gauge
 
             if(results[0].request911Call)
@@ -318,14 +323,16 @@ module.exports.reportsDetails = function(req, res) {
             if(results[0].requestINeedHelp){
                 showHelp = 'showThis';
             }
-            if(flagCount == 1){ // 3 Gauges
-                pageColSize = 'col-md-4 col-sm-4 col-xs-6';
-                pageColSize2 = 'col-md-4 col-sm-4 col-xs-12';
+            if(flagCount == 1){ // 2 Gauges
+                pageColSize = 'col-md-6 col-sm-6 col-xs-6';
+                pageColSize2 = 'col-md-6 col-sm-6 col-xs-6';
             }
 
-            if(flagCount == 2){ // 4 Gauges
-                pageColSize = 'col-md-3 col-sm-3 col-xs-6';
-                pageColSize2 = 'col-md-3 col-sm-3 col-xs-6';
+            if(flagCount == 2){ // 3 Gauges
+                pageColSize = 'col-md-4 col-sm-4 col-xs-6';
+                pageColSize2 = 'col-md-4 col-sm-4 col-xs-6';
+                //pageColSize = 'col-md-3 col-sm-3 col-xs-6';    // 4 Gauges
+                //pageColSize2 = 'col-md-3 col-sm-3 col-xs-6';   // 4 Gauges
             }
             //end of hide show Gauges Accordions Procedure, Safe, Help
 
@@ -366,6 +373,7 @@ module.exports.reportsDetails = function(req, res) {
                 showHelp: showHelp,
                 pageColSize: pageColSize,
                 pageColSize2: pageColSize2,
+                notCompletedReceived: 'SMECS APP NOT INSTALLED',
                 icons: {
                     lights: lights,
                     lightTitle: lightTitle,

@@ -1,10 +1,21 @@
-<html>
-<head>
-    <title>register parent</title>
-    <link rel='stylesheet' href='/stylesheets/updateUser.css' />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
-    <script>
 
+<html lang="en">
+<head>
+
+    <!-- Bootstrap -->
+    <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link rel='stylesheet' href='/public/stylesheets/updateStudent.css' />
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- iCheck -->
+    <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+
+    <script>
         var choices, value2send;
         function selectUser(select)
         {
@@ -92,7 +103,7 @@
                 }
 
 
-                    //-----forms validation------------------------------------
+                //-----forms validation------------------------------------
                 if (firstName == "" ) {
                     alert("FIRST NAME must be filled out");
                     return false;
@@ -132,11 +143,46 @@
                     alert("LAST NAME must be filled out");
                     return false;
                 }
+
                 if (arrayUsers.length < 1) {
-                    alert("Please choose a student.");
+                    alert("Please choose a student. If your child isn't listed, please contact the school and we will add asap");
                     return false;
                 }
                 //--------------------------------forms validation end-------
+                //--------------------------------Capitalize Words---------------------------
+                if (firstName != "" ) {
+                    //changes user input and put first letter of each word capitalized
+                    // replaces: "fort collins, croton-on-hudson, harper's ferry, coeur d'alene, o'fallon"
+                    //with: "Fort Collins, Croton-On-Hudson, Harper's Ferry, Coeur D'Alene, O'Fallon"
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = firstName;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+
+                    //fixes words like: "Marty Mcfly"
+                    // with: "Marty McFly"
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                        {
+                            return 'Mc' + k[2].toUpperCase();
+                        }
+                    );
+                }
+                firstName = text;
+
+                if (lastName != "" ) {
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = lastName;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                        {
+                            return 'Mc' + k[2].toUpperCase();
+                        }
+                    );
+                }
+                lastName = text;
+                //--------------------------------Capitalize Words end---------------------
+
                 var pin;
                 if (newPin !== oldPin) {
                     pin = newPin;
@@ -170,94 +216,223 @@
 
             });
         });
+
     </script>
+
+
 </head>
-<body>
-<h1><%= title %></h1>
 
-<% if ( error_messages ) { %>
-<p style="color: red"><%= error_messages %></p>
-<% } %>
-
-<% if (iPad) { %>
-<label for="userCredentials"><b>Please, use a Computer to register. Thank you!</b></label><br>
-<% }else { %>
-
-<input type="hidden" id="userTempID"  value="<%= userTempID %>">
-<input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
-<input type="hidden" id="roleID"  value="<%= roleID %>">
-<input type="hidden" id="roleName"  value="<%= roleName %>">
-<input type="hidden" id="privilegeID"  value="<%= privilege.privilegeID %>">
-<input type="hidden" id="privilegeName"  value="<%= privilege.privilegeName %>">
-
-<form>
-    <hr>
-    <label for="userCredentials"><b>User Email/pin:</b></label><br>
-    <div id="checkboxRadioboxDiv" class="checkboxRadioboxDiv">
-        First Name:
-        <input type="text" id="firstName" placeholder="ex: Manuel" value="<%= users.firstName %>"><br>
-        Last Name:
-        <input type="text" id="lastName" placeholder="ex: Neves" value="<%= users.lastName %>"><br>
-        Email:&nbsp
-        <input type="email" id="email" size="40" placeholder="ex: Manuel.Neves@gmail.com" value="<%= users.email %>"><br>
-        Pin:&nbsp
-        <input type="password" id="newPin" size="40" placeholder="ex: 1234" value="<%= users.pin %>"><br>
-        Confirm Pin:&nbsp
-        <input type="password" id="confirmPin" size="40" value="<%= users.pin %>"><br>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
 
 
+                <!-- menu profile quick info -->
+                <% include ./../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
 
+                <br>
 
-    </div>
-    <hr>
-
-
-        <div id="labelsDiv2" class="labelsDiv2">
-            <div id="smecsUserDiv" class="enable">
-                <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Parent of:</label><br>
-
-
-                <ul id="smecsUserUl" class="enable">
-                    <% for (var a = 0; a < users.parentOf.length; a++) { %>
-
-                    <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
-                        <input type="hidden" name="users[]" value="<%= users.parentOf[a].studentID %>" />
-                        <%= users.parentOf[a].studentFirstName %> <%= users.parentOf[a].studentLastName %>
-                    </li>
-                    <% } %>
-
-                </ul>
-
-                <input
-                        class="enable"
-                        autocomplete="off"
-                        id="dataList" list="students"
-                        name="student"
-                        placeholder="type student name"
-                        value="<%= students.studentID %>"
-                        onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
-                <dataList id="students">
-                    <% students.forEach(function(student) { %>
-                    <option data-value="<%= student.studentID %>" value="<%= student.firstName %> <%= student.lastName %>"></option>
-                    <% }); %>
-                </dataList>
-
-                <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
-                <br><br>
-
+                <!-- sidebar menu -->
+                <% include ./../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
             </div>
         </div>
 
+        <!-- top navigation -->
+        <% include ./../layout/topNavigation.ejs %>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3><%= title %></h3>
+                </div>
 
 
-    <input type="button" id="next" value="Next" ><br>
+                <div class="title_right">
 
-    <% } %>
+                    <div class="pull-left">
 
-</form>
-<form action="/login">
-    <input type="submit" value="Back" ><br>
-</form>
+                        <button type="button"
+                                id="next"
+                                value="Submit"
+                                class="btn btn-success">Save
+                        </button>
+
+                        <a href="/login"><button type="button" class="btn btn-default">Cancel</button></a>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><small>Information</small></h2>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form class="form-horizontal form-label-left input_mask">
+
+                                <% if ( error_messages ) { %>
+                                    <p style="color: red"><%= error_messages %></p>
+                                <% } %>
+
+                                <% if (iPad) { %>
+                                    <label for="userCredentials"><b>Please, use a Computer to register. Thank you!</b></label><br>
+                                <% }else { %>
+
+                                    <input type="hidden" id="userTempID"  value="<%= userTempID %>">
+                                    <input type="hidden" id="oldPin" size="40" value="<%= users.pin %>">
+                                    <input type="hidden" id="oldParentOf"  value="<%= users.parentOfOld %>">
+                                    <input type="hidden" id="roleID"  value="<%= roleID %>">
+                                    <input type="hidden" id="roleName"  value="<%= roleName %>">
+                                    <input type="hidden" id="privilegeID"  value="<%= privilege.privilegeID %>">
+                                    <input type="hidden" id="privilegeName"  value="<%= privilege.privilegeName %>">
+
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">First name <span class="required" style="color: red">*</span> :</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="firstName"
+                                                   placeholder="ex: Manuel">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Last name <span class="required" style="color: red">*</span> :</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="lastName"
+                                                   placeholder="ex: Neves">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Email <span class="required" style="color: red">*</span> :</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="email"
+                                                   placeholder="ex: Manuel.Neves@gmail.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Pin <span class="required" style="color: red">*</span> :</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="newPin"
+                                                   placeholder="ex: 1234">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Confirm Pin <span class="required" style="color: red">*</span> :</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="confirmPin">
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Parent of :</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                            <div id="labelsDiv2" class="labelsDiv2">
+                                                <div id="smecsUserDiv" class="enable">
+                                                    <label for="smecsUserLabel" id="smecsUserLabel" class="enable">Students:</label><br>
+                                                    <ul id="smecsUserUl" class="enable">
+                                                        <% for (var a = 0; a < users.parentOf.length; a++) { %>
+                                                            <li id="user1" onclick="this.parentNode.removeChild(this); removeUser(this)">
+                                                                <input type="hidden" name="users[]" value="<%= users.parentOf[a].studentID %> %>" />
+                                                                <%= users.parentOf[a].studentFirstName %> <%= users.parentOf[a].studentLastName %>
+                                                            </li>
+                                                        <% } %>
+                                                    </ul>
+                                                    <input
+                                                            class="enable"
+                                                            autocomplete="off"
+                                                            id="dataList" list="students"
+                                                            name="student"
+                                                            placeholder=" type student name"
+                                                            value="<%= students.studentID %>"
+                                                            onkeydown = "return (event.keyCode!=13);" onchange="selectUser(this);">
+                                                    <dataList id="students">
+                                                        <% students.forEach(function(student) { %>
+                                                            <option data-value="<%= student.studentID %>" value="<%= student.firstName %> <%= student.lastName %>"></option>
+                                                        <% }); %>
+                                                    </dataList>
+
+                                                    <img id="imgAdd" class="enable" src="/miscPictures/add.png" alt="Add" style="vertical-align: middle;" onclick="selectUser($(this).prev().get(0));">
+                                                    <br><br>
+                                                    If your child isn't listed, please contact the school and we will add asap
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                            </form>
+                            <% } %>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <!-- /page content -->
+
+
+    </div>
+</div>
+
+
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.min.js"></script>
+<!-- Google Analytics -->
 
 </body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ./../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

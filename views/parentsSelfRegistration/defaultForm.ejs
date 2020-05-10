@@ -27,7 +27,7 @@
                 email=$("#email").val();
                 pin=$("#newPin").val();
                 textToPrint=$("#textToPrint").val();
-
+console.log('email = ', email);
                 //-----forms validation------------------------------------
                 var mailFormat = /^([a-z A-Z 0-9 _\.\-])+\@(([a-z A-Z 0-9\-])+\.)+([a-z A-z 0-9]{2,4})+$/;
                 if (!mailFormat.test(email)) {
@@ -171,7 +171,7 @@
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <input type="text"
                                                class="form-control print"
-                                               id="email"
+                                               id="school"
                                                value="stts-ma">
                                     </div>
                                 </div>

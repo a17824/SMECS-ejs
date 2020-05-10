@@ -100,6 +100,8 @@
                             <% var pageColSize = 'col-md-3 col-sm-3 col-xs-6' %>
                             <% if (userAuthID == 1) {%>
                             <% pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
+                            <% } else { %>
+                                <% total.receivedNumber = total.sentToWithPushTokenNumber %>
                             <% } %>
 
                             <% if (userAuthID == 1) {%>
@@ -118,10 +120,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <% } %>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -136,10 +138,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <% } %>
 
 
-
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -148,7 +150,7 @@
                                             <div class="goal-wrapper">
                                                 <span id="gauge-text3" class="gauge-value gauge-chart pull-left"></span>
                                                 <span class="gauge-value pull-left">&emsp;&emsp; users out of</span>
-                                                <span id="goal-text3" class="goal-value pull-right">46</span>
+                                                <span id="goal-text3" class="goal-value pull-right">48</span>
                                             </div>
                                         </div>
                                     </div>
@@ -156,7 +158,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -173,7 +175,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -249,7 +251,7 @@
                                                 <td align="left" style="color: #e76146">didn't receive alert:</td>
                                                 <td width="20" align="center">2</td>
                                                 <td width="140" align="center">users out of</td>
-                                                <td width="20" align="right">48</td>
+                                                <td width="20" align="right">50</td>
                                             </tr>
                                         </table>
                                     </h4>
@@ -260,7 +262,7 @@
                                         <ul class="list-unstyled msg_list">
                                             <li class="imageSentUsers">
                                                 <img src="/public/photosUsers/5b1594b03cc6e0004815bbfa.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>not completed</b></i></span></span>
+                                                <span><span>&ensp;Rosetta Mark</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 35px;"><i><b>SMECS APP NOT INSTALLED</b></i></span></span>
 
                                                 <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
                                     received: <span style="color: #e76146">no</span> &ensp;
@@ -273,7 +275,7 @@
                                             <!-- last user, picture and name need to be manual position -->
                                             <li class="imageSentUsers">
                                                 <img style="position: relative; left: -5px" src="/public/photosUsers/5b1592593cc6e0004815bbf6.BMP" class="avatarSentUsers" alt="Avatar" />
-                                                <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>not completed</b></i></span></span>
+                                                <span><span style="position: absolute; left: 62px">&ensp;Susan Hayes</span><span class="time" style="color: #e76146; font-size: 11px; position: absolute; right: 37px;"><i><b>SMECS APP NOT INSTALLED</b></i></span></span>
 
                                                 <span class="message" style="font-size: 11px; position: absolute; left: 70px"><br>
                                     received: <span style="color: #e76146">no</span> &ensp;

@@ -24,7 +24,7 @@ module.exports.forgotPost = function (req, res) {
             var options = {
                 service: 'gmail',
                 auth: {
-                    user: 'pdcpadr@gmail.com',
+                    user: 'smecs@sttheresaschoolboston.com',
                     pass: 'Welcome@123!'
                 }
             };
@@ -87,7 +87,7 @@ module.exports.post = function(req, res, next) {
             var options = {
                 service: 'gmail',
                 auth: {
-                    user: 'pdcpadr@gmail.com',
+                    user: 'smecs@sttheresaschoolboston.com',
                     pass: 'Welcome@123!'
                 }
             };
@@ -96,7 +96,7 @@ module.exports.post = function(req, res, next) {
             // setup e-mail data with unicode symbols
             var mailOptions = {
                 to: user.email,
-                from: 'pdcpadr@gmail.com', //Gmail and many other email services don't allow you to send messages with various FROM field
+                from: 'smecs@sttheresaschoolboston.com', //Gmail and many other email services don't allow you to send messages with various FROM field
                 subject: 'SMECS Password Reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
@@ -142,7 +142,7 @@ module.exports.sendAlertRequestAssistance = function(req, utilityName, next) {
                 var options = {
                     service: 'gmail',
                     auth: {
-                        user: 'pdcpadr@gmail.com',
+                        user: 'smecs@sttheresaschoolboston.com',
                         pass: 'Welcome@123!'
                     }
                 };

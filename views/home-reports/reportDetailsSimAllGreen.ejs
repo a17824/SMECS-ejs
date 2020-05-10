@@ -79,6 +79,8 @@
                             <% var pageColSize = 'col-md-3 col-sm-3 col-xs-6' %>
                             <% if (userAuthID == 1) {%>
                             <% pageColSize = 'col-md-2half col-sm-3 col-xs-6' %>
+                            <% } else { %>
+                                <% total.receivedNumber = total.sentToWithPushTokenNumber %>
                             <% } %>
 
                             <% if (userAuthID == 1) {%>
@@ -97,10 +99,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <% } %>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -115,10 +117,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <% } %>
 
 
-
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -135,7 +137,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">
@@ -152,7 +154,7 @@
                             </div>
 
 
-                            <div class="<%= pageColSize %>" align="center">
+                            <div class="<%= htmlTags.pageColSize %>" align="center">
                                 <div class="x_content">
                                     <div class="dashboard-widget-content">
                                         <div class="reports-widget">

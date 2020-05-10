@@ -22,8 +22,10 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.showDeletedUsers(req, res, callback);},   //aclPermissions showDeletedUsers
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
+        function(callback){aclPermissions.modifyOnlyNameEmailPin(req, res, callback);},        //aclPermissions .modifyOnlyNameEmailPin
         function(callback){aclPermissions.deleteUsers(req, res, callback);},         //aclPermissions deleteUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback){aclPermissions.changePhoto(req, res, callback);},         //aclPermissions changePhoto
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -32,6 +34,22 @@ module.exports.show = function(req, res, next) {
         else {
             functions.redirectPage(req, res, 'showUsers');
             functions.redirectTabBuildings(req, res, 'showBuilding');
+
+
+            if(!results[10][1]){   //if user has no permissions, only shows his user to be able to update his profile
+                for(let x = 0; x < results[0].length; x++) {
+                    if(results[0][x].email === req.user.email){
+                        results[0] = [results[0][x]];
+                        if(!results[0][0].internal && results[0][0].parent) // if user is only parent
+                            req.user.redirectTabUsers = 'showParents';
+                        if(!results[0][0].internal && results[0][0].external) // if user is only External
+                            req.user.redirectTabUsers = 'showExternal';
+                        if(!results[0][0].internal && results[0][0].parent && results[0][0].external) // if user is only Parent & External
+                            req.user.redirectTabUsers = 'showParents';
+                        break
+                    }
+                }
+            }
 
             res.render('users/showUsers',{
                 title:'Users',
@@ -44,8 +62,10 @@ module.exports.show = function(req, res, next) {
                 aclShowDeletedUsers: results[4], //aclPermissions showDeletedUsers
                 aclAddUsers: results[5], //aclPermissions addUsers
                 aclModifyUsers: results[6],  //aclPermissions modifyUsers
-                aclDeleteUsers: results[7],  //aclPermissions deleteUsers
-                aclSideMenu: results[8],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclModifyOnlyNameEmailPin: results[7], //aclPermissions ModifyOnlyNameEmailPin
+                aclDeleteUsers: results[8],  //aclPermissions deleteUsers
+                aclChangePhoto: results[9],  //aclPermissions changePhoto
+                aclSideMenu: results[10][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo,
                 redirectTab: req.user.redirectTabUsers
@@ -422,18 +442,27 @@ module.exports.update = function(req, res) {
                 callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers);
             });
         },
-        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers,callback) {
+        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers,callback){
+            aclPermissions.modifyOnlyNameEmailPin(req, res, function (err, aclModifyOnlyNameEmailPin) {
+                callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers,aclModifyOnlyNameEmailPin);
+            });
+        },
+        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, aclModifyOnlyNameEmailPin,callback){
+            aclPermissions.changePhoto(req, res, function (err, aclChangePhoto) {
+                callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers,aclModifyOnlyNameEmailPin,aclChangePhoto);
+            });
+        },
+        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, aclModifyOnlyNameEmailPin, aclChangePhoto, callback) {
             functions.aclSideMenu(req, res, function (sideMenu) {
-                callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu);});}, //aclPermissions sideMenu
+                callback(null, user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, aclModifyOnlyNameEmailPin, aclChangePhoto, sideMenu);});}, //aclPermissions sideMenu
 
-        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, sideMenu, callback){
-            if (aclShowPermissionsTable.checkBoxValue == false) {
-                console.log(err);
+        function(user, students, roles, privileges, aclShowPermissionsTable, aclModifyUsers, aclModifyOnlyNameEmailPin, aclChangePhoto, sideMenu, callback){
+            /*if (aclShowPermissionsTable.checkBoxValue == false) {
                 console.log('No Permission');
                 req.flash('error_messages', 'No permission to update User info ');
                 res.redirect('/users/showUsers/');
             }
-            else {
+            else { */
                 var ifUserHasPrincipalRole = 0;
                 var ifUserHasUtilityUserRole = 0;
                 var ifUserHasAnyOtherRole = 0;
@@ -464,6 +493,8 @@ module.exports.update = function(req, res) {
                         privileges,
                         aclShowPermissionsTable,
                         aclModifyUsers,
+                        aclModifyOnlyNameEmailPin,
+                        aclChangePhoto,
                         sideMenu,
                         ifUserHasPrincipalRole,
                         ifUserHasUtilityUserRole,
@@ -471,7 +502,7 @@ module.exports.update = function(req, res) {
                 }
 
 
-            }
+            //}
         },
         function(
             user,
@@ -480,6 +511,8 @@ module.exports.update = function(req, res) {
             privileges,
             aclShowPermissionsTable,
             aclModifyUsers,
+            aclModifyOnlyNameEmailPin,
+            aclChangePhoto,
             sideMenu,
             ifUserHasPrincipalRole,
             ifUserHasUtilityUserRole,
@@ -507,6 +540,8 @@ module.exports.update = function(req, res) {
                 privileges,
                 aclShowPermissionsTable,
                 aclModifyUsers,
+                aclModifyOnlyNameEmailPin,
+                aclChangePhoto,
                 sideMenu,
                 ifUserHasPrincipalRole,
                 ifUserHasUtilityUserRole,
@@ -523,6 +558,8 @@ module.exports.update = function(req, res) {
         privileges,
         aclShowPermissionsTable,
         aclModifyUsers,
+        aclModifyOnlyNameEmailPin,
+        aclChangePhoto,
         sideMenu,
         ifUserHasPrincipalRole,
         ifUserHasUtilityUserRole,
@@ -531,6 +568,8 @@ module.exports.update = function(req, res) {
         studentsIdArray){
 
         functions.redirectPage(req,res,'updateUser');
+
+
         res.render('users/updateUser', {
             title: 'Update User:',
             userAuthID: req.user.userPrivilegeID,
@@ -540,6 +579,8 @@ module.exports.update = function(req, res) {
             privileges: privileges,
             aclShowPermissionsTable: aclShowPermissionsTable,    //aclPermissions showPermissionsTable
             aclModifyUsers: aclModifyUsers,              //aclPermissions modifyUsers
+            aclModifyOnlyNameEmailPin: aclModifyOnlyNameEmailPin, //aclPermissions ModifyOnlyNameEmailPin
+            aclChangePhoto: aclChangePhoto,     //aclPermissions ChangePhoto
             principalRole: ifUserHasPrincipalRole,
             parentRole: ifUserHasParentRole,
             utilityUserRole: ifUserHasUtilityUserRole,

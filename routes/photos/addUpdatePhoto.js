@@ -212,22 +212,35 @@ module.exports.cropPhoto = function (req, res){
 
     ],function(err, results){
 
-        if (req.session.user.userRoleID)              // if it is a user from "User" database
-            var title = 'Add Photo';
-        else                                         // if it is a user from "ParentSelfRegistration" database
-            var title = 'Parent registration Step2';
+        let userType,aclType,folder,cancelButton;
 
-        let userType,aclType,folder;
-        if(req.session.user.redirect == 'showStudents'){ //if photo to update is from a Student
-            userType = 'Students';
-            aclType = results[2];
-            folder = 'photosStudents';
+        console.log('req.session.user.userRoleID = ',req.session.user.userRoleID);
+        if (req.session.user.userRoleID) {            // if it is a user from "User" database
+            var title = 'Add Photo';
+            if(req.session.user.redirect == 'showStudents'){ //if photo to update is from a Student
+                userType = 'Students';
+                aclType = results[2];
+                folder = 'photosStudents';
+                cancelButton = '/students/showStudents';
+
+            }
+            else {                                          //if photo to update is from a User
+                userType = 'Users';
+                aclType = results[0];
+                folder = 'photosUsers';
+                cancelButton = '/users/showUsers';
+            }
         }
-        else {                                          //if photo to update is from a User
+        else {                                    // if it is a user from "ParentSelfRegistration" database
+            var title = 'Parent registration Step2';
             userType = 'Users';
             aclType = results[0];
             folder = 'photosUsers';
+            cancelButton = '/loginParents';
+            console.log('22222222222222 = ');
         }
+
+
 
         var iPad = false;
         var md = new MobileDetect(req.headers['user-agent']);
@@ -245,6 +258,7 @@ module.exports.cropPhoto = function (req, res){
                     userType: userType,
                     iPad: iPad,
                     folder: folder,
+                    cancelButton: cancelButton,
                     aclModifyUsers: aclType, //aclPermissions modifyUsers
                     aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,

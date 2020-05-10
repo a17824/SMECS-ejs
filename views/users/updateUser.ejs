@@ -121,10 +121,17 @@
             //This will check the status of radio button on page load/page refresh
             $('input[id=parents]').each(function() {
                 var checkVal = $(this).is(':checked');
+                var modifyUsers = $("#modifyUsersCheckBoxValue").val();
+                //console.log('checkVal = ',checkVal);
+                //console.log('modifyUsers = ',modifyUsers);
                 if (checkVal == false){
                     checkBoxOffParents();
                 } else {
-                    checkBoxOnParents();
+                    if (modifyUsers === 'false'){
+                        checkBoxOffParents();
+                    } else {
+                        checkBoxOnParents();
+                    }
                 }
             });
             //This will check the status of radio button onclick
@@ -304,6 +311,40 @@
                 }
 
                 //--------------------------------forms validation end-------
+                //--------------------------------Capitalize Words---------------------------
+                if (firstName != "" ) {
+                    //changes user input and put first letter of each word capitalized
+                    // replaces: "fort collins, croton-on-hudson, harper's ferry, coeur d'alene, o'fallon"
+                    //with: "Fort Collins, Croton-On-Hudson, Harper's Ferry, Coeur D'Alene, O'Fallon"
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = firstName;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+
+                    //fixes words like: "Marty Mcfly"
+                    // with: "Marty McFly"
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                        {
+                            return 'Mc' + k[2].toUpperCase();
+                        }
+                    );
+                }
+                firstName = text;
+
+                if (lastName != "" ) {
+                    var re = /(\b[a-z](?!\s))/g;
+                    var s = lastName;
+                    s = s.replace(re, function(x){return x.toUpperCase();});
+                    var text = s;
+                    text = text.replace(/Mc[a-z]/, function (k)
+                        {
+                            return 'Mc' + k[2].toUpperCase();
+                        }
+                    );
+                }
+                lastName = text;
+                //--------------------------------Capitalize Words end---------------------
+
                 var pin;
                 if (newPin !== oldPin) {
                     pin = newPin;
@@ -381,7 +422,7 @@
                 <div class="title_right">
 
                     <div class="pull-left">
-                        <% if (aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) {%>
+                        <% if (aclModifyUsers.checkBoxValue == true || aclModifyOnlyNameEmailPin.checkBoxValue == true) {%>
                             <button type="button"
                                     id="<%= users.id %>"
                                     value="Submit"
@@ -417,6 +458,7 @@
             <input type="hidden" id="oldUtilityName" value="<%= users.companyName %>">
             <input type="hidden" id="oldUtilityContact" value="<%= users.contactName %>">
             <input type="hidden" id="oldUtilityID" value="<%= users.utilityID %>">
+            <input type="hidden" id="modifyUsersCheckBoxValue" value="<%= aclModifyUsers.checkBoxValue %>">
 
             <div class="row">
                 <div class="col-md-6 col-xs-12">
@@ -435,9 +477,13 @@
                                         <div class="col-md-9 col-sm-9 col-xs-12">
                                             <div id="container">
                                                 <% if (users.photo === '' || users.photo == undefined) {%>
-                                                <a href="/photos/choosePhoto/<%= users.id %>"><img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /></a>
+                                                    <% if (aclModifyUsers.checkBoxValue == true || aclChangePhoto.checkBoxValue == true) {%>
+                                                        <a href="/photos/choosePhoto/<%= users.id %>"><img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" /></a>
+                                                    <% } else { %>
+                                                        <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosNotAvailable/photoNotAvailable.bmp" alt="your image" />
+                                                    <% } %>
                                                 <% } else { %>
-                                                    <% if ((aclModifyUsers == null || aclModifyUsers.checkBoxValue == true) && (users.userPrivilegeID != 1 || userAuthID == 1)) {%>
+                                                    <% if (aclModifyUsers.checkBoxValue == true || aclChangePhoto.checkBoxValue == true) {%>
                                                         <a href="/photos/choosePhoto/<%= users.id %>"><img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" /></a>
                                                     <% } else { %>
                                                         <img id="blah" style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="/photosUsers/<%= users.photo %>" />
@@ -520,16 +566,33 @@
                                         <% privileges.forEach(function(privilege) { %>
                                             <% if (userAuthID == 1) {%>
                                             <%if (privilege.privilegeID == users.userPrivilegeID) { %>
-                                                <input type="radio"
-                                                       name="userPrivilegeID"
-                                                       id="<%= privilege.privilegeID %>"
-                                                       value="<%= privilege.privilegeID %>"
-                                                       checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label><br>
+                                                <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"
+                                                           checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label><br>
+                                                <% }else {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"
+                                                           checked
+                                                           disabled><label for="userPrivilegeName"><%= privilege.privilegeName %></label><br>
+                                                <% } %>
                                             <% }else {%>
-                                                <input type="radio"
-                                                       name="userPrivilegeID"
-                                                       id="<%= privilege.privilegeID %>"
-                                                       value="<%= privilege.privilegeID %>"><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% }else {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"
+                                                           disabled><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% } %>
                                                 <% if (privilege.privilegeID == 2 ) { %>
                                                     <small> - by default, has Full Access</small>
                                                 <% } %>
@@ -546,11 +609,20 @@
                                             <% }%>
                                             <% } else if (privilege.privilegeID != 1 ) { %>
                                             <%if (privilege.privilegeID == users.userPrivilegeID) { %>
-                                                <input type="radio"
-                                                       name="userPrivilegeID"
-                                                       id="<%= privilege.privilegeID %>"
-                                                       value="<%= privilege.privilegeID %>"
-                                                       checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"
+                                                           checked><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% }else {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"
+                                                           checked
+                                                           disabled><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% } %>
                                                 <% if (privilege.privilegeID == 2 ) { %>
                                                     <small> - by default, has Full Access</small>
                                                 <% } %>
@@ -565,10 +637,18 @@
                                                 <% } %>
                                                 <br>
                                             <% }else {%>
-                                                <input type="radio"
-                                                       name="userPrivilegeID"
-                                                       id="<%= privilege.privilegeID %>"
-                                                       value="<%= privilege.privilegeID %>"><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% }else {%>
+                                                    <input type="radio"
+                                                           name="userPrivilegeID"
+                                                           id="<%= privilege.privilegeID %>"
+                                                           value="<%= privilege.privilegeID %>"
+                                                           disabled><label for="userPrivilegeName"><%= privilege.privilegeName %></label>
+                                                <% } %>
                                                 <% if (privilege.privilegeID == 2 ) { %>
                                                     <small> - by default, has Full Access</small>
                                                 <% } %>
@@ -620,22 +700,44 @@
                                         <%if (role2.roleID != 99) { %>
                                         <%if (role2.roleID == users.userRoleID[i]) { %>
                                         <%if (role2.roleID == 98 && role2.roleID == users.userRoleID[i]) { %>
-                                            <input class="other"
-                                                   type="checkbox"
-                                                   id="parents"
-                                                   name="checkbox"
-                                                   onclick="showMe('div1')"
-                                                   value="<%= role2.roleID %>"
-                                                   checked><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                <input class="other"
+                                                       type="checkbox"
+                                                       id="parents"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       checked><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% } else {%>
+                                                <input class="other"
+                                                       type="checkbox"
+                                                       id="parents"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       checked
+                                                       disabled><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% }  %>
                                             <% check = 1; %>
                                         <% } else {%>
-                                            <input class="other labelSpace"
-                                                   type="checkbox"
-                                                   class="checkbox"
-                                                   name="checkbox"
-                                                   onclick="showMe('div1')"
-                                                   value="<%= role2.roleID %>"
-                                                   checked><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                <input class="other labelSpace"
+                                                       type="checkbox"
+                                                       class="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       checked><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% } else {%>
+                                                <input class="other labelSpace"
+                                                       type="checkbox"
+                                                       class="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       checked
+                                                       disabled><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% }  %>
                                             <% check = 1; %>
                                         <% }  %>
                                         <% }  %>
@@ -644,19 +746,39 @@
                                         <% if (check == 0) {%>
                                         <%if (role2.roleID != 99) { %>
                                         <%if (role2.roleID == 98) { %>
-                                            <input class="other"
-                                                   type="checkbox"
-                                                   id="parents"
-                                                   name="checkbox"
-                                                   onclick="showMe('div1')"
-                                                   value="<%= role2.roleID %>"><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                <input class="other"
+                                                       type="checkbox"
+                                                       id="parents"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% } else {%>
+                                                <input class="other"
+                                                       type="checkbox"
+                                                       id="parents"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       disabled><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% } %>
                                         <% } else {%>
-                                            <input class="other"
-                                                   type="checkbox"
-                                                   class="checkbox"
-                                                   name="checkbox"
-                                                   onclick="showMe('div1')"
-                                                   value="<%= role2.roleID %>"><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% if ((aclModifyUsers.checkBoxValue == true) ) {%>
+                                                <input class="other"
+                                                       type="checkbox"
+                                                       class="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% } else {%>
+                                                <input class="other"
+                                                       type="checkbox"
+                                                       class="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       disabled><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% }  %>
                                         <% }  %>
                                         <% } %>
                                         <% } %>
@@ -701,12 +823,21 @@
                                         <% for (var i=0; i < users.userRoleID.length; i++) { %>
                                         <%if (role2.roleID == 99) { %>
                                         <%if (role2.roleID == users.userRoleID[i]) { %>
-                                            <input class="utilityCompany"
-                                                   type="checkbox"
-                                                   name="checkbox"
-                                                   onclick="showMe('div1')"
-                                                   value="<%= role2.roleID %>"
-                                                   checked><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% if ((aclModifyUsers.checkBoxValue == true)  ) {%>
+                                                <input class="utilityCompany"
+                                                       type="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       checked><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% } else {%>
+                                                <input class="utilityCompany"
+                                                       type="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       checked disabled><label class="labelSpace" for="roleName"><%= role2.roleName %></label><br>
+                                            <% }  %>
                                             <% check = 1; %>
                                         <% }  %>
                                         <% }  %>
@@ -714,27 +845,50 @@
                                         <% } %>
                                         <% if (check == 0) {%>
                                         <%if (role2.roleID == 99) { %>
-                                            <input class="utilityCompany"
-                                                   type="checkbox"
-                                                   name="checkbox"
-                                                   onclick="showMe('div1')"
-                                                   value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+                                            <% if ((aclModifyUsers.checkBoxValue == true)  ) {%>
+                                                <input class="utilityCompany"
+                                                       type="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"><label for="roleName"><%= role2.roleName %></label><br>
+                                            <% } else {%>
+                                                <input class="utilityCompany"
+                                                       type="checkbox"
+                                                       name="checkbox"
+                                                       onclick="showMe('div1')"
+                                                       value="<%= role2.roleID %>"
+                                                       disabled><label for="roleName"><%= role2.roleName %></label><br>
+                                            <% } %>
                                         <% } %>
                                         <% } %>
                                     <% }); %>
 
                                     <div id="labelsDiv3" class="labelsDiv3">
                                         Company Name:
-                                        <input type="text"
-                                               id="companyNameText"
-                                               size="40"
-                                               value="<%= users.companyName %>" placeholder="ex: Gas Company" class="disable"><br>
+                                        <% if ((aclModifyUsers.checkBoxValue == true)  ) {%>
+                                            <input type="text"
+                                                   id="companyNameText"
+                                                   size="40"
+                                                   value="<%= users.companyName %>" placeholder="ex: Gas Company" class="disable"><br>
+                                        <% } else {%>
+                                            <input type="text"
+                                                   id="companyNameText"
+                                                   size="40"
+                                                   value="<%= users.companyName %>" placeholder="ex: Gas Company" class="disable" disabled><br>
+                                        <% } %>
                                         <div id="div1" style="display:none">
                                             <p>&thinsp;&thinsp;&thinsp;&thinsp;Contact Name:
+                                                <% if ((aclModifyUsers.checkBoxValue == true)  ) {%>
+                                                    <input type="text"
+                                                           id="contactNameText"
+                                                           size="40"
+                                                           value="<%= users.contactName %>" class="disable"></p>
+                                            <% } else {%>
                                                 <input type="text"
                                                        id="contactNameText"
                                                        size="40"
-                                                       value="<%= users.contactName %>" class="disable"></p>
+                                                       value="<%= users.contactName %>" class="disable" disabled></p>
+                                            <% } %>
                                         </div>
                                     </div>
                                 </div>
@@ -744,6 +898,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <!-- /page content -->

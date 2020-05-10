@@ -1,4 +1,15 @@
 
+<script>
+    function confirmYN(type, optionName) {
+        if (confirm('ATTENTION: Backup make take a few seconds to complete. Are you sure you want to continue?')){
+            window.location.replace("/inProgressBackup/backup");
+            return true;
+        }
+
+        else
+            return false;
+    };
+</script>
 
 <div class="top_nav">
     <div class="nav_menu">
@@ -18,12 +29,13 @@
                 </li>
 
                 <li>
-
-                    <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href=''">New School Year</button>
-                    <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href='/inProgressBackup/backup'">Backup</button>
-                    <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href='/restore/showBackups'">Restore</button>
-                    <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href=''">Reset settings</button>
-
+                    <% if (aclSideMenu == null || aclSideMenu.topNavigationButtons.checkBoxValue == true){%>
+                        <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href=''">New School Year</button>
+                        <!-- <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href='/inProgressBackup/backup'">Backup</button> -->
+                        <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="return(confirmYN())">Backup</button>
+                        <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href='/restore/showBackups'">Restore</button>
+                        <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href=''">Reset settings</button>
+                    <% } %>
 
                 </li>
 

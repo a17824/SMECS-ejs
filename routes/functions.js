@@ -148,11 +148,12 @@ module.exports.aclSideMenu = function(req, res, callback) {
         function(callback){aclPermissions.showUtilities(req, res, callback);},          //aclPermissions showUtilities
         function(callback){aclPermissions.showMedical(req, res, callback);},            //aclPermissions showMedical
         function(callback){aclPermissions.showPAUsers(req, res, callback);},            //aclPermissions showPAUsers
-        function(callback){aclPermissions.showPAPreRecorded(req, res, callback);}
+        function(callback){aclPermissions.showPAPreRecorded(req, res, callback);},
+        function(callback){aclPermissions.ShowTopNavigationButtons(req, res, callback);}
 
     ],function(err, results){
 
-        var show = {
+        let show = {
             users: results[0],
             students: results[1],
             reports: results[2],
@@ -168,9 +169,18 @@ module.exports.aclSideMenu = function(req, res, callback) {
             utilities: results[12],
             medical: results[13],
             pAUsers: results[14],
-            pAPreRecorded: results[15]
+            pAPreRecorded: results[15],
+            topNavigationButtons: results[16]
         };
-        callback(show);
+
+        let profilePage = 0; //if user has no permissions, only shows his user to be able to update his profile
+        for(let x = 0; x < results.length; x++) {
+            if(results[x].checkBoxValue){
+                profilePage = 1;
+                break
+            }
+        }
+        callback(show,profilePage);
     })
 };
 

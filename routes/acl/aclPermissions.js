@@ -403,6 +403,22 @@ module.exports.deletePAPreRecorded = function(req, res, callback) {
     models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
 };
 
+//Show Top Navigation Buttons ID = 63
+module.exports.ShowTopNavigationButtons = function(req, res, callback) {
+    var id = 63;
+    models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
+};
+//changePhoto ID = 64
+module.exports.changePhoto = function(req, res, callback) {
+    var id = 64;
+    models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
+};
+//changePhoto ID = 65
+module.exports.modifyOnlyNameEmailPin = function(req, res, callback) {
+    var id = 65;
+    models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
+};
 
 
-                        /* LAST ID IS:  */
+
+                        /* LAST ID IS:  65*/
