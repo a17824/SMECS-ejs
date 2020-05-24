@@ -58,7 +58,7 @@ div.enableAutoDrill {
     margin: auto 0em;
     padding: 1em;
 
-    overflow:hidden;
+
     visibility: visible;
     -webkit-transition: opacity 600ms, visibility 600ms;
     transition: opacity 600ms, visibility 600ms;
@@ -165,7 +165,7 @@ input[type=checkbox] + label {
 
     border: 3px solid #ccd0ce;
     border-radius: 20%;
-
+    cursor: pointer;
     /* box position*/
     margin-left: 10px;
     margin-top: 15px;
@@ -246,7 +246,7 @@ input[type=checkbox].wee + label {
 
     border: 3px solid #ccd0ce;
     border-radius: 100%;
-
+    cursor: pointer;
     /* box position*/
     margin-left: 10px;
     margin-top: 10px;

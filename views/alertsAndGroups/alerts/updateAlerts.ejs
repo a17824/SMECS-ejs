@@ -29,7 +29,14 @@
     <!-- iCheck -->
     <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
-
+    <!-- bootstrap-daterangepicker -->
+    <link href="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- bootstrap-datetimepicker -->
+    <link href="/public/gentelella/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <!-- Ion.RangeSlider -->
+    <link href="/public/gentelella/vendors/normalize-css/normalize.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
 
     <script>
 
@@ -267,11 +274,12 @@
                 var alertRequestSendEmail = document.getElementById("checkboxSendEmail").checked;
                 var alertRequestSendText = document.getElementById("checkboxSendText").checked;
 
+                var occurrences = $("#occurrences").val();
+                var fullStartDate = $("#startDate").val();
+                var fullEndDate = $("#endDate").val();
                 var autoDrillNumber = $("#autoDrillNumber").val();
-
                 var e = document.getElementById("everyType");
                 var everyType = e.options[e.selectedIndex].value;
-
                 var sunday = document.getElementById("sunday").checked;
                 var monday = document.getElementById("monday").checked;
                 var tuesday = document.getElementById("tuesday").checked;
@@ -279,6 +287,8 @@
                 var thursday = document.getElementById("thursday").checked;
                 var friday = document.getElementById("friday").checked;
                 var saturday = document.getElementById("saturday").checked;
+
+                var fullTime = $("#myDatepicker3").find("input").val();
 
 
                 var arrayUsers = [];
@@ -326,6 +336,30 @@
                     alert("REPEAT EVERY: needs to be a number between 1 and 35");
                     return false;
                 }*/
+
+                if(autoDrill === 'true') {
+                    var validStartDate = moment(fullStartDate, 'MM/DD/YYYY',true).isValid()
+                    var validEndDate = moment(fullEndDate, 'MM/DD/YYYY',true).isValid()
+                    if(!validStartDate) {
+                        alert("Start date is incorrect. Please input MM/DD/YYYY");
+                        return false;
+                    }
+                    if(!validEndDate) {
+                        alert("End date is incorrect. Please input MM/DD/YYYY");
+                        return false;
+                    }
+                    if(fullStartDate >= fullEndDate) {
+                        alert("Date range incorrect. End Date needs to be earlier than Start date");
+                        return false;
+                    }
+
+                    if(!sunday && !monday && !tuesday && !wednesday && !thursday && !friday && !saturday) {
+                        alert("REPEAT ON incorrect. Choose at least one day");
+                        return false;
+                    }
+                }
+
+
                 //--------------------------------forms validation end-------
 
                 $.post("/alerts/updateAlerts",{
@@ -350,6 +384,9 @@
                     icon: icon,
                     sound: sound,
                     emailID: emailID,
+                    occurrences: occurrences,
+                    fullStartDate: fullStartDate,
+                    fullEndDate: fullEndDate,
                     autoDrillNumber: autoDrillNumber,
                     everyType: everyType,
                     sunday: sunday,
@@ -358,7 +395,8 @@
                     wednesday: wednesday,
                     thursday: thursday,
                     friday: friday,
-                    saturday: saturday
+                    saturday: saturday,
+                    fullTime: fullTime
 
                 },function(data){
                     if(data==='done')
@@ -820,7 +858,45 @@
                                     </div>
                                 </div>
 
+
                                 <div id="autoDrillDiv" class="enableAutoDrill" style="display: none;">
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" id="autoDrillLabel" style="margin-top: -2px">How many drills</label>
+                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                            <input type="number"
+                                                   class=" form-control autoDrill"
+                                                   id="occurrences"
+                                                   name="occurrences"
+                                                   value="<%= alert.alertAutoDrill.occurrences %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="labelStartDate" id="labelStartDate" style="margin-top: -2px">Start date</label>
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            <div class='input-group date' id='myDatepicker2'>
+                                                <input type='text' class="form-control" id="startDate" value="<%= alert.alertAutoDrill.dates.start.fullStartDate %>" />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="busTime" id="endTime" style="margin-top: -2px">End date</label>
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            <div class='input-group date' id='myDatepicker2a'>
+                                                <input type='text' class="form-control" id="endDate" value="<%= alert.alertAutoDrill.dates.end.fullEndDate %>" />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="control-label col-md-4 col-sm-4 col-xs-12" id="autoDrillLabel" style="margin-top: -2px">Repeat every</label>
                                         <div class="col-md-3 col-sm-3 col-xs-12">
@@ -864,7 +940,7 @@
                                         <div class="col-md-8 col-sm-8 col-xs-12">
                                             <div class="wee">
                                                 <% if (alert.alertAutoDrill.days.sunday == true) {%>
-                                                    <input type="checkbox" class="wee" id="sunday" value="<%= alert.alertAutoDrill.days.sunday %>" checked/>
+                                                    <input type="checkbox" class="wee" id="sunday" title="Sunday" value="<%= alert.alertAutoDrill.days.sunday %>" checked/>
                                                 <% } else {%>
                                                     <input type="checkbox" class="wee" id="sunday" value="<%= alert.alertAutoDrill.days.sunday %>"/>
                                                 <% } %>
@@ -910,14 +986,13 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="busTime" id="time" style="margin-top: -2px">Time</label>
-
-                                        <div class="col-md-7 col-sm-7 col-xs-12">
-                                            <select class="form-control" id="busTimeSelect"> </select>
-
-
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="time" id="time" style="margin-top: -2px">Time</label>
+                                        <div class="col-md-5 col-sm-5 col-xs-12 date input-group" id='myDatepicker3' style="left: 10px">
+                                            <input type='text' class="form-control" value="<%= alert.alertAutoDrill.times.fullTime %>"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
                                         </div>
-
                                     </div>
 
                                 </div>
@@ -1126,12 +1201,41 @@
 <!-- iCheck -->
 <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
+<!-- bootstrap-daterangepicker -->
+<script src="/public/gentelella/vendors/moment/min/moment.min.js"></script>
+<script src="/public/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap-datetimepicker -->
+<script src="/public/gentelella/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<!-- Ion.RangeSlider -->
+<script src="/public/gentelella/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+
+
+
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.min.js"></script>
 <!-- Google Analytics -->
 
+<script>
+    $('#myDatepicker').datetimepicker();
+
+    $('#myDatepicker2').datetimepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $('#myDatepicker2a').datetimepicker({
+        format: 'dd/mm/yyyy'
+    });
+
+    $('#myDatepicker3').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#myDatepicker4').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true
+    });
 
 
+</script>
 </body>
 <!-- footer content -->
 <footer class="adjustPos">

@@ -264,8 +264,16 @@ module.exports.update = function(req, res) {
     })
 };
 module.exports.updatePost = function(req, res) {
+    /* to change date or time format, go to the end of the page updateAlerts.ejs. ex:
+    * $('#myDatepicker2a').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    $('#myDatepicker3').datetimepicker({
+        format: 'hh:mm A'
+    });
+    * */
 
-    var alertToUpdate1 = req.body.alertToUpdate;
+    let alertToUpdate1 = req.body.alertToUpdate;
     models.Alerts.findById({'_id': alertToUpdate1}, function(err, alert){
         models.AlertsGroup.findOne({'groupID': req.body.alertGroupID}, function(err, group){
             alert.group.groupID = group.groupID;
@@ -293,16 +301,21 @@ module.exports.updatePost = function(req, res) {
             alert.sendEmailWith.emailID = req.body.emailID;
             alert.sendEmailWith.email = req.body.email;
             alert.alertAutoDrill.alertAutoDrill = req.body.autoDrill;
-            alert.alertAutoDrill.everyNumber = req.body.autoDrillNumber;
-            alert.alertAutoDrill.everyType = req.body.everyType;
-            alert.alertAutoDrill.days.sunday = req.body.sunday;
-            alert.alertAutoDrill.days.monday = req.body.monday;
-            alert.alertAutoDrill.days.tuesday = req.body.tuesday;
-            alert.alertAutoDrill.days.wednesday = req.body.wednesday;
-            alert.alertAutoDrill.days.thursday = req.body.thursday;
-            alert.alertAutoDrill.days.friday = req.body.friday;
-            alert.alertAutoDrill.days.saturday = req.body.saturday;
-
+            if(req.body.autoDrill === 'true') {
+                alert.alertAutoDrill.occurrences = req.body.occurrences;
+                alert.alertAutoDrill.dates.start.fullStartDate = req.body.fullStartDate;
+                alert.alertAutoDrill.dates.end.fullEndDate = req.body.fullEndDate;
+                alert.alertAutoDrill.everyNumber = req.body.autoDrillNumber;
+                alert.alertAutoDrill.everyType = req.body.everyType;
+                alert.alertAutoDrill.days.sunday = req.body.sunday;
+                alert.alertAutoDrill.days.monday = req.body.monday;
+                alert.alertAutoDrill.days.tuesday = req.body.tuesday;
+                alert.alertAutoDrill.days.wednesday = req.body.wednesday;
+                alert.alertAutoDrill.days.thursday = req.body.thursday;
+                alert.alertAutoDrill.days.friday = req.body.friday;
+                alert.alertAutoDrill.days.saturday = req.body.saturday;
+                alert.alertAutoDrill.times.fullTime = req.body.fullTime;
+            }
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {
                     console.log(err);

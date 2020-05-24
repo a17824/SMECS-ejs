@@ -239,8 +239,21 @@ var AlertsSchema = new mongoose.Schema({
     alertRequestSendEmail: {type: Boolean, default: false},
     alertRequestSendSMS: {type: Boolean, default: false},
     alertAutoDrill: {
-        alertAutoDrill: Boolean, default: false,
-        everyNumber: {type: Number, default: 1},    // 1 to 35
+        alertAutoDrill: {type: Boolean, default: false},
+        occurrences: {type: Number, default: 5},
+        dates: {
+            start: {
+                fullStartDate: String,
+                month: Number,
+                day: Number
+            },
+            end: {
+                fullEndDate: String,
+                month: Number,
+                day: Number
+            }
+        },
+        everyNumber: {type: Number, default: 1},
         everyType: {type: String, default: 'weeks'},       // "days" "weeks" "months" "years"
         days: {
             sunday: {type: Boolean, default: false},
@@ -250,6 +263,12 @@ var AlertsSchema = new mongoose.Schema({
             thursday: {type: Boolean, default: false},
             friday: {type: Boolean, default: false},
             saturday: {type: Boolean, default: false}
+        },
+        times: {
+            fullTime: {type: String, default: '10:05 AM'},
+            hour: {type: String, default: '10'},
+            minutes: {type: String, default: '05'},
+            amPm: {type: String, default: 'AM'}
         }
     },
     softDeleted: { type: Boolean, default: false },
