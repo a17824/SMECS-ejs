@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <script>
         //Detect if user is using the back/foreward button, then reload whole page
         if (!!window.performance && window.performance.navigation.type === 2) {
@@ -23,48 +23,48 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- Datatables -->
-      <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
-      <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/public/gentelella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Custom Theme Style -->
-      <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
-      <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
-      <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/table.css" rel="stylesheet">
+    <link href="/public/gentelella/build/css/custom.css" rel="stylesheet">
+    <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
 
-      <script>
-          //DELETE Confirmation
-          function YNconfirm(type) {
-              if (confirm('ATTENTION: Student will be permanently deleted. Are you sure you want to trash the student: ' + type + '?'))
-                  return true;
-              else
-                  return false;
-          };
-      </script>
-  </head>
+    <script>
+        //DELETE Confirmation
+        function YNconfirm(type) {
+            if (confirm('ATTENTION: Student will be permanently deleted. Are you sure you want to trash the student: ' + type + '?'))
+                return true;
+            else
+                return false;
+        };
+    </script>
+</head>
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
         <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
+            <div class="left_col scroll-view">
 
-            <!-- menu profile quick info -->
-            <% include ../layout/menuProfile.ejs %>
-            <!-- /menu profile quick info -->
+                <!-- menu profile quick info -->
+                <% include ../layout/menuProfile.ejs %>
+                <!-- /menu profile quick info -->
 
-            <br>
+                <br>
 
-            <!-- sidebar menu -->
-            <% include ../layout/sideMenu.ejs %>
-            <!-- /sidebar menu -->
+                <!-- sidebar menu -->
+                <% include ../layout/sideMenu.ejs %>
+                <!-- /sidebar menu -->
 
-          </div>
+            </div>
         </div>
 
         <!-- top navigation -->
@@ -79,150 +79,154 @@
                 </div>
             </div>
 
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_content">
-                  <ul>
-                      <div align="center">
-                      <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
-                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addStudent'">Add Student</button>
-                        <% } else { %>
-                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addStudent'" disabled>Add Student</button>
-                      <% } %>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <ul>
+                                <div align="center">
+                                    <% if (aclAddStudent == null || aclAddStudent.checkBoxValue == true) {%>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addStudent'">Add Student</button>
+                                    <% } else { %>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addStudent'" disabled>Add Student</button>
+                                    <% } %>
 
-                      <% if (aclAddMultiStudent == null || aclAddMultiStudent.checkBoxValue == true) {%>
-                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiStudents'">Add Multiple Students</button>
-                      <% } else { %>
-                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiStudents'" disabled>Add Multiple Students</button>
-                      <% } %>
+                                    <% if (aclAddMultiStudent == null || aclAddMultiStudent.checkBoxValue == true) {%>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiStudents'">Add Multiple Students</button>
+                                    <% } else { %>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiStudents'" disabled>Add Multiple Students</button>
+                                    <% } %>
 
-                      <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiImage'">Add Multiple Students Photos</button>
-                      <% } else { %>
-                      <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiImage'" disabled>Add Multiple Students Photos</button>
-                      <% } %>
-                      </div>
-                      <br>
-
-                  </ul>
-                    <div class="table-responsive">
-                        <table id="datatable-buttons" class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Photo</th>
-                                <th>Name</th>
-                                <th>ID</th>
-                                <th>Uses Bus</th>
-                                <th>Parent</th>
-                                <th>Update</th>
-                                <th>Delete</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <% students.forEach(function(student) { %>
-                            <tr>
-                                <td></td>
-                                <% if (student.photo == "" || student.photo == undefined) { %>
-                                <td>
                                     <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-success">add</button></a>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiImage'">Add Multiple Students Photos</button>
                                     <% } else { %>
-                                    &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-success" disabled>add</button></a>
+                                        <button class="btn btn-success" id="exit" onclick="location.href='/students/addMultiImage'" disabled>Add Multiple Students Photos</button>
                                     <% } %>
-                                </td>
-                                <% } else { %>
-                                <td >
-                                    <a href="/photos/choosePhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
-                                </td>
-                                <% } %>
-                                <td><%= student.firstName %> <%= student.lastName %></td>
-                                <td><%= student.studentID %></td>
-                                <% if (student.busRide == true) { %>
-                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
-                                <% } else { %>
-                                <td><img  src="/miscPictures/redCross20.png"></td>
-                                <% } %>
-                                <td >
-                                    <% if (student.parentOf.length > 0) { %>
-                                    <% for (var x = 0; x < student.parentOf.length; x++) {%>
+                                </div>
+                                <br>
 
-                                    <p class="image">
-                                        <% if (student.parentOf[x].parentPhoto == '') { %>
-                                        <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                            </ul>
+                            <div class="table-responsive">
+                                <table id="datatable-buttons" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>ID</th>
+                                        <th>Uses Bus</th>
+                                        <th>Parent</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% students.forEach(function(student) { %>
+                                        <tr>
+                                            <td></td>
+                                            <% if (student.photo == "" || student.photo == undefined) { %>
+                                                <td>
+                                                    <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true || aclChangeStudentPhoto.checkBoxValue == true) {%>
+                                                        &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-success">add</button></a>
+                                                    <% } else { %>
+                                                        &ensp;<a href="/photos/choosePhoto/<%= student.id %>"><button class="btn btn-round btn-success" disabled>add</button></a>
+                                                    <% } %>
+                                                </td>
+                                            <% } else { %>
+                                                <td >
+                                                    <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true || aclChangeStudentPhoto.checkBoxValue == true) {%>
+                                                        <a href="/photos/choosePhoto/<%= student.id %>"><img src="/photosStudents/<%= student.photo %>"  class="avatarStudents"></a>
+                                                    <% } else { %>
+                                                        <img src="/photosStudents/<%= student.photo %>"  class="avatarStudents">
+                                                    <% } %>
+                                                </td>
+                                            <% } %>
+                                            <td><%= student.firstName %> <%= student.lastName %></td>
+                                            <td><%= student.studentID %></td>
+                                            <% if (student.busRide == true) { %>
+                                                <td><img  src="/miscPictures/greenCheckmarkSuccessButtonColor.png" class="avatarIcons"></td>
+                                            <% } else { %>
+                                                <td><img  src="/miscPictures/redCross20.png"></td>
+                                            <% } %>
+                                            <td >
+                                                <% if (student.parentOf.length > 0) { %>
+                                                    <% for (var x = 0; x < student.parentOf.length; x++) {%>
 
-                                        <% } else { %>
-                                        <img src="/photosUsers/<%= student.parentOf[x].parentPhoto%>" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
-                                        <% } %>
-                                    </p>
-                                    <% } %>
-                                    <% } %>
-                                </td>
-                                <td align="center">
-                                    <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
-                                    <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning">update</button></a>
-                                    <% } else { %>
-                                    <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning" disabled>update</button></a>
-                                    <% } %>
-                                </td>
-                                <td align="center">
-                                    <% if (aclDeleteStudent == null || aclDeleteStudent.checkBoxValue == true) {%>
-                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm('<%= student.firstName %> <%= student.lastName %>'));"><button class="btn btn-danger">delete</button></a>
-                                    <% } else { %>
-                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm('<%= student.firstName %> <%= student.lastName %>'));"><button class="btn btn-danger" disabled>delete</button></a>
-                                    <% } %>
-                                </td>
-                            </tr>
-                            <% }); %>
-                            </tbody>
-                        </table>
+                                                        <p class="image">
+                                                            <% if (student.parentOf[x].parentPhoto == '') { %>
+                                                                <img src="/photosNotAvailable/user.png" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+
+                                                            <% } else { %>
+                                                                <img src="/photosUsers/<%= student.parentOf[x].parentPhoto%>" class="avatarParents" alt="Avatar"> <%= student.parentOf[x].parentFirstName%> <%= student.parentOf[x].parentLastName%><br>
+                                                            <% } %>
+                                                        </p>
+                                                    <% } %>
+                                                <% } %>
+                                            </td>
+                                            <td align="center">
+                                                <% if (aclModifyStudent == null || aclModifyStudent.checkBoxValue == true) {%>
+                                                    <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning">update</button></a>
+                                                <% } else { %>
+                                                    <a href="/students/updateStudent/<%= student.id %>"><button class="btn btn-warning" disabled>update</button></a>
+                                                <% } %>
+                                            </td>
+                                            <td align="center">
+                                                <% if (aclDeleteStudent == null || aclDeleteStudent.checkBoxValue == true) {%>
+                                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm('<%= student.firstName %> <%= student.lastName %>'));"><button class="btn btn-danger">delete</button></a>
+                                                <% } else { %>
+                                                    <a href="/students/deleteStudent/<%= student.id %>" onclick="return(YNconfirm('<%= student.firstName %> <%= student.lastName %>'));"><button class="btn btn-danger" disabled>delete</button></a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
 
-      </div>
     </div>
+</div>
 
-    <!-- jQuery -->
-    <script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
-    <!-- Bootstrap -->
-    <script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
-    <!-- FastClick -->
-    <script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
-    <!-- NProgress -->
-    <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
-    <!-- iCheck -->
-    <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+<!-- jQuery -->
+<script src="/public/gentelella/vendors/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/public/gentelella/vendors/bootstrap/dist/js/bootstrap.js"></script>
+<!-- FastClick -->
+<script src="/public/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
 
-    <!-- Datatables -->
-    <script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<!-- Datatables -->
+<script src="/public/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
 
-    <script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-    <script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-    <script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
-    <script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
-    <script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/public/gentelella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/public/gentelella/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/gentelella/vendors/pdfmake/build/vfs_fonts.js"></script>
 
-    <!-- Custom Theme Scripts -->
-    <script src="/public/gentelella/build/js/custom.js"></script>
-    <!-- Google Analytics -->
+<!-- Custom Theme Scripts -->
+<script src="/public/gentelella/build/js/custom.js"></script>
+<!-- Google Analytics -->
 
-  </body>
-  <!-- footer content -->
-  <footer class="adjustPos">
-      <% include ../layout/footer.ejs %>
-  </footer>
-  <!-- /footer content -->
+</body>
+<!-- footer content -->
+<footer class="adjustPos">
+    <% include ../layout/footer.ejs %>
+</footer>
+<!-- /footer content -->
 </html>

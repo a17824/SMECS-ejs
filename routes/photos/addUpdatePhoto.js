@@ -14,7 +14,7 @@ module.exports.addUpdatePhoto = function (req, res){
     async.parallel([
         //function(callback){models.Users.findById(req.params.id).exec(callback);},
         function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});}, //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});}, //aclPermissions sideMenu
         function(callback){aclPermissions.modifyStudent(req, res, callback);}   //aclPermissions modifyUsers
 
     ],function(err, results){
@@ -46,7 +46,7 @@ module.exports.addUpdatePhoto = function (req, res){
                 userType: userType,
                 iPad: iPad,
                 aclModifyUsers: aclType, //aclPermissions modifyUsers
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -207,7 +207,7 @@ module.exports.cropPhoto = function (req, res){
     async.parallel([
         //function(callback){models.Users.findById(req.params.id).exec(callback);},
         function(callback){aclPermissions.modifyUsers(req, res, callback);},   //aclPermissions modifyUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});}, //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});}, //aclPermissions sideMenu
         function(callback){aclPermissions.modifyStudent(req, res, callback);}   //aclPermissions modifyUsers
 
     ],function(err, results){
@@ -260,7 +260,7 @@ module.exports.cropPhoto = function (req, res){
                     folder: folder,
                     cancelButton: cancelButton,
                     aclModifyUsers: aclType, //aclPermissions modifyUsers
-                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

@@ -35,7 +35,6 @@ module.exports.show = function(req, res, next) {
             functions.redirectPage(req, res, 'showUsers');
             functions.redirectTabBuildings(req, res, 'showBuilding');
 
-
             if(!results[10][1]){   //if user has no permissions, only shows his user to be able to update his profile
                 for(let x = 0; x < results[0].length; x++) {
                     if(results[0][x].email === req.user.email){
@@ -83,7 +82,7 @@ module.exports.showSoftDeleted = function(req, res, next) {
         },
         function(callback){aclPermissions.addUsers(req, res, callback);},   //aclPermissions addUsers
         function(callback){aclPermissions.eraseUsers(req, res, callback);}, //aclPermissions eraseUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('users/deletedUsers',{
@@ -92,7 +91,7 @@ module.exports.showSoftDeleted = function(req, res, next) {
             users: results[0],
             aclAddUsers: results[1], //aclPermissions addUsers
             aclEraseUsers: results[2],  //aclPermissions eraseUsers
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -137,7 +136,7 @@ module.exports.addStep1 = function(req, res) {
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
         function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -150,7 +149,7 @@ module.exports.addStep1 = function(req, res) {
                 user: results[0],
                 roles2: results[1],
                 aclAddUsers: results[2], //aclPermissions addUsers
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -182,7 +181,7 @@ module.exports.addStep2 = function(req, res) {
             models.Students.find().sort({"firstName":1}).exec(callback);
         },
         function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -214,7 +213,7 @@ module.exports.addStep2 = function(req, res) {
                 user: results[0],
                 students: results[1],
                 aclAddUsers: results[2], //aclPermissions addUsers
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -303,7 +302,7 @@ module.exports.addStep3 = function(req, res) {
         },
         function(callback){aclPermissions.addUsers(req, res, callback);}, //aclPermissions addUsers
         function(callback){aclPermissions.showPermissionsTable(req, res, callback);},   //aclPermissions showPermissionsTable
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -339,7 +338,7 @@ module.exports.addStep3 = function(req, res) {
                 privilege: results[1],
                 aclAddUsers: results[2], //aclPermissions addUsers
                 aclShowPermissionsTable: results[3],    //aclPermissions showPermissionsTable
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -792,7 +791,7 @@ module.exports.updateAppSettings = function(req, res) {
     async.parallel([
         function(callback){models.Users.findById(req.params.id, function (err, user) {callback(null, user);});
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -807,7 +806,7 @@ module.exports.updateAppSettings = function(req, res) {
                 title: 'App Settings',
                 userAuthID: req.user.userPrivilegeID,
                 user: results[0],
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

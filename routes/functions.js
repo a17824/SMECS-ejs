@@ -175,7 +175,8 @@ module.exports.aclSideMenu = function(req, res, callback) {
 
         let profilePage = 0; //if user has no permissions, only shows his user to be able to update his profile
         for(let x = 0; x < results.length; x++) {
-            if(results[x].checkBoxValue){
+            if(results[x].permissionsID == 1 && results[x].checkBoxValue){
+                //console.log('results[x] = ', results[x]);
                 profilePage = 1;
                 break
             }

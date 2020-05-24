@@ -37,8 +37,33 @@ div.enable {
     transition: opacity 600ms, visibility 600ms;
 
 }
+div.disableAutoDrill {
+    background-color: ghostwhite;
 
+    margin: auto 0em;
+    padding: 1em;
 
+    position:fixed;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    overflow:hidden;
+    -webkit-transition: opacity 600ms, visibility 600ms;
+    transition: opacity 600ms, visibility 600ms;
+
+}
+div.enableAutoDrill {
+    background-color: #fff;
+
+    margin: auto 0em;
+    padding: 1em;
+
+    overflow:hidden;
+    visibility: visible;
+    -webkit-transition: opacity 600ms, visibility 600ms;
+    transition: opacity 600ms, visibility 600ms;
+
+}
 
 
 ul.enable {
@@ -205,5 +230,70 @@ input[type=checkbox]:checked + label:after {
 }
 
 .hide {
+    display: none;
+}
+
+
+
+
+
+
+input[type=checkbox].wee + label {
+
+    /* box size*/
+    width: 22px;
+    height: 22px;
+
+    border: 3px solid #ccd0ce;
+    border-radius: 100%;
+
+    /* box position*/
+    margin-left: 10px;
+    margin-top: 10px;
+    transform: translate(-50%, -50%);
+    transition: all ease-out 200ms;
+    text-indent: 0px;
+    text-align: center;
+    font: normal normal 11px/11px "Helvetica";
+    color: grey;
+    background-color: #fafafa;
+    line-height: 17px;
+}
+input[type=checkbox].wee + label:after {
+    transform-origin: bottom left;
+    transform: rotate(-45deg);
+    opacity: 0;
+    transition: all ease-out 200ms;
+}
+
+input[type=checkbox].wee:checked + label {
+    border: 3px solid #18c09c;
+    background: #18c09c;
+    font: normal normal 11px/11px "Helvetica";
+    color: white;
+    text-indent: 0px;
+    text-align: center;
+    line-height: 17px;
+}
+
+#sunday {
+    display: none;
+}
+#monday {
+    display: none;
+}
+#tuesday {
+    display: none;
+}
+#wednesday {
+    display: none;
+}
+#thursday {
+    display: none;
+}
+#friday {
+    display: none;
+}
+#saturday {
     display: none;
 }

@@ -33,9 +33,9 @@
                 <li><a href="/students/showStudents"><i class="fa fa-graduation-cap fa-lg"></i> Students <span class="fa fa-chevron-right"></span></a></li>
             <% } %>
 
-            <% if (aclSideMenu == null || aclSideMenu.users.checkBoxValue == true){%>
+
                 <li><a href="/users/showUsers"><i class="fa fa-users fa-lg"></i> Users <span class="fa fa-chevron-right"></span></a></li>
-            <% } %>
+
 
             <% if (aclSideMenu == null || aclSideMenu.floors.checkBoxValue == true || aclSideMenu.rooms.checkBoxValue == true){%>
                 <li><a href="/buildingFloorRoom/show"><i class="fa fa-building fa-lg"></i> Buildings Floors Rooms <span class="fa fa-chevron-right"></span></a></li>

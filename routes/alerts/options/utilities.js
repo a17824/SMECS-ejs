@@ -13,7 +13,7 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.addUtilities(req, res, callback);},   //aclPermissions addUtilities
         function(callback){aclPermissions.modifyUtilities(req, res, callback);},   //aclPermissions modifyUtilities
         function(callback){aclPermissions.deleteUtilities(req, res, callback);},   //aclPermissions deleteUtilities
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -26,7 +26,7 @@ module.exports.show = function(req, res, next) {
             aclAddUtilities: results[1], //aclPermissions addUtilities
             aclModifyUtilities: results[2], //aclPermissions modifyUtilities
             aclDeleteUtilities: results[3], //aclPermissions deleteUtilities
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -46,7 +46,7 @@ module.exports.add = function(req, res) {
         },
         function(callback){aclPermissions.showUtilities(req, res, callback);}, //aclPermissions showUtilities
         function(callback){aclPermissions.addUtilities(req, res, callback);},  //aclPermissions addUtilities
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -85,7 +85,7 @@ module.exports.add = function(req, res) {
                     showHideAlertID: showHideAlertID,
                     aclShowUtilities: results[2],     //aclPermissions showAddUtilities
                     aclAddUtilities: results[3],      //aclPermissions addAddUtilities
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -131,7 +131,7 @@ module.exports.update = function(req, res) {
         },
         function(callback){aclPermissions.showUtilities(req, res, callback);},  //aclPermissions showUtilities
         function(callback){aclPermissions.modifyUtilities(req, res, callback);},  //aclPermissions modifyUtilities
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -173,7 +173,7 @@ module.exports.update = function(req, res) {
                         showHideAlertID: showHideAlertID,
                         aclShowUtilities: results[2],      //aclPermissions ShowUtilities
                         aclModifyUtilities: results[3],      //aclPermissions modifyUtilities
-                        aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo
                     });
@@ -234,7 +234,7 @@ module.exports.showUtilityUsers = function(req, res, next) {
         function(callback){aclPermissions.addUtilities(req, res, callback);},   //aclPermissions addUtilities
         function(callback){aclPermissions.modifyUtilities(req, res, callback);},   //aclPermissions modifyUtilities
         function(callback){aclPermissions.deleteUtilities(req, res, callback);},   //aclPermissions deleteUtilities
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if (!results[0]) {
@@ -249,7 +249,7 @@ module.exports.showUtilityUsers = function(req, res, next) {
                 aclAddUtilities: results[2], //aclPermissions addUtilities
                 aclModifyUtilities: results[3], //aclPermissions modifyUtilities
                 aclDeleteUtilities: results[4], //aclPermissions deleteUtilities
-                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

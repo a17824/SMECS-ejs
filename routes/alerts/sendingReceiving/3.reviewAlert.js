@@ -55,7 +55,7 @@ module.exports.reviewAlert = function(req, res) {
                         utilities: results[2],
                         alerts: results[3], // check if alert is softDeleted for Utilities Failure
                         arraySituations: arraySituations,
-                        aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo
                     });

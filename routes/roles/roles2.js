@@ -19,7 +19,7 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
         function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
@@ -33,7 +33,7 @@ module.exports.show = function(req, res, next) {
             aclAddRoles2: results[2], //aclPermissions addRoles2
             aclModifyRoles2: results[3],  //aclPermissions modifyRoles2
             aclDeleteRoles2: results[4],  //aclPermissions deleteRoles2
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
 
@@ -50,7 +50,7 @@ module.exports.add = function(req, res) {
             }).exec(callback);
         },
         function(callback){aclPermissions.addRoles2(req, res, callback);},  //aclPermissions addRoles2
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -79,7 +79,7 @@ module.exports.add = function(req, res) {
                     userAuthID: req.user.userPrivilegeID,
                     roles2: results[0],
                     aclAddRoles2: results[1],      //aclPermissions addRoles2
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -136,7 +136,7 @@ module.exports.update = function(req, res) {
             models.Roles2.findById(req.params.id,function(error, role) {}).exec(callback);
         },
         function(callback){aclPermissions.modifyRoles2(req, res, callback);},  //aclPermissions modifyRoles2
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -163,7 +163,7 @@ module.exports.update = function(req, res) {
                     array: array,
                     roles2: results[0],
                     aclModifyRoles2: results[1],      //aclPermissions modifyRoles2
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

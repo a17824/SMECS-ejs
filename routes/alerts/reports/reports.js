@@ -64,7 +64,7 @@ module.exports.reportsArchived = function(req, res, next) {
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('home-reports/archivedReports',{
@@ -72,7 +72,7 @@ module.exports.reportsArchived = function(req, res, next) {
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
             aclDeleteReports: results[2],        //aclPermissions deleteReports
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -87,7 +87,7 @@ module.exports.reportsTrash = function(req, res, next) {
         },
         function(callback){aclPermissions.clearReports(req, res, callback);},          //aclPermissions clearReports
         function(callback){aclPermissions.deleteReports(req, res, callback);},       //aclPermissions deleteReports
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('home-reports/trashReports',{
@@ -95,7 +95,7 @@ module.exports.reportsTrash = function(req, res, next) {
             reportSent: results[0],
             aclClearReports: results[1],           //aclPermissions clearReports
             aclDeleteReports: results[2],        //aclPermissions deleteReports
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -284,7 +284,7 @@ module.exports.reportsDetails = function(req, res) {
 
     async.parallel([
         function(callback){models.AlertSentInfo.findById(req.params.id).exec(callback);},
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         if(err || !results) console.log('reportsDetails: something wrong with results. err - ', err);
@@ -412,7 +412,7 @@ module.exports.reportsDetails = function(req, res) {
                             title: 'REPORTS SENT',
                             userAuthID: req.user.userPrivilegeID,
                             report: results[0],
-                            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                            aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                             userAuthName: req.user.firstName + ' ' + req.user.lastName,
                             userAuthPhoto: req.user.photo,
                             total: result,

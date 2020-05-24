@@ -18,7 +18,7 @@ module.exports.add = function(req, res) {
         function(callback){buildIconsColorSound.lightMode(function(lightMode){callback(null, lightMode);});},  //lightMode
         function(callback){aclPermissions.showAlertGroups(req, res, callback);}, //aclPermissions showAlertGroups
         function(callback){aclPermissions.addAlertGroup(req, res, callback);},  //aclPermissions addAlertGroup
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabAlertGroups(req, res, 'showGroups');
@@ -54,7 +54,7 @@ module.exports.add = function(req, res) {
                 lightModes: results[2],
                 aclShowAlertGroups: results[3],     //aclPermissions showAddAlertGroup
                 aclAddAlertGroup: results[4],      //aclPermissions addAddAlertGroup
-                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -123,7 +123,7 @@ module.exports.update = function(req, res) {
         function(callback){buildIconsColorSound.soundBuild(function(sound){callback(null, sound);});},  //sounds
         function(callback){buildIconsColorSound.lightMode(function(lightMode){callback(null, lightMode);});},  //lightMode
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
 
     ],function(err, results){
@@ -157,7 +157,7 @@ module.exports.update = function(req, res) {
                 sounds: results[1],
                 lightModes: results[2],
                 aclModifyAlertGroup: results[3],      //aclPermissions modifyAlertGroup
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

@@ -20,7 +20,7 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.addPrivilege(req, res, callback);},      //aclPermissions addPrivilege
         function(callback){aclPermissions.modifyPrivilege(req, res, callback);},   //aclPermissions modifyPrivilege
         function(callback){aclPermissions.deletePrivilege(req, res, callback);},    //aclPermissions deletePrivilege
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
@@ -33,7 +33,7 @@ module.exports.show = function(req, res, next) {
             aclAddPrivilege: results[2],       //aclPermissions addPrivilege
             aclModifyPrivilege: results[3],    //aclPermissions modifyPrivilege
             aclDeletePrivilege: results[4],     //aclPermissions deletePrivilege
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -47,7 +47,7 @@ module.exports.add = function(req, res) {
             models.Privilege.find(function(error, privilege) {}).exec(callback);
         },
         function(callback){aclPermissions.addPrivilege(req, res, callback);},  //aclPermissions addPrivilege
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var array = [];
@@ -64,7 +64,7 @@ module.exports.add = function(req, res) {
                 array: array,
                 privilege: results[0],
                 aclAddPrivilege: results[1],      //aclPermissions addPrivilege
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -115,7 +115,7 @@ module.exports.update = function(req, res) {
             models.Privilege.findById(req.params.id,function(error, privilege) {}).exec(callback);
         },
         function(callback){aclPermissions.modifyPrivilege(req, res, callback);},  //aclPermissions modifyPrivilege
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var array = [];
@@ -132,7 +132,7 @@ module.exports.update = function(req, res) {
                 array: array,
                 privilege: results[0],
                 aclModifyPrivilege: results[1],      //aclPermissions modifyPrivilege
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

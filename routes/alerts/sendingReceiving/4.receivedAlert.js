@@ -100,7 +100,7 @@ module.exports.receivedAlert = function(req, res) {
                                 utilities: results[4],
                                 canRequestAssistance: canRequestAssistance,
                                 enableProcedureButton: enableProcedureButton,
-                                aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo,
                                 total: result

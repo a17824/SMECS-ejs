@@ -57,7 +57,7 @@ module.exports.verifyPinGet = function(req, res) {
                             res.render('alerts/sending/verifyPin', {
                                 title: 'Verify Pin',
                                 alertToUpdate: alertToUpdate,
-                                aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                aclSideMenu: results[0][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo
                             });

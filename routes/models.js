@@ -208,12 +208,12 @@ var AlertsSchema = new mongoose.Schema({
         },
         light: {
             mode: String,   //always on, blinking, strips, etc.
-            colorRandom: { type: Boolean, default: false }  // true = random; false = same as group color
+            colorRandom: {type: Boolean, default: false}  // true = random; false = same as group color
         }
     },
-    sortID: { type: Number, unique: true },
-    alertID: { type: Number, unique: true },
-    alertName: { type: String, unique: true }, // Lockdown, Evacuate...
+    sortID: {type: Number, unique: true},
+    alertID: {type: Number, unique: true},
+    alertName: {type: String, unique: true}, // Lockdown, Evacuate...
     alertProcedure: String,
     procedureSpecific: [{
         Building: {
@@ -226,19 +226,32 @@ var AlertsSchema = new mongoose.Schema({
             sortID: Number,
             name: String
         },
-        roomID: { type: Number, unique: true },
-        sortID: { type: Number, unique: true },
+        roomID: {type: Number, unique: true},
+        sortID: {type: Number, unique: true},
         roomName: String,
         procedure: String
     }],
-    alertRequest911Call: { type: Boolean, default: false },
+    alertRequest911Call: {type: Boolean, default: false},
     whoCanCall911: [String],
-    alertRequestProcedureCompleted: { type: Boolean, default: true },
-    alertRequestWeAreSafe: { type: Boolean, default: true },
-    alertRequestForINeedHelp: { type: Boolean, default: true },
-    alertRequestSendEmail: { type: Boolean, default: false },
-    alertRequestSendSMS: { type: Boolean, default: false },
-    alertAutoDrill: { type: Boolean, default: false },
+    alertRequestProcedureCompleted: {type: Boolean, default: true},
+    alertRequestWeAreSafe: {type: Boolean, default: true},
+    alertRequestForINeedHelp: {type: Boolean, default: true},
+    alertRequestSendEmail: {type: Boolean, default: false},
+    alertRequestSendSMS: {type: Boolean, default: false},
+    alertAutoDrill: {
+        alertAutoDrill: Boolean, default: false,
+        everyNumber: {type: Number, default: 1},    // 1 to 35
+        everyType: {type: String, default: 'weeks'},       // "days" "weeks" "months" "years"
+        days: {
+            sunday: {type: Boolean, default: false},
+            monday: {type: Boolean, default: false},
+            tuesday: {type: Boolean, default: false},
+            wednesday: {type: Boolean, default: false},
+            thursday: {type: Boolean, default: false},
+            friday: {type: Boolean, default: false},
+            saturday: {type: Boolean, default: false}
+        }
+    },
     softDeleted: { type: Boolean, default: false },
     useIcon: { type: Boolean, default: false },
     icon: String,

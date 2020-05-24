@@ -28,7 +28,7 @@ function showTable(req, res, typeAclAlert, title){
         },
         function(callback){aclPermissions.showAlertsTable(req, res, callback);},   //aclPermissions showAlertsTable
         function(callback){aclPermissions.modifyAlertsTable(req, res, callback);},  //aclPermissions modifyAlertsTable
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectPage(req, res, 'showAlertsAndGroups');
@@ -43,7 +43,7 @@ function showTable(req, res, typeAclAlert, title){
             alerts: results[3],
             aclShowAlertsTable: results[4],    //aclPermissions showPermissionsTable
             aclModifyAlertsTable: results[5],   //aclPermissions modifyAlertsTable
-            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[6][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });

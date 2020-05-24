@@ -17,7 +17,7 @@ module.exports.defaultForm = function(req, res, next) {
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
         function(callback){aclPermissions.deleteUsers(req, res, callback);},         //aclPermissions deleteUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -30,7 +30,7 @@ module.exports.defaultForm = function(req, res, next) {
             aclAddUsers: results[3], //aclPermissions addUsers
             aclModifyUsers: results[4],  //aclPermissions modifyUsers
             aclDeleteUsers: results[5],  //aclPermissions deleteUsers
-            aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[6][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -92,7 +92,7 @@ module.exports.registerParentStep1 = function(req, res, next) {
             },function(callback){
                 models.Privilege.findOne({privilegeID: 5}).exec(callback);
             },
-            function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+            function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
         ],function(err, results){
 
@@ -118,7 +118,7 @@ module.exports.registerParentStep1 = function(req, res, next) {
                         roleID: results[1].roleID,
                         roleName: results[1].roleName,
                         privilege: results[2],
-                        aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo
                     });

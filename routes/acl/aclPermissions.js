@@ -418,7 +418,11 @@ module.exports.modifyOnlyNameEmailPin = function(req, res, callback) {
     var id = 65;
     models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
 };
+//changePhoto ID = 66
+module.exports.changeStudentPhoto = function(req, res, callback) {
+    var id = 66;
+    models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
+};
 
 
-
-                        /* LAST ID IS:  65*/
+                        /* LAST ID IS:  66*/

@@ -3,7 +3,7 @@ var models = require('./../models');
 var async = require("async");
 var aclPermissions = require('./../acl/aclPermissions');
 var functions = require('./../functions');
-
+var schedule = require('node-schedule');
 
 
 /* SHOW SoftDeleted ALERTS. */
@@ -15,7 +15,7 @@ module.exports.showSoftDeleted = function(req, res, next) {
         function(callback){aclPermissions.addAlerts(req, res, callback);},   //aclPermissions addAlerts
         function(callback){aclPermissions.modifyAlert(req, res, callback);},   //aclPermissions modifyAlert
         function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectPage(req, res, 'addAlerts');
@@ -29,7 +29,7 @@ module.exports.showSoftDeleted = function(req, res, next) {
             aclAddAlert: results[1], //aclPermissions addAlerts
             aclModifyAlert: results[2], //aclPermissions modifyAlert
             aclShowProcedure: results[3], //aclPermissions showProcedure
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -55,7 +55,7 @@ module.exports.create = function(req, res) {
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
         function(callback){aclPermissions.addAlerts(req, res, callback);},  //aclPermissions addAlerts
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -92,7 +92,7 @@ module.exports.create = function(req, res) {
                 alert: results[1],
                 roles: arrayRoles,
                 aclAddAlerts: results[3],      //aclPermissions addAlerts
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -195,7 +195,7 @@ module.exports.update = function(req, res) {
         function(callback){aclPermissions.modifyMedical(req, res, callback);},   //aclPermissions modifyMedical
         function(callback){aclPermissions.deleteMedical(req, res, callback);},   //aclPermissions deleteMedical
         function(callback){aclPermissions.modifyAlertGroup(req, res, callback);},  //aclPermissions modifyAlertGroup
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -253,7 +253,7 @@ module.exports.update = function(req, res) {
                     aclDeleteMedical: results[7], //aclPermissions deleteMedical
 
                     aclModifyAlertGroup: results[8],      //aclPermissions modifyAlertGroup
-                    aclSideMenu: results[9],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[9][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -292,12 +292,31 @@ module.exports.updatePost = function(req, res) {
             alert.icon = req.body.icon;
             alert.sendEmailWith.emailID = req.body.emailID;
             alert.sendEmailWith.email = req.body.email;
+            alert.alertAutoDrill.alertAutoDrill = req.body.autoDrill;
+            alert.alertAutoDrill.everyNumber = req.body.autoDrillNumber;
+            alert.alertAutoDrill.everyType = req.body.everyType;
+            alert.alertAutoDrill.days.sunday = req.body.sunday;
+            alert.alertAutoDrill.days.monday = req.body.monday;
+            alert.alertAutoDrill.days.tuesday = req.body.tuesday;
+            alert.alertAutoDrill.days.wednesday = req.body.wednesday;
+            alert.alertAutoDrill.days.thursday = req.body.thursday;
+            alert.alertAutoDrill.days.friday = req.body.friday;
+            alert.alertAutoDrill.days.saturday = req.body.saturday;
 
             alert.save(function (err) {
                 if (err && (err.code === 11000 || err.code === 11001)) {
                     console.log(err);
                     return res.status(409).send('showAlert')
                 }else {
+                    if (alert.alertAutoDrill.alertAutoDrill) { //schedule auto drill
+                        console.log('alertAutoDrill');
+                        schedule.scheduleJob("* 1 * * * *", function() {
+                            console.log('This runs every day ay 0X:01');
+                            //call notification
+
+                        });
+
+                    }
                     res.send({redirect: '/alertGroups/showAlertGroups'});
                 }
             });
@@ -317,7 +336,7 @@ module.exports.procedure = function(req, res) {
         },
         function(callback){aclPermissions.modifyProcedure(req, res, callback);},   //aclPermissions modifyProcedure
         function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -330,7 +349,7 @@ module.exports.procedure = function(req, res) {
             procedureSpecific: procedureSpecific,
             aclModifyProcedure: results[1], //aclPermissions modifyProcedure
             aclShowProcedure: results[2], //aclPermissions showProcedure
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,
             redirectTab: req.user.redirectTabProcedure
@@ -365,7 +384,7 @@ module.exports.specificProcedure = function(req, res) {
         },
         function(callback){aclPermissions.modifyProcedure(req, res, callback);},   //aclPermissions modifyProcedure
         function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         let roomProcedure = '';
@@ -382,7 +401,7 @@ module.exports.specificProcedure = function(req, res) {
             roomProcedure: roomProcedure,
             aclModifyProcedure: results[1], //aclPermissions modifyProcedure
             aclShowProcedure: results[2], //aclPermissions showProcedure
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,
             redirectTab: req.user.redirectTabProcedure
@@ -482,7 +501,7 @@ module.exports.show911UserRoles = function(req, res, next) {
         function(callback){aclPermissions.addUsers(req, res, callback);},           //aclPermissions addUsers
         function(callback){aclPermissions.modifyUsers(req, res, callback);},        //aclPermissions modifyUsers
         function(callback){aclPermissions.deleteUsers(req, res, callback);},        //aclPermissions deleteUsers
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('alertsAndGroups/alerts/crud911Users',{
@@ -495,7 +514,7 @@ module.exports.show911UserRoles = function(req, res, next) {
             aclAddUsers: results[4], //aclPermissions addUsers
             aclModifyUsers: results[5],  //aclPermissions modifyUsers
             aclDeleteUsers: results[6],  //aclPermissions deleteUsers
-            aclSideMenu: results[7],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[7][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });

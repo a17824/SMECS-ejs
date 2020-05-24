@@ -85,7 +85,7 @@ module.exports.showFloor = function(req, res) {
                     buildings: results[1],
                     floor: modelToUse,
                     arrayFloors: arrayFloors,
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -247,7 +247,7 @@ module.exports.showFloorLocation = function(req, res) {
                 res.render('alerts/sending/floorLocation', {
                     alert: results[0],
                     floor: results[1],
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -310,7 +310,7 @@ module.exports.showNotes = function(req, res) {
                     userAuthID: req.user.userPrivilegeID,
                     userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,   //for Back or Exit button
                     alert: results[0],
-                    aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -392,7 +392,7 @@ module.exports.showStudent = function(req, res) {
                     userAuthGroupAlerts: req.user.appSettings.groupAlertsButtons,   //for Back or Exit button
                     alert: results[0],
                     student: results[1],
-                    aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -495,7 +495,7 @@ module.exports.showMultiSelection = function(req, res) {
                         utilities: results[1],
                         medical: results[2],
                         schoolClosed: results[3],
-                        aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         arraySituations: arraySituations,
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo

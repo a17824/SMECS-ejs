@@ -15,7 +15,7 @@ module.exports.show = function(req, res, next) {
         },
         function(callback){aclPermissions.modifyAlert(req, res, callback);},   //aclPermissions modifyAlert
         function(callback){aclPermissions.deleteAlert(req, res, callback);},   //aclPermissions deleteAlert
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectPage(req, res, 'showLightPanicButtons');
@@ -27,7 +27,7 @@ module.exports.show = function(req, res, next) {
             panicButtons: results[1],
             aclModifyAlert: results[2], //aclPermissions modifyAlert
             aclDeleteAlert: results[3], //aclPermissions deleteAlert
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthID: req.user.userPrivilegeID,
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,

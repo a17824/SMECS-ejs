@@ -21,7 +21,7 @@ module.exports.add = function(req, res) {
             models.Roles2.find().sort({"roleID":1}).exec(callback);
         },
         function(callback){aclPermissions.addFloor(req, res, callback);},  //aclPermissions addFloor
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         let iPad = false;
@@ -63,7 +63,7 @@ module.exports.add = function(req, res) {
                     roles: arrayRoles,
                     iPad: iPad,
                     aclAddFloor: results[4],      //aclPermissions addFloor
-                    aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -168,7 +168,7 @@ module.exports.update = function(req, res) {
         },
         function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
         function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -212,7 +212,7 @@ module.exports.update = function(req, res) {
                     iPad: iPad,
                     aclShowFloors: results[4],      //aclPermissions showFloors
                     aclModifyFloor: results[5],      //aclPermissions modifyFloor
-                    aclSideMenu: results[6],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[6][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

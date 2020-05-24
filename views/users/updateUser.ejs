@@ -75,9 +75,21 @@
             }
             function checkBoxOnOther() {
                 $('#other').removeClass().addClass('enable');
-                $('#firstName').prop( "disabled", false ); //Enable
-                $('#lastName').prop( "disabled", false ); //Enable
-                $('#labelsDiv1').removeClass().addClass('labelsDivEnable');
+                var modifyUsers = $("#modifyUsersCheckBoxValue").val();
+                var modifyOnlyNameEmailPin = $("#modifyOnlyNameEmailPin").val();
+                if (modifyUsers === 'false' && modifyOnlyNameEmailPin === 'false'){
+                    $('#firstName').prop( "disabled", true ); //Disable
+                    $('#lastName').prop( "disabled", true ); //Disable
+                    $('#labelsDiv1').removeClass().addClass('labelsDivDisable');
+                } else {
+                    $('#firstName').prop( "disabled", false ); //Enable
+                    $('#lastName').prop( "disabled", false ); //Enable
+                    $('#labelsDiv1').removeClass().addClass('labelsDivEnable');
+                }
+
+
+
+
             }
 
             //This will check the status of radio button on page load/page refresh
@@ -122,8 +134,6 @@
             $('input[id=parents]').each(function() {
                 var checkVal = $(this).is(':checked');
                 var modifyUsers = $("#modifyUsersCheckBoxValue").val();
-                //console.log('checkVal = ',checkVal);
-                //console.log('modifyUsers = ',modifyUsers);
                 if (checkVal == false){
                     checkBoxOffParents();
                 } else {
@@ -459,6 +469,7 @@
             <input type="hidden" id="oldUtilityContact" value="<%= users.contactName %>">
             <input type="hidden" id="oldUtilityID" value="<%= users.utilityID %>">
             <input type="hidden" id="modifyUsersCheckBoxValue" value="<%= aclModifyUsers.checkBoxValue %>">
+            <input type="hidden" id="modifyOnlyNameEmailPin" value="<%= aclModifyOnlyNameEmailPin.checkBoxValue %>">
 
             <div class="row">
                 <div class="col-md-6 col-xs-12">
@@ -497,50 +508,85 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Email:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="email"
-                                               value="<%= users.email %>">
+                                        <% if (aclModifyUsers.checkBoxValue == true || aclModifyOnlyNameEmailPin.checkBoxValue == true) {%>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="email"
+                                                   value="<%= users.email %>">
+                                        <% } else { %>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="email"
+                                                   value="<%= users.email %>" disabled>
+                                        <% } %>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Pin:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="password"
-                                               class="form-control"
-                                               id="newPin"
-                                               value="<%= users.pin %>">
+                                        <% if (aclModifyUsers.checkBoxValue == true || aclModifyOnlyNameEmailPin.checkBoxValue == true) {%>
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="newPin"
+                                                   value="<%= users.pin %>">
+                                        <% } else { %>
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="newPin"
+                                                   value="<%= users.pin %>" disabled>
+                                        <% } %>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Confirm:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="password"
-                                               class="form-control"
-                                               id="confirmPin"
-                                               value="<%= users.pin %>">
+                                        <% if (aclModifyUsers.checkBoxValue == true || aclModifyOnlyNameEmailPin.checkBoxValue == true) {%>
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="confirmPin"
+                                                   value="<%= users.pin %>">
+                                        <% } else { %>
+                                            <input type="password"
+                                                   class="form-control"
+                                                   id="confirmPin"
+                                                   value="<%= users.pin %>" disabled>
+                                        <% } %>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">First Name:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="firstName"
-                                               value="<%= users.firstName %>">
+                                        <% if (aclModifyUsers.checkBoxValue == true || aclModifyOnlyNameEmailPin.checkBoxValue == true) {%>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="firstName"
+                                                   value="<%= users.firstName %>" disabled>
+                                        <% } else { %>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="firstName"
+                                                   value="<%= users.firstName %>">
+                                        <% } %>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Last Name:</label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text"
-                                               class="form-control"
-                                               id="lastName"
-                                               value="<%= users.lastName %>">
+                                        <% if (aclModifyUsers.checkBoxValue == true || aclModifyOnlyNameEmailPin.checkBoxValue == true) {%>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="lastName"
+                                                   value="<%= users.lastName %>">
+                                        <% } else { %>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="lastName"
+                                                   value="<%= users.lastName %>" disabled>
+                                        <% } %>
                                     </div>
                                 </div>
 

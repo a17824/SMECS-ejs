@@ -14,7 +14,7 @@ module.exports.showReceptionUsers = function(req, res) {
         },
         function(callback){aclPermissions.modifyPAUser(req, res, callback);},        //aclPermissions modifyPAUser
         function(callback){aclPermissions.showPAPreRecorded(req, res, callback);},        //aclPermissions showPAPreRecorded
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
@@ -23,7 +23,7 @@ module.exports.showReceptionUsers = function(req, res) {
             users: results[0],
             aclModifyPAUser: results[1],  //aclPermissions modifyPAUser
             aclShowPAPreRecorded: results[2],  //aclPermissions showPAPreRecorded
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -64,7 +64,7 @@ module.exports.showRecorded = function(req, res) {
         function(callback){aclPermissions.addPAPreRecorded(req, res, callback);},        //aclPermissions addPAPreRecorded
         function(callback){aclPermissions.modifyPAPreRecorded(req, res, callback);},     //aclPermissions modifyPAPreRecorded
         function(callback){aclPermissions.deletePAPreRecorded(req, res, callback);},     //aclPermissions deletePAPreRecorded
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
@@ -76,7 +76,7 @@ module.exports.showRecorded = function(req, res) {
             aclAddPAPreRecorded: results[2],        //aclPermissions addPAPreRecorded
             aclModifyPAPreRecorded: results[3],     //aclPermissions modifyPAPreRecorded
             aclDeletePAPreRecorded: results[4],      //aclPermissions deletePAPreRecorded
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[5][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -120,7 +120,7 @@ module.exports.add = function(req, res) {
             models.Room.find().sort({"privilegeID":1}).exec(callback);
         },
         function(callback){aclPermissions.addPAPreRecorded(req, res, callback);},        //aclPermissions addPAPreRecorded
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         //console.log(results[2]);
@@ -131,7 +131,7 @@ module.exports.add = function(req, res) {
             floors: results[1],
             rooms: results[2],
             aclAddPAPreRecorded: results[3],        //aclPermissions addPAPreRecorded
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });

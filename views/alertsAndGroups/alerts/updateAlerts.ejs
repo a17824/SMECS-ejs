@@ -30,7 +30,9 @@
     <link href="/public/gentelella/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
 
+
     <script>
+
         var iconSelect;
         var selectedText;
         var savedIcon;
@@ -61,6 +63,7 @@
     </script>
 
     <script>
+
         //Request calling 911
         var choices;
         function selectUser(select)
@@ -111,13 +114,13 @@
                 $('#emailAddressSelect').fadeIn("medium"); //to remove display: none
             }
             else {
-                console.log('hide = ')
                 $('#emailAddressLabel').fadeOut("medium"); //to remove display: none
                 $('#emailAddressSelect').fadeOut("medium"); //to remove display: none
             }
         }
 
         $(document).ready(function(){
+
             var oldSortID = $("#oldSortID").val();
             var select_sort = '';
             var sortArray = $("#inUseSortID").val().split(",").map(Number);
@@ -167,6 +170,15 @@
                 $('#clickHere').removeClass().addClass('enable');
             }
 
+
+            function radioOffAutoDrill() {
+                $('#autoDrillDiv').removeClass().addClass('disableAutoDrill');
+            }
+            function radioOnAutoDrill() {
+                $('#autoDrillDiv').removeClass().addClass('enableAutoDrill');
+            }
+
+
             //This will check the status of radio button on page load
             $('input[name=request911]:checked').each(function() {
                 var checkVal = $(this).val();
@@ -178,6 +190,16 @@
                 }
             });
 
+            $('input[name=autoDrill]:checked').each(function() {
+                var checkVal = $(this).val();
+                if (checkVal == 'false'){
+                    radioOffAutoDrill();
+                } else {
+                    $('#autoDrillDiv').show(); //to remove display: none
+                    radioOnAutoDrill();
+                }
+            });
+
             //This will check the status of radio button onclick
             $('#request911').on('ifChecked', function () {
                 radioOff();
@@ -185,6 +207,15 @@
             $('#request911').on('ifUnchecked', function () {
                 $('#smecsUserDiv').show(); //to remove display: none
                 radioOn();
+            })
+
+
+            $('#autoDrill').on('ifChecked', function () {
+                radioOffAutoDrill();
+            })
+            $('#autoDrill').on('ifUnchecked', function () {
+                $('#autoDrillDiv').show(); //to remove display: none
+                radioOnAutoDrill();
             })
 
 
@@ -201,7 +232,7 @@
             });
 
 
-            var id,alertName,alertID,alertProcedure,request911Call,sortID, icon,alertLight,alertLightSound;
+            var id,alertName,alertID,alertProcedure,request911Call,autoDrill,sortID, icon,alertLight,alertLightSound;
             $("#<%= alert.id %>").click(function(){
 
                 var alertGroupIdAndSound=$("#alertGroupID").val();
@@ -222,6 +253,7 @@
 
                 id=$(this).attr('id');
                 request911Call=$("input:radio[name='request911']:checked").val();
+                autoDrill=$("input:radio[name='autoDrill']:checked").val();
                 alertLight=$("input:radio[name='alertLight']:checked").val();
                 alertLightSound=$("input:radio[name='alertLightSound']:checked").val();
                 alertName=$("#alertName").val();
@@ -234,6 +266,20 @@
                 var alertRequestForINeedHelp = document.getElementById("checkboxNeedHelp").checked;
                 var alertRequestSendEmail = document.getElementById("checkboxSendEmail").checked;
                 var alertRequestSendText = document.getElementById("checkboxSendText").checked;
+
+                var autoDrillNumber = $("#autoDrillNumber").val();
+
+                var e = document.getElementById("everyType");
+                var everyType = e.options[e.selectedIndex].value;
+
+                var sunday = document.getElementById("sunday").checked;
+                var monday = document.getElementById("monday").checked;
+                var tuesday = document.getElementById("tuesday").checked;
+                var wednesday = document.getElementById("wednesday").checked;
+                var thursday = document.getElementById("thursday").checked;
+                var friday = document.getElementById("friday").checked;
+                var saturday = document.getElementById("saturday").checked;
+
 
                 var arrayUsers = [];
                 if (choices === undefined){
@@ -276,12 +322,17 @@
                     alert("You have selected that this alert request a 911 call. Please select at least one user role/group from dropdown list");
                     return false;
                 }
+                /*if(autoDrillNumber > 35) {
+                    alert("REPEAT EVERY: needs to be a number between 1 and 35");
+                    return false;
+                }*/
                 //--------------------------------forms validation end-------
 
                 $.post("/alerts/updateAlerts",{
                     alertToUpdate: id,
                     alertGroupName: alertGroupName,
                     request911Call: request911Call,
+                    autoDrill: autoDrill,
                     whoCanCall911: arrayUsers,
                     alertGroupID: alertGroupID,
                     alertName: alertName,
@@ -299,7 +350,15 @@
                     icon: icon,
                     sound: sound,
                     emailID: emailID,
-                    email: email,
+                    autoDrillNumber: autoDrillNumber,
+                    everyType: everyType,
+                    sunday: sunday,
+                    monday: monday,
+                    tuesday: tuesday,
+                    wednesday: wednesday,
+                    thursday: thursday,
+                    friday: friday,
+                    saturday: saturday
 
                 },function(data){
                     if(data==='done')
@@ -729,21 +788,146 @@
                                     <label class="control-label col-md-4 col-sm-4 col-xs-12" style="margin-top: -2px">Automatic send drills</label>
                                     <div class="col-md-8 col-sm-8 col-xs-12">
 
-                                        <input
-                                                type="radio"
-                                                class="flat"
-                                                id="autoSchedule"
-                                                name="autoSchedule"
-                                                value="false" checked disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >off</label>&emsp;&emsp;&nbsp;&nbsp;&nbsp;&thinsp;&thinsp;&thinsp;
-                                        <input type="radio"
-                                               class="flat"
-                                               id="autoSchedule"
-                                               name="autoSchedule"
-                                               value="true" disabled>
-                                        <label for="req911" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <%if (alert.alertAutoDrill.alertAutoDrill == false) { %>
+                                            <input
+                                                    type="radio"
+                                                    class="flat"
+                                                    id="autoDrill"
+                                                    name="autoDrill"
+                                                    value="false" checked>
+                                            <label for="autoDrill" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;&nbsp;&nbsp;&nbsp;&thinsp;&thinsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="autoDrill"
+                                                   name="autoDrill"
+                                                   value="true">
+                                            <label for="autoDrill" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }else {%>
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="autoDrill"
+                                                   name="autoDrill"
+                                                   value="false">
+                                            <label for="autoDrill" style="font-weight:normal; position: relative; top: 4px" >Off</label>&emsp;&emsp;&nbsp;&nbsp;&nbsp;&thinsp;&thinsp;
+                                            <input type="radio"
+                                                   class="flat"
+                                                   id="autoDrill"
+                                                   name="autoDrill"
+                                                   value="true" checked>
+                                            <label for="autoDrill" style="font-weight:normal; position: relative; top: 4px" >On</label>
+                                        <% }%>
+                                        <br><br><br>
                                     </div>
                                 </div>
+
+                                <div id="autoDrillDiv" class="enableAutoDrill" style="display: none;">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" id="autoDrillLabel" style="margin-top: -2px">Repeat every</label>
+                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                            <input type="number"
+                                                   class=" form-control autoDrill"
+                                                   id="autoDrillNumber"
+                                                   name="autoDrillNumber"
+                                                   value="<%= alert.alertAutoDrill.everyNumber %>">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <select class="form-control autoDrill" id="everyType">
+                                                <%if (alert.alertAutoDrill.everyType == "days") { %>
+                                                    <option value="days" selected>days</option>
+                                                <%} else { %>
+                                                    <option value="days">days</option>
+                                                <% } %>
+                                                <%if (alert.alertAutoDrill.everyType == "weeks") { %>
+                                                    <option value="weeks" selected>weeks</option>
+                                                <%} else { %>
+                                                    <option value="weeks" selected>weeks</option>
+                                                <% } %>
+                                                <%if (alert.alertAutoDrill.everyType == "months") { %>
+                                                    <option value="months" selected>months</option>
+                                                <%} else { %>
+                                                    <option value="months">months</option>
+                                                <% } %>
+                                                <%if (alert.alertAutoDrill.everyType == "years") { %>
+                                                    <option value="years" selected>years</option>
+                                                <%} else { %>
+                                                    <option value="years">years</option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <br>
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" id="autoDrillLabel" style="margin-top: -8px">Repeat on</label>
+
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            <div class="wee">
+                                                <% if (alert.alertAutoDrill.days.sunday == true) {%>
+                                                    <input type="checkbox" class="wee" id="sunday" value="<%= alert.alertAutoDrill.days.sunday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee" id="sunday" value="<%= alert.alertAutoDrill.days.sunday %>"/>
+                                                <% } %>
+                                                <label for="sunday">S</label>
+                                                <% if (alert.alertAutoDrill.days.monday == true) {%>
+                                                    <input type="checkbox" class="wee" id="monday" value="<%= alert.alertAutoDrill.days.monday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee"id="monday" value="<%= alert.alertAutoDrill.days.monday %>"/>
+                                                <% } %>
+                                                <label for="monday" style="text-indent: -0.5px">M</label>
+                                                <% if (alert.alertAutoDrill.days.tuesday == true) {%>
+                                                    <input type="checkbox" class="wee" id="tuesday" value="<%= alert.alertAutoDrill.days.tuesday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee"id="tuesday" value="<%= alert.alertAutoDrill.days.tuesday %>"/>
+                                                <% } %>
+                                                <label for="tuesday">T</label>
+                                                <% if (alert.alertAutoDrill.days.wednesday == true) {%>
+                                                    <input type="checkbox" class="wee" id="wednesday" value="<%= alert.alertAutoDrill.days.wednesday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee" id="wednesday" value="<%= alert.alertAutoDrill.days.wednesday %>"/>
+                                                <% } %>
+                                                <label for="wednesday">W</label>
+                                                <% if (alert.alertAutoDrill.days.thursday == true) {%>
+                                                    <input type="checkbox" class="wee" id="thursday" value="<%= alert.alertAutoDrill.days.thursday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee" id="thursday" value="<%= alert.alertAutoDrill.days.thursday %>"/>
+                                                <% } %>
+                                                <label for="thursday">T</label>
+                                                <% if (alert.alertAutoDrill.days.friday == true) {%>
+                                                    <input type="checkbox" class="wee" id="friday" value="<%= alert.alertAutoDrill.days.friday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee" id="friday" value="<%= alert.alertAutoDrill.days.friday %>"/>
+                                                <% } %>
+                                                <label for="friday">F</label>
+                                                <% if (alert.alertAutoDrill.days.saturday == true) {%>
+                                                    <input type="checkbox" class="wee" id="saturday" value="<%= alert.alertAutoDrill.days.saturday %>" checked/>
+                                                <% } else {%>
+                                                    <input type="checkbox" class="wee" id="saturday" value="<%= alert.alertAutoDrill.days.saturday %>"/>
+                                                <% } %>
+                                                <label for="saturday" style="text-indent: -1px">S</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="busTime" id="time" style="margin-top: -2px">Time</label>
+
+                                        <div class="col-md-7 col-sm-7 col-xs-12">
+                                            <select class="form-control" id="busTimeSelect"> </select>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
+
 
 
 
@@ -941,9 +1125,12 @@
 <script src="/public/gentelella/vendors/nprogress/nprogress.js"></script>
 <!-- iCheck -->
 <script src="/public/gentelella/vendors/iCheck/icheck.min.js"></script>
+
 <!-- Custom Theme Scripts -->
 <script src="/public/gentelella/build/js/custom.min.js"></script>
 <!-- Google Analytics -->
+
+
 
 </body>
 <!-- footer content -->

@@ -21,7 +21,7 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.modifyAlert(req, res, callback);},   //aclPermissions modifyAlert
         function(callback){aclPermissions.deleteAlert(req, res, callback);},   //aclPermissions deleteAlert
         function(callback){aclPermissions.showProcedure(req, res, callback);},   //aclPermissions showProcedure
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectPage(req, res, 'showAlertsAndGroups');
@@ -41,7 +41,7 @@ module.exports.show = function(req, res, next) {
             aclModifyAlert: results[7], //aclPermissions modifyAlert
             aclDeleteAlert: results[8], //aclPermissions deleteAlert
             aclShowProcedure: results[9], //aclPermissions showProcedure
-            aclSideMenu: results[10],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[10][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo,
             redirectTab: req.user.redirectTabAlertGroups

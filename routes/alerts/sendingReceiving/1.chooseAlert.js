@@ -94,7 +94,7 @@ module.exports.showGroups = function(req, res) {
                     aclTest: arrayGroups[1],
                     aclDemo: arrayGroups[2],
                     icons: results[3],
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -212,7 +212,7 @@ module.exports.showAlerts = function(req, res) {
                                 aclTest: arrayGroups[1],
                                 aclDemo: arrayGroups[2],
                                 icons: results[3],
-                                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                                aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                                 userAuthPhoto: req.user.photo
                             });
@@ -245,7 +245,7 @@ module.exports.showAlerts = function(req, res) {
                     aclTest: results[1],
                     aclDemo: results[2],
                     icons: results[3],
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });

@@ -65,7 +65,7 @@ let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicBut
 //This runs every day ay 7pm
 schedule.scheduleJob("0 19 * * *", function() {
     console.log('This runs every day ay 07:00PM');
-    login.heartBeat();  //remove pushTokens of users with app installed but are not logged in
+    //login.heartBeat();  //remove pushTokens of users with app installed but are not logged in
 
 });
 

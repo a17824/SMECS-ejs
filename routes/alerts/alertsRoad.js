@@ -19,7 +19,7 @@ module.exports.show = function(req, res) {
         function(callback){
             models.Alerts.find().sort({"sortID":1}).exec(callback); ////to find all alerts that use a specific function
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('alertsAndGroups/alerts/road/showAlertRoad', {
@@ -29,7 +29,7 @@ module.exports.show = function(req, res) {
             AlertRoadFunctions: results[1],
             AlertRoadRedirection: results[2],
             alerts: results[3], //to find all alerts that use a specific function
-            aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -53,7 +53,7 @@ module.exports.createStep = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -76,7 +76,7 @@ module.exports.createStep = function(req, res) {
                 functions: results[0],
                 redirections: results[1],
                 pageToReturn: req.params.id,
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -171,7 +171,7 @@ module.exports.updateStep = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         let stepToUpdate = req.params.step_id;
@@ -205,7 +205,7 @@ module.exports.updateStep = function(req, res) {
                 functions: results[0],
                 redirections: results[1],
                 pageToReturn: req.params.alert_id,
-                aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -298,7 +298,7 @@ module.exports.createFunctions = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -328,7 +328,7 @@ module.exports.createFunctions = function(req, res) {
                 array: array,
                 functions: results[0],
                 pageToReturn: req.params.id,
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -366,7 +366,7 @@ module.exports.updateFunctions = function(req, res) {
             }).exec(callback);
 
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
 
     ],function(err, results){
@@ -396,7 +396,7 @@ module.exports.updateFunctions = function(req, res) {
                 array: array,
                 functions: results[0],
                 pageToReturn: req.params.alert_id,
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -493,7 +493,7 @@ module.exports.createRedirection = function(req, res) {
 
             }).exec(callback);
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -523,7 +523,7 @@ module.exports.createRedirection = function(req, res) {
                 array: array,
                 functions: results[0],
                 pageToReturn: req.params.id,
-                aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -562,7 +562,7 @@ module.exports.updateRedirection = function(req, res) {
             }).exec(callback);
 
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
 
     ],function(err, results){
@@ -592,7 +592,7 @@ module.exports.updateRedirection = function(req, res) {
                 array: array,
                 functions: results[0],
                 pageToReturn: req.params.alert_id,
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

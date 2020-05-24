@@ -11,7 +11,7 @@ module.exports.inProgressBackup = function(req, res) {
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
         function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         let type = req.params.type; //type can be 'backup' or '[directory name to restore]'
@@ -29,7 +29,7 @@ module.exports.inProgressBackup = function(req, res) {
             aclAddRoles2: results[0], //aclPermissions addRoles2
             aclModifyRoles2: results[1],  //aclPermissions modifyRoles2
             aclDeleteRoles2: results[2],  //aclPermissions deleteRoles2
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -67,7 +67,7 @@ module.exports.backupResp = function(req, res) {
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
         function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
 
@@ -81,7 +81,7 @@ module.exports.backupResp = function(req, res) {
             aclAddRoles2: results[0], //aclPermissions addRoles2
             aclModifyRoles2: results[1],  //aclPermissions modifyRoles2
             aclDeleteRoles2: results[2],  //aclPermissions deleteRoles2
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -117,7 +117,7 @@ module.exports.showBackups = function(req, res, next) {
         function(callback){aclPermissions.addRoles2(req, res, callback);},   //aclPermissions addRoles2
         function(callback){aclPermissions.modifyRoles2(req, res, callback);}, //aclPermissions modifyRoles2
         function(callback){aclPermissions.deleteRoles2(req, res, callback);}, //aclPermissions deleteRoles2
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
@@ -154,7 +154,7 @@ module.exports.showBackups = function(req, res, next) {
                 aclAddRoles2: results[0], //aclPermissions addRoles2
                 aclModifyRoles2: results[1],  //aclPermissions modifyRoles2
                 aclDeleteRoles2: results[2],  //aclPermissions deleteRoles2
-                aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });

@@ -34,8 +34,9 @@ module.exports.show = function(req, res, next) {
         function(callback){aclPermissions.addStudent(req, res, callback);},   //aclPermissions addStudent
         function(callback){aclPermissions.addMultiStudent(req, res, callback);},   //aclPermissions addMultiStudent
         function(callback){aclPermissions.modifyStudent(req, res, callback);}, //aclPermissions modifyStudent
+        function(callback){aclPermissions.changeStudentPhoto(req, res, callback);}, //aclPermissions ChangeStudentPhoto
         function(callback){aclPermissions.deleteStudent(req, res, callback);}, //aclPermissions deleteStudent
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
 
     ],function(err, results){
@@ -49,8 +50,9 @@ module.exports.show = function(req, res, next) {
             aclAddStudent: results[1], //aclPermissions addStudent
             aclAddMultiStudent: results[2], //aclPermissions addMultiStudent
             aclModifyStudent: results[3],  //aclPermissions modifyStudent
-            aclDeleteStudent: results[4],  //aclPermissions deleteStudent
-            aclSideMenu: results[5],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclChangeStudentPhoto: results[4],  //aclPermissions ChangeStudentPhoto
+            aclDeleteStudent: results[5],  //aclPermissions deleteStudent
+            aclSideMenu: results[6][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -64,7 +66,7 @@ module.exports.add = function(req, res) {
             models.Users.find({'parentOf.0': { "$exists": true }, 'softDeleted': null }).sort({"firstName":1}).exec(callback);
         },
         function(callback){aclPermissions.addStudent(req, res, callback);},   //aclPermissions addStudent
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var student = {
@@ -75,7 +77,7 @@ module.exports.add = function(req, res) {
             users: results[0],
             student: student,
             aclAddStudent: results[1], //aclPermissions addStudent
-            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
@@ -229,7 +231,7 @@ module.exports.update = function(req, res) {
             models.Users.find({'parentOf.0': { "$exists": true }, 'softDeleted': null }).sort({"firstName":1}).exec(callback);
         },
         function(callback){aclPermissions.modifyStudent(req, res, callback);}, //aclPermissions modifyStudent
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var parentsIdArray = [];
@@ -243,7 +245,7 @@ module.exports.update = function(req, res) {
             users: results[1],
             parentsIdArray: parentsIdArray,//student that has parents. This array contains their parents ID (user._id)
             aclModifyStudent: results[2],  //aclPermissions modifyStudent
-            aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });

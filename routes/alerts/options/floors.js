@@ -22,7 +22,7 @@ module.exports.add = function(req, res) {
             models.Building.find(function(error, building) {}).exec(callback);
         },
         function(callback){aclPermissions.addFloor(req, res, callback);},  //aclPermissions addFloor
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var arraySort = [];
@@ -50,7 +50,7 @@ module.exports.add = function(req, res) {
                     floor: results[0],
                     buildings: results[1],
                     aclAddFloor: results[2],      //aclPermissions addFloor
-                    aclSideMenu: results[3],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[3][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -118,7 +118,7 @@ module.exports.update = function(req, res) {
         },
         function(callback){aclPermissions.showFloors(req, res, callback);},  //aclPermissions showFloors
         function(callback){aclPermissions.modifyFloor(req, res, callback);},  //aclPermissions modifyFloor
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         var streamSort = models.Floors.find().sort({"sortID":1}).cursor();
@@ -146,7 +146,7 @@ module.exports.update = function(req, res) {
                     buildings: results[1],
                     aclShowFloors: results[2],      //aclPermissions showFloors
                     aclModifyFloor: results[3],      //aclPermissions modifyFloor
-                    aclSideMenu: results[4],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                    aclSideMenu: results[4][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                     userAuthName: req.user.firstName + ' ' + req.user.lastName,
                     userAuthPhoto: req.user.photo
                 });
@@ -300,7 +300,7 @@ module.exports.delete = function(req, res) {
 //--ADD or CHANGE FloorPlan -------------------------------------
 module.exports.addUpdateFloorPlan = function (req, res){
     async.parallel([
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results) {
         if (!results[0]) {
@@ -320,7 +320,7 @@ module.exports.addUpdateFloorPlan = function (req, res){
                         title: 'ADD FLOOR PLAN',
                         floor: floor,
                         iPad: iPad,
-                        aclSideMenu: results[0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                        aclSideMenu: results[0][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                         userAuthName: req.user.firstName + ' ' + req.user.lastName,
                         userAuthPhoto: req.user.photo
                     });

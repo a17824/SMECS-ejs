@@ -12,7 +12,7 @@ module.exports.procedure = function(req, res) {
         function(callback){
             models.Alerts.find().exec(callback);
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         res.render('alerts/receiving/procedureR',{
@@ -20,7 +20,7 @@ module.exports.procedure = function(req, res) {
             userAuthID: req.user.userPrivilegeID,
             info: results[0],
             alert: results[1],
-            aclSideMenu: results[2],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[2][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
 

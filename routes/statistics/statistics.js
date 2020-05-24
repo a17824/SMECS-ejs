@@ -11,7 +11,7 @@ var MobileDetect = require('mobile-detect');
             function(callback){
                 models.Users.find().exec(callback);
             },
-            function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+            function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
         ],function(err, results){
             functions.redirectTabUsers(req, res, 'showUsers');
@@ -26,7 +26,7 @@ var MobileDetect = require('mobile-detect');
                 userAuthEmail: req.user.email,
                 users: results[0],
                 iPad: iPad,
-                aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+                aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
                 userAuthName: req.user.firstName + ' ' + req.user.lastName,
                 userAuthPhoto: req.user.photo
             });
@@ -40,7 +40,7 @@ module.exports.userStats = function(req, res, next) {
         function(callback){
             models.Users.find().exec(callback);
         },
-        function(callback) {functions.aclSideMenu(req, res, function (acl) {callback(null, acl);});} //aclPermissions sideMenu
+        function(callback) {functions.aclSideMenu(req, res, function (acl, profilePage) {callback(null, acl, profilePage);});} //aclPermissions sideMenu
 
     ],function(err, results){
         functions.redirectTabUsers(req, res, 'showUsers');
@@ -55,7 +55,7 @@ module.exports.userStats = function(req, res, next) {
             userAuthEmail: req.user.email,
             users: results[0],
             iPad: iPad,
-            aclSideMenu: results[1],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
+            aclSideMenu: results[1][0],  //aclPermissions for sideMenu.ejs ex: if(aclSideMenu.users.checkbox == true)
             userAuthName: req.user.firstName + ' ' + req.user.lastName,
             userAuthPhoto: req.user.photo
         });
