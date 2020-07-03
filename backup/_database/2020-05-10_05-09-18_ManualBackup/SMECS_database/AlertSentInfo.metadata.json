@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"SMECS_database.AlertSentInfo"},{"v":2,"key":{"expirationDate":1},"name":"expirationDate_1","ns":"SMECS_database.AlertSentInfo","expireAfterSeconds":0,"background":true}],"uuid":"75004fb464ce4dc4b7034c0b62250c4c"}

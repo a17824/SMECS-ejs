@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"SMECS_database.UsersAddTemp"},{"v":2,"key":{"ttl":1},"name":"ttl_1","ns":"SMECS_database.UsersAddTemp","expireAfterSeconds":600,"background":true}],"uuid":"875d0b4196964dc2be5db3da7de22b32"}
