@@ -405,7 +405,7 @@ module.exports.reportsDetails = function(req, res) {
             }
 
             function getRenderJson() {
-                reportsEJS.totalNumbers(results[0], function (result, err) {
+                reportsEJS.totalNumbers(req, results[0], function (result, err) {
                     if (err) console.log('totalNumbers err - ',err);
                     else {
                         res.render(page, {
@@ -430,7 +430,7 @@ module.exports.reportsDetails = function(req, res) {
 
 
 
-module.exports.totalNumbers = function(alert, callback) {
+module.exports.totalNumbers = function(req, alert, callback) {
     let total = {
         sentToAll: [],
         sentToNoPushToken: [],
@@ -496,18 +496,34 @@ module.exports.totalNumbers = function(alert, callback) {
     //end of How many users Received Alert
 
     //How many users Viewed Alert
-    alert.sentTo.forEach(function (user) {
-        if( user.pushToken.length > 0 && user.received.receivedBoolean) {
-            if (user.viewed.viewedBoolean) {
-                total.viewedBy.push(user);
-            }
+    if(typeof req.decoded === "undefined" && req.user.userPrivilegeID === 1){
+        alert.sentTo.forEach(function (user) {
+            if( user.pushToken.length > 0 && user.received.receivedBoolean) {
+                if (user.viewed.viewedBoolean) {
+                    total.viewedBy.push(user);
+                }
 
-            else
-                total.notViewedBy.push(user);
-        }
-    });
-    total.viewedNumber = total.viewedBy.length;
-    total.notViewedNumber = total.notViewedBy.length;
+                else
+                    total.notViewedBy.push(user);
+            }
+        });
+        total.viewedNumber = total.viewedBy.length;
+        total.notViewedNumber = total.notViewedBy.length;
+    }
+    else {
+        alert.sentTo.forEach(function (user) {
+            if( user.pushToken.length > 0) {
+                if (user.viewed.viewedBoolean) {
+                    total.viewedBy.push(user);
+                }
+
+                else
+                    total.notViewedBy.push(user);
+            }
+        });
+        total.viewedNumber = total.viewedBy.length;
+        total.notViewedNumber = total.notViewedBy.length;
+    }
     //end of How many users Viewed Alert
 
 

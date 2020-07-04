@@ -54,17 +54,17 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                 else {
                     newArray.forEach(function(usersWithPushTokenArrayChunk, idx, array) {
                         let title = testModeON + ' ' + alert.alert.name;
-                        let message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-                            //registration_ids: usersWithPushTokenArrayChunk,
-                            to: usersWithPushTokenArrayChunk[0],
+                        let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                            registration_ids: usersWithPushTokenArrayChunk,
+                            //to: usersWithPushTokenArrayChunk[0],
                             /*notification: {
                                 click_action: ".MainActivity",
                                 title: title,
                                 body: 'Body of your push notification'
                             },*/
                             data: {  //you can send only notification or only data(or include both)
-                                alertID: alert._id,
-                                "force-start": "1"
+                                alertID: alert._id
+
                             },
                             priority: "high"
                         };
@@ -170,8 +170,9 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 };
 */
 
-// FOR OneSignal - Update open alerts badge number
+// FOR FCM - Update open alerts badge number
 module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
+    console.log('alertsClosed = ', alertsClosed);
     console.log('updateBadge');
     console.log('action (no var action) of updateBadge = ');
 
@@ -219,7 +220,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                 // we need to create a notification to send
                 //console.log('ALERT REOPEN CLOSED = ');
                 console.log('alertsReopened[0]', alertsReopened[0].id);
-                let message = {
+                /*let message = {
                     app_id: appId,
                     contents: {
                         en: enReopened
@@ -235,17 +236,74 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                 };
 
                 let title = '';
-                sendPush(message, title, function (result,err) {
+*/
 
-                    if(err || !result) console.log('updateBadge err = ',err);
+                let arr =  allUsersWithPushToken;
+                let size = 500;
+                splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+                    if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
                     else {
-                        console.log('result updateBadge = ',result)
+                        newArray.forEach(function(usersWithPushTokenArrayChunk) {
+
+                            let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                                registration_ids: usersWithPushTokenArrayChunk,
+                                //to: usersWithPushTokenArrayChunk[0],
+                                /*notification: {
+                                    click_action: ".MainActivity",
+                                    title: title,
+                                    body: 'Body of your push notification'
+                                },*/
+                                data: {  //you can send only notification or only data(or include both)
+                                    action: 'reOpenAlert',
+                                    alertID: alertsReopened[0].id
+                                },
+                                priority: "high"
+                            };
+
+                            sendPush2(message, function (result,err) {
+
+                                if(err || !result) console.log('updateBadge err = ',err);
+                                else {
+                                    console.log('result updateBadge = ',result);
+                                }
+                            });
+                        });
                     }
                 });
+
             }
             else {
                 //console.log('ALERT CLOSED = ');
                 // we need to create a notification to send
+
+                let arr =  allUsersWithPushToken;
+                let size = 500;
+                splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+                    if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
+                    else {
+                        newArray.forEach(function(usersWithPushTokenArrayChunk) {
+
+                            let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                                registration_ids: usersWithPushTokenArrayChunk,
+                                data: {  //you can send only notification or only data(or include both)
+                                    action: 'closeAlert',
+                                    alertsClosed: alertsClosed
+                                },
+                                priority: "high"
+                            };
+
+                            sendPush2(message, function (result,err) {
+
+                                if(err || !result) console.log('updateBadge err = ',err);
+                                else {
+                                    console.log('result updateBadge = ',result);
+                                }
+                            });
+                        });
+                    }
+                });
+                /*
+                //ONE SIGNAL
                 let message = {
                     app_id: appId,
                     contents: {
@@ -260,15 +318,9 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
                         alertsClosed: alertsClosed
                     }
                 };
+                */
 
-                let title = '';
-                sendPush(message, title, function (result,err) {
 
-                    if(err || !result) console.log('updateBadge err = ',err);
-                    else {
-                        console.log('result updateBadge = ',result)
-                    }
-                });
             }
 
 
@@ -291,6 +343,9 @@ module.exports.icons = function(icons,action) {
                     allUsersWithPushToken.push(token);
                 });
             });
+
+            /*
+            //ONE SIGNAL
             let message = {
                 app_id: appId,
                 content_available: true,
@@ -300,14 +355,32 @@ module.exports.icons = function(icons,action) {
                     icons: icons
                 }
             };
+            */
 
-            let title = '';
-            sendPush(message, title, function (result,err) {
-                if(err || !result) console.log('icons err = ',err);
+            let arr =  allUsersWithPushToken;
+            let size = 500;
+            splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+                if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
                 else {
-                    console.log('result icons = ',result)
-                }
+                    newArray.forEach(function(usersWithPushTokenArrayChunk) {
 
+                        let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                            registration_ids: usersWithPushTokenArrayChunk,
+                            data: {  //you can send only notification or only data(or include both)
+                                action: action,
+                                icons: icons
+                            },
+                            priority: "high"
+                        };
+
+                        sendPush2(message, function (result,err) {
+                            if(err || !result) console.log('icons err = ',err);
+                            else {
+                                console.log('result icons = ',result);
+                            }
+                        });
+                    });
+                }
             });
         }
     });
@@ -332,9 +405,9 @@ module.exports.notifyUser = function(user, action) {
         }
     };
     */
-    // ONESIGNAL
 
-    // we need to create a notification to send
+    /*
+    //ONESIGNAL
     let message = {
         app_id: appId,
         content_available: true,
@@ -352,14 +425,30 @@ module.exports.notifyUser = function(user, action) {
             token: token
         }
     };
+    */
 
-    let title = '';
-    sendPush(message, title, function (result,err) {
+    let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+        to: user.pushToken,
+        data: {  //you can send only notification or only data(or include both)
+            action: action,
+            groupAlertsButtons: user.appSettings.groupAlertsButtons,
+            enableFingerprint: user.appSettings.enableFingerprint,
+            theme: user.appSettings.theme,
+            userRoleName: user.userRoleName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userPhoto: user.photo,
+            userEmail: user.email,
+            token: token
+        },
+        priority: "high"
+    };
+
+    sendPush2(message, function (result,err) {
         if(err || !result) console.log('notifyUser err = ',err);
         else {
-            console.log('result notifyUser = ',result)
+            console.log('result notifyUser = ',result);
         }
-
     });
 };
 
@@ -367,15 +456,15 @@ module.exports.refreshAlertInfo = function(alert, action) {
     console.log('refreshAlertInfo');
     console.log('action of refreshAlertInfo = ', action);
 
-    // ONESIGNAL
+
     let allUsersWithPushToken = [];
     alert.sentTo.forEach(function (user) {
         user.pushToken.forEach(function (token) {
             allUsersWithPushToken.push(token);
         });
     });
-
-    // we need to create a notification to send
+    /*
+    //ONESIGNAL
     let message = {
         app_id: appId,
         content_available: true,
@@ -385,13 +474,31 @@ module.exports.refreshAlertInfo = function(alert, action) {
             action: action
         }
     };
-    let title = '';
-    sendPush(message, title, function (result,err) {
-        if(err || !result) console.log('refreshAlertInfo err = ',err);
+    */
+    let arr =  allUsersWithPushToken;
+    let size = 500;
+    splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+        if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
         else {
-            console.log('result refreshAlertInfo = ',result)
-        }
+            newArray.forEach(function(usersWithPushTokenArrayChunk) {
 
+                let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                    registration_ids: usersWithPushTokenArrayChunk,
+                    data: {  //you can send only notification or only data(or include both)
+                        alertID: alert._id,
+                        action: action
+                    },
+                    priority: "high"
+                };
+
+                sendPush2(message, function (result,err) {
+                    if(err || !result) console.log('refreshAlertInfo err = ',err);
+                    else {
+                        console.log('result refreshAlertInfo = ',result);
+                    }
+                });
+            });
+        }
     });
 };
 
@@ -400,7 +507,7 @@ module.exports.refreshNotes = function(alert, action) {
     console.log('refreshNotes');
     console.log('action of refreshNotes = ', action);
 
-    // ONESIGNAL
+
     let allUsersWithPushToken = [];
     let testModeON = 'This is a Real Alert -';
     if (alert.realDrillDemo == 'drill')
@@ -411,8 +518,8 @@ module.exports.refreshNotes = function(alert, action) {
             allUsersWithPushToken.push(token);
         });
     });
-
-    // we need to create a notification to send
+    /*
+    // ONESIGNAL
     let message = {
         app_id: appId,
         contents: {
@@ -427,41 +534,62 @@ module.exports.refreshNotes = function(alert, action) {
             alert: alert._id
         }
     };
+    //let title = testModeON + ' ' + alert.alert.name;
+    */
 
-    let title = testModeON + ' ' + alert.alert.name;
-    sendPush(message, title, function (result,err) {
-        if(err || !result) console.log('refreshNotes err = ',err);
+    let arr =  allUsersWithPushToken;
+    let size = 500;
+    splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+        if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
         else {
-            console.log('result refreshNotes = ',result)
-        }
+            newArray.forEach(function(usersWithPushTokenArrayChunk) {
 
+                let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                    registration_ids: usersWithPushTokenArrayChunk,
+                    data: {  //you can send only notification or only data(or include both)
+                        action: action,
+                        alert: alert._id
+                    },
+                    priority: "high"
+                };
+
+                sendPush2(message, function (result,err) {
+                    if(err || !result) console.log('refreshNotes err = ',err);
+                    else {
+                        console.log('result refreshNotes = ',result);
+                    }
+                });
+            });
+        }
     });
 };
 
-//To remove pushTokens of users with app that is logged out
-module.exports.heartBeat = function(arrayTokensToSend, action) {
 
-    // we need to create a notification to send
-    let message = {
-        app_id: appId,
-        content_available: true,
-        include_player_ids: arrayTokensToSend,
-        data: {
+//To remove pushTokens "not Registered" in FCM
+module.exports.heartBeat = function(token, action, callback) {
+
+    let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+        to: token,
+        data: {  //you can send only notification or only data(or include both)
             action: action
-        }
+        },
+        priority: "high"
     };
 
-    let title = '';
-    sendPush(message, title, function (result,err) {
-        if(err || !result) console.log('heartBeat err = ',err);
-        else {
-            console.log('result heartBeat = ',result)
+    sendPush2(message, function (result,err) {
+        if(err || !result) {
+            console.log('notifyUser err = ',err);
         }
+        else {
+            console.log('result notifyUser = ',result);
 
+        }
+        callback(result) // result = 'sendPush with Error' or 'doneSendPush'
     });
 };
 
 
+/*
 //OneSignal - sending cellPhone notification
 function sendPush(message, title, callback) {
     console.log('sendPush');
@@ -489,10 +617,10 @@ function sendPush(message, title, callback) {
     callback('doneSendPush');
 }
 //end of OneSignal - sending cellPhone notification
+*/
 
 
-
-// FireBase - sending cellPhone notification
+// FCM - sending cellPhone notification
 function sendPush2(message, callback) {
     let serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
     let fcm = new FCM(serverKey);
@@ -500,6 +628,7 @@ function sendPush2(message, callback) {
     fcm.send(message, function (err, result) {
         if(err || !result) {
             console.log('err = ', err);
+            /*
             //this IF and ELSE can be deleted. this was just for testing receipts
             if(result !== null && result !== undefined ){
                 let myArrayResult = result.split(/([0-9]+)/);
@@ -509,12 +638,14 @@ function sendPush2(message, callback) {
             else
                 console.log('result1 - ', result);
             //END OF this IF and ELSE can be deleted. this was just for testing receipts
-
+            */
             //resendMessage function
+            callback('sendPush with Error');
         }
         else {
             console.log('PUSH NOTIFICATION SENT Correctly');
-            console.log('result2 - ', result);
+            //console.log('result2 - ', result);
+            /*
             //this IF and ELSE can be deleted. this was just for testing receipts
             if(result !== null && result !== undefined ){
                 let myArrayResult = result.split(/([0-9]+)/);
@@ -522,6 +653,8 @@ function sendPush2(message, callback) {
                 console.log('success_number - ', success_number);
             }
             //END OF this IF and ELSE can be deleted. this was just for testing receipts
+            */
+            callback('doneSendPush');
         }
     });
     /*admin.messaging().send(message).then(response => {
@@ -529,7 +662,7 @@ function sendPush2(message, callback) {
         console.log('response - ', response);
     });*/
 
-    callback('doneSendPush');
+
 }
 
 //end of FireBase - sending cellPhone notification
@@ -537,7 +670,7 @@ function sendPush2(message, callback) {
 
 
 
-
+/*
 function resendMessage(errResponse, message, myClient, title) {
 
     if(typeof errResponse.body.errors.length !== 'undefined'){
@@ -598,7 +731,7 @@ function resendMessage(errResponse, message, myClient, title) {
 
     //end of When a pushToken has incorrect format
 }
-
+*/
 
 function splittingArray(size, arr, callback){ //size - child_array.length
     let out = [],i = 0, n= Math.ceil((arr.length)/size);

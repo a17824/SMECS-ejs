@@ -71,7 +71,7 @@ module.exports.receivedAlert = function(req, res) {
                         usersWithPushToken.push(user);
                 });
 
-                reportsEJS.totalNumbers(results[0],function (result,err) {
+                reportsEJS.totalNumbers(req, results[0],function (result,err) {
                     if(err) console.log('totalNumbers err - ',);
                     else {
                         if(req.decoded){ //API user

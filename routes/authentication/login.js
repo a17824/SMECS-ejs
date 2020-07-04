@@ -4,7 +4,6 @@ var models = require('./../models');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../api/config');
 
-let OneSignal = require('onesignal-node'); //for OneSignal
 let pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
 
 
@@ -109,7 +108,6 @@ module.exports.postLogin = function(req, res, next) {
                         //expiresIn: 1440 // expires in 24 hours
                     });
                     let newPushToken = req.body.pushToken;
-
                     if (user.pushToken.includes(null)) { //deletes all null pushTokens from user
                         let filtered = user.pushToken.filter(function (el) {
                             return el != null;
@@ -222,19 +220,46 @@ module.exports.getLogout = function(req, res) {
 
 module.exports.heartBeat = function (){
     console.log('heartBeat');
-    let arrayTokensToSend = [];
+    //let arrayTokensToDelete = [];
     models.Users.find({}, function (err, users) {
         if (err) {
             console.log('err - finding Users');
         } else {
             users.forEach(function (user) {
-                user.pushToken.forEach(function (token) {
-                    arrayTokensToSend.push(token);
-                });
+                if (user.pushToken.length >= 1){
+                    user.pushToken.forEach(function (token) {
+                        //arrayTokensToSend.push(token);
+                        pushNotification.heartBeat(token,'heartBeat', function (result2,err2) {
+                            if(err2) console.log('err2 result heartbeat = ',err2);
+                            else {
+
+                                if(result2 === 'sendPush with Error'){
+                                    const index = user.pushToken.indexOf(token);
+                                    if (index > -1) {
+                                        user.pushToken.splice(index, 1);
+                                    }
+                                    if (user.pushToken.length < 1) { //put radio button off if array is empty
+                                        user.pushToken = undefined;
+                                    }
+                                    user.save(function (err3) {
+                                        if(err){console.log('err saving deleting token NotRegistered = ',err3);}
+                                        else {console.log('Success removing token NotRegistered = ' + token + 'from user: ' + user.firstName + ' ' + user.lastName);}
+                                    });
+                                }
+                            }
+
+
+                        })
+                    });
+
+                }
+
 
             });
             /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.icons(arrayTokensToSend,'heartBeat');
+            //pushNotification.heartBeat(arrayTokensToSend,'heartBeat',, function (result2,err2) {});
+
+
         }
     });
 };
