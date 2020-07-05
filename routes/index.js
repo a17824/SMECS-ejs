@@ -62,9 +62,9 @@ let showLightsAndPanicButtons = require('./lightsPanicButtons/showLightsPanicBut
 │    └──────────────────── minute (0 - 59)
 └───────────────────────── second (0 - 59, OPTIONAL)
 */
-//This runs every day ay 7pm
-schedule.scheduleJob("13 21 * * *", function() {
-    console.log('This runs every day ay 07:00PM');
+//This runs every week on sunday at 7pm
+schedule.scheduleJob("0 19 * * 7", function() {
+    console.log('This runs every week on Sunday at 07:00PM');
     login.heartBeat();  //remove pushTokens in SMECS database that are not Registered in FCM
 
 });

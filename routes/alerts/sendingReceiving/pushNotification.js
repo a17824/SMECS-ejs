@@ -624,7 +624,7 @@ function sendPush(message, title, callback) {
 function sendPush2(message, callback) {
     let serverKey = 'AAAAblin56M:APA91bEISdc0T7gPr_MeUJZ6wHnnKzwv1oUWi360L83GsEFTNpx-8yLg-Hs5-DXGcPWk8EzCxt1Vqhs3aaK9d2JM_uSe45pV3i_Ypw6bmnRtG9OCOzAefMqmsDR9uKEyKwitJe7aDfBN';
     let fcm = new FCM(serverKey);
-    console.log('message - ', message);
+
     fcm.send(message, function (err, result) {
         if(err || !result) {
             console.log('err = ', err);

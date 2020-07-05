@@ -220,53 +220,40 @@ module.exports.getLogout = function(req, res) {
 
 module.exports.heartBeat = function (){
     console.log('heartBeat');
-    //let arrayTokensToDelete = [];
     models.Users.find({}, function (err, users) {
         if (err) {
             console.log('err - finding Users');
         } else {
             users.forEach(function (user) {
+                let flag0 = 1;
                 if (user.pushToken.length >= 1){
-                    user.pushToken.forEach(function (token) {
-                        //arrayTokensToSend.push(token);
+                    user.pushToken.forEach(function (token, idx2, array2) {
                         pushNotification.heartBeat(token,'heartBeat', function (result2,err2) {
                             if(err2) console.log('err2 result heartbeat = ',err2);
                             else {
-
                                 if(result2 === 'sendPush with Error'){
                                     const index = user.pushToken.indexOf(token);
                                     if (index > -1) {
                                         user.pushToken.splice(index, 1);
                                     }
-                                    if (user.pushToken.length < 1) { //put radio button off if array is empty
+                                    if (user.pushToken.length < 1) {
                                         user.pushToken = undefined;
+                                        flag0 = 0;
                                     }
-                                    user.save(function (err3) {
-                                        if(err){console.log('err saving deleting token NotRegistered = ',err3);}
-                                        else {console.log('Success removing token NotRegistered = ' + token + 'from user: ' + user.firstName + ' ' + user.lastName);}
-                                    });
+
+                                    if (flag0 === 0 || idx2 === array2.length - 1) {
+                                        user.save(function (err3) {
+                                            if(err){console.log('err saving deleting token NotRegistered = ',err3);}
+                                            else {console.log('Success removing tokens NotRegistered from user: ' + user.firstName + ' ' + user.lastName);}
+                                        });
+                                    }
                                 }
                             }
-
-
                         })
                     });
-
                 }
-
-
             });
-            /*****  CALL HERE NOTIFICATION API  *****/
-            //pushNotification.heartBeat(arrayTokensToSend,'heartBeat',, function (result2,err2) {});
-
-
         }
     });
 };
 
-module.exports.heartBeatResponse = function (){ //response with pushTokens to remove
-
-};
-
-
-//module.exports = router;

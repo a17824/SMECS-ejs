@@ -17,7 +17,7 @@ var login = require('./authentication/login');
 /* AUTHENTICATE ---------------------- */
 routerApi.post('/login', login.postLogin, function(req, res) {});
 routerApi.post('/logout', auth.auth, auth.logout, function(req, res) {});
-routerApi.post('/heartBeatResponse', auth.auth, login.heartBeatResponse, function(req, res) {});
+
 
 /* FORGOT PASSWORD ------------------- */
 routerApi.post('/forgot', email.forgotPost, function(req, res) {});
