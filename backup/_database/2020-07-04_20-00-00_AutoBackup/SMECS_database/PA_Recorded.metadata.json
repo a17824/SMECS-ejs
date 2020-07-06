@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"SMECS_database.PA_Recorded"},{"v":2,"unique":true,"key":{"titleName":1},"name":"titleName_1","ns":"SMECS_database.PA_Recorded","background":true}],"uuid":"5854d5105d34498382a8168d470360e9"}

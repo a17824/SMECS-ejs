@@ -4,6 +4,7 @@ var aclPermissions = require('./../acl/aclPermissions');
 var backup = require('./backupRestore');
 var functions = require('../functions');
 var clean = require('../backupRestore/cleanOldFiles');
+var models = require('../models');
 
 //MANUAL BACKUP Wait Page
 module.exports.inProgressBackup = function(req, res) {
@@ -40,7 +41,6 @@ module.exports.inProgressBackup = function(req, res) {
 
 //MANUAL BACKUP
 module.exports.manualBackupPost = function(req, res) {
-
     var spawn = require('child_process').spawn,
         ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_manual_backup.bat`],{env: process.env});
     backup.backupRestore(ls, 'manualBackup', function (result,err) {   //manual backup
@@ -167,48 +167,46 @@ module.exports.showBackups = function(req, res, next) {
 //Restore database Backups
 module.exports.restoreBackupPost = function(req, res) {
     let backupToRestore = req.body.directoryName;
-    console.log('backupToRestore = ',backupToRestore);
-    //res.redirect('/restore/showBackups'); //needs to go to restore in progress
 
-
-    var spawn = require('child_process').spawn,
-        ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_1restoreDatabase.bat`,backupToRestore],{env: process.env});
-    backup.backupRestore(ls, 'restore', function (result,err) {   //restore DATABASE
-        if(err) console.log('restore database err = ',err);
+    backup.savePushTokens(function (result4,err4) { //Before restore, saves users pushTokens. result3 contains users pushTokens before restore
+        if(err4)console.log('err4 - ',err4);
         else {
-            let message;
-            if(result === 0){
-                console.log('Restore database successful!');
-                backup.restoreFolders(function (result2,err2) { //restore FOLDERS
-                    if(err) console.log('restore folders err = ',err2);
-                    else {
-                        let message2;
-                        if(result2 === 0){
-                            console.log('Restore folders successful!');
-                            message2 = "Restore finished successfully";
-                            clean.cleanOldUserPhotos(); //delete old Users photos
-                            clean.cleanOldStudentPhotos(); //delete old Users photos
-                            clean.cleanOldAlertSentInfoFloors(); //delete old AlertSentInfoFloors photos
-                            clean.cleanOldAlertSentInfoStudents(); //delete old AlertSentInfoStudents photos
-
-                        }
-                        else {
-                            message2 = "There was a problem restoring folders backup";
-                            console.log('restore folders backup FAILED');
-
-                        }
-                        res.send({redirect: '/backupResp/' + message2});
+            //Start restore process
+            var spawn = require('child_process').spawn,
+                ls    = spawn('cmd.exe', ["/c", `backup\\SMECS_1restoreDatabase.bat`,backupToRestore],{env: process.env});
+            backup.backupRestore(ls, 'restore', function (result,err) {   //restore DATABASE
+                if(err) console.log('restore database err = ',err);
+                else {
+                    let message;
+                    if(result === 0){
+                        savePushTokensToRestoredDatabase(result4);  //replace users pushTokens to restored database
+                        backup.restoreFolders(function (result2,err2) { //restore FOLDERS
+                            if(err) console.log('restore folders err = ',err2);
+                            else {
+                                let message2;
+                                if(result2 === 0){
+                                    console.log('Restore folders successful!');
+                                    message2 = "Restore finished successfully";
+                                    clean.cleanOldUserPhotos(); //delete old Users photos
+                                    clean.cleanOldStudentPhotos(); //delete old Users photos
+                                    clean.cleanOldAlertSentInfoFloors(); //delete old AlertSentInfoFloors photos
+                                    clean.cleanOldAlertSentInfoStudents(); //delete old AlertSentInfoStudents photos
+                                }
+                                else {
+                                    message2 = "There was a problem restoring folders backup";
+                                    console.log('restore folders backup FAILED');
+                                }
+                                res.send({redirect: '/backupResp/' + message2});
+                            }
+                        });
                     }
-
-                });
-
-            }
-            else {
-                message = "There was a problem restoring database backup";
-                console.log('restore database backup FAILED');
-                res.send({redirect: '/backupResp/' + message});
-            }
-
+                    else {
+                        message = "There was a problem restoring database backup";
+                        console.log('restore database backup FAILED');
+                        res.send({redirect: '/backupResp/' + message});
+                    }
+                }
+            });
         }
     });
 };
@@ -223,3 +221,62 @@ module.exports.restoreFolders = function(callback) {
 
     });
 };
+
+//AUTO & MANUAL BACKUP & RESTORE
+module.exports.savePushTokens = function(callback) {
+    console.log('savePushTokens');
+    models.Users.find({}, function (err, users) {
+        if (err) {
+            console.log('err = ', err);
+        }
+        else {
+            let arrayOfUsersWithPushTokens = [];
+            users.forEach(function (user, idx2, array2) {
+                if(user.pushToken.length >= 1){
+                    let userTokens = {
+                        _id: user._id,
+                        pushToken: user.pushToken
+                    };
+                    arrayOfUsersWithPushTokens.push(userTokens);
+                }
+                if (idx2 === array2.length - 1) {
+                    callback(arrayOfUsersWithPushTokens)
+                }
+            });
+        }
+    });
+};
+function savePushTokensToRestoredDatabase(arrayOfUsersWithPushTokens){
+    console.log('savePushTokensToRestoredDatabase');
+    models.Users.find({}, function (err, users) {
+        if (err) {
+            console.log('err = ', err);
+        }
+        else {
+            users.forEach(function (user) {
+
+                console.log('arrayOfUsersWithPushTokens= ',arrayOfUsersWithPushTokens);
+
+                let flagUserFound = 0;
+                for (let i = 0; i < arrayOfUsersWithPushTokens.length; ++i) {
+                    let userID = user._id.toString();
+                    let userInArray = arrayOfUsersWithPushTokens[i]._id.toString();
+                    console.log('userID -- ',userID);
+                    console.log('userInArray -- ',userInArray);
+                    if(userID === userInArray){
+                        user.pushToken = arrayOfUsersWithPushTokens[i].pushToken;
+                        flagUserFound = 1;
+                        break
+                    }
+                }
+                if(flagUserFound === 0){
+                    user.pushToken = undefined;
+                }
+                user.save(function (err2) {
+                    if(err){console.log('err saving user pushTokens = ',err2);}
+                    else {console.log('Success replacing user pushTokens user: ' + user.firstName + ' ' + user.lastName);console.log('user.pushTokenZ = ',user.pushToken);}
+                });
+            });
+        }
+    });
+}

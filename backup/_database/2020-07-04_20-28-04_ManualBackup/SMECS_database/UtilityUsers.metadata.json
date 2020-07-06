@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"SMECS_database.UtilityUsers"},{"v":2,"unique":true,"key":{"email":1},"name":"email_1","ns":"SMECS_database.UtilityUsers","background":true}],"uuid":"2f41af2116664d8e84b30f3e5bd0cba0"}

@@ -19,7 +19,7 @@ var statistics = require('./statistics/statistics');
 var reports = require('./alerts/reports/reports');
 var photos = require('./photos/addUpdatePhoto');
 var backup = require('./backupRestore/backupRestore');
-var clean = require('./backupRestore/cleanOldFiles');
+
 var alertsPermissionsTable = require('./alerts/alertsPermissionsTable');
 
 var auth = require('./authentication/auth');
