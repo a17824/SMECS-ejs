@@ -57,15 +57,17 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                         let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
                             registration_ids: usersWithPushTokenArrayChunk,
                             //to: usersWithPushTokenArrayChunk[0],
-                            /*notification: {
-                                click_action: ".MainActivity",
+                            notification: {
                                 title: title,
-                                body: 'Body of your push notification'
-                            },*/
-                            data: {  //you can send only notification or only data(or include both)
-                                alertID: alert._id
+                                body: 'aaaaaa',
+                                sound: "sound2"
+
 
                             },
+                            data: {  //you can send only notification or only data(or include both)
+                                alertID: alert._id
+                            },
+
                             priority: "high"
                         };
 
@@ -453,7 +455,7 @@ module.exports.notifyUser = function(user, action) {
 };
 
 module.exports.refreshAlertInfo = function(alert, action) {
-    console.log('refreshAlertInfo');
+ /*   console.log('refreshAlertInfo');
     console.log('action of refreshAlertInfo = ', action);
 
 
@@ -475,6 +477,7 @@ module.exports.refreshAlertInfo = function(alert, action) {
         }
     };
     */
+    /*
     let arr =  allUsersWithPushToken;
     let size = 500;
     splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
@@ -499,7 +502,7 @@ module.exports.refreshAlertInfo = function(alert, action) {
                 });
             });
         }
-    });
+    });*/
 };
 
 

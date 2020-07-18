@@ -28,7 +28,7 @@ module.exports.simpleAuth = function(req, res, next) {
 function authentication(req, res, typeUserAuth, next){
     models[typeUserAuth].findOne({ email: req.session.user.email }, function(err, user) {
         if(err || !user){
-        console.log("error finding in model: " + typeUserAuth);
+            console.log("error finding in model: " + typeUserAuth);
         }
         else {
             req.user = user;
@@ -152,20 +152,30 @@ module.exports.checkPushToken = function(req, res, next) {
 
 
 
-/*
+
 // route middleware to update pushToken
 module.exports.updatePushToken = function (req, res, next) {
-   let newPushToken = req.body.pushToken;
-    console.log('req.body.pushToken = ',newPushToken);
-    console.log('req.decoded.email = ',req.decoded.email);
-    models.Users.findOne({ email: req.decoded.email }, function(err, user) {
+    let newPushToken = req.body.pushToken;
+    models.Users.findOne({ email: req.decoded.user.email }, function(err, user) {
         if (err || !user) {
             console.log("error finding user to update pushToken");
         }
         else {
             user.pushToken.push(newPushToken);
-            user.save();
+            user.save(function (err2) {
+                if(err2){
+                    res.json({
+                        success: false
+                    });
+                    console.log('err updating user pushToken = ',err2);
+                }
+                else {
+                    res.json({
+                        success: true
+                    });
+                    console.log('Success updating pushToken of user: ' + user.firstName + ' ' + user.lastName);
+                }
+            });
         }
     });
 };
-*/

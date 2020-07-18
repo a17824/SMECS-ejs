@@ -229,12 +229,14 @@ module.exports.heartBeat = function (){
                 if (user.pushToken.length >= 1){
                     user.pushToken.forEach(function (token, idx2, array2) {
                         pushNotification.heartBeat(token,'heartBeat', function (result2,err2) {
+
                             if(err2) console.log('err2 result heartbeat = ',err2);
                             else {
                                 if(result2 === 'sendPush with Error'){
                                     const index = user.pushToken.indexOf(token);
                                     if (index > -1) {
                                         user.pushToken.splice(index, 1);
+                                        flag0 = 0;
                                     }
                                     if (user.pushToken.length < 1) {
                                         user.pushToken = undefined;

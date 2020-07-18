@@ -70,7 +70,7 @@ routerApi.get('/createAlert/:id', auth.auth, createAlert.createAlert, function(r
 routerApi.get('/alerts/received/receiveAlert/:id', auth.auth, receiveAlert.receivedAlert, function(req, res, next) {});
 
 /* Update pushToken ------------------------------------*/
-//routerApi.post('/updatePushToken', auth.auth, auth.updatePushToken, function(req, res) {});
+routerApi.post('/updatePushToken', auth.auth, auth.updatePushToken, function(req, res) {});
 
 /* Get all alerts ------------------------------------*/
 routerApi.get('/reports/reportsGet', auth.auth, reports.reportsGet, function(req, res) {});
