@@ -59,15 +59,14 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
                             //to: usersWithPushTokenArrayChunk[0],
                             notification: {
                                 title: title,
-                                body: 'aaaaaa',
-                                sound: "sound2"
+                                android_channel_id: alert.group.sound
 
 
                             },
                             data: {  //you can send only notification or only data(or include both)
-                                alertID: alert._id
+                                alertID: alert._id,
+                                action: action
                             },
-
                             priority: "high"
                         };
 
@@ -180,15 +179,22 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
 
     //popup message for alerts closed and reopened
     let enClosed = 'no alerts were closed';
+    let strClosedAlerts = '';
     if(alertsClosed.length === 1)
         enClosed = 'Alert ' + alertsClosed[0].name + ' was closed';
+
     if(alertsClosed.length > 1) {
         let allAlertsClosed = [];
         alertsClosed.forEach(function(alertClosed) {
             allAlertsClosed.push(alertClosed.name);
+            strClosedAlerts = strClosedAlerts + ',' + alertClosed.name;
         });
-        enClosed = 'The following alerts were closed:\n' + '-' + allAlertsClosed.join("\n-");
+        //enClosed = 'The following alerts were closed:\n' + '-' + allAlertsClosed.join("\n-");
+
+        console.log('strClosedAlerts = ',strClosedAlerts);
+
     }
+
     let enReopened = 'no alerts were reopened';
     if(alertsReopened.length === 1)
         enReopened = 'Alert ' + alertsReopened[0].name + ' was reopened';
@@ -221,7 +227,7 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
             if(reOpenAlert){
                 // we need to create a notification to send
                 //console.log('ALERT REOPEN CLOSED = ');
-                console.log('alertsReopened[0]', alertsReopened[0].id);
+                //console.log('alertsReopened[0]', alertsReopened[0].id);
                 /*let message = {
                     app_id: appId,
                     contents: {
@@ -249,12 +255,10 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
 
                             let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
                                 registration_ids: usersWithPushTokenArrayChunk,
-                                //to: usersWithPushTokenArrayChunk[0],
-                                /*notification: {
-                                    click_action: ".MainActivity",
-                                    title: title,
-                                    body: 'Body of your push notification'
-                                },*/
+                                notification: {
+                                    title: enReopened,
+                                    android_channel_id: alerts[0].group.sound
+                                },
                                 data: {  //you can send only notification or only data(or include both)
                                     action: 'reOpenAlert',
                                     alertID: alertsReopened[0].id
@@ -287,9 +291,13 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
 
                             let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
                                 registration_ids: usersWithPushTokenArrayChunk,
+                                notification: {
+                                    title: strClosedAlerts,
+                                    android_channel_id: 'sound22'
+                                },
                                 data: {  //you can send only notification or only data(or include both)
                                     action: 'closeAlert',
-                                    alertsClosed: alertsClosed
+                                    alertsClosed: strClosedAlerts
                                 },
                                 priority: "high"
                             };
@@ -389,7 +397,7 @@ module.exports.icons = function(icons,action) {
 };
 //end of Create message for cellPhone notification
 
-module.exports.notifyUser = function(user, action) {
+module.exports.notifyUser = function(user, action) { //action = updateUserInfo (group buttons, fingerprint)
     console.log('notifyUser');
     console.log('action of notifyUser= ', action);
 
@@ -397,16 +405,6 @@ module.exports.notifyUser = function(user, action) {
         //expiresIn: 1440 // expires in 24 hours
     });
 
-    /* FIREBASE
-    var message = {
-        to: user.pushToken, // required fill with device token
-        data: { //you can send only notification or only data(or include both)
-            action: action,
-            groupAlertsButtons: user.appSettings.groupAlertsButtons,
-            theme: user.appSettings.theme
-        }
-    };
-    */
 
     /*
     //ONESIGNAL
@@ -430,7 +428,7 @@ module.exports.notifyUser = function(user, action) {
     */
 
     let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
-        to: user.pushToken,
+        registration_ids: user.pushToken,
         data: {  //you can send only notification or only data(or include both)
             action: action,
             groupAlertsButtons: user.appSettings.groupAlertsButtons,
@@ -547,11 +545,16 @@ module.exports.refreshNotes = function(alert, action) {
         else {
             newArray.forEach(function(usersWithPushTokenArrayChunk) {
 
+                let title = testModeON + ' ' + alert.alert.name;
                 let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
                     registration_ids: usersWithPushTokenArrayChunk,
+                    notification: {
+                        title: title,
+                        android_channel_id: 'sound22'
+                    },
                     data: {  //you can send only notification or only data(or include both)
-                        action: action,
-                        alert: alert._id
+                        alertID: alert._id,
+                        action: action
                     },
                     priority: "high"
                 };
