@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
     <!-- Datatables -->
     <link href="/public/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
@@ -115,6 +115,16 @@
             });
 
         }
+        $(document).ready(function() {
+            $("#datatable-buttons").dataTable().fnDestroy();
+            $('#datatable-buttons').dataTable({
+                aLengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "All"]
+                ],
+                iDisplayLength: -1
+            });
+        } );
     </script>
 </head>
 

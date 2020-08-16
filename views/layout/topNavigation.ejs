@@ -29,7 +29,7 @@
                 </li>
 
                 <li>
-                    <% if (aclSideMenu == null || aclSideMenu.topNavigationButtons.checkBoxValue == true){%>
+                    <% if (aclSideMenu == null || aclSideMenu.topNavigationButtons == null || aclSideMenu.topNavigationButtons.checkBoxValue == true){%>
                         <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href=''">New School Year</button>
                         <!-- <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="location.href='/inProgressBackup/backup'">Backup</button> -->
                         <button style="margin-top: 15px" class="btn btn-dark" id="newYear" onclick="return(confirmYN())">Backup</button>
