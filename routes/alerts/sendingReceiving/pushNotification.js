@@ -173,21 +173,26 @@ module.exports.alert= function(alert, action, userAuthEmail, callback) {
 
 // FOR FCM - Update open alerts badge number
 module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReopened) {
-    console.log('alertsClosed = ', alertsClosed);
     console.log('updateBadge');
     console.log('action (no var action) of updateBadge = ');
 
     //popup message for alerts closed and reopened
     let enClosed = 'no alerts were closed';
     let strClosedAlerts = '';
-    if(alertsClosed.length === 1)
-        enClosed = 'Alert ' + alertsClosed[0].name + ' was closed';
 
-    if(alertsClosed.length > 1) {
+    if(alertsClosed.length >= 1) {
         let allAlertsClosed = [];
+        let flagFirstTime = 0;
         alertsClosed.forEach(function(alertClosed) {
-            allAlertsClosed.push(alertClosed.name);
-            strClosedAlerts = strClosedAlerts + ',' + alertClosed.name;
+            if(flagFirstTime === 0){
+                strClosedAlerts = alertClosed.name;
+                flagFirstTime = 1;
+            }
+            else
+            {
+                allAlertsClosed.push(alertClosed.name);
+                strClosedAlerts = strClosedAlerts + ',' + alertClosed.name;
+            }
         });
         //enClosed = 'The following alerts were closed:\n' + '-' + allAlertsClosed.join("\n-");
 
@@ -453,28 +458,28 @@ module.exports.notifyUser = function(user, action) { //action = updateUserInfo (
 };
 
 module.exports.refreshAlertInfo = function(alert, action) {
- /*   console.log('refreshAlertInfo');
-    console.log('action of refreshAlertInfo = ', action);
+    /*   console.log('refreshAlertInfo');
+       console.log('action of refreshAlertInfo = ', action);
 
 
-    let allUsersWithPushToken = [];
-    alert.sentTo.forEach(function (user) {
-        user.pushToken.forEach(function (token) {
-            allUsersWithPushToken.push(token);
-        });
-    });
-    /*
-    //ONESIGNAL
-    let message = {
-        app_id: appId,
-        content_available: true,
-        include_player_ids: allUsersWithPushToken,
-        data: {
-            alertID: alert._id,
-            action: action
-        }
-    };
-    */
+       let allUsersWithPushToken = [];
+       alert.sentTo.forEach(function (user) {
+           user.pushToken.forEach(function (token) {
+               allUsersWithPushToken.push(token);
+           });
+       });
+       /*
+       //ONESIGNAL
+       let message = {
+           app_id: appId,
+           content_available: true,
+           include_player_ids: allUsersWithPushToken,
+           data: {
+               alertID: alert._id,
+               action: action
+           }
+       };
+       */
     /*
     let arr =  allUsersWithPushToken;
     let size = 500;
