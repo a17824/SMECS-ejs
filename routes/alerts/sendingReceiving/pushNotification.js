@@ -181,19 +181,28 @@ module.exports.updateBadge= function(alerts,reOpenAlert,alertsClosed,alertsReope
     let strClosedAlerts = '';
 
     if(alertsClosed.length >= 1) {
-        let allAlertsClosed = [];
-        let flagFirstTime = 0;
-        alertsClosed.forEach(function(alertClosed) {
-            if(flagFirstTime === 0){
-                strClosedAlerts = alertClosed.name;
-                flagFirstTime = 1;
-            }
-            else
-            {
-                allAlertsClosed.push(alertClosed.name);
-                strClosedAlerts = strClosedAlerts + ',' + alertClosed.name;
-            }
-        });
+        if(alertsClosed.length === 1) {
+            strClosedAlerts = alertsClosed[0].name + ' was closed';
+        }
+        else {
+            strClosedAlerts = alertsClosed.length + ' alerts were closed';
+            /*
+            let allAlertsClosed = [];
+            let flagFirstTime = 0;
+            alertsClosed.forEach(function(alertClosed) {
+                if(flagFirstTime === 0){
+                    strClosedAlerts = alertClosed.name;
+                    flagFirstTime = 1;
+                }
+                else
+                {
+                    allAlertsClosed.push(alertClosed.name);
+                    strClosedAlerts = strClosedAlerts + ',' + alertClosed.name;
+                }
+            });
+            */
+        }
+
         //enClosed = 'The following alerts were closed:\n' + '-' + allAlertsClosed.join("\n-");
 
         console.log('strClosedAlerts = ',strClosedAlerts);
