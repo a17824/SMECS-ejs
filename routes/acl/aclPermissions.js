@@ -174,7 +174,12 @@ module.exports.showReports = function(req, res, callback) {
 //clearReports ID = 25
 module.exports.clearReports = function(req, res, callback) {
     var id = 25;
-    models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
+    if(req.decoded){
+        models.AclPermissions.findOne({"checkBoxID": req.decoded.user.userPrivilegeID+''+id}).exec(callback);
+    }
+    else {
+        models.AclPermissions.findOne({"checkBoxID": req.user.userPrivilegeID+''+id}).exec(callback);
+    }
 };
 
 //deleteReports ID = 26

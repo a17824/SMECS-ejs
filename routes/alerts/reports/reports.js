@@ -13,7 +13,7 @@ let reqButtons = require('./../sendingReceiving/saveAlertFunc/2_3_4.reqAssButton
 
 
 //* SHOW REPORTS. */
-module.exports.homeReports = function(req, res, next) {
+module.exports.homeReports = function(req, res) {
     async.parallel([
         function(callback){
             models.AlertSentInfo.find({autoAlert: false}).sort({"_id":-1}).exec(callback);

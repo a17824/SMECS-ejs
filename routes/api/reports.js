@@ -1,4 +1,6 @@
 var models = require('./../models');
+var async = require("async");
+var aclPermissions = require('./../acl/aclPermissions');
 var moment = require('moment');
 let pushNotification = require('./../alerts/sendingReceiving/pushNotification.js');
 let timeDifFunc = require('./reports.js');
@@ -6,9 +8,56 @@ let timeDifFunc = require('./reports.js');
 /* Send all alerts. -------------------------------*/
 module.exports.reportsGet = function (req, res) {
 
+    let state = 'closed';
+    if(req.params.alertState === 'open')
+        state = 'open';
+
+    async.parallel([
+        function(callback){
+            models.AlertSentInfo.find({
+                $and: [
+                    {'status.statusString': state},
+                    {$or: [{ sentTo: {$elemMatch: {email: req.decoded.user.email}} } , { sentSmecsAppUsersScope: {$elemMatch: {userEmail: req.decoded.user.email}} }] }
+                ]}).exec(callback);
+        },
+        function(callback){aclPermissions.clearReports(req, res, callback);}         //aclPermissions clearReports
+
+    ],function(err, results){
+
+        if (err || !results[0]){
+            console.log('no open alerts found. err - ',err);
+            res.json({
+                success: 'false',
+                message: 'Something went wrong'
+            })
+        }
+        else {
+            if(state === 'closed'){
+                results[0].sort((a, b) => {
+                    // sort by date + time
+                    if (new Date(a.sentDate + ' ' + a.sentTime) > new Date(b.sentDate + ' ' + b.sentTime))
+                        return -1;
+
+                    if (new Date(a.sentDate + ' ' + a.sentTime) < new Date(b.sentDate + ' ' + b.sentTime))
+                        return 1;
+                    return 0;
+                });
+                if(results[0].length > 20)
+                    results[0].length = 20;
+
+            }
+            res.json({
+                success: 'true',
+                alerts: results[0],
+                canOpenCloseAlerts: results[1].checkBoxValue
+            });
+        }
+    })
+
+/*
     models.AlertSentInfo.find({
         $and: [
-            {'status.statusString': "open"},
+            {'status.statusString': state},
             {$or: [{ sentTo: {$elemMatch: {email: req.decoded.user.email}} } , { sentSmecsAppUsersScope: {$elemMatch: {userEmail: req.decoded.user.email}} }] }
         ]
     },function (err, alert) {
@@ -20,13 +69,27 @@ module.exports.reportsGet = function (req, res) {
             })
         }
         else {
+            if(state === 'closed'){
+                alert.sort((a, b) => {
+                    // sort by date + time
+                    if (new Date(a.sentDate + ' ' + a.sentTime) > new Date(b.sentDate + ' ' + b.sentTime))
+                        return -1;
+
+                    if (new Date(a.sentDate + ' ' + a.sentTime) < new Date(b.sentDate + ' ' + b.sentTime))
+                        return 1;
+                    return 0;
+                });
+                if(alert.length > 20)
+                    alert.length = 20;
+
+            }
             res.json({
                 success: 'true',
-                alerts: alert,
-                openAlerts: alert.length
+                alerts: alert
             });
         }
     });
+*/
 };
 
 /* Send spevific alert info ------------------------*/
