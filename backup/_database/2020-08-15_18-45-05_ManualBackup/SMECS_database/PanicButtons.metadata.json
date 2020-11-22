@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"SMECS_database.PanicButtons"},{"v":2,"unique":true,"key":{"nameID":1},"name":"nameID_1","ns":"SMECS_database.PanicButtons","background":true},{"v":2,"unique":true,"key":{"sortID":1},"name":"sortID_1","background":true,"ns":"SMECS_database.PanicButtons"}],"uuid":"53d88139648c4451a91f67f595abb7ba"}

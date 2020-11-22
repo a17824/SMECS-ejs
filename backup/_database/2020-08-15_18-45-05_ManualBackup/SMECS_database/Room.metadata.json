@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"SMECS_database.Room"},{"v":2,"unique":true,"key":{"roomID":1},"name":"roomID_1","background":true,"ns":"SMECS_database.Room"},{"v":2,"unique":true,"key":{"sortID":1},"name":"sortID_1","background":true,"ns":"SMECS_database.Room"}],"uuid":"dc8c8ad67a0a4bfbaee7ec8442d0806e"}

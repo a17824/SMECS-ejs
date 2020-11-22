@@ -3,16 +3,25 @@ var models = require('./../../models');
 var moment = require('moment');
 let pushNotification = require('./pushNotification.js');
 
-//update notes only from cellphone
-module.exports.postUpdateNotes = function(req, res) {
-    var wrapped = moment(new Date());
-    //var redirectEJS; //EJS user
+//update notes only from cellphone and from EJS homeReports
+module.exports.postUpdateNotes = function(req, res, closeReopenAlerts, alertID, closeReopendNote) {
+    let wrapped = moment(new Date());
 
-    var alertToUpdate1 = req.body.alertToUpdate;
-    var htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
-    var htmlTime = '</span></strong><span style="font-size:11px">';
-    var htmlNote = '</span></div><span style="color:#333333">&nbsp;';
-    var newNote = req.body.note;
+    let alertToUpdate1, newNote;
+
+    if(closeReopenAlerts){
+        alertToUpdate1 = alertID;
+        newNote = closeReopendNote;
+    }
+    else{
+        alertToUpdate1 = req.body.alertToUpdate;
+        newNote = req.body.note;
+    }
+
+    let htmlName = '<div class="lineSpaceP"><strong><span style="color:#800000">';
+    let htmlTime = '</span></strong><span style="font-size:11px">';
+    let htmlNote = '</span></div><span style="color:#333333">&nbsp;';
+
 
     if ( typeof newNote == 'undefined') //if user send an note update empty
     {
@@ -26,12 +35,16 @@ module.exports.postUpdateNotes = function(req, res) {
         else {
             console.log('newNote update = ',newNote);
             if(req.decoded){ // run SMECS API
-                if(alert.note)
+                if(alert.note)  // update note
                     alert.note += '<br><br class="lineSpaceBR">' + htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
-                else
+                else    // create first note entry
                     alert.note = htmlName + req.decoded.user.firstName + ' ' + req.decoded.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
             }else{  // run SMECS EJS
-                alert.note += '<br><br class="lineSpaceBR">' + htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+                if(alert.note) // update note
+                    alert.note += '<br><br class="lineSpaceBR">' + htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+                else // create first note entry
+                    alert.note = htmlName + req.user.firstName + ' ' + req.user.lastName + ' ' +  htmlTime + wrapped.format('h:mm:ss a') + htmlNote + newNote;
+
             }
             console.log('alert.note update = ',alert.note);
             alert.save();
@@ -40,11 +53,9 @@ module.exports.postUpdateNotes = function(req, res) {
                 res.json({
                     success: true
                 });
-            }else{  // run SMECS EJS
-                res.send({redirect: redirectEJS});
+                /*****  CALL HERE NOTIFICATION API  *****/
+                pushNotification.refreshNotes(alert, 'refreshNotes'); //refresh notes on cellphones
             }
-            /*****  CALL HERE NOTIFICATION API  *****/
-            pushNotification.refreshNotes(alert, 'refreshNotes'); //refresh notes on cellphones
         }
     });
 };

@@ -2,6 +2,7 @@
 var models = require('./../../models');
 var async = require("async");
 var aclPermissions = require('./../../acl/aclPermissions');
+var updateNotes = require('../sendingReceiving/5.updates');
 var moment = require('moment');
 var pushNotification = require('./../sendingReceiving/pushNotification.js');
 var functions = require('../../functions');
@@ -102,12 +103,13 @@ module.exports.reportsTrash = function(req, res, next) {
     })
 };
 
-/* Update STATUS Report. */
+/* REOPEN ALERT */
 module.exports.updateStatusReopen = function(req, res) {
 
     let alertsClosed = [];
     let alertsReopend = [];
     let reOpenAlert = true;
+    let reopenNote = req.body.note;
 
     models.AlertSentInfo.find({'_id': req.body.alertId}, function(err, alerts){//check if Request Assistance is softDeleted
         if(err || !alerts) console.log("No AlertInfo found");
@@ -151,6 +153,8 @@ module.exports.updateStatusReopen = function(req, res) {
                 user.iNeedHelp.helpers = undefined;
             });
 
+            updateNotes.postUpdateNotes(req, res, 'closeReopenAlerts', alerts[0]._id, reopenNote);
+
             alerts[0].save(function(err) {
                 if (err)
                     console.log('err = ', err);
@@ -172,10 +176,12 @@ module.exports.updateStatusReopen = function(req, res) {
     });
 };
 
+//CLOSE ALERTS
 module.exports.updateStatus = function(req, res) {
 
-    var statusToChange = req.body.searchIDsChecked;
-    var wrapped = moment(new Date());
+    let statusToChange = req.body.searchIDsChecked;
+    let closedNote = req.body.note;
+    let wrapped = moment(new Date());
 
     let alertsClosed = [];
     let alertsReopend = [];
@@ -211,6 +217,9 @@ module.exports.updateStatus = function(req, res) {
                     };
                     alertsReopend.push(alertIdName);
                 }
+
+                updateNotes.postUpdateNotes(req, res, 'closeReopenAlerts', alert._id, closedNote);
+
                 alert.save(function(err) {
                     if (err)
                         console.log('err = ', err);

@@ -53,43 +53,6 @@ module.exports.reportsGet = function (req, res) {
             });
         }
     })
-
-/*
-    models.AlertSentInfo.find({
-        $and: [
-            {'status.statusString': state},
-            {$or: [{ sentTo: {$elemMatch: {email: req.decoded.user.email}} } , { sentSmecsAppUsersScope: {$elemMatch: {userEmail: req.decoded.user.email}} }] }
-        ]
-    },function (err, alert) {
-        if (err || !alert){
-            console.log('no open alerts found. err - ',err);
-            res.json({
-                success: 'false',
-                message: 'Something went wrong'
-            })
-        }
-        else {
-            if(state === 'closed'){
-                alert.sort((a, b) => {
-                    // sort by date + time
-                    if (new Date(a.sentDate + ' ' + a.sentTime) > new Date(b.sentDate + ' ' + b.sentTime))
-                        return -1;
-
-                    if (new Date(a.sentDate + ' ' + a.sentTime) < new Date(b.sentDate + ' ' + b.sentTime))
-                        return 1;
-                    return 0;
-                });
-                if(alert.length > 20)
-                    alert.length = 20;
-
-            }
-            res.json({
-                success: 'true',
-                alerts: alert
-            });
-        }
-    });
-*/
 };
 
 /* Send spevific alert info ------------------------*/

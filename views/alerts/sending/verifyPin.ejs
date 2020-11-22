@@ -10,7 +10,7 @@
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 
-    <link rel='stylesheet' href='/public/stylesheets/building.css' />
+    <!--<link rel='stylesheet' href='/public/stylesheets/building.css' /> -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
@@ -19,12 +19,9 @@
 
         $(document).ready(function(){
 
-
-
-            var pin,alertToUpdate;
             $("#btSubmit").click(function(){
-                pin=$("#utilityName").val();
-                alertToUpdate=$("#alertToUpdate").val();
+                var pin=$("#utilityName").val();
+                var alertToUpdate=$("#alertToUpdate").val();
 
                 //-----forms validation------------------------------------
                 if (pin == "" ) {
@@ -134,7 +131,8 @@
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <input type="password"
                                                class="form-control"
-                                               id="utilityName">
+                                               id="utilityName"
+                                               onkeydown = "if (event.keyCode == 13)document.getElementById('btSubmit').click()">
                                         <br>
                                         <button type="button"
                                                 id="btSubmit"

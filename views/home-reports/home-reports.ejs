@@ -30,7 +30,6 @@
     <link href="/public/stylesheets/footerAdjust.css" rel="stylesheet">
 
     <script>
-
         function selectAll() {
             $('input:checkbox').prop('checked','checked');
             $(this).val();
@@ -40,18 +39,17 @@
             $(this).val();
         }
 
-        //Reopen alert Confirmation
-        function YNconfirm(type, optionName) {
-            if (confirm('ATTENTION: \'' + optionName + '\' option will be deleted. Are you sure?'))
-                return true;
-            else
-                return false;
-        };
 
+        //Reopen Popup with input filed
         function changeStatusReopen(alertId, route, alertName) {
-            if (confirm('ATTENTION: \'' + alertName + '\' alert will be reopen and send notifications to all users that can receive this alert.')){
+            var txt = '';
+            var reopenNote = prompt('ATTENTION: \'' + alertName + '\' alert will be reopen and send notifications to all users that can receive this alert.\n (If desire, change default reopen note)', "Not resolved yet");
+            if (reopenNote != null) { //if user press "OK" button
+                txt = reopenNote;
+
                 $.post(route, {
-                    alertId: alertId
+                    alertId: alertId,
+                    note: txt
 
                 },function(data){
                     if(data==='done')
@@ -61,8 +59,14 @@
                     window.location = data.redirect
                 });
             }
-             else
-                return false;
+            /*
+            if (confirm('ATTENTION: \'' + alertName + '\' alert will be reopen and send notifications to all users that can receive this alert.')){
+                $.post(route, {alertId: alertId},function(data){
+                    if(data==='done'){alert("login success");}
+                    window.location = data.redirect
+                });
+            } else return false;
+            */
         }
 
         function changeStatus(action, page) {
@@ -94,25 +98,50 @@
             //--------------------------------forms validation end-------
 
             var route
-            if (action == 'status')
-                route = "/reportStatus";
-            if (action == 'archive')
-                route = "/moveToArchiveInboxTrash";
-            if (action == 'trash')
-                route = "/moveToArchiveInboxTrash";
 
-            $.post(route, {
-                searchIDsChecked: searchIDsChecked,
-                action: action,
-                page: page
+            //Close Alerts
+            var txt = '';
+            if (action == 'status') {
+                var closeNote = prompt("Are you sure tou want to close selected alert(s)? (If desire, change default closing note)", "Resolved");
+                if (closeNote != null) { //if user press "OK" button
+                    txt = closeNote;
+                    route = "/reportStatus";
+                    $.post(route, {
+                        searchIDsChecked: searchIDsChecked,
+                        action: action,
+                        page: page,
+                        note: txt
 
-            },function(data){
-                if(data==='done')
-                {
-                    alert("login success");
+                    },function(data){
+                        if(data==='done')
+                        {
+                            alert("login success");
+                        }
+                        window.location = data.redirect
+                    });
                 }
-                window.location = data.redirect
-            });
+            }   //end of Close Alerts
+
+            else {
+                if (action == 'archive')
+                    route = "/moveToArchiveInboxTrash";
+                if (action == 'trash')
+                    route = "/moveToArchiveInboxTrash";
+
+                $.post(route, {
+                    searchIDsChecked: searchIDsChecked,
+                    action: action,
+                    page: page
+
+                },function(data){
+                    if(data==='done')
+                    {
+                        alert("login success");
+                    }
+                    window.location = data.redirect
+                });
+            }
+
 
         }
         $(document).ready(function() {
