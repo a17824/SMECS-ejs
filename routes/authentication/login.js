@@ -54,7 +54,7 @@ router.post('/register', function(req, res) {
  * Render the login page.
  */
 module.exports.getLogin = function(req, res, next) {
-
+    console.log('4444444444444444WWWWWWWWWWWWWWWWWWWW');
     res.render('login', {
         title: 'SMECS Login',
         error: "",

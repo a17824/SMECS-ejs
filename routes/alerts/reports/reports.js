@@ -178,7 +178,7 @@ module.exports.updateStatusReopen = function(req, res) {
 
 //CLOSE ALERTS
 module.exports.updateStatus = function(req, res) {
-
+    console.log('1111111111111111111WWWWWWWWWWWWWWWWWWWW');
     let statusToChange = req.body.searchIDsChecked;
     let closedNote = req.body.note;
     let wrapped = moment(new Date());
@@ -265,6 +265,11 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
                         alert.softDeletedDate = null;
                         alert.softDeletedTime = null;
                         alert.expirationDate = undefined;
+
+                        let alertIdName = {
+                            id: alert._id,
+                            name: alert.alert.name
+                        };
                     }
                 }
                 if (action == 'trash') {
@@ -274,9 +279,16 @@ module.exports.moveToArchiveInboxTrash = function(req, res) {
                     alert.softDeletedDate = wrapped.format('YYYY-MM-DD');
                     alert.softDeletedTime = wrapped.format('h:mm:ss');
                     alert.expirationDate = new Date(Date.now() + ( 30 * 24 * 3600 * 1000)); //( 'days' * 24 * 3600 * 1000) milliseconds
+
+                    let alertIdName = {
+                        id: alert._id,
+                        name: alert.alert.name
+                    };
                 }
                 alert.save();
             });
+            /*****  CALL HERE NOTIFICATION API  *****/
+            pushNotification.updateClosedAlertsPage();
             return res.send({redirect: page});
         }
     })

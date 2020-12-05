@@ -411,6 +411,46 @@ module.exports.icons = function(icons,action) {
 };
 //end of Create message for cellPhone notification
 
+
+//UPDATE CLOSED ALERTS PAGE WHEN ALERTS ARE TRASHED OR ARCHIVED
+module.exports.updateClosedAlertsPage = function() {
+    models.Users.find({pushToken: {$exists: true, $not: {$size: 0}}}, function (err,users) {
+        if( err || !users) console.log("No users with pushToken to update");
+        else{
+            let allUsersWithPushToken = [];
+            users.forEach(function (user) {
+                user.pushToken.forEach(function (token) {
+                    allUsersWithPushToken.push(token);
+                });
+            });
+            let arr =  allUsersWithPushToken;
+            let size = 500;
+            splittingArray(size, arr,function (newArray,err) { // split allUsersWithPushToken array in arrays of maximum 500 users
+                if(err || !newArray || newArray < 1) console.log('newArray err = ',err);
+                else {
+                    newArray.forEach(function(usersWithPushTokenArrayChunk) {
+
+                        let message = { //this may vary according to the message type (single recipient, multicast, topic, etc.)
+                            registration_ids: usersWithPushTokenArrayChunk,
+                            data: {  //you can send only notification or only data(or include both)
+                                action: 'refreshClosedAlerts'
+                            },
+                            priority: "high"
+                        };
+                        sendPush2(message, function (result,err) {
+                            if(err || !result) console.log('icons err = ',err);
+                            else {
+                                console.log('result icons = ',result);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+    });
+};
+
+
 module.exports.notifyUser = function(user, action) { //action = updateUserInfo (group buttons, fingerprint)
     console.log('notifyUser');
     console.log('action of notifyUser= ', action);

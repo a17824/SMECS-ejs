@@ -13,6 +13,7 @@ var bcrypt = require('bcryptjs');
  */
 
 module.exports.simpleAuth = function(req, res, next) {
+    console.log('2222222222222222222222WWWWWWWWWWWWWWWWWWWW');
     if (req.session && req.session.user) {
         if (req.session.user.userRoleID) {         // if it is a user from "User" database
             var typeUserAuth = 'Users';
@@ -43,6 +44,7 @@ function authentication(req, res, typeUserAuth, next){
 
 //if user is not logged in redirect to login page
 module.exports.requireLogin = function(req, res, next) {
+    console.log('3333333333333333WWWWWWWWWWWWWWWWWWWW');
     if (!req.user) {
         res.redirect('/login');
     } else {

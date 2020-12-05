@@ -16,7 +16,7 @@ module.exports.reportsGet = function (req, res) {
         function(callback){
             models.AlertSentInfo.find({
                 $and: [
-                    {'status.statusString': state},
+                    {'status.statusString': state}, {'archived': false}, {'softDeletedTime': null},
                     {$or: [{ sentTo: {$elemMatch: {email: req.decoded.user.email}} } , { sentSmecsAppUsersScope: {$elemMatch: {userEmail: req.decoded.user.email}} }] }
                 ]}).exec(callback);
         },
@@ -32,6 +32,7 @@ module.exports.reportsGet = function (req, res) {
             })
         }
         else {
+            let openAlerts = 0;
             if(state === 'closed'){
                 results[0].sort((a, b) => {
                     // sort by date + time
@@ -46,10 +47,14 @@ module.exports.reportsGet = function (req, res) {
                     results[0].length = 20;
 
             }
+            else {
+                openAlerts = results[0].length;
+            }
             res.json({
                 success: 'true',
                 alerts: results[0],
-                canOpenCloseAlerts: results[1].checkBoxValue
+                canOpenCloseAlerts: results[1].checkBoxValue,
+                openAlerts: openAlerts
             });
         }
     })
