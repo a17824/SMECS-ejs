@@ -52,11 +52,13 @@
                     note: txt
 
                 },function(data){
-                    if(data==='done')
+                    if(data.redirect === undefined)
                     {
-                        alert("login success");
+                        window.location = '/reports/homeReports';
                     }
-                    window.location = data.redirect
+                    else {
+                        window.location = data.redirect
+                    }
                 });
             }
             /*
@@ -113,11 +115,13 @@
                         note: txt
 
                     },function(data){
-                        if(data==='done')
+                        if(data.redirect === undefined)
                         {
-                            alert("login success");
+                            window.location = '/reports/homeReports';
                         }
-                        window.location = data.redirect
+                        else {
+                            window.location = data.redirect
+                        }
                     });
                 }
             }   //end of Close Alerts
@@ -134,11 +138,13 @@
                     page: page
 
                 },function(data){
-                    if(data==='done')
+                    if(data.redirect === undefined)
                     {
-                        alert("login success");
+                        window.location = '/reports/homeReports';
                     }
-                    window.location = data.redirect
+                    else {
+                        window.location = data.redirect
+                    }
                 });
             }
 

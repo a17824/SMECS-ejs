@@ -12,9 +12,9 @@
     <!--  <meta http-equiv="refresh" content="300"> -->
 
 
-      <title>SMECS Login</title>
+    <title>SMECS Login</title>
 
-      <!-- Bootstrap -->
+    <!-- Bootstrap -->
     <link href="/public/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="/public/gentelella/vendors/fontawesome-free-5.0.12/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
@@ -50,18 +50,24 @@
     <div class="animate form login_form">
         <section class="login_content">
             <% if (error) { %>
-            <% if (error == '403') { %>
-            <div class="alert alert-warning" role="alert">
-                <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-                Sorry, we will need you to input your email and pin again
-            </div>
-            <% } %>
-            <% if (error == 'Registration completed') { %>
-            <div class="alert alert-success" role="alert">
-                <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-                Registration completed, please use your new email and pin to login
-            </div>
-            <% } %>
+                <% if (error == '403') { %>
+                    <div class="alert alert-warning" role="alert">
+                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                        Sorry, we will need you to input your email and pin again
+                    </div>
+                <% } %>
+                <% if (error == 'TimeOut') { %>
+                    <div class="alert alert-warning" role="alert">
+                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                        Session expired. Please, insert your email and pin again
+                    </div>
+                <% } %>
+                <% if (error == 'Registration completed') { %>
+                    <div class="alert alert-success" role="alert">
+                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                        Registration completed, please use your new email and pin to login
+                    </div>
+                <% } %>
                 <% if (error == 'Success! An e-mail has been sent with further instructions.') { %>
                     <div class="alert alert-success" role="alert">
                         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
@@ -74,23 +80,23 @@
                         There was a problem sending email with further instructions! If problem persists contact SMECS support
                     </div>
                 <% } %>
-            <% if (error == 'Success! Your Pin has been changed.') { %>
-                <div class="alert alert-success" role="alert">
-                    <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-                    Success! Your Pin has been changed.
-                </div>
-            <% } %>
+                <% if (error == 'Success! Your Pin has been changed.') { %>
+                    <div class="alert alert-success" role="alert">
+                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                        Success! Your Pin has been changed.
+                    </div>
+                <% } %>
 
-            <% if (error == 'Incorrect email or pin') { %>
-            <div class="alert alert-danger" role="alert">
-                <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-                Incorrect email or pin, please try again.
-            </div>
-            <% } %>
+                <% if (error == 'Incorrect email or pin') { %>
+                    <div class="alert alert-danger" role="alert">
+                        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+                        Incorrect email or pin, please try again.
+                    </div>
+                <% } %>
             <% } %>
 
             <% if ( error_messages ) { %>
-            <p style="color: red"><%= error_messages %></p>
+                <p style="color: red"><%= error_messages %></p>
             <% } %>
             <form action="/login" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">

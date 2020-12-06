@@ -8,6 +8,7 @@ routerEjs.use(csrf());
 
 /* GET login page. */
 routerEjs.get('/login', login.getLogin, function(req, res) {});
+routerEjs.get('/loginSessionExpired', login.getLoginSessionExpired, function(req, res) {});
 routerEjs.get('/loginParents', login.getLoginParentSelfRegistration, function(req, res) {});
 routerEjs.get('/loginFurtherInstructions/:emailMessage', login.getLoginFurtherInstructions, function(req, res) {});
 routerEjs.get('/loginResetPassword', login.getLoginResetPassword, function(req, res) {});

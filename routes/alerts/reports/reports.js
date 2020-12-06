@@ -178,7 +178,6 @@ module.exports.updateStatusReopen = function(req, res) {
 
 //CLOSE ALERTS
 module.exports.updateStatus = function(req, res) {
-    console.log('1111111111111111111WWWWWWWWWWWWWWWWWWWW');
     let statusToChange = req.body.searchIDsChecked;
     let closedNote = req.body.note;
     let wrapped = moment(new Date());
