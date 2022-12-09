@@ -18,7 +18,7 @@
     "csurf": "^1.8.3",
     "debug": "~2.2.0",
     "ejs": "~2.3.3",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-flash": "0.0.2",
     "fast-csv": "^2.4.1",
     "fcm-node": "^1.5.2",
